@@ -8,6 +8,10 @@ import com.zachsthings.libcomponents.Depend;
 import com.zachsthings.libcomponents.bukkit.BukkitComponent;
 import com.zachsthings.libcomponents.config.ConfigurationBase;
 import com.zachsthings.libcomponents.config.Setting;
+import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
+import de.raidcraft.dragontravelplus.npc.NPCListener;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.trait.TraitInfo;
 
 /**
  * Author: Philip
@@ -32,7 +36,19 @@ public class DragonTravelPlusModule extends BukkitComponent {
                 if(ComponentDatabase.INSTANCE.getConnection() != null) {
                     loadConfig();
 
-                    CommandBook.logger().info("[DragonTravelPlus] Found DB connection, init DTPlus module...");
+                    CommandBook.registerEvents(new NPCListener());
+                    CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
+
+
+                    if(CommandBook.server().getPluginManager().getPlugin("Citizens") == null
+                            || CommandBook.server().getPluginManager().getPlugin("Citizens").isEnabled() == false) {
+                        CommandBook.logger().warning("Citizens 2.0 not found or not enabled! Disabling DragonTravelPro!");
+                        DragonTravelPlusModule.inst.disable();
+                    }
+                    else {
+                        CommandBook.logger().info("[DragonTravelPlus] Found DB connection, init DTPlus module...");
+                    }
+
                     CommandBook.server().getScheduler().cancelTask(startTaskId);
                 }
             }
