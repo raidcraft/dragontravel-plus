@@ -34,22 +34,22 @@ public class DragonTravelPlusModule extends BukkitComponent {
         startTaskId = CommandBook.inst().getServer().getScheduler().scheduleSyncRepeatingTask(CommandBook.inst(), new Runnable() {
             public void run() {
                 if(ComponentDatabase.INSTANCE.getConnection() != null) {
-                    loadConfig();
-
-                    CommandBook.registerEvents(new NPCListener());
-                    CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
-
 
                     if(CommandBook.server().getPluginManager().getPlugin("Citizens") == null
-                            || CommandBook.server().getPluginManager().getPlugin("Citizens").isEnabled() == false) {
+                        || CommandBook.server().getPluginManager().getPlugin("Citizens").isEnabled() == false) {
                         CommandBook.logger().warning("Citizens 2.0 not found or not enabled! Disabling DragonTravelPro!");
                         DragonTravelPlusModule.inst.disable();
+                        CommandBook.server().getScheduler().cancelTask(startTaskId);
+                        return;
                     }
                     else {
-                        CommandBook.logger().info("[DragonTravelPlus] Found DB connection, init DTPlus module...");
-                    }
+                        loadConfig();
+                        CommandBook.registerEvents(new NPCListener());
+                        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
+                        CommandBook.server().getScheduler().cancelTask(startTaskId);
 
-                    CommandBook.server().getScheduler().cancelTask(startTaskId);
+                        CommandBook.logger().info("[DragonTravelPlus] Found DB connection, init DTPlus module...");
+                }
                 }
             }
         }, 0, 2*20);
