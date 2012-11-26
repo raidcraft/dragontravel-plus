@@ -22,16 +22,15 @@ public class StationManager {
         return selectedDragonStations.get(player);
     }
     
-    public void addStation(String name, Location location, int costLevel) {
-        DragonStation station = new DragonStation(name, location.clone(), costLevel);
+    public void addStation(DragonStation dragonStation) {
 
-        List<DragonStation> existingStations = registeredStations.get(MapLocation.getMapLocation(location));
+        List<DragonStation> existingStations = registeredStations.get(MapLocation.getMapLocation(dragonStation.getLocation()));
         
         if(existingStations == null) {
             existingStations = new ArrayList<>();
         }
-        existingStations.add(station);
-        registeredStations.put(MapLocation.getMapLocation(location), existingStations);
+        existingStations.add(dragonStation);
+        registeredStations.put(MapLocation.getMapLocation(dragonStation.getLocation()), existingStations);
         //TODO save station in database
     }
     

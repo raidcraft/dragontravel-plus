@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus.npc;
+package de.raidcraft.dragontravelplus;
 
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.dragontravelplus.DragonStation;
@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
  * Date: 25.11.12 - 19:01
  * Description:
  */
-public class NPCCommands {
-    public NPCCommands(DragonTravelPlusModule module) {
+public class DTPCommands {
+    public DTPCommands(DragonTravelPlusModule module) {
 
     }
 
@@ -37,32 +37,34 @@ public class NPCCommands {
 
         @Command(
                 aliases = {"create", "new", "add"},
+                flags = "mec:",
                 desc = "Create new station"
         )
         @CommandPermissions("dragontravelplus.create")
         public void create(CommandContext context, CommandSender sender) throws CommandException {
 
-        }
-
-        @Command(
-                aliases = {"stationname", "sn"},
-                desc = "Set the name of the dragon station"
-        )
-        @CommandPermissions("dragontravelplus.guard.stationname")
-        public void stationname(CommandContext context, CommandSender sender) throws CommandException {
-
-            DragonStation station = StationManager.INST.getSelectedDragonStation(sender.getName());
-
-            if(station == null) {
-                ChatMessages.noDragonGuardSelected((Player)sender);
-            }
-
             if(context.argsLength() < 1) {
                 ChatMessages.tooFewArguments((Player)sender);
             }
 
-            station.setName(context.getString(0));
-            ChatMessages.stationNameSuccessfullyChanged((Player)sender);
+            int costLevel = 0;
+            boolean mainStation = false;
+            boolean emergencyTarget = false;
+
+            if(context.hasFlag('c')) {
+                costLevel = context.getFlagInteger('c', 0);
+            }
+
+            if(context.hasFlag('m')) {
+                mainStation = true;
+            }
+
+            if(context.hasFlag('e')) {
+                emergencyTarget = true;
+            }
+
+            StationManager.INST.addStation(
+                    new DragonStation(context.getString(0), ((Player)sender).getLocation(), costLevel, mainStation, emergencyTarget));
         }
     }
 }

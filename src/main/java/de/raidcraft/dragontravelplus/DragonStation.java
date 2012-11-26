@@ -10,25 +10,17 @@ import org.bukkit.Location;
 public class DragonStation {
     private String name;
     private Location location;
-    private int costLevel;
+    private int costLevel = 0;
+    private boolean mainStation = false;
+    private boolean emergencyTarget = false;
 
-    public DragonStation(String name, Location location, int costLevel) {
+    public DragonStation(String name, Location location, int costLevel, boolean mainStation, boolean emergencyTarget) {
 
         this.name = name;
         this.location = location;
         this.costLevel = costLevel;
-    }
-
-    public DragonStation(Location location, int costLevel) {
-
-        this.name = "~ No Name ~";
-        this.location = location;
-        this.costLevel = costLevel;
-    }
-
-    public void setName(String name) {
-
-        this.name = name;
+        this.mainStation = mainStation;
+        this.emergencyTarget = emergencyTarget;
     }
 
     public String getName() {
@@ -44,5 +36,15 @@ public class DragonStation {
     public int getCostLevel() {
 
         return costLevel;
+    }
+
+    public boolean isMainStation() {
+
+        return mainStation;
+    }
+
+    public boolean isEmergencyTarget() {
+
+        return emergencyTarget;
     }
 }
