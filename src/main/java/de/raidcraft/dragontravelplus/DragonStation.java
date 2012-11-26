@@ -19,6 +19,18 @@ public class DragonStation {
         this.costLevel = costLevel;
     }
 
+    public DragonStation(Location location, int costLevel) {
+
+        this.name = "~ No Name ~";
+        this.location = location;
+        this.costLevel = costLevel;
+    }
+
+    public void setName(String name) {
+
+        this.name = name;
+    }
+
     public String getName() {
 
         return name;

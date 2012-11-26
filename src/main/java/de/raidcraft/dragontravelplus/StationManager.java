@@ -15,7 +15,12 @@ import java.util.Map;
 public class StationManager {
     public static final StationManager INST = new StationManager();
 
+    private Map<String, DragonStation> selectedDragonStations = new HashMap<>();
     private Map<MapLocation, List<DragonStation>> registeredStations = new HashMap<>();
+    
+    public DragonStation getSelectedDragonStation(String player) {
+        return selectedDragonStations.get(player);
+    }
     
     public void addStation(String name, Location location, int costLevel) {
         DragonStation station = new DragonStation(name, location.clone(), costLevel);
@@ -27,6 +32,7 @@ public class StationManager {
         }
         existingStations.add(station);
         registeredStations.put(MapLocation.getMapLocation(location), existingStations);
+        //TODO save station in database
     }
     
     public List<DragonStation> getDragonStations(MapLocation mapLocation) {

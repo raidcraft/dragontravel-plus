@@ -7,12 +7,16 @@ import net.citizensnpcs.api.util.DataKey;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Author: Philip
  * Date: 22.11.12 - 21:21
  * Description:
  */
 public class DragonGuardTrait extends Trait {
+    private List<Conversation> conversations = new ArrayList<>();
 
     public DragonGuardTrait() {
         super("dragonguard");
