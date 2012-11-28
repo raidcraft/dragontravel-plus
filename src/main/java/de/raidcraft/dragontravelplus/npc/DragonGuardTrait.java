@@ -1,14 +1,8 @@
 package de.raidcraft.dragontravelplus.npc;
 
-import com.sk89q.commandbook.CommandBook;
 import net.citizensnpcs.api.exception.NPCLoadException;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Author: Philip
@@ -16,7 +10,6 @@ import java.util.List;
  * Description:
  */
 public class DragonGuardTrait extends Trait {
-    private List<Conversation> conversations = new ArrayList<>();
 
     public DragonGuardTrait() {
         super("dragonguard");

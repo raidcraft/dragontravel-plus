@@ -3,8 +3,14 @@ package de.raidcraft.dragontravelplus;
 import com.silthus.raidcraft.util.component.DateUtil;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.dragontravelplus.eceptions.AlreadyExistsException;
+import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.trait.LookClose;
+import net.citizensnpcs.trait.text.Text;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 /**
@@ -69,7 +75,14 @@ public class DTPCommands {
                 ChatMessages.warn(((Player)sender), e.getMessage());
             }
 
-            ChatMessages.success(((Player)sender), "Du hast erfolgreich die Station " + context.getString(0) + " erstellt!");
+            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, DragonTravelPlusModule.inst.config.npcDefaultName);
+            npc.spawn(((Player) sender).getLocation());
+            npc.addTrait(LookClose.class);
+            npc.getTrait(LookClose.class).lookClose(true);
+            npc.addTrait(Text.class);
+            npc.addTrait(DragonGuardTrait.class);
+
+            ChatMessages.success(((Player)sender), "Du hast erfolgreich die Drachenstation '" + context.getString(0) + "' erstellt!");
         }
     }
 }

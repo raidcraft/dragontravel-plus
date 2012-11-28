@@ -1,11 +1,13 @@
 package de.raidcraft.dragontravelplus.npc;
 
+import net.citizensnpcs.api.event.NPCClickEvent;
 import net.citizensnpcs.api.event.NPCSpawnEvent;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.trait.LookClose;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Author: Philip
@@ -13,15 +15,32 @@ import org.bukkit.event.Listener;
  * Description:
  */
 public class NPCListener implements Listener {
+    private Map<String, Conversation> conversations = new HashMap<> ();
 
     @EventHandler
-    public void onNPCSpawn(NPCSpawnEvent event) {
+    public void onSpawn(NPCSpawnEvent event) {
+        if(!event.getNPC().hasTrait(DragonGuardTrait.class)) {
+            return;
+        }
+        
+        Bukkit.broadcastMessage("spawned");
+    }
+    
+    @EventHandler
+    public void onClick(NPCClickEvent event) {
         if(!event.getNPC().hasTrait(DragonGuardTrait.class)) {
             return;
         }
 
-        event.getNPC().getTrait(LookClose.class).lookClose(true);
+        event.getClicker().sendMessage("Hallo ich bin ein Drachenmeister!");
+    }
 
-        Bukkit.broadcastMessage("npc spawn");
+    @EventHandler
+    public void onRight(NPCClickEvent event) {
+        if(!event.getNPC().hasTrait(DragonGuardTrait.class)) {
+            return;
+        }
+
+        event.getClicker().sendMessage("Hallo ich bin ein Drachenmeister!");
     }
 }

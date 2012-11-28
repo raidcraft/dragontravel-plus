@@ -8,6 +8,7 @@ import com.zachsthings.libcomponents.config.ConfigurationBase;
 import com.zachsthings.libcomponents.config.Setting;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.npc.NPCListener;
+import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
@@ -46,6 +47,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
                         CommandBook.registerEvents(new NPCListener());
                         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
                         ComponentDatabase.INSTANCE.registerTable(StationTable.class, new StationTable());
+                        ComponentDatabase.INSTANCE.registerTable(PlayerStations.class, new PlayerStations());
                         load();
                         CommandBook.server().getScheduler().cancelTask(startTaskId);
 
@@ -64,6 +66,6 @@ public class DragonTravelPlusModule extends BukkitComponent {
 
     public class LocalConfiguration extends ConfigurationBase {
 
-        @Setting("") public int n = 0;
+        @Setting("dragon-guard-npc-name") public String npcDefaultName = "Drachenmeister";
     }
 }
