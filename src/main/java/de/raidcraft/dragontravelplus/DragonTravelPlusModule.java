@@ -2,14 +2,13 @@ package de.raidcraft.dragontravelplus;
 
 import com.silthus.raidcraft.util.component.database.ComponentDatabase;
 import com.sk89q.commandbook.CommandBook;
-import com.sk89q.worldedit.LocalConfiguration;
 import com.zachsthings.libcomponents.ComponentInformation;
-import com.zachsthings.libcomponents.Depend;
 import com.zachsthings.libcomponents.bukkit.BukkitComponent;
 import com.zachsthings.libcomponents.config.ConfigurationBase;
 import com.zachsthings.libcomponents.config.Setting;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.npc.NPCListener;
+import de.raidcraft.dragontravelplus.tables.StationTable;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 
@@ -43,9 +42,11 @@ public class DragonTravelPlusModule extends BukkitComponent {
                         return;
                     }
                     else {
-                        loadConfig();
+                        registerCommands(DTPCommands.class);
                         CommandBook.registerEvents(new NPCListener());
                         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
+                        ComponentDatabase.INSTANCE.registerTable(StationTable.class, new StationTable());
+                        load();
                         CommandBook.server().getScheduler().cancelTask(startTaskId);
 
                         CommandBook.logger().info("[DragonTravelPlus] Found DB connection, init DTPlus module...");
@@ -55,8 +56,9 @@ public class DragonTravelPlusModule extends BukkitComponent {
         }, 0, 2*20);
     }
 
-    public void loadConfig() {
+    public void load() {
 
+        StationManager.INST.loadExistingStations();
         config = configure(new LocalConfiguration());
     }
 

@@ -1,9 +1,7 @@
 package de.raidcraft.dragontravelplus;
 
 import com.sk89q.minecraft.util.commands.*;
-import de.raidcraft.dragontravelplus.DragonStation;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
-import de.raidcraft.dragontravelplus.StationManager;
+import de.raidcraft.dragontravelplus.eceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -63,8 +61,14 @@ public class DTPCommands {
                 emergencyTarget = true;
             }
 
-            StationManager.INST.addStation(
-                    new DragonStation(context.getString(0), ((Player)sender).getLocation(), costLevel, mainStation, emergencyTarget));
+            try {
+                StationManager.INST.addNewStation(
+                        new DragonStation(context.getString(0), ((Player) sender).getLocation(), costLevel, mainStation, emergencyTarget));
+            } catch (AlreadyExistsException e) {
+                ChatMessages.warn(((Player)sender), e.getMessage());
+            }
+
+            ChatMessages.success(((Player)sender), "Du hast erfolgreich die Station " + context.getString(0) + " erstellt!");
         }
     }
 }

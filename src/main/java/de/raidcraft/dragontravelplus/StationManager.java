@@ -1,10 +1,11 @@
 package de.raidcraft.dragontravelplus;
 
-import org.bukkit.Location;
+import com.silthus.raidcraft.util.component.database.ComponentDatabase;
+import com.sk89q.commandbook.CommandBook;
+import de.raidcraft.dragontravelplus.eceptions.AlreadyExistsException;
+import de.raidcraft.dragontravelplus.tables.StationTable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,49 +17,36 @@ public class StationManager {
     public static final StationManager INST = new StationManager();
 
     private Map<String, DragonStation> selectedDragonStations = new HashMap<>();
-    private Map<MapLocation, List<DragonStation>> registeredStations = new HashMap<>();
+    private Map<String, DragonStation> existingStations = new HashMap<>();
     
     public DragonStation getSelectedDragonStation(String player) {
         return selectedDragonStations.get(player);
     }
-    
-    public void addStation(DragonStation dragonStation) {
 
-        List<DragonStation> existingStations = registeredStations.get(MapLocation.getMapLocation(dragonStation.getLocation()));
-        
-        if(existingStations == null) {
-            existingStations = new ArrayList<>();
+    public void loadExistingStations() {
+
+        existingStations.clear();
+        int i = 0;
+        for(DragonStation station : ComponentDatabase.INSTANCE.getTable(StationTable.class).getAllStations()) {
+            i++;
+            existingStations.put(station.getName().toLowerCase(), station);
         }
-        existingStations.add(dragonStation);
-        registeredStations.put(MapLocation.getMapLocation(dragonStation.getLocation()), existingStations);
-        //TODO save station in database
+        CommandBook.logger().info("[DTP] Es wurden " + i + " Stationen geladen!");
     }
     
-    public List<DragonStation> getDragonStations(MapLocation mapLocation) {
-        return registeredStations.get(mapLocation);
+    public void addNewStation(DragonStation dragonStation) throws AlreadyExistsException {
+        
+        if(existingStations.containsKey(dragonStation.getName().toLowerCase())) {
+            throw new AlreadyExistsException("Eine Station mit diesem Namen existiert bereits!");
+        }
+    
+        existingStations.put(dragonStation.getName().toLowerCase(), dragonStation);
+        ComponentDatabase.INSTANCE.getTable(StationTable.class).addStation(dragonStation);
+    }
+    
+    public DragonStation getDragonStation(String name) {
+        return existingStations.get(name);
     }
 
-    public enum MapLocation {
-        NORTH,
-        EAST,
-        SOUTH,
-        WEST,
-        NORTH_EAST,
-        NORTH_WEST,
-        SOUTH_EAST,
-        SOUTH_WEST;
-        
-        public static MapLocation getMapLocation(Location location) {
-            if(location.getBlockX() >= 0 && location.getZ() >= 0) {
-                return SOUTH_EAST;
-            }
-            if(location.getBlockX() <= 0 && location.getZ() >= 0) {
-                return SOUTH_WEST;
-            }
-            if(location.getBlockX() <= 0 && location.getZ() <= 0) {
-                return NORTH_WEST;
-            }
-            return NORTH_EAST;
-        }
-    }
+
 }
