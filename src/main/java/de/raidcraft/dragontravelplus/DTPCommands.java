@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus;
 
+import com.silthus.raidcraft.util.component.DateUtil;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.dragontravelplus.eceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
@@ -63,7 +64,7 @@ public class DTPCommands {
 
             try {
                 StationManager.INST.addNewStation(
-                        new DragonStation(context.getString(0), ((Player) sender).getLocation(), costLevel, mainStation, emergencyTarget));
+                        new DragonStation(context.getString(0), ((Player) sender).getLocation(), costLevel, mainStation, emergencyTarget, sender.getName(), DateUtil.getCurrentDateString()));
             } catch (AlreadyExistsException e) {
                 ChatMessages.warn(((Player)sender), e.getMessage());
             }

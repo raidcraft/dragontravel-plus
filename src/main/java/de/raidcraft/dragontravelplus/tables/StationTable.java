@@ -38,6 +38,8 @@ public class StationTable extends Table {
                             "`cost_level` INT( 11 ) NOT NULL ,\n" +
                             "`main` TINYINT( 1 ) NOT NULL, " +
                             "`emergency` TINYINT( 1 ) NOT NULL, " +
+                            "`creator` VARCHAR ( 32 ) NOT NULL, " +
+                            "`created` VARCHAR ( 32 ) NOT NULL, " +
                             "PRIMARY KEY ( `id` )" +
                             ")").execute();
         } catch (SQLException e) {
@@ -60,7 +62,9 @@ public class StationTable extends Table {
                         , new Location(world, resultSet.getDouble("x"), resultSet.getDouble("y"), resultSet.getDouble("z"))
                         , resultSet.getInt("cost_level")
                         , resultSet.getBoolean("main")
-                        , resultSet.getBoolean("emergency"));
+                        , resultSet.getBoolean("emergency")
+                        , resultSet.getString("creator")
+                        , resultSet.getString("created"));
                         
                 stations.add(station);
             }
@@ -73,7 +77,7 @@ public class StationTable extends Table {
     public void addStation(DragonStation station) {
 
         try {
-            String query = "INSERT INTO " + getTableName() + " (name, world, x, y, z, cost_level, main, emergency) " +
+            String query = "INSERT INTO " + getTableName() + " (name, world, x, y, z, cost_level, main, emergency, creator, created) " +
                     "VALUES (" +
                     "'" + station.getName() + "'" + "," +
                     "'" + station.getLocation().getWorld().getName() + "'" + "," +
@@ -82,7 +86,9 @@ public class StationTable extends Table {
                     "'" + station.getLocation().getBlockZ() + "'" + "," +
                     "'" + station.getCostLevel() + "'" + "," +
                     "'" + ((station.isMainStation()) ? 1 : 0) + "'" + "," +
-                    "'" + ((station.isEmergencyTarget()) ? 1 : 0) + "'" +
+                    "'" + ((station.isEmergencyTarget()) ? 1 : 0) + "'" + "," +
+                    "'" + station.getCreator() + "'" + "," +
+                    "'" + station.getCreated() + "'" +
                     ");";
 
             Statement statement = getConnection().createStatement();

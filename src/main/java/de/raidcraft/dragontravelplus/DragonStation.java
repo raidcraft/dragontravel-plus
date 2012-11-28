@@ -14,8 +14,10 @@ public class DragonStation {
     private int costLevel = 0;
     private boolean mainStation = false;
     private boolean emergencyTarget = false;
+    private String creator;
+    private String created;
 
-    public DragonStation(String name, Location location, int costLevel, boolean mainStation, boolean emergencyTarget) {
+    public DragonStation(String name, Location location, int costLevel, boolean mainStation, boolean emergencyTarget, String creator, String created) {
 
         this.name = name;
         this.location = location;
@@ -23,6 +25,8 @@ public class DragonStation {
         this.costLevel = costLevel;
         this.mainStation = mainStation;
         this.emergencyTarget = emergencyTarget;
+        this.creator = creator;
+        this.created = created;
     }
 
     public String getName() {
@@ -53,6 +57,16 @@ public class DragonStation {
     public boolean isEmergencyTarget() {
 
         return emergencyTarget;
+    }
+
+    public String getCreator() {
+
+        return creator;
+    }
+
+    public String getCreated() {
+
+        return created;
     }
 
     public enum MapLocation {
