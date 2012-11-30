@@ -8,7 +8,6 @@ import de.raidcraft.dragontravelplus.util.ChatMessages;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.LookClose;
-import net.citizensnpcs.trait.text.Text;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -79,9 +78,10 @@ public class DTPCommands {
             npc.spawn(((Player) sender).getLocation());
             npc.addTrait(LookClose.class);
             npc.getTrait(LookClose.class).lookClose(true);
-            npc.addTrait(Text.class);
             npc.addTrait(DragonGuardTrait.class);
 
+            npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, false);
+            //TODO dynmap marker
             ChatMessages.success(((Player)sender), "Du hast erfolgreich die Drachenstation '" + context.getString(0) + "' erstellt!");
         }
     }

@@ -43,9 +43,10 @@ public class DragonTravelPlusModule extends BukkitComponent {
                         return;
                     }
                     else {
-                        registerCommands(DTPCommands.class);
-                        CommandBook.registerEvents(new NPCListener());
+
                         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
+                        CommandBook.registerEvents(new NPCListener());
+                        registerCommands(DTPCommands.class);
                         ComponentDatabase.INSTANCE.registerTable(StationTable.class, new StationTable());
                         ComponentDatabase.INSTANCE.registerTable(PlayerStations.class, new PlayerStations());
                         load();

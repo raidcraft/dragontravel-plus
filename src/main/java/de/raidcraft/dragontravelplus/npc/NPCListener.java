@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.npc;
 
-import net.citizensnpcs.api.event.NPCClickEvent;
+import net.citizensnpcs.api.event.NPCLeftClickEvent;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.event.NPCSpawnEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -25,22 +26,23 @@ public class NPCListener implements Listener {
         
         Bukkit.broadcastMessage("spawned");
     }
-    
+
     @EventHandler
-    public void onClick(NPCClickEvent event) {
+    public void onRightClick(NPCRightClickEvent event) {
         if(!event.getNPC().hasTrait(DragonGuardTrait.class)) {
             return;
         }
 
-        event.getClicker().sendMessage("Hallo ich bin ein Drachenmeister!");
+        event.getClicker().sendMessage("Hallo ich bin ein Drachenmeister! RC");
     }
 
     @EventHandler
-    public void onRight(NPCClickEvent event) {
+    public void onLeftClick(NPCLeftClickEvent event) {
         if(!event.getNPC().hasTrait(DragonGuardTrait.class)) {
             return;
         }
 
-        event.getClicker().sendMessage("Hallo ich bin ein Drachenmeister!");
+        event.getClicker().sendMessage("Hallo ich bin ein Drachenmeister! LC");
     }
+
 }

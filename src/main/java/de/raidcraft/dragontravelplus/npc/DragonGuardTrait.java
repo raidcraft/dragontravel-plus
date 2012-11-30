@@ -42,7 +42,7 @@ public class DragonGuardTrait extends Trait {
     @Override
     public void onRemove() {
 
-        super.onRemove();    //To change body of overridden methods use File | Settings | File Templates.
+        return; // stop removing dragon guard
     }
 
     @Override
@@ -56,4 +56,5 @@ public class DragonGuardTrait extends Trait {
 
         super.run();    //To change body of overridden methods use File | Settings | File Templates.
     }
+
 }

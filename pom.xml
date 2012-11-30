@@ -37,6 +37,11 @@
             <version>2.0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.xemsdoom</groupId>
+            <artifactId>dragontravel</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+        <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>component-utils</artifactId>
             <version>1.0-SNAPSHOT</version>
