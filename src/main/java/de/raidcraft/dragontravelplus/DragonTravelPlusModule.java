@@ -6,8 +6,10 @@ import com.zachsthings.libcomponents.ComponentInformation;
 import com.zachsthings.libcomponents.bukkit.BukkitComponent;
 import com.zachsthings.libcomponents.config.ConfigurationBase;
 import com.zachsthings.libcomponents.config.Setting;
+import de.raidcraft.dragontravelplus.commands.Commands;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.npc.NPCListener;
+import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import net.citizensnpcs.api.CitizensAPI;
@@ -46,7 +48,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
 
                         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
                         CommandBook.registerEvents(new NPCListener());
-                        registerCommands(DTPCommands.class);
+                        registerCommands(Commands.class);
                         ComponentDatabase.INSTANCE.registerTable(StationTable.class, new StationTable());
                         ComponentDatabase.INSTANCE.registerTable(PlayerStations.class, new PlayerStations());
                         load();

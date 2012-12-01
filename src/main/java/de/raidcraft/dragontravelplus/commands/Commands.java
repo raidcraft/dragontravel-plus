@@ -1,13 +1,15 @@
-package de.raidcraft.dragontravelplus;
+package de.raidcraft.dragontravelplus.commands;
 
 import com.silthus.raidcraft.util.component.DateUtil;
 import com.sk89q.minecraft.util.commands.*;
-import de.raidcraft.dragontravelplus.eceptions.AlreadyExistsException;
+import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
+import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.trait.LookClose;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -17,8 +19,8 @@ import org.bukkit.entity.Player;
  * Date: 25.11.12 - 19:01
  * Description:
  */
-public class DTPCommands {
-    public DTPCommands(DragonTravelPlusModule module) {
+public class Commands {
+    public Commands(DragonTravelPlusModule module) {
 
     }
 
@@ -76,11 +78,8 @@ public class DTPCommands {
 
             NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, DragonTravelPlusModule.inst.config.npcDefaultName);
             npc.spawn(((Player) sender).getLocation());
-            npc.addTrait(LookClose.class);
-            npc.getTrait(LookClose.class).lookClose(true);
             npc.addTrait(DragonGuardTrait.class);
 
-            npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, false);
             //TODO dynmap marker
             ChatMessages.success(((Player)sender), "Du hast erfolgreich die Drachenstation '" + context.getString(0) + "' erstellt!");
         }

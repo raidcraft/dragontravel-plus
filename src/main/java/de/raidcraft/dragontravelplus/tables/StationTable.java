@@ -2,7 +2,7 @@ package de.raidcraft.dragontravelplus.tables;
 
 import com.silthus.raidcraft.util.component.database.Table;
 import com.sk89q.commandbook.CommandBook;
-import de.raidcraft.dragontravelplus.DragonStation;
+import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

@@ -1,8 +1,8 @@
-package de.raidcraft.dragontravelplus;
+package de.raidcraft.dragontravelplus.station;
 
 import com.silthus.raidcraft.util.component.database.ComponentDatabase;
 import com.sk89q.commandbook.CommandBook;
-import de.raidcraft.dragontravelplus.eceptions.AlreadyExistsException;
+import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 
 import java.util.HashMap;

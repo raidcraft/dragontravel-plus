@@ -3,8 +3,8 @@ package de.raidcraft.dragontravelplus.tables;
 import com.silthus.raidcraft.util.component.DateUtil;
 import com.silthus.raidcraft.util.component.database.Table;
 import com.sk89q.commandbook.CommandBook;
-import de.raidcraft.dragontravelplus.DragonStation;
-import de.raidcraft.dragontravelplus.StationManager;
+import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.dragontravelplus.station.StationManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

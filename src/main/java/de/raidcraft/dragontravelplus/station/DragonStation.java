@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus;
+package de.raidcraft.dragontravelplus.station;
 
 import org.bukkit.Location;
 

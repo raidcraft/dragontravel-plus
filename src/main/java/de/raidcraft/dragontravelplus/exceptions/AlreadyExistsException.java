@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus.eceptions;
+package de.raidcraft.dragontravelplus.exceptions;
 
 /**
  * Author: Philip
