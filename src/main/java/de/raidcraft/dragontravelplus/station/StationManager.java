@@ -46,7 +46,7 @@ public class StationManager {
     
     public DragonStation getDragonStation(String name) {
         
-        return existingStations.get(name);
+        return existingStations.get(name.toLowerCase());
     }
 
     public DragonStation getNearbyStation(Location location) {

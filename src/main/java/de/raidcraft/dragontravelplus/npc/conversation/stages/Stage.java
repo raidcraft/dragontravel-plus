@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
+import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import org.bukkit.ChatColor;
 
@@ -11,17 +12,52 @@ import org.bukkit.ChatColor;
 public abstract class Stage {
     private Conversation conversation;
     private String[] textToSpeak = new String[]{};
+    private String[] playerReply = new String[]{};
+    private String[] wrongAnswerReply = DragonTravelPlusModule.inst.config.convWrongAnswerWarning;
 
     public Stage(Conversation conversation) {
         this.conversation = conversation;
     }
 
     public void speak() {
+        speak(textToSpeak);
+    }
+    
+    public void showAnswers() {
         conversation.getPlayer().sendMessage("-----");
-        for(String line : textToSpeak) {
+        int i = 0;
+        for(String line : playerReply) {
+            i++;
+            conversation.getPlayer().sendMessage(i + " : " + Conversation.ANSWER_COLOR + replaceParameters(line));
+        }
+    }
 
-            line = line.replace("%s", getConversation().getPlayer().getName());
-            conversation.getPlayer().sendMessage(ChatColor.AQUA + line);
+    public boolean processAnswer(String answer) {
+        return false;
+    }
+    
+    public String replaceParameters(String line) {
+        line = line.replace("%s", getConversation().getPlayer().getName());
+        return line;
+    }
+
+    public void wrongAnswerWarning() {
+        wrongAnswerWarning(wrongAnswerReply);
+    }
+    
+    public void wrongAnswerWarning(String[] warning) {
+        speak(warning, ChatColor.RED);
+    }
+    
+    public void speak(String[] msg) {
+        speak(msg, Conversation.SPEAK_COLOR);
+    }
+
+    public void speak(String[] msg, ChatColor color) {
+        conversation.getPlayer().sendMessage("-----");
+        for(String line : msg) {
+
+            conversation.getPlayer().sendMessage(color + replaceParameters(line));
         }
     }
 
@@ -33,5 +69,10 @@ public abstract class Stage {
     public void setTextToSpeak(String[] textToSpeak) {
 
         this.textToSpeak = textToSpeak;
+    }
+
+    public void setPlayerReply(String[] playerReply) {
+
+        this.playerReply = playerReply;
     }
 }

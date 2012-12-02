@@ -25,6 +25,7 @@ public class FirstMeetStage extends Stage {
 
         StationManager.INST.assignStationWithPlayer(getConversation().getPlayer().getName()
                 , getConversation().getDragonGuard().getDragonStation());
+        getConversation().updatePlayerStations();
         getConversation().setCurrentStage(null);
     }
 }

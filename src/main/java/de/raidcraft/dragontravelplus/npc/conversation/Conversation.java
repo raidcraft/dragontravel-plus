@@ -2,10 +2,7 @@ package de.raidcraft.dragontravelplus.npc.conversation;
 
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
-import de.raidcraft.dragontravelplus.npc.conversation.stages.DisabledStage;
-import de.raidcraft.dragontravelplus.npc.conversation.stages.FirstMeetStage;
-import de.raidcraft.dragontravelplus.npc.conversation.stages.NoPermissionStage;
-import de.raidcraft.dragontravelplus.npc.conversation.stages.Stage;
+import de.raidcraft.dragontravelplus.npc.conversation.stages.*;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import net.citizensnpcs.api.npc.NPC;
@@ -21,6 +18,7 @@ import java.util.List;
  */
 public class Conversation {
     public final static ChatColor SPEAK_COLOR = ChatColor.AQUA;
+    public final static ChatColor ANSWER_COLOR = ChatColor.YELLOW;
     private Player player;
     private NPC npc;
     DragonGuardTrait dragonGuard;
@@ -31,16 +29,26 @@ public class Conversation {
 
         this.player = player;
     }
-    
-    public void trigger(NPC npc, TriggerType triggerType) {
 
-        trigger(npc, triggerType, null);
+    public boolean trigger(TriggerType triggerType, String data) {
+
+        return trigger(null, triggerType, data);
     }
     
-    public void trigger(NPC npc, TriggerType triggerType, String data) {
+    public boolean trigger(NPC npc, TriggerType triggerType) {
+
+        return trigger(npc, triggerType, null);
+    }
+    
+    public boolean trigger(NPC npc, TriggerType triggerType, String data) {
 
         if(playerStations == null) {
-            playerStations = StationManager.INST.getPlayerStations(player.getName());
+            updatePlayerStations();
+        }
+
+        if(triggerType == TriggerType.CHAT_ANSWER && currentStage != null) {
+            currentStage.processAnswer(data);
+            return true;
         }
 
         if(DragonTravelPlusModule.inst.config.disabled && !player.hasPermission("dtp.ignore.disabled")) {
@@ -63,20 +71,32 @@ public class Conversation {
             currentStage = new FirstMeetStage(this);
         }
 
-
+        if(currentStage == null) {
+            currentStage = new SelectDialModeStage(this);
+        }
 
         if(currentStage == null) {
-            return;
+            return false;
         }
 
         if(triggerType == TriggerType.LEFT_CLICK || triggerType == TriggerType.RIGHT_CLICK || triggerType == TriggerType.REPEAT) {
             currentStage.speak();
         }
+        return false;
+    }
+
+    public void updatePlayerStations() {
+        playerStations = StationManager.INST.getPlayerStations(player.getName());
     }
 
     public void setCurrentStage(Stage currentStage) {
 
         this.currentStage = currentStage;
+    }
+
+    public Stage getCurrentStage() {
+
+        return currentStage;
     }
 
     public Player getPlayer() {

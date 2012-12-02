@@ -6,6 +6,7 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.event.NPCSpawnEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -58,4 +59,12 @@ public class NPCListener implements Listener {
         conversations.remove(event.getPlayer().getName());
     }
 
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event) {
+        if(conversations.get(event.getPlayer().getName())
+                .trigger(Conversation.TriggerType.CHAT_ANSWER, event.getMessage())) {
+            event.setCancelled(true);
+        }
+
+    }
 }

@@ -63,6 +63,13 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("npc-search-radius") public int npcStationSearchRadius = 10;
         @Setting("npc-name") public String npcDefaultName = "Drachenmeister";
 
+        
+        /*  NPC CONVERSATION */
+        
+        @Setting("conv-wrong-answer-warning") public String[] convWrongAnswerWarning = new String[] {
+                "Ich habe deine Antwort nicht verstanden!"
+        };
+        
         @Setting("conv-stage-disabled-speak") public String[] convDisabledSpeak = new String[] {
                 "Ich habe meinen Drachen schon seit Tagen nichtmehr gesehen.",
                 "Schaue später nochmal vorbei vielleicht kann ich dir dann weiterhelfen!"
@@ -76,6 +83,34 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("conv-stage-no-permission-speak") public String[] convNoPermissionSpeak = new String[]{
                 "Ich rede nicht mit leuten die ich nicht kenne!",
                 "Geh und stelle dich zuerst in der Stadt vor!"
+        };
+
+        @Setting("conv-stage-select-dial-mode-speak") public String[] convSelectDialModeSpeak = new String[]{
+                "Hallo %s!",
+                "Du möchtest bestimmt mit meinem Drachen auf Reise gehen!",
+                "Kann ich dir bei der Zielwahl helfen?"
+        };
+
+        @Setting("conv-stage-select-dial-mode-answers") public String[] convSelectDialModeAnswers = new String[]{
+                "Ja gerne!",
+                "Nein ich kenne den Name meines Ziels!"
+
+        };
+
+        @Setting("conv-stage-flight-by-name-speak") public String[] convFlightByNameSpeak = new String[]{
+                "Ok dann nenne mir den Namen:"
+        };
+
+        @Setting("conv-stage-flight-by-name-unknown-station") public String[] convFlightByNameUnknownStation = new String[]{
+                "Eine Drachenstation mit diesem Namen kenn ich nicht!"
+        };
+
+        @Setting("conv-stage-flight-by-name-same-station") public String[] convFlightByNameSameStation = new String[]{
+                "Du bist bereits bei deiner gewählten Station!"
+        };
+
+        @Setting("conv-stage-flight-by-name-takeoff") public String[] convFlightByNameTakeoff = new String[]{
+                "Ok mein Drache wird in küze mit dir nach %ds fliegen!"
         };
     }
 }
