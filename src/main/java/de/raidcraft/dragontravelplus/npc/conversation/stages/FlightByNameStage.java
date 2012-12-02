@@ -1,11 +1,10 @@
 package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
-import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.dragontravelplus.dragonmanger.DragonManager;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +51,9 @@ public class FlightByNameStage extends Stage {
         
         speak(replacedMsg.toArray(new String[replacedMsg.size()]));
 
-        CommandBook.inst().getServer().getScheduler().scheduleSyncDelayedTask(CommandBook.inst(), new Runnable() {
-            public void run() {
+        DragonManager.INST.takeoff(getConversation().getPlayer(), station, 5);
 
-                Bukkit.broadcastMessage("dragon flight");
-            }
-        }, 3*20);
-
+        getConversation().setCurrentStage(null);
         return true;
     }
 }
