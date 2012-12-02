@@ -63,8 +63,10 @@ public class Conversation {
             currentStage = new FirstMeetStage(this);
         }
 
-        if(currentStage == null) {
 
+
+        if(currentStage == null) {
+            return;
         }
 
         if(triggerType == TriggerType.LEFT_CLICK || triggerType == TriggerType.RIGHT_CLICK || triggerType == TriggerType.REPEAT) {

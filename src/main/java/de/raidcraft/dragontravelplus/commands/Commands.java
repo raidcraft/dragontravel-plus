@@ -50,6 +50,7 @@ public class Commands {
 
             DragonTravelPlusModule.inst.loadConfig();
             StationManager.INST.loadExistingStations();
+            ChatMessages.successfulReloaded((Player)sender);
         }
 
 

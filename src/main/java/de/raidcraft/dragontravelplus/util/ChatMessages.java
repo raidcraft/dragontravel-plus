@@ -24,6 +24,10 @@ public class ChatMessages {
         success(player, "Der Stationsname wurde erfolgreich geändert!");
     }
 
+    public static void successfulReloaded(Player player) {
+        success(player, "DragonTravelPlus wurde neugeladen!");
+    }
+
     public static void success(Player player, String msg) {
 
         player.sendMessage(CHAT_PREFIX + ChatColor.GREEN + msg

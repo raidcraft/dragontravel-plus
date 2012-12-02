@@ -17,7 +17,9 @@ public abstract class Stage {
     }
 
     public void speak() {
+        conversation.getPlayer().sendMessage("-----");
         for(String line : textToSpeak) {
+
             line = line.replace("%s", getConversation().getPlayer().getName());
             conversation.getPlayer().sendMessage(ChatColor.AQUA + line);
         }
