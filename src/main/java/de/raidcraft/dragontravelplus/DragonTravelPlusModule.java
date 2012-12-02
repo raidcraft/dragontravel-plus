@@ -21,54 +21,61 @@ import net.citizensnpcs.api.trait.TraitInfo;
  * Description:
  */
 @ComponentInformation(
-        friendlyName = "Dragon Travel Plus Module",
+        friendlyName = "Dragon Travel Plus",
         desc = "Sends the dragons into the air."
 )
 public class DragonTravelPlusModule extends BukkitComponent {
 
     public static DragonTravelPlusModule inst;
-    public LocalConfiguration config;
+    public LocalDTPConfiguration config;
     private int startTaskId;
 
     @Override
     public void enable() {
         inst = this;
+        loadConfig();
         startTaskId = CommandBook.inst().getServer().getScheduler().scheduleSyncRepeatingTask(CommandBook.inst(), new Runnable() {
             public void run() {
                 if(ComponentDatabase.INSTANCE.getConnection() != null) {
 
-                    if(CommandBook.server().getPluginManager().getPlugin("Citizens") == null
-                        || CommandBook.server().getPluginManager().getPlugin("Citizens").isEnabled() == false) {
-                        CommandBook.logger().warning("Citizens 2.0 not found or not enabled! Disabling DragonTravelPro!");
-                        DragonTravelPlusModule.inst.disable();
-                        CommandBook.server().getScheduler().cancelTask(startTaskId);
-                        return;
-                    }
-                    else {
+                    CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
+                    CommandBook.registerEvents(new NPCListener());
+                    registerCommands(Commands.class);
+                    ComponentDatabase.INSTANCE.registerTable(StationTable.class, new StationTable());
+                    ComponentDatabase.INSTANCE.registerTable(PlayerStations.class, new PlayerStations());
+                    StationManager.INST.loadExistingStations();
+                    CommandBook.server().getScheduler().cancelTask(startTaskId);
 
-                        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
-                        CommandBook.registerEvents(new NPCListener());
-                        registerCommands(Commands.class);
-                        ComponentDatabase.INSTANCE.registerTable(StationTable.class, new StationTable());
-                        ComponentDatabase.INSTANCE.registerTable(PlayerStations.class, new PlayerStations());
-                        load();
-                        CommandBook.server().getScheduler().cancelTask(startTaskId);
-
-                        CommandBook.logger().info("[DragonTravelPlus] Found DB connection, init DTPlus module...");
-                }
+                    CommandBook.logger().info("[DragonTravelPlus] Found DB connection, init DTPlus module...");
                 }
             }
         }, 0, 2*20);
     }
 
-    public void load() {
+    public void loadConfig() {
 
-        StationManager.INST.loadExistingStations();
-        config = configure(new LocalConfiguration());
+        config = configure(new LocalDTPConfiguration());
     }
 
-    public class LocalConfiguration extends ConfigurationBase {
+    public class LocalDTPConfiguration extends ConfigurationBase {
 
-        @Setting("dragon-guard-npc-name") public String npcDefaultName = "Drachenmeister";
+        @Setting("disabled") public boolean disabled = true;
+        @Setting("npc-search-radius") public int npcStationSearchRadius = 10;
+        @Setting("npc-name") public String npcDefaultName = "Drachenmeister";
+
+        @Setting("conv-stage-disabled-speak") public String[] convDisabledSpeak = new String[] {
+                "Ich habe meinen Drachen schon seit Tagen nichtmehr gesehen.",
+                "Schaue später nochmal vorbei vielleicht kann ich dir dann weiterhelfen!"
+        };
+
+        @Setting("conv-stage-first-meet-speak") public String[] convFirstMeetSpeak = new String[] {
+                    "Hallo %s, ich sehe dich hier zum ersten Mal!",
+                    "Gerne kannst du in Zukunft mit meinem Drachen reisen!"
+        };
+
+        @Setting("conv-stage-no-permission-speak") public String[] convNoPermissionSpeak = new String[]{
+                "Ich rede nicht mit leuten die ich nicht kenne!",
+                "Geh und stelle dich zuerst in der Stadt vor!"
+        };
     }
 }

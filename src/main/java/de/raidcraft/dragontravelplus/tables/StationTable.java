@@ -74,6 +74,40 @@ public class StationTable extends Table {
         return stations;
     }
 
+    public List<DragonStation> getNearbyStations(Location location, int radius) {
+
+        List<DragonStation> stations = new ArrayList<>();
+        try {
+            ResultSet resultSet = getConnection().prepareStatement(
+                    "SELECT * FROM " + getTableName() + " WHERE " +
+                    "x >= " + (location.getBlockX() - radius) + " AND " +
+                    "x <= " + (location.getBlockX() + radius) + " AND " +
+                    "y >= " + (location.getBlockY() - radius) + " AND " +
+                    "y <= " + (location.getBlockY() + radius) + " AND " +
+                    "z >= " + (location.getBlockZ() - radius) + " AND " +
+                    "z <= " + (location.getBlockZ() + radius)
+            ).executeQuery();
+
+            while (resultSet.next()) {
+                World world = Bukkit.getWorld(resultSet.getString("world"));
+                if(world == null) continue;
+
+                DragonStation station = new DragonStation(resultSet.getString("name")
+                        , new Location(world, resultSet.getDouble("x"), resultSet.getDouble("y"), resultSet.getDouble("z"))
+                        , resultSet.getInt("cost_level")
+                        , resultSet.getBoolean("main")
+                        , resultSet.getBoolean("emergency")
+                        , resultSet.getString("creator")
+                        , resultSet.getString("created"));
+
+                stations.add(station);
+            }
+        } catch (SQLException e) {
+            CommandBook.logger().warning(e.getMessage());
+        }
+        return stations;
+    }
+
     public void addStation(DragonStation station) {
 
         try {

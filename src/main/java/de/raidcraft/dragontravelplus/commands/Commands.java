@@ -42,6 +42,18 @@ public class Commands {
         }
 
         @Command(
+                aliases = {"reload"},
+                desc = "Reload config and database"
+        )
+        @CommandPermissions("dragontravelplus.reload")
+        public void reload(CommandContext context, CommandSender sender) throws CommandException {
+
+            DragonTravelPlusModule.inst.loadConfig();
+            StationManager.INST.loadExistingStations();
+        }
+
+
+        @Command(
                 aliases = {"create", "new", "add"},
                 flags = "mec:",
                 desc = "Create new station"

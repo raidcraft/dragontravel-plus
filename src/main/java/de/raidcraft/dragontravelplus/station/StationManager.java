@@ -2,10 +2,15 @@ package de.raidcraft.dragontravelplus.station;
 
 import com.silthus.raidcraft.util.component.database.ComponentDatabase;
 import com.sk89q.commandbook.CommandBook;
+import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
+import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
+import org.bukkit.Location;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,12 +21,7 @@ import java.util.Map;
 public class StationManager {
     public static final StationManager INST = new StationManager();
 
-    private Map<String, DragonStation> selectedDragonStations = new HashMap<>();
     private Map<String, DragonStation> existingStations = new HashMap<>();
-    
-    public DragonStation getSelectedDragonStation(String player) {
-        return selectedDragonStations.get(player);
-    }
 
     public void loadExistingStations() {
 
@@ -45,8 +45,31 @@ public class StationManager {
     }
     
     public DragonStation getDragonStation(String name) {
+        
         return existingStations.get(name);
     }
 
+    public DragonStation getNearbyStation(Location location) {
+
+        List<DragonStation> stations =  ComponentDatabase.INSTANCE.getTable(
+                StationTable.class).getNearbyStations(location,
+                DragonTravelPlusModule.inst.config.npcStationSearchRadius);
+        if(stations.size() == 0) {
+            return null;
+        }
+        return existingStations.get(stations.get(0).getName().toLowerCase());
+    }
+    
+    public List<DragonStation> getPlayerStations(String player) {
+        List<DragonStation> stations = new ArrayList<>();
+        for(DragonStation station : ComponentDatabase.INSTANCE.getTable(PlayerStations.class).getAllPlayerStations(player)) {
+            stations.add(existingStations.get(station.getName().toLowerCase()));
+        }
+        return stations;
+    }
+    
+    public void assignStationWithPlayer(String player, DragonStation station) {
+        ComponentDatabase.INSTANCE.getTable(PlayerStations.class).addStation(player, station);
+    }
 
 }
