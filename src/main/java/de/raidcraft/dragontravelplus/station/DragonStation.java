@@ -70,14 +70,25 @@ public class DragonStation {
     }
 
     public enum MapLocation {
-        NORTH,
-        EAST,
-        SOUTH,
-        WEST,
-        NORTH_EAST,
-        NORTH_WEST,
-        SOUTH_EAST,
-        SOUTH_WEST;
+        NORTH("Norden"),
+        EAST("Osten"),
+        SOUTH("Süden"),
+        WEST("Westen"),
+        NORTH_EAST("Nordosten"),
+        NORTH_WEST("Nordwesten"),
+        SOUTH_EAST("Südosten"),
+        SOUTH_WEST("Südwesten");
+        
+        private String name;
+        
+        private MapLocation(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+
+            return name;
+        }
 
         public static MapLocation getMapLocation(Location location) {
             if(location.getBlockX() >= 0 && location.getZ() >= 0) {

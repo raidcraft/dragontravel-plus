@@ -68,6 +68,15 @@ public class StationManager {
         return stations;
     }
     
+    public DragonStation getPlayerStation(String player, String stationName) {
+        for(DragonStation station : getPlayerStations(player)) {
+            if(station.getName().equalsIgnoreCase(stationName)) {
+                return station;
+            }
+        }
+        return null;
+    }
+    
     public void assignStationWithPlayer(String player, DragonStation station) {
         ComponentDatabase.INSTANCE.getTable(PlayerStations.class).addStation(player, station);
     }

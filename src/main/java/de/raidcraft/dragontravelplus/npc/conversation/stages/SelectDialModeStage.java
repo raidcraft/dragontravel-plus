@@ -32,6 +32,7 @@ public class SelectDialModeStage extends Stage {
             switch(Integer.parseInt(answer)) {
                 case 1:
                     getConversation().setCurrentStage(new TargetAssistRegionStage(getConversation()));
+                    getConversation().getCurrentStage().speak();
                     break;
                 case 2:
                     getConversation().setCurrentStage(new FlightByNameStage(getConversation()));

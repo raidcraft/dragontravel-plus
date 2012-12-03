@@ -62,6 +62,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("disabled") public boolean disabled = true;
         @Setting("npc-search-radius") public int npcStationSearchRadius = 10;
         @Setting("npc-name") public String npcDefaultName = "Drachenmeister";
+        @Setting("npc-conversation-max-stations-per-page") public int maxStationPerPage = 5;
 
         
         /*  NPC CONVERSATION */
@@ -102,7 +103,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
         };
 
         @Setting("conv-stage-flight-by-name-unknown-station") public String[] convFlightByNameUnknownStation = new String[]{
-                "Eine Drachenstation mit diesem Namen kenn ich nicht!"
+                "Du hast noch keine Drachenstation mit diesem Namen entdeckt!"
         };
 
         @Setting("conv-stage-flight-by-name-same-station") public String[] convFlightByNameSameStation = new String[]{
@@ -111,6 +112,10 @@ public class DragonTravelPlusModule extends BukkitComponent {
 
         @Setting("conv-stage-flight-by-name-takeoff") public String[] convFlightByNameTakeoff = new String[]{
                 "Ok mein Drache wird in küze mit dir nach %ds fliegen!"
+        };
+
+        @Setting("conv-stage-target-assist-region-speak") public String[] convTargetAssistRegionSpeak = new String[]{
+                "In welche Himmelrichtung willst du reisen?"
         };
     }
 }

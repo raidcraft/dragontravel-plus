@@ -32,7 +32,7 @@ public class FlightByNameStage extends Stage {
     @Override
     public boolean processAnswer(String answer) {
 
-        DragonStation station = StationManager.INST.getDragonStation(answer);
+        DragonStation station = StationManager.INST.getPlayerStation(getConversation().getPlayer().getName(), answer);
 
         if(station == null) {
             wrongAnswerWarning(DragonTravelPlusModule.inst.config.convFlightByNameUnknownStation);
