@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus.npc;
 
+import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -10,6 +11,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,6 +63,12 @@ public class NPCListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
+        if(!conversations.containsKey(event.getPlayer().getName())) {
+            return;
+        }
+        if(Arrays.asList(DragonTravelPlusModule.inst.config.exitWords).contains(event.getMessage())) {
+            conversations.remove(event.getPlayer().getName());
+        }
         if(conversations.get(event.getPlayer().getName())
                 .trigger(Conversation.TriggerType.CHAT_ANSWER, event.getMessage())) {
             event.setCancelled(true);

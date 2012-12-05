@@ -63,6 +63,12 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("npc-search-radius") public int npcStationSearchRadius = 10;
         @Setting("npc-name") public String npcDefaultName = "Drachenmeister";
         @Setting("npc-conversation-max-stations-per-page") public int maxStationPerPage = 5;
+        @Setting("npc-conversation-exit-words") public String[] exitWords = new String[] {
+                "exit",
+                "ende",
+                "beenden",
+                "stop"
+        };
 
         
         /*  NPC CONVERSATION */
@@ -74,6 +80,11 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("conv-stage-disabled-speak") public String[] convDisabledSpeak = new String[] {
                 "Ich habe meinen Drachen schon seit Tagen nichtmehr gesehen.",
                 "Schaue später nochmal vorbei vielleicht kann ich dir dann weiterhelfen!"
+        };
+
+        @Setting("conv-no-stations-discovered") public String[] convNoStationsDiscovered = new String[] {
+                "Du musst erst einmal andere Drachenmeister kennen lernen!",
+                "Geh in die Welt und suche nach ihnen."
         };
 
         @Setting("conv-stage-first-meet-speak") public String[] convFirstMeetSpeak = new String[] {
@@ -111,11 +122,25 @@ public class DragonTravelPlusModule extends BukkitComponent {
         };
 
         @Setting("conv-stage-flight-by-name-takeoff") public String[] convFlightByNameTakeoff = new String[]{
-                "Ok mein Drache wird in küze mit dir nach %ds fliegen!"
+                "Ok mein Drache wird in Kürze mit dir nach %ds fliegen!"
         };
 
         @Setting("conv-stage-target-assist-region-speak") public String[] convTargetAssistRegionSpeak = new String[]{
                 "In welche Himmelrichtung willst du reisen?"
+        };
+
+        @Setting("conv-stage-target-assist-list-speak") public String[] convTargetAssistListSpeak = new String[]{
+                "Folgende Ziele gibt es dort:"
+        };
+
+        @Setting("conv-stage-target-assist-list-tell-more") public String convTargetAssistListTellMore =
+                "Nenn mir weitere!";
+
+        @Setting("conv-stage-target-assist-list-go-back") public String convTargetAssistListGoBack =
+                "Ich möchte doch eine andere Himmelsrichtung wählen!";
+
+        @Setting("conv-stage-target-assist-takeoff") public String[] convTargetAssistListTakeoff = new String[]{
+                "Ok mein Drache wird in Kürze mit dir nach %ds fliegen!"
         };
     }
 }

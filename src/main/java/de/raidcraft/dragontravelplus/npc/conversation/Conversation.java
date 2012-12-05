@@ -42,7 +42,7 @@ public class Conversation {
     
     public boolean trigger(NPC npc, TriggerType triggerType, String data) {
 
-        if(playerStations == null) {
+        if(playerStations == null || playerStations.size() == 0) {
             updatePlayerStations();
         }
 
@@ -72,11 +72,12 @@ public class Conversation {
         }
 
         if(currentStage == null) {
-            currentStage = new SelectDialModeStage(this);
-        }
-
-        if(currentStage == null) {
-            return false;
+            if(playerStations.size() == 0) {
+                currentStage = new NoStationsStage(this);
+            }
+            else {
+                currentStage = new SelectDialModeStage(this);
+            }
         }
 
         if(triggerType == TriggerType.LEFT_CLICK || triggerType == TriggerType.RIGHT_CLICK || triggerType == TriggerType.REPEAT) {
@@ -87,6 +88,7 @@ public class Conversation {
 
     public void updatePlayerStations() {
         playerStations = StationManager.INST.getPlayerStations(player.getName());
+        playerStations.remove(getDragonGuard().getDragonStation());
     }
 
     public void setCurrentStage(Stage currentStage) {
@@ -120,6 +122,4 @@ public class Conversation {
         CHAT_ANSWER,
         REPEAT
     }
-
-
 }

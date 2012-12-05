@@ -33,11 +33,11 @@ public class SelectDialModeStage extends Stage {
                 case 1:
                     getConversation().setCurrentStage(new TargetAssistRegionStage(getConversation()));
                     getConversation().getCurrentStage().speak();
-                    break;
+                    return true;
                 case 2:
                     getConversation().setCurrentStage(new FlightByNameStage(getConversation()));
                     getConversation().getCurrentStage().speak();
-                    break;
+                    return true;
                 default:
                     wrongAnswerWarning();
             }
