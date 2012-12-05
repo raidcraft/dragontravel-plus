@@ -87,6 +87,7 @@ public class Commands {
                         new DragonStation(context.getString(0), ((Player) sender).getLocation(), costLevel, mainStation, emergencyTarget, sender.getName(), DateUtil.getCurrentDateString()));
             } catch (AlreadyExistsException e) {
                 ChatMessages.warn(((Player)sender), e.getMessage());
+                return;
             }
 
             NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, DragonTravelPlusModule.inst.config.npcDefaultName);

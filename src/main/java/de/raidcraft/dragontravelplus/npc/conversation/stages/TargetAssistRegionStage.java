@@ -70,6 +70,7 @@ public class TargetAssistRegionStage extends Stage {
                         , 0
                 ));
                 getConversation().getCurrentStage().speak();
+                return true;
             }
         }
         catch (Exception e) {}

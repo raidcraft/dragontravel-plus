@@ -32,6 +32,8 @@ public class TargetAssistListStage extends Stage {
     }
 
     private void init() {
+        specialAnswers.clear();
+        answerAssignment.clear();
         int maxPerPage = DragonTravelPlusModule.inst.config.maxStationPerPage;
         if(page > Math.ceil((double)stations.size()/(double)maxPerPage)) {
             page = 0;
@@ -74,8 +76,9 @@ public class TargetAssistListStage extends Stage {
                 if(specialAnswers.get(choice) == SpecialAnswers.MORE) {
                     page++;
                     init();
+                    speak();
                 }
-                if(specialAnswers.get(choice) == SpecialAnswers.BACK) {
+                else if(specialAnswers.get(choice) == SpecialAnswers.BACK) {
                     getConversation().setCurrentStage(new TargetAssistRegionStage(getConversation()));
                     getConversation().getCurrentStage().speak();
                 }

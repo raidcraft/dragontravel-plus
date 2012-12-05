@@ -60,9 +60,10 @@ public class Conversation {
         }
 
         // start new conversation
-        if(this.npc != npc) {
+        if(this.npc != npc || this.npc == null) {
             this.npc = npc;
             this.dragonGuard = npc.getTrait(DragonGuardTrait.class);
+            updatePlayerStations();
             currentStage = null;
         }
 
@@ -88,7 +89,9 @@ public class Conversation {
 
     public void updatePlayerStations() {
         playerStations = StationManager.INST.getPlayerStations(player.getName());
-        playerStations.remove(getDragonGuard().getDragonStation());
+        if(getDragonGuard() != null) {
+            playerStations.remove(getDragonGuard().getDragonStation());
+        }
     }
 
     public void setCurrentStage(Stage currentStage) {

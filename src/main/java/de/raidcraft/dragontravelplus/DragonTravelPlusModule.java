@@ -62,6 +62,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("disabled") public boolean disabled = true;
         @Setting("npc-search-radius") public int npcStationSearchRadius = 10;
         @Setting("npc-name") public String npcDefaultName = "Drachenmeister";
+        @Setting("npc-conversation-auto-exit-distance") public int autoExitDistance = 10;
         @Setting("npc-conversation-max-stations-per-page") public int maxStationPerPage = 5;
         @Setting("npc-conversation-exit-words") public String[] exitWords = new String[] {
                 "exit",
