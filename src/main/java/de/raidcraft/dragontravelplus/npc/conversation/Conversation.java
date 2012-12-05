@@ -20,7 +20,7 @@ public class Conversation {
     public final static ChatColor SPEAK_COLOR = ChatColor.AQUA;
     public final static ChatColor ANSWER_COLOR = ChatColor.YELLOW;
     private Player player;
-    private NPC npc;
+    private NPC npc = null;
     DragonGuardTrait dragonGuard;
     private Stage currentStage;
     private List<DragonStation> playerStations = null;
@@ -42,7 +42,7 @@ public class Conversation {
     
     public boolean trigger(NPC npc, TriggerType triggerType, String data) {
 
-        if(playerStations == null || playerStations.size() == 0) {
+        if(playerStations == null) {
             updatePlayerStations();
         }
 
@@ -68,7 +68,7 @@ public class Conversation {
         }
 
         // player doesn't know this station
-        if(!playerStations.contains(npc.getTrait(DragonGuardTrait.class).getDragonStation())) {
+        if(!StationManager.INST.getPlayerStations(player.getName()).contains(npc.getTrait(DragonGuardTrait.class).getDragonStation())) {
             currentStage = new FirstMeetStage(this);
         }
 
@@ -117,6 +117,17 @@ public class Conversation {
     public DragonGuardTrait getDragonGuard() {
 
         return dragonGuard;
+    }
+
+    public void abortConversation() {
+        setCurrentStage(null);
+    }
+
+    public boolean inConversation() {
+        if(currentStage != null) {
+            return true;
+        }
+        return false;
     }
 
     public enum TriggerType {

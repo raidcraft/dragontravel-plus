@@ -37,7 +37,8 @@ public abstract class Stage {
     }
     
     public String replaceParameters(String line) {
-        line = line.replace("%s", getConversation().getPlayer().getName());
+        line = line.replace("%pn", getConversation().getPlayer().getName());
+        line = line.replace("%sn", getConversation().getDragonGuard().getDragonStation().getName());
         return line;
     }
 

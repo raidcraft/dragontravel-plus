@@ -39,9 +39,14 @@ public class TargetAssistRegionStage extends Stage {
             playerStations.put(station.getMapLocation(), stations);
         }
         
-        if(playerStations.size() == 1) {
-            // change stage
-        }
+//        if(playerStations.keySet().size() == 1) {
+//            getConversation().setCurrentStage(new TargetAssistListStage(getConversation()
+//                    , unsortedPlayerStations
+//                    , 0
+//            ));
+//            getConversation().getCurrentStage().speak();
+//            return;
+//        }
 
         int i = 0;
         List<String> reply = new ArrayList<>();

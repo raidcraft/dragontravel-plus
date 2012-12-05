@@ -35,7 +35,7 @@ public class TargetAssistListStage extends Stage {
         specialAnswers.clear();
         answerAssignment.clear();
         int maxPerPage = DragonTravelPlusModule.inst.config.maxStationPerPage;
-        if(page > Math.ceil((double)stations.size()/(double)maxPerPage)) {
+        if(page > Math.ceil((double)stations.size()/(double)maxPerPage) - 1) {
             page = 0;
         }
         int endIndex = page*maxPerPage + maxPerPage;
@@ -69,9 +69,9 @@ public class TargetAssistListStage extends Stage {
 
     @Override
     public boolean processAnswer(String answer) {
+
         try {
             int choice = Integer.parseInt(answer);
-
             if(specialAnswers.containsKey(choice)) {
                 if(specialAnswers.get(choice) == SpecialAnswers.MORE) {
                     page++;

@@ -67,20 +67,26 @@ public class NPCListener implements Listener {
         if(!conversations.containsKey(event.getPlayer().getName())) {
             return;
         }
+        Conversation conversation = conversations.get(event.getPlayer().getName());
+
+        if(!conversation.inConversation()) {
+            return;
+        }
+            
         if(Arrays.asList(DragonTravelPlusModule.inst.config.exitWords).contains(event.getMessage())) {
-            conversations.remove(event.getPlayer().getName());
+            conversation.abortConversation();
             event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.YELLOW + "Gespräch verlassen...");
+            event.getPlayer().sendMessage(ChatColor.GOLD + "Gespräch verlassen...");
             return;
         }
-        if(conversations.get(event.getPlayer().getName()).getDragonGuard().getDragonStation().getLocation()
+        if(conversation.getDragonGuard().getDragonStation().getLocation()
                 .distance(event.getPlayer().getLocation()) > DragonTravelPlusModule.inst.config.autoExitDistance) {
+            conversation.abortConversation();
             event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.YELLOW + "Der Drachenwächter hört dich nichtmehr...");
+            event.getPlayer().sendMessage(ChatColor.GOLD + "Der Drachenwächter hört dir nichtmehr zu...");
             return;
         }
-        if(conversations.get(event.getPlayer().getName())
-                .trigger(Conversation.TriggerType.CHAT_ANSWER, event.getMessage())) {
+        if(conversation.trigger(Conversation.TriggerType.CHAT_ANSWER, event.getMessage())) {
             event.setCancelled(true);
         }
 

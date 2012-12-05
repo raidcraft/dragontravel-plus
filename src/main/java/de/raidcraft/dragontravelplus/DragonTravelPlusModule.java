@@ -60,7 +60,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
     public class LocalDTPConfiguration extends ConfigurationBase {
 
         @Setting("disabled") public boolean disabled = true;
-        @Setting("npc-search-radius") public int npcStationSearchRadius = 10;
+        @Setting("npc-search-radius") public int npcStationSearchRadius = 3;
         @Setting("npc-name") public String npcDefaultName = "Drachenmeister";
         @Setting("npc-conversation-auto-exit-distance") public int autoExitDistance = 10;
         @Setting("npc-conversation-max-stations-per-page") public int maxStationPerPage = 5;
@@ -89,7 +89,8 @@ public class DragonTravelPlusModule extends BukkitComponent {
         };
 
         @Setting("conv-stage-first-meet-speak") public String[] convFirstMeetSpeak = new String[] {
-                    "Hallo %s, ich sehe dich hier zum ersten Mal!",
+                    "Hallo in %sn %pn!",
+                    "Ich sehe dich hier zum ersten Mal.",
                     "Gerne kannst du in Zukunft mit meinem Drachen reisen!"
         };
 
@@ -99,8 +100,8 @@ public class DragonTravelPlusModule extends BukkitComponent {
         };
 
         @Setting("conv-stage-select-dial-mode-speak") public String[] convSelectDialModeSpeak = new String[]{
-                "Hallo %s!",
-                "Du möchtest bestimmt mit meinem Drachen auf Reise gehen!",
+                "Hallo in %sn %pn!",
+                "Du möchtest bestimmt mit meinem Drachen reisen!",
                 "Kann ich dir bei der Zielwahl helfen?"
         };
 
