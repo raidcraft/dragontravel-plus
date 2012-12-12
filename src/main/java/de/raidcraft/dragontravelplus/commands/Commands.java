@@ -8,6 +8,7 @@ import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
+import de.raidcraft.dragontravelplus.util.DynmapComponent;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.command.CommandSender;
@@ -82,9 +83,16 @@ public class Commands {
                 emergencyTarget = true;
             }
 
+            DragonStation station = new DragonStation(context.getString(0)
+                    , ((Player) sender).getLocation()
+                    , costLevel
+                    , mainStation
+                    , emergencyTarget
+                    , sender.getName()
+                    , DateUtil.getCurrentDateString());
+;
             try {
-                StationManager.INST.addNewStation(
-                        new DragonStation(context.getString(0), ((Player) sender).getLocation(), costLevel, mainStation, emergencyTarget, sender.getName(), DateUtil.getCurrentDateString()));
+                StationManager.INST.addNewStation(station);
             } catch (AlreadyExistsException e) {
                 ChatMessages.warn(((Player)sender), e.getMessage());
                 return;
@@ -93,8 +101,11 @@ public class Commands {
             NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, DragonTravelPlusModule.inst.config.npcDefaultName);
             npc.spawn(((Player) sender).getLocation());
             npc.addTrait(DragonGuardTrait.class);
+            npc.getTrait(DragonGuardTrait.class).setDragonStation(station);
 
-            //TODO dynmap marker
+            // dynmap
+            DynmapComponent.INST.addStationMarker(station);
+
             ChatMessages.success(((Player)sender), "Du hast erfolgreich die Drachenstation '" + context.getString(0) + "' erstellt!");
         }
     }

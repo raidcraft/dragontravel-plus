@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.npc;
 
 import com.sk89q.commandbook.CommandBook;
+import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import net.citizensnpcs.api.exception.NPCLoadException;
@@ -69,6 +70,10 @@ public class DragonGuardTrait extends Trait {
         npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS));
         npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS));
 
+        if(!npc.getName().equalsIgnoreCase(DragonTravelPlusModule.inst.config.npcDefaultName)) {
+            npc.setName(DragonTravelPlusModule.inst.config.npcDefaultName);
+        }
+
         station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation());
         if(station == null) {
             LivingEntity entity = npc.getBukkitEntity();
@@ -85,6 +90,10 @@ public class DragonGuardTrait extends Trait {
     public void run() {
 
         super.run();
+    }
+
+    public void setDragonStation(DragonStation station) {
+        this.station = station;
     }
 
     public DragonStation getDragonStation() {
