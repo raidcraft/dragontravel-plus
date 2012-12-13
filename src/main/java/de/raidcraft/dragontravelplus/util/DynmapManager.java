@@ -3,6 +3,7 @@ package de.raidcraft.dragontravelplus.util;
 import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.dynmap.DynmapAPI;
+import org.dynmap.markers.Marker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
@@ -11,14 +12,14 @@ import org.dynmap.markers.MarkerSet;
  * Date: 12.12.12 - 22:16
  * Description:
  */
-public class DynmapComponent {
-    public static final DynmapComponent INST = new DynmapComponent();
+public class DynmapManager {
+    public static final DynmapManager INST = new DynmapManager();
 
     private DynmapAPI api;
     private MarkerAPI markerAPI;
     private MarkerSet dragonSet;
 
-    public DynmapComponent() {
+    public DynmapManager() {
 
         api = (DynmapAPI)CommandBook.server().getPluginManager().getPlugin("dynmap");
         markerAPI = api.getMarkerAPI();
@@ -34,5 +35,13 @@ public class DynmapComponent {
                 , station.getLocation().getBlockZ()
                 , markerAPI.getMarkerIcon("sign")
                 , true);
+    }
+    
+    public void removeMarker(DragonStation station) {
+        for(Marker marker : dragonSet.getMarkers()) {
+            if(marker.getLabel().equalsIgnoreCase(station.getName())) {
+                marker.deleteMarker();
+            }
+        }
     }
 }

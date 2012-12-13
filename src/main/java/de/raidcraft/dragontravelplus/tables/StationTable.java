@@ -132,4 +132,14 @@ public class StationTable extends Table {
             e.printStackTrace();
         }
     }
+
+    public void deleteStation(DragonStation station) {
+        try {
+            getConnection().prepareStatement(
+                    "DELETE FROM " + getTableName() + " WHERE name = '" + station.getName() + "'").execute();
+        } catch (SQLException e) {
+        CommandBook.logger().warning(e.getMessage());
+        e.printStackTrace();
+        }
+    }
 }

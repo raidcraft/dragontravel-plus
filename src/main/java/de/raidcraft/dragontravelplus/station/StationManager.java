@@ -85,4 +85,8 @@ public class StationManager {
         ComponentDatabase.INSTANCE.getTable(PlayerStations.class).addStation(player, station);
     }
 
+    public void deleteStation(DragonStation station) {
+        ComponentDatabase.INSTANCE.getTable(StationTable.class).deleteStation(station);
+    }
+
 }

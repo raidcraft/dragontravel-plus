@@ -8,7 +8,7 @@ import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
-import de.raidcraft.dragontravelplus.util.DynmapComponent;
+import de.raidcraft.dragontravelplus.util.DynmapManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.command.CommandSender;
@@ -104,7 +104,7 @@ public class Commands {
             npc.getTrait(DragonGuardTrait.class).setDragonStation(station);
 
             // dynmap
-            DynmapComponent.INST.addStationMarker(station);
+            DynmapManager.INST.addStationMarker(station);
 
             ChatMessages.success(((Player)sender), "Du hast erfolgreich die Drachenstation '" + context.getString(0) + "' erstellt!");
         }

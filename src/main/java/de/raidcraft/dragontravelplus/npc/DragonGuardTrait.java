@@ -4,6 +4,7 @@ import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
+import de.raidcraft.dragontravelplus.util.DynmapManager;
 import net.citizensnpcs.api.exception.NPCLoadException;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
@@ -53,7 +54,8 @@ public class DragonGuardTrait extends Trait {
     @Override
     public void onRemove() {
 
-        return; // stop removing dragon guard
+        StationManager.INST.deleteStation(station);
+        DynmapManager.INST.removeMarker(station);
     }
 
     @Override
@@ -82,7 +84,8 @@ public class DragonGuardTrait extends Trait {
                     + " y:" + entity.getLocation().getBlockY()
                     + " z:" + entity.getLocation().getBlockZ()
                     + "! Station not found!");
-            npc.despawn();
+//            npc.despawn();
+            npc.destroy();
         }
     }
 
