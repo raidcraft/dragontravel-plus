@@ -51,11 +51,11 @@ public class Conversation {
             return true;
         }
 
-        if(DragonTravelPlusModule.inst.config.disabled && !player.hasPermission("dtp.ignore.disabled")) {
+        if(DragonTravelPlusModule.inst.config.disabled && !player.hasPermission("dragontravelplus.ignore.disabled")) {
             currentStage = new DisabledStage(this);
         }
         
-        if(!player.hasPermission("dtp.use")) {
+        if(!player.hasPermission("dragontravelplus.use")) {
             currentStage = new NoPermissionStage(this);
         }
 

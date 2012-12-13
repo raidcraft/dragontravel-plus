@@ -54,7 +54,6 @@ public class Commands {
             ChatMessages.successfulReloaded((Player)sender);
         }
 
-
         @Command(
                 aliases = {"create", "new", "add"},
                 flags = "mec:",
@@ -107,6 +106,25 @@ public class Commands {
             DynmapManager.INST.addStationMarker(station);
 
             ChatMessages.success(((Player)sender), "Du hast erfolgreich die Drachenstation '" + context.getString(0) + "' erstellt!");
+        }
+
+        @Command(
+                aliases = {"delete", "remove"},
+                desc = "Remove dragon station"
+        )
+        @CommandPermissions("dragontravelplus.remove")
+        public void remove(CommandContext context, CommandSender sender) throws CommandException {
+
+            if(context.argsLength() < 1) {
+                ChatMessages.tooFewArguments((Player)sender);
+                return;
+            }
+            if(!DragonGuardTrait.dragonGuards.containsKey(context.getString(0))) {
+                ChatMessages.warn((Player) sender, "Es gibt keine Station mit diesem Namen oder der dazugehörige NPC ist nicht gespawnt!");
+                return;
+            }
+            DragonGuardTrait.dragonGuards.get(context.getString(0)).getNPC().destroy();
+            ChatMessages.success((Player) sender, "Die Drachenstation '" + context.getString(0) + "' wurde gelöscht!");
         }
     }
 }

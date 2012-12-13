@@ -24,7 +24,7 @@ public abstract class Stage {
     }
     
     public void showAnswers() {
-        conversation.getPlayer().sendMessage("-----");
+        conversation.getPlayer().sendMessage(DragonTravelPlusModule.inst.config.chatDelimiter);
         int i = 0;
         for(String line : playerReply) {
             i++;
@@ -55,7 +55,7 @@ public abstract class Stage {
     }
 
     public void speak(String[] msg, ChatColor color) {
-        conversation.getPlayer().sendMessage("-----");
+        conversation.getPlayer().sendMessage(DragonTravelPlusModule.inst.config.chatDelimiter);
         for(String line : msg) {
 
             conversation.getPlayer().sendMessage(color + replaceParameters(line));

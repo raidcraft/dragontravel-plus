@@ -15,12 +15,16 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Author: Philip
  * Date: 22.11.12 - 21:21
  * Description:
  */
 public class DragonGuardTrait extends Trait {
+    public static Map<String, DragonGuardTrait> dragonGuards = new HashMap<>();
     private DragonStation station;
 
     public DragonGuardTrait() {
@@ -56,6 +60,7 @@ public class DragonGuardTrait extends Trait {
 
         StationManager.INST.deleteStation(station);
         DynmapManager.INST.removeMarker(station);
+        StationManager.INST.loadExistingStations();
     }
 
     @Override
@@ -84,9 +89,10 @@ public class DragonGuardTrait extends Trait {
                     + " y:" + entity.getLocation().getBlockY()
                     + " z:" + entity.getLocation().getBlockZ()
                     + "! Station not found!");
-//            npc.despawn();
             npc.destroy();
         }
+        dragonGuards.remove(station.getName());
+        dragonGuards.put(station.getName(), this);
     }
 
     @Override
