@@ -66,12 +66,12 @@ public class Commands {
                 ChatMessages.tooFewArguments((Player)sender);
             }
 
-            int costLevel = 0;
+            int costLevel = 1;
             boolean mainStation = false;
             boolean emergencyTarget = false;
 
             if(context.hasFlag('c')) {
-                costLevel = context.getFlagInteger('c', 0);
+                costLevel = context.getFlagInteger('c', 1);
             }
 
             if(context.hasFlag('m')) {
@@ -120,10 +120,16 @@ public class Commands {
                 return;
             }
             if(!DragonGuardTrait.dragonGuards.containsKey(context.getString(0))) {
-                ChatMessages.warn((Player) sender, "Es gibt keine Station mit diesem Namen oder der dazugehörige NPC ist nicht gespawnt!");
+                ChatMessages.warn((Player) sender, "Es gibt keine Station mit diesem Namen!");
                 return;
             }
-            DragonGuardTrait.dragonGuards.get(context.getString(0)).getNPC().destroy();
+            DragonGuardTrait trait = DragonGuardTrait.dragonGuards.get(context.getString(0));
+
+            StationManager.INST.deleteStation(trait.getDragonStation());
+            DynmapManager.INST.removeMarker(trait.getDragonStation());
+            StationManager.INST.loadExistingStations();
+            trait.getNPC().destroy();
+
             ChatMessages.success((Player) sender, "Die Drachenstation '" + context.getString(0) + "' wurde gelöscht!");
         }
     }

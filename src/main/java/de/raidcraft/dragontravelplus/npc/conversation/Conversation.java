@@ -108,6 +108,10 @@ public class Conversation {
 
         return player;
     }
+    
+    public List<DragonStation> getPlayerStations() {
+        return playerStations;
+    }
 
     public NPC getNpc() {
 

@@ -3,7 +3,6 @@ package de.raidcraft.dragontravelplus.npc.conversation.stages;
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
-import de.raidcraft.dragontravelplus.station.StationManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +24,7 @@ public class TargetAssistRegionStage extends Stage {
         
         setTextToSpeak(DragonTravelPlusModule.inst.config.convTargetAssistRegionSpeak);
         
-        List<DragonStation> unsortedPlayerStations = StationManager.INST.getPlayerStations(getConversation().getPlayer().getName());
+        List<DragonStation> unsortedPlayerStations = getConversation().getPlayerStations();
         for(DragonStation station : unsortedPlayerStations) {
             List<DragonStation> stations;
             if(playerStations.containsKey(station.getMapLocation())) {

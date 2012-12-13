@@ -1,9 +1,11 @@
 package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
+import com.silthus.raidcraft.bukkit.CorePlugin;
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.dragonmanger.DragonManager;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.dragontravelplus.util.FlightCosts;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
@@ -45,7 +47,13 @@ public class TargetAssistListStage extends Stage {
         for(DragonStation station : stations.subList(page*maxPerPage,endIndex)) {
             i++;
             answerAssignment.put(i, station);
-            reply.add(station.getName());
+            double price = FlightCosts.getPrice(getConversation().getDragonGuard().getDragonStation(), station);
+            String strike = "";
+            if(price > CorePlugin.get().getEconomy().getBalace(getConversation().getPlayer())) {
+                strike += ChatColor.STRIKETHROUGH;
+            };
+            reply.add(strike + station.getName() + ChatColor.RESET + ChatColor.RED + " $"
+                    + price);
         }
         if(stations.size() > maxPerPage) {
             i++;

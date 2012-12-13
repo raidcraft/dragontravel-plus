@@ -60,11 +60,14 @@ public class DragonTravelPlusModule extends BukkitComponent {
     public class LocalDTPConfiguration extends ConfigurationBase {
 
         @Setting("disabled") public boolean disabled = true;
+
+        @Setting("flight-cost-per-block") public double pricePerBlock = 0.1;
+
         @Setting("npc-search-radius") public int npcStationSearchRadius = 3;
         @Setting("npc-name") public String npcDefaultName = "Drachenmeister";
         @Setting("npc-conversation-auto-exit-distance") public int autoExitDistance = 10;
         @Setting("npc-conversation-max-stations-per-page") public int maxStationPerPage = 5;
-        @Setting("npc-conversation-chat-delimiter") public String chatDelimiter = "~";
+        @Setting("npc-conversation-chat-delimiter") public String chatDelimiter = " ";
         @Setting("npc-conversation-exit-words") public String[] exitWords = new String[] {
                 "exit",
                 "ende",
@@ -143,7 +146,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
                 "Ich möchte doch eine andere Himmelsrichtung wählen!";
 
         @Setting("conv-stage-target-assist-takeoff") public String[] convTargetAssistListTakeoff = new String[]{
-                "Ok mein Drache wird in Kürze mit dir nach %ds fliegen!"
+                "Gerne, mein Drache wird in Kürze mit dir nach %ds fliegen!"
         };
     }
 }
