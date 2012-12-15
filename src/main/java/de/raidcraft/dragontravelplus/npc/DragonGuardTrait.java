@@ -63,19 +63,27 @@ public class DragonGuardTrait extends Trait {
         super.onSpawn();
 
         NPC npc = getNPC();
+
+        // add traits
         npc.addTrait(LookClose.class);
+        npc.addTrait(Equipment.class);
+
+        // configure traits
         npc.getTrait(LookClose.class).lookClose(true);
         npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, true);
-        npc.addTrait(Equipment.class);
+
+        // add equipment
         npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET));
         npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE));
         npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS));
         npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS));
 
+        // change name
         if(!npc.getName().equalsIgnoreCase(DragonTravelPlusModule.inst.config.npcDefaultName)) {
             npc.setName(DragonTravelPlusModule.inst.config.npcDefaultName);
         }
 
+        // link station
         station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation());
         if(station == null) {
             LivingEntity entity = npc.getBukkitEntity();
@@ -87,7 +95,6 @@ public class DragonGuardTrait extends Trait {
             npc.destroy();
             return;
         }
-        dragonGuards.remove(station.getName());
         dragonGuards.put(station.getName(), this);
     }
 

@@ -93,7 +93,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
         };
 
         @Setting("conv-stage-first-meet-speak") public String[] convFirstMeetSpeak = new String[] {
-                    "Hallo in %sn %pn!",
+                    "Hallo in '%sn' %pn!",
                     "Ich sehe dich hier zum ersten Mal.",
                     "Gerne kannst du in Zukunft mit meinem Drachen reisen!"
         };
@@ -127,10 +127,6 @@ public class DragonTravelPlusModule extends BukkitComponent {
                 "Du bist bereits bei deiner gewählten Station!"
         };
 
-        @Setting("conv-stage-flight-by-name-takeoff") public String[] convFlightByNameTakeoff = new String[]{
-                "Ok mein Drache wird in Kürze mit dir nach %ds fliegen!"
-        };
-
         @Setting("conv-stage-target-assist-region-speak") public String[] convTargetAssistRegionSpeak = new String[]{
                 "In welche Himmelrichtung willst du reisen?"
         };
@@ -145,8 +141,28 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("conv-stage-target-assist-list-go-back") public String convTargetAssistListGoBack =
                 "Ich möchte doch eine andere Himmelsrichtung wählen!";
 
-        @Setting("conv-stage-target-assist-takeoff") public String[] convTargetAssistListTakeoff = new String[]{
-                "Gerne, mein Drache wird in Kürze mit dir nach %ds fliegen!"
+        @Setting("conv-stage-process-economy-back") public String convProcessEconomyGoBack =
+                "Ich möchte ein anderes Ziel wählen.";
+
+        @Setting("conv-stage-process-economy-exit") public String convProcessEconomyExit =
+                "Schade, dann nicht.";
+
+        @Setting("conv-stage-process-economy-confirm") public String convProcessEconomyConfirm =
+                "Ja, ist in Ordnung!";
+
+        @Setting("conv-stage-process-economy-broke") public String[] convProcessEconomyBroke = new String[]{
+                "Du hast leider nicht genug Geld für diesen Flug!"
+        };
+
+        @Setting("conv-stage-process-economy-confirm-question") public String[] convProcessEconomyConfirmQuestion = new String[]{
+                "Die Reise nach %sn kostet dich $%fp."
+        };
+
+        @Setting("conv-stage-process-economy-goodbye") public String convProcessEconomyGoodbye =
+                "Tschüss, bis zum nächsten mal!";
+
+        @Setting("conv-stage-process-economy-takeoff") public String[] convProcessEconomyTakeoff = new String[]{
+                "Mein Drache wird in Kürze mit dir nach %sn fliegen!"
         };
     }
 }

@@ -2,7 +2,6 @@ package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
 import com.silthus.raidcraft.bukkit.CorePlugin;
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
-import de.raidcraft.dragontravelplus.dragonmanger.DragonManager;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.util.FlightCosts;
@@ -95,16 +94,10 @@ public class TargetAssistListStage extends Stage {
             else {
                 DragonStation station = answerAssignment.get(choice);
                 if(station != null) {
-                    List<String> replacedMsg = new ArrayList<>();
-                    for(String line : DragonTravelPlusModule.inst.config.convTargetAssistListTakeoff) {
-                        replacedMsg.add(line.replace("%ds", station.getName()));
-                    }
-
-                    speak(replacedMsg.toArray(new String[replacedMsg.size()]));
-
-                    DragonManager.INST.takeoff(getConversation().getPlayer(), station, 5);
-
-                    getConversation().setCurrentStage(null);
+                    getConversation().setCurrentStage(new ProcessEconomyStage(getConversation()
+                            , this
+                            , station));
+                    getConversation().getCurrentStage().speak();
                     return true;
                 }
             }

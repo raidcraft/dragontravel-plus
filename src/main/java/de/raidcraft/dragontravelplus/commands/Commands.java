@@ -119,16 +119,23 @@ public class Commands {
                 ChatMessages.tooFewArguments((Player)sender);
                 return;
             }
-            if(!DragonGuardTrait.dragonGuards.containsKey(context.getString(0))) {
-                ChatMessages.warn((Player) sender, "Es gibt keine Station mit diesem Namen!");
+
+            DragonStation station = StationManager.INST.getDragonStation(context.getString(0));
+
+            if(station == null) {
+                ChatMessages.warn((Player)sender, "Es gibt keine Station mit diesem Namen!");
                 return;
             }
-            DragonGuardTrait trait = DragonGuardTrait.dragonGuards.get(context.getString(0));
 
-            StationManager.INST.deleteStation(trait.getDragonStation());
-            DynmapManager.INST.removeMarker(trait.getDragonStation());
+            if(DragonGuardTrait.dragonGuards.containsKey(context.getString(0))) {
+                DragonGuardTrait trait = DragonGuardTrait.dragonGuards.get(context.getString(0));
+                trait.getNPC().destroy();
+            }
+
+            StationManager.INST.deleteStation(station);
+            DynmapManager.INST.removeMarker(station);
             StationManager.INST.loadExistingStations();
-            trait.getNPC().destroy();
+
 
             ChatMessages.success((Player) sender, "Die Drachenstation '" + context.getString(0) + "' wurde gelöscht!");
         }
