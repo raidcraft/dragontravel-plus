@@ -44,7 +44,7 @@ public class PlayerStations extends Table {
         List<DragonStation> stations = new ArrayList<>();
         try {
             ResultSet resultSet = getConnection().prepareStatement(
-                    "SELECT * FROM " + getTableName() + " WHERE player = '" + player + "'").executeQuery();
+                    "SELECT * FROM " + getTableName() + " WHERE player = '" + player + "' OR emergency = '1'").executeQuery();
 
             while (resultSet.next()) {
                 DragonStation station = StationManager.INST.getDragonStation(resultSet.getString("station_name"));

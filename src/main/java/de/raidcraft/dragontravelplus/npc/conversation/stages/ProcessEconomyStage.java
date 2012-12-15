@@ -2,7 +2,7 @@ package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
 import com.silthus.raidcraft.bukkit.CorePlugin;
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
-import de.raidcraft.dragontravelplus.dragonmanger.DragonManager;
+import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.util.FlightCosts;
