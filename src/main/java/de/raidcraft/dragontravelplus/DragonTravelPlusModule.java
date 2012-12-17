@@ -83,6 +83,14 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("flight-cost-per-block") public double pricePerBlock = 0.1;
         @Setting("flight-height") public int flightHeight = 70;
         @Setting("flight-speed") public double flightSpeed = 0.7;
+        @Setting("forbidden-commands") public String[] forbiddenCommands = new String[] {
+            "spawn",
+            "home",
+            "cast",
+            "town spawn",
+            "tutorial",
+            "tp"
+        };
 
         @Setting("npc-search-radius") public int npcStationSearchRadius = 3;
         @Setting("npc-name") public String npcDefaultName = "Drachenmeister";

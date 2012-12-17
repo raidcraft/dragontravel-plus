@@ -1,15 +1,14 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
 import com.sk89q.commandbook.CommandBook;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +40,26 @@ public class DragonManager {
 
         FlightTravel.flyFlight(flight, player);
     }
+    
+    public void abortFlight(Player player) {
+        if(!DragonManager.INST.flyingPlayers.containsKey(player)) {
+            return;
+        }
+
+        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
+
+        // teleport to start
+        player.teleport(flyingPlayer.getStart());
+
+        if(flyingPlayer.isInAir()) {
+            Travels.removePlayerandDragon(flyingPlayer.getDragon().getBukkitEntity());
+
+        }
+        else {
+            CommandBook.server().getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
+        }
+        DragonManager.INST.flyingPlayers.remove(player);
+    }
 
     public class DelayedTakeoffTask implements Runnable {
 
@@ -55,28 +74,6 @@ public class DragonManager {
         @Override
         public void run() {
             takeoff(player, targetStation);
-        }
-    }
-
-    public class CheckIfArrivedTask implements Runnable {
-        
-        @Override
-        public void run() {
-
-            List<Player> playerToRemove = new ArrayList<>();
-            for(Map.Entry<Player, FlyingPlayer> entry : flyingPlayers.entrySet()) {
-                FlyingPlayer flyingPlayer = entry.getValue();
-                if(flyingPlayer.hasIncorrectState()) {
-                    flyingPlayer.getPlayer().teleport(flyingPlayer.getStart());
-                    playerToRemove.add(flyingPlayer.getPlayer());
-                    continue;
-                }
-
-                
-                for(Player player : playerToRemove) {
-                    flyingPlayers.remove(player);
-                }
-            }
         }
     }
 }
