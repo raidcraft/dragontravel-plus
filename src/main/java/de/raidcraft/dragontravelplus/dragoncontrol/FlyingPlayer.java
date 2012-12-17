@@ -17,11 +17,17 @@ public class FlyingPlayer {
     private boolean inAir;
     private int waitingTaskID = 0;
     private long startTime = 0;
+    private double price = 0;
 
     public FlyingPlayer(Player player) {
+        this(player, 0);
+    }
+
+    public FlyingPlayer(Player player, double price) {
 
         this.player = player;
         this.start = player.getLocation().clone();
+        this.price = price;
     }
 
     public boolean hasIncorrectState() {
@@ -84,5 +90,10 @@ public class FlyingPlayer {
     public long getStartTime() {
 
         return startTime;
+    }
+
+    public double getPrice() {
+
+        return price;
     }
 }

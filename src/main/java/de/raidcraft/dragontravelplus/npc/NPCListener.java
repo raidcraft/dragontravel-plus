@@ -13,8 +13,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Author: Philip
@@ -22,7 +20,6 @@ import java.util.Map;
  * Description:
  */
 public class NPCListener implements Listener {
-    private Map<String, Conversation> conversations = new HashMap<> ();
 
     @EventHandler
     public void onSpawn(NPCSpawnEvent event) {
@@ -38,7 +35,7 @@ public class NPCListener implements Listener {
             return;
         }
 
-        Conversation conversation = conversations.get(event.getClicker().getName());
+        Conversation conversation = Conversation.conversations.get(event.getClicker().getName());
         conversation.trigger(event.getNPC(), Conversation.TriggerType.RIGHT_CLICK);
     }
 
@@ -48,26 +45,26 @@ public class NPCListener implements Listener {
             return;
         }
 
-        Conversation conversation = conversations.get(event.getClicker().getName());
+        Conversation conversation = Conversation.conversations.get(event.getClicker().getName());
         conversation.trigger(event.getNPC(), Conversation.TriggerType.LEFT_CLICK);
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        conversations.put(event.getPlayer().getName(), new Conversation(event.getPlayer()));
+        Conversation.conversations.put(event.getPlayer().getName(), new Conversation(event.getPlayer()));
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        conversations.remove(event.getPlayer().getName());
+        Conversation.conversations.remove(event.getPlayer().getName());
     }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        if(!conversations.containsKey(event.getPlayer().getName())) {
+        if(!Conversation.conversations.containsKey(event.getPlayer().getName())) {
             return;
         }
-        Conversation conversation = conversations.get(event.getPlayer().getName());
+        Conversation conversation = Conversation.conversations.get(event.getPlayer().getName());
 
         if(!conversation.inConversation()) {
             return;

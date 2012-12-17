@@ -9,7 +9,9 @@ import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author: Philip
@@ -17,6 +19,8 @@ import java.util.List;
  * Description:
  */
 public class Conversation {
+    public static Map<String, Conversation> conversations = new HashMap<>();
+
     public final static ChatColor SPEAK_COLOR = ChatColor.AQUA;
     public final static ChatColor ANSWER_COLOR = ChatColor.YELLOW;
     private Player player;

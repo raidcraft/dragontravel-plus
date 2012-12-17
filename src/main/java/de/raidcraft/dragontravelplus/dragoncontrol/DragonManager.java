@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
+import com.silthus.raidcraft.bukkit.CorePlugin;
 import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
@@ -20,15 +21,15 @@ public class DragonManager {
     public Map<Player, FlyingPlayer> flyingPlayers = new HashMap<>();
     public final static DragonManager INST = new DragonManager();
 
-    public void takeoff(Player player, DragonStation targetStation, int delay) {
-        flyingPlayers.put(player, new FlyingPlayer(player));
+    public void takeoff(Player player, DragonStation targetStation, int delay, double price) {
+        flyingPlayers.put(player, new FlyingPlayer(player, price));
         CommandBook.inst().getServer().getScheduler()
                 .scheduleSyncDelayedTask(CommandBook.inst(), new DelayedTakeoffTask(player, targetStation), delay * 20);
     }
     
-    public void takeoff(Player player, DragonStation targetStation) {
+    public void takeoff(Player player, DragonStation targetStation, double price) {
         if(!flyingPlayers.containsKey(player)) {
-            return;
+            flyingPlayers.put(player, new FlyingPlayer(player, price));
         }
         FlyingPlayer flyingPlayer = flyingPlayers.get(player);
 
@@ -39,6 +40,7 @@ public class DragonManager {
                 , targetStation.getLocation().getBlockZ()));
 
         FlightTravel.flyFlight(flight, player);
+        CorePlugin.get().getEconomy().substract(player, flyingPlayer.getPrice());
     }
     
     public void abortFlight(Player player) {
@@ -48,16 +50,15 @@ public class DragonManager {
 
         FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
 
-        // teleport to start
-        player.teleport(flyingPlayer.getStart());
+
 
         if(flyingPlayer.isInAir()) {
             Travels.removePlayerandDragon(flyingPlayer.getDragon().getBukkitEntity());
-
         }
         else {
             CommandBook.server().getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
         }
+        player.teleport(flyingPlayer.getStart());   // teleport to start
         DragonManager.INST.flyingPlayers.remove(player);
     }
 
@@ -73,7 +74,7 @@ public class DragonManager {
 
         @Override
         public void run() {
-            takeoff(player, targetStation);
+            takeoff(player, targetStation, 0);
         }
     }
 }

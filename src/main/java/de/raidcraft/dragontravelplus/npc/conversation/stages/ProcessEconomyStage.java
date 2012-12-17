@@ -119,8 +119,6 @@ public class ProcessEconomyStage extends Stage {
 
     private void takeoff() {
 
-        CorePlugin.get().getEconomy().substract(getConversation().getPlayer(), price);
-
         List<String> replacedMsg = new ArrayList<>();
         for(String line : DragonTravelPlusModule.inst.config.convProcessEconomyTakeoff) {
             replacedMsg.add(line.replace("%sn", target.getName()));
