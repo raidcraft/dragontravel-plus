@@ -1,5 +1,7 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement;
 
+import org.bukkit.Location;
+
 import java.util.HashMap;
 
 public class Flight {
@@ -27,6 +29,10 @@ public class Flight {
 		waypoints.put(wpcreatenum, wp);
 		wpcreatenum++;
 	}
+    
+    public void addWaypoint(Location location) {
+        addWaypoint(new Waypoint(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+    }
 
 	/**
 	 * Removes the last waypoint

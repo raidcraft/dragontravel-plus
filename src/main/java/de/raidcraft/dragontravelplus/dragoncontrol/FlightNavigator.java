@@ -15,6 +15,8 @@ public class FlightNavigator {
         Flight flight = new Flight(start.getName() + "_" + destination.getName());
 
 
+        flight.addWaypoint(destination.getLocation());
+
         return flight;
     }
 }
