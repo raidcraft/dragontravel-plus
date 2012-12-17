@@ -4,8 +4,10 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
+import de.raidcraft.dragontravelplus.events.DragonLandEvent;
 import net.minecraft.server.EntityEnderDragon;
 import net.minecraft.server.World;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
@@ -239,7 +241,11 @@ public class RCDragon extends EntityEnderDragon {
 
 			// Removing the entity and dismouting the player
 			if (wp == null) {
-				Travels.removePlayerandDragon(entity);
+
+                if(passenger != null) {
+                    Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
+                }
+                Travels.removePlayerandDragon(entity);
 				return;
 			}
 
@@ -288,7 +294,11 @@ public class RCDragon extends EntityEnderDragon {
 
 			// Removing entity
 			else {
-				Travels.removePlayerandDragon(entity);
+
+                if(passenger != null) {
+                    Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
+                }
+                Travels.removePlayerandDragon(entity);
 				return;
 			}
 
