@@ -95,6 +95,7 @@ public class ProcessEconomyStage extends Stage {
             
             if(answer == Answer.BACK) {
                 getConversation().setCurrentStage(previousStageInstance);
+                getConversation().getCurrentStage().speak();
                 return true;
             }
             

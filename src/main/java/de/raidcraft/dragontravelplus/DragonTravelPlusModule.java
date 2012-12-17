@@ -7,6 +7,7 @@ import com.zachsthings.libcomponents.bukkit.BukkitComponent;
 import com.zachsthings.libcomponents.config.ConfigurationBase;
 import com.zachsthings.libcomponents.config.Setting;
 import de.raidcraft.dragontravelplus.commands.Commands;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import de.raidcraft.dragontravelplus.listener.EntityListener;
 import de.raidcraft.dragontravelplus.listener.PlayerListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
@@ -16,6 +17,9 @@ import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
+import net.minecraft.server.EntityTypes;
+
+import java.lang.reflect.Method;
 
 /**
  * Author: Philip
@@ -49,6 +53,17 @@ public class DragonTravelPlusModule extends BukkitComponent {
                     ComponentDatabase.INSTANCE.registerTable(PlayerStations.class, new PlayerStations());
                     StationManager.INST.loadExistingStations();
                     CommandBook.server().getScheduler().cancelTask(startTaskId);
+
+                    // Add our new entity to minecrafts entities
+                    try {
+                        Method method = EntityTypes.class.getDeclaredMethod("a", new Class[] { Class.class, String.class, int.class });
+                        method.setAccessible(true);
+                        method.invoke(EntityTypes.class, RCDragon.class, "RCDragon", 63);
+                    } catch (Exception e) {
+                        CommandBook.logger().warning("[DragonTravelPlus] Error registering Entity! DISABLING!");
+                        disable();
+                        return;
+                    }
 
                     CommandBook.logger().info("[DragonTravelPlus] Found DB connection, init DTPlus module...");
                 }

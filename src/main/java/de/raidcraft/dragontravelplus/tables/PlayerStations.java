@@ -4,7 +4,6 @@ import com.silthus.raidcraft.util.component.DateUtil;
 import com.silthus.raidcraft.util.component.database.Table;
 import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.dragontravelplus.station.DragonStation;
-import de.raidcraft.dragontravelplus.station.StationManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,18 +38,15 @@ public class PlayerStations extends Table {
         }
     }
 
-    public List<DragonStation> getAllPlayerStations(String player) {
+    public List<String> getAllPlayerStations(String player) {
 
-        List<DragonStation> stations = new ArrayList<>();
+        List<String> stations = new ArrayList<>();
         try {
             ResultSet resultSet = getConnection().prepareStatement(
-                    "SELECT * FROM " + getTableName() + " WHERE player = '" + player + "' OR emergency = '1'").executeQuery();
+                    "SELECT * FROM " + getTableName() + " WHERE player = '" + player + "'").executeQuery();
 
             while (resultSet.next()) {
-                DragonStation station = StationManager.INST.getDragonStation(resultSet.getString("station_name"));
-                if(station == null) continue;
-
-                stations.add(station);
+                stations.add(resultSet.getString("station_name"));
             }
         } catch (SQLException e) {
             CommandBook.logger().warning(e.getMessage());

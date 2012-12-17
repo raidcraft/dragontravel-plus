@@ -47,6 +47,21 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
 
+        Player player = event.getPlayer();
+
+        if(!DragonManager.INST.flyingPlayers.containsKey(player)) {
+            return;
+        }
+
+        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
+
+        // teleport to start
+        player.teleport(flyingPlayer.getStart());
+
+        if(!flyingPlayer.isInAir()) {
+            CommandBook.server().getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
+        }
+        DragonManager.INST.flyingPlayers.remove(player);
     }
 
     @EventHandler

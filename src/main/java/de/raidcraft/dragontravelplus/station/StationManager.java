@@ -62,12 +62,14 @@ public class StationManager {
     
     public List<DragonStation> getPlayerStations(String player) {
         List<DragonStation> stations = new ArrayList<>();
-        List<String> stationNames = new ArrayList<>();
-        for(DragonStation station : ComponentDatabase.INSTANCE.getTable(PlayerStations.class).getAllPlayerStations(player)) {
-            if(stationNames.contains(station.getName())) continue;
+        List<String> stationNames = ComponentDatabase.INSTANCE.getTable(PlayerStations.class).getAllPlayerStations(player);
+        stationNames.addAll(ComponentDatabase.INSTANCE.getTable(StationTable.class).getEmergencyStations());
+        for(String name : stationNames) {
+            DragonStation station = existingStations.get(name.toLowerCase());
+            if(station == null) continue;
+            if(stations.contains(station)) continue;
 
-            stationNames.add(station.getName());
-            stations.add(existingStations.get(station.getName().toLowerCase()));
+            stations.add(station);
         }
         return stations;
     }

@@ -48,10 +48,8 @@ public class Travels {
 
 		// Set the player as passenger to the RCDragon
         dragonEntity.setPassenger(player);
-
 		// Adding RCDragon and Player to static hashmaps
         DragonManager.INST.flyingPlayers.get(player).setDragon(dragon);
-
 		return true;
 	}
 

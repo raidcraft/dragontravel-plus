@@ -107,6 +107,22 @@ public class StationTable extends Table {
         }
         return stations;
     }
+    
+    public List<String> getEmergencyStations() {
+        List<String> stations = new ArrayList<>();
+        try {
+            ResultSet resultSet = getConnection().prepareStatement(
+                    "SELECT * FROM " + getTableName() + " WHERE emergency = '1'"
+            ).executeQuery();
+
+            while (resultSet.next()) {
+                stations.add(resultSet.getString("name"));
+            }
+        } catch (SQLException e) {
+            CommandBook.logger().warning(e.getMessage());
+        }
+        return stations;
+    }
 
     public void addStation(DragonStation station) {
 
