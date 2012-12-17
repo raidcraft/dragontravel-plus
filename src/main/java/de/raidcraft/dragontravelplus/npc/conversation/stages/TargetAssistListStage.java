@@ -94,7 +94,7 @@ public class TargetAssistListStage extends Stage {
             else {
                 DragonStation station = answerAssignment.get(choice);
                 if(station != null) {
-                    getConversation().setCurrentStage(new ProcessEconomyStage(getConversation()
+                    getConversation().setCurrentStage(new FlightConfirmStage(getConversation()
                             , this
                             , station));
                     getConversation().getCurrentStage().speak();

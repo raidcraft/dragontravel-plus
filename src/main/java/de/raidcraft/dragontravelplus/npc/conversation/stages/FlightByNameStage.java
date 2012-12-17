@@ -40,7 +40,7 @@ public class FlightByNameStage extends Stage {
             return true;
         }
 
-        getConversation().setCurrentStage(new ProcessEconomyStage(getConversation()
+        getConversation().setCurrentStage(new FlightConfirmStage(getConversation()
                 , this
                 , station
                 , true));

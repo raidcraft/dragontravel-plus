@@ -81,6 +81,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("disabled") public boolean disabled = true;
         @Setting("error-prevention-flight-timeout") public int flightTimeout = 30;
         @Setting("flight-cost-per-block") public double pricePerBlock = 0.1;
+        @Setting("flight-warmup-time") public int flightWarmup = 7;
         @Setting("flight-height") public int flightHeight = 70;
         @Setting("flight-speed") public double flightSpeed = 0.7;
         @Setting("forbidden-commands") public String[] forbiddenCommands = new String[] {

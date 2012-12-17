@@ -18,7 +18,7 @@ import java.util.Map;
  * Date: 02.12.12 - 16:51
  * Description:
  */
-public class ProcessEconomyStage extends Stage {
+public class FlightConfirmStage extends Stage {
     private Map<Integer, Answer> answers = new HashMap<>();
     private DragonStation target;
     private Stage previousStageInstance;
@@ -26,11 +26,11 @@ public class ProcessEconomyStage extends Stage {
     private boolean broke;
     private double price;
     
-    public ProcessEconomyStage(Conversation conversation, Stage previousStageInstance, DragonStation target) {
+    public FlightConfirmStage(Conversation conversation, Stage previousStageInstance, DragonStation target) {
         this(conversation, previousStageInstance, target, false);
     }
 
-    public ProcessEconomyStage(Conversation conversation, Stage previousStageInstance, DragonStation target, boolean confirm) {
+    public FlightConfirmStage(Conversation conversation, Stage previousStageInstance, DragonStation target, boolean confirm) {
         super(conversation);
 
         this.target = target;
@@ -125,7 +125,7 @@ public class ProcessEconomyStage extends Stage {
         }
         speak(replacedMsg.toArray(new String[replacedMsg.size()]));
 
-        DragonManager.INST.takeoff(getConversation().getPlayer(), target, 5);
+        DragonManager.INST.takeoff(getConversation().getPlayer(), getConversation().getDragonGuard().getDragonStation(), target, price);
     }
 
     public enum Answer {

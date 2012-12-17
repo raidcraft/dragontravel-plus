@@ -2,10 +2,10 @@ package de.raidcraft.dragontravelplus.dragoncontrol;
 
 import com.silthus.raidcraft.bukkit.CorePlugin;
 import com.sk89q.commandbook.CommandBook;
+import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.entity.Player;
 
@@ -20,27 +20,12 @@ import java.util.Map;
 public class DragonManager {
     public Map<Player, FlyingPlayer> flyingPlayers = new HashMap<>();
     public final static DragonManager INST = new DragonManager();
-
-    public void takeoff(Player player, DragonStation targetStation, int delay, double price) {
-        flyingPlayers.put(player, new FlyingPlayer(player, price));
-        CommandBook.inst().getServer().getScheduler()
-                .scheduleSyncDelayedTask(CommandBook.inst(), new DelayedTakeoffTask(player, targetStation), delay * 20);
-    }
     
-    public void takeoff(Player player, DragonStation targetStation, double price) {
-        if(!flyingPlayers.containsKey(player)) {
-            flyingPlayers.put(player, new FlyingPlayer(player, price));
-        }
-        FlyingPlayer flyingPlayer = flyingPlayers.get(player);
+    public void takeoff(Player player, DragonStation start, DragonStation destination, double price) {
 
-        Flight flight = new Flight("Flight");
-        flight.addWaypoint(new Waypoint(0, 200, 0)); // debug
-        flight.addWaypoint(new Waypoint(targetStation.getLocation().getBlockX()
-                , targetStation.getLocation().getBlockY()
-                , targetStation.getLocation().getBlockZ()));
-
-        FlightTravel.flyFlight(flight, player);
-        CorePlugin.get().getEconomy().substract(player, flyingPlayer.getPrice());
+        FlyingPlayer flyingPlayer = new FlyingPlayer(player, start, destination, price);
+        CommandBook.inst().getServer().getScheduler()
+                .scheduleSyncDelayedTask(CommandBook.inst(), new DelayedTakeoffTask(flyingPlayer), DragonTravelPlusModule.inst.config.flightWarmup * 20);
     }
     
     public void abortFlight(Player player) {
@@ -58,23 +43,28 @@ public class DragonManager {
         else {
             CommandBook.server().getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
         }
-        player.teleport(flyingPlayer.getStart());   // teleport to start
+        player.teleport(flyingPlayer.getStart().getLocation());   // teleport to start
         DragonManager.INST.flyingPlayers.remove(player);
     }
 
     public class DelayedTakeoffTask implements Runnable {
 
-        private Player player;
-        private DragonStation targetStation;
+        private FlyingPlayer flyingPlayer;
 
-        public DelayedTakeoffTask(Player player, DragonStation targetStation) {
-            this.player = player;
-            this.targetStation = targetStation;
+        public DelayedTakeoffTask(FlyingPlayer flyingPlayer) {
+            this.flyingPlayer = flyingPlayer;
         }
 
         @Override
         public void run() {
-            takeoff(player, targetStation, 0);
+            if(!flyingPlayers.containsKey(flyingPlayer.getPlayer())) {
+                flyingPlayers.put(flyingPlayer.getPlayer(), flyingPlayer);
+            }
+
+            Flight flight = FlightNavigator.INST.getFlight(flyingPlayer.getStart(), flyingPlayer.getDestination());
+
+            FlightTravel.flyFlight(flight, flyingPlayer.getPlayer());
+            CorePlugin.get().getEconomy().substract(flyingPlayer.getPlayer(), flyingPlayer.getPrice());
         }
     }
 }
