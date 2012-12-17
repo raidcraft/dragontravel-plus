@@ -1,12 +1,15 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
 import com.sk89q.commandbook.CommandBook;
-import com.xemsdoom.dt.modules.Travels;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
 import de.raidcraft.dragontravelplus.station.DragonStation;
-import de.raidcraft.dragontravelplus.util.ChatMessages;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,56 +18,65 @@ import java.util.Map;
  * Description:
  */
 public class DragonManager {
-    private Map<Player, FlyingPlayer> flyingPlayers = new HashMap<>();
+    public Map<Player, FlyingPlayer> flyingPlayers = new HashMap<>();
     public final static DragonManager INST = new DragonManager();
 
     public void takeoff(Player player, DragonStation targetStation, int delay) {
-        flyingPlayers.put(player, new FlyingPlayer(player.getLocation()));
+        flyingPlayers.put(player, new FlyingPlayer(player));
         CommandBook.inst().getServer().getScheduler()
-                .scheduleSyncDelayedTask(CommandBook.inst(), new DelayedTakeoff(player, targetStation), delay * 20);
+                .scheduleSyncDelayedTask(CommandBook.inst(), new DelayedTakeoffTask(player, targetStation), delay * 20);
     }
     
     public void takeoff(Player player, DragonStation targetStation) {
         if(!flyingPlayers.containsKey(player)) {
             return;
         }
-        flyingPlayers.get(player).setInAir(true);
-        Travels.travelChord(player, targetStation.getLocation().getBlockX()
+        FlyingPlayer flyingPlayer = flyingPlayers.get(player);
+
+        Flight flight = new Flight("Flight");
+        flight.addWaypoint(new Waypoint(0, 200, 0)); // debug
+        flight.addWaypoint(new Waypoint(targetStation.getLocation().getBlockX()
                 , targetStation.getLocation().getBlockY()
-                , targetStation.getLocation().getBlockZ());
+                , targetStation.getLocation().getBlockZ()));
+
+        FlightTravel.flyFlight(flight, player);
     }
 
-    public class DelayedTakeoff implements Runnable {
+    public class DelayedTakeoffTask implements Runnable {
 
         private Player player;
         private DragonStation targetStation;
-        
-        public DelayedTakeoff(Player player, DragonStation targetStation) {
+
+        public DelayedTakeoffTask(Player player, DragonStation targetStation) {
             this.player = player;
             this.targetStation = targetStation;
         }
-        
+
         @Override
         public void run() {
-                takeoff(player, targetStation);
+            takeoff(player, targetStation);
         }
     }
 
-    public boolean playerGetDamage(Player player) {
-        if(!flyingPlayers.containsKey(player)) {
-            return true;
-        }
+    public class CheckIfArrivedTask implements Runnable {
+        
+        @Override
+        public void run() {
 
-        FlyingPlayer flyingPlayer = flyingPlayers.get(player);
+            List<Player> playerToRemove = new ArrayList<>();
+            for(Map.Entry<Player, FlyingPlayer> entry : flyingPlayers.entrySet()) {
+                FlyingPlayer flyingPlayer = entry.getValue();
+                if(flyingPlayer.hasIncorrectState()) {
+                    flyingPlayer.getPlayer().teleport(flyingPlayer.getStart());
+                    playerToRemove.add(flyingPlayer.getPlayer());
+                    continue;
+                }
 
-        if(flyingPlayer.isInAir()) {
-            return false;
-        }
-        else {
-            CommandBook.server().getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
-            flyingPlayers.remove(player);
-            ChatMessages.warn(player, "Du hast schaden genommen, der Drache hat wieder abgedreht!");
-            return true;
+                
+                for(Player player : playerToRemove) {
+                    flyingPlayers.remove(player);
+                }
+            }
         }
     }
 }

@@ -9,8 +9,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.bukkit:craftbukkit:1.4.2-R0.2" level="project" />
     <orderEntry type="library" name="Maven: net.citizensnpcs:citizens:2.0.4-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.xemsdoom:dragontravel:1.7.1" level="project" />
     <orderEntry type="library" name="Maven: org.dynmap:Dynmap:1.2" level="project" />
     <orderEntry type="library" name="Maven: de.raidcraft:component-utils:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: net.milkbowl:vault:1.2.20" level="project" />

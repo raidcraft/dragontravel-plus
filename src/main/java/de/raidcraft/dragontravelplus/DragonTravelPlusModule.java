@@ -7,6 +7,8 @@ import com.zachsthings.libcomponents.bukkit.BukkitComponent;
 import com.zachsthings.libcomponents.config.ConfigurationBase;
 import com.zachsthings.libcomponents.config.Setting;
 import de.raidcraft.dragontravelplus.commands.Commands;
+import de.raidcraft.dragontravelplus.listener.EntityListener;
+import de.raidcraft.dragontravelplus.listener.PlayerListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.npc.NPCListener;
 import de.raidcraft.dragontravelplus.station.StationManager;
@@ -40,6 +42,8 @@ public class DragonTravelPlusModule extends BukkitComponent {
 
                     CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
                     CommandBook.registerEvents(new NPCListener());
+                    CommandBook.registerEvents(new PlayerListener());
+                    CommandBook.registerEvents(new EntityListener());
                     registerCommands(Commands.class);
                     ComponentDatabase.INSTANCE.registerTable(StationTable.class, new StationTable());
                     ComponentDatabase.INSTANCE.registerTable(PlayerStations.class, new PlayerStations());
@@ -60,8 +64,10 @@ public class DragonTravelPlusModule extends BukkitComponent {
     public class LocalDTPConfiguration extends ConfigurationBase {
 
         @Setting("disabled") public boolean disabled = true;
-
+        @Setting("error-prevention-flight-timeout") public int flightTimeout = 30;
         @Setting("flight-cost-per-block") public double pricePerBlock = 0.1;
+        @Setting("flight-height") public int flightHeight = 70;
+        @Setting("flight-speed") public double flightSpeed = 0.7;
 
         @Setting("npc-search-radius") public int npcStationSearchRadius = 3;
         @Setting("npc-name") public String npcDefaultName = "Drachenmeister";

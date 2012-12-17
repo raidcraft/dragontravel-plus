@@ -1,6 +1,9 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
+import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 /**
  * Author: Philip
@@ -8,13 +11,44 @@ import org.bukkit.Location;
  * Description:
  */
 public class FlyingPlayer {
+    private Player player;
+    private RCDragon dragon = null;
     private Location start;
     private boolean inAir;
     private int waitingTaskID = 0;
+    private long startTime = 0;
 
-    public FlyingPlayer(Location start) {
+    public FlyingPlayer(Player player) {
 
-        this.start = start.clone();
+        this.player = player;
+        this.start = player.getLocation().clone();
+    }
+
+    public boolean hasIncorrectState() {
+        if(inAir && !player.isInsideVehicle()) {
+            return true;
+        }
+
+        if(inAir &&
+                (System.currentTimeMillis() - startTime) > DragonTravelPlusModule.inst.config.flightTimeout*1000*60) {
+            return true;
+        }
+        return false;
+    }
+
+    public Player getPlayer() {
+
+        return player;
+    }
+
+    public RCDragon getDragon() {
+
+        return dragon;
+    }
+
+    public void setDragon(RCDragon dragon) {
+
+        this.dragon = dragon;
     }
 
     public Location getStart() {
@@ -40,5 +74,15 @@ public class FlyingPlayer {
     public int getWaitingTaskID() {
 
         return waitingTaskID;
+    }
+
+    public void setStartTime(long startTime) {
+
+        this.startTime = startTime;
+    }
+
+    public long getStartTime() {
+
+        return startTime;
     }
 }
