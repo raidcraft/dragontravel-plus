@@ -44,6 +44,14 @@ public class StationManager {
         ComponentDatabase.INSTANCE.getTable(StationTable.class).addStation(dragonStation);
     }
     
+    public List<Location> getAllStationLocations() {
+        List<Location> locations = new ArrayList<>();
+        for(Map.Entry<String, DragonStation> entry : existingStations.entrySet()) {
+            locations.add(entry.getValue().getLocation());
+        }
+        return locations;
+    }
+    
     public DragonStation getDragonStation(String name) {
         
         return existingStations.get(name.toLowerCase());
