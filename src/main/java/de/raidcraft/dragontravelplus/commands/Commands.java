@@ -9,10 +9,7 @@ import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 /**
@@ -97,10 +94,7 @@ public class Commands {
                 return;
             }
 
-            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, DragonTravelPlusModule.inst.config.npcDefaultName);
-            npc.spawn(((Player) sender).getLocation());
-            npc.addTrait(DragonGuardTrait.class);
-            npc.getTrait(DragonGuardTrait.class).setDragonStation(station);
+            DragonGuardTrait.createDragonGuard(((Player) sender).getLocation(), station);
 
             // dynmap
             DynmapManager.INST.addStationMarker(station);

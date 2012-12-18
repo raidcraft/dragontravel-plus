@@ -4,6 +4,7 @@ import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
+import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.exception.NPCLoadException;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
@@ -12,7 +13,9 @@ import net.citizensnpcs.api.trait.trait.Owner;
 import net.citizensnpcs.api.trait.trait.Spawned;
 import net.citizensnpcs.api.util.DataKey;
 import net.citizensnpcs.trait.LookClose;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
@@ -66,26 +69,6 @@ public class DragonGuardTrait extends Trait {
 
         NPC npc = getNPC();
 
-        // add traits
-        npc.addTrait(LookClose.class);
-        npc.addTrait(Equipment.class);
-        npc.addTrait(Owner.class);
-        npc.addTrait(Spawned.class);
-
-        // configure traits
-        npc.getTrait(LookClose.class).lookClose(true);
-        npc.getTrait(Owner.class).setOwner("raidcraft");
-        npc.getTrait(Spawned.class).setSpawned(true);
-        npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, true);
-
-        // add equipment
-        npc.getTrait(Equipment.class).set(0, new ItemStack(Material.SADDLE));
-        npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET));
-        npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE));
-        npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS));
-        npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS));
-        
-
         // change name
         if(!npc.getName().equalsIgnoreCase(DragonTravelPlusModule.inst.config.npcDefaultName)) {
             npc.setName(DragonTravelPlusModule.inst.config.npcDefaultName);
@@ -119,5 +102,33 @@ public class DragonGuardTrait extends Trait {
     public DragonStation getDragonStation() {
 
         return station;
+    }
+    
+    public static void createDragonGuard(Location location, DragonStation station) {
+        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, DragonTravelPlusModule.inst.config.npcDefaultName);
+        npc.addTrait(DragonGuardTrait.class);
+        npc.getTrait(DragonGuardTrait.class).setDragonStation(station);
+
+
+        // add traits
+        npc.addTrait(LookClose.class);
+        npc.addTrait(Equipment.class);
+        npc.addTrait(Owner.class);
+        npc.addTrait(Spawned.class);
+
+        // configure traits
+        npc.getTrait(LookClose.class).lookClose(true);
+        npc.getTrait(Owner.class).setOwner("raidcraft");
+        npc.getTrait(Spawned.class).setSpawned(true);
+        npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, true);
+
+        // add equipment
+        npc.getTrait(Equipment.class).set(0, new ItemStack(Material.SADDLE));
+        npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET));
+        npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE));
+        npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS));
+        npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS));
+
+        npc.spawn(location);
     }
 }
