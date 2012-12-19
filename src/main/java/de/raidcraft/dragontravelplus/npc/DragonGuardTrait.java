@@ -48,14 +48,13 @@ public class DragonGuardTrait extends Trait {
     }
 
     @Override
-    public void onCopy() {
-
-        super.onCopy();
-    }
-
-    @Override
     public void onDespawn() {
 
+        station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation());
+        if(station != null) {
+            dragonGuards.remove(station.getName());
+        }
+        
         super.onDespawn();
     }
 
@@ -111,15 +110,16 @@ public class DragonGuardTrait extends Trait {
 
 
         // add traits
+        npc.addTrait(Spawned.class);
         npc.addTrait(LookClose.class);
         npc.addTrait(Equipment.class);
         npc.addTrait(Owner.class);
-        npc.addTrait(Spawned.class);
+
 
         // configure traits
-        npc.getTrait(LookClose.class).lookClose(true);
-        npc.getTrait(Owner.class).setOwner("raidcraft");
         npc.getTrait(Spawned.class).setSpawned(true);
+        npc.getTrait(LookClose.class).toggle();
+        npc.getTrait(Owner.class).setOwner("raidcraft");
         npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, true);
 
         // add equipment

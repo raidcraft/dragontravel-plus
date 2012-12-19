@@ -25,7 +25,7 @@ public class DragonManager {
 
         FlyingPlayer flyingPlayer = new FlyingPlayer(player, start, destination, price);
         CommandBook.inst().getServer().getScheduler()
-                .scheduleSyncDelayedTask(CommandBook.inst(), new DelayedTakeoffTask(flyingPlayer), DragonTravelPlusModule.inst.config.flightWarmup * 20);
+                .scheduleAsyncDelayedTask(CommandBook.inst(), new DelayedTakeoffTask(flyingPlayer), DragonTravelPlusModule.inst.config.flightWarmup * 20);
     }
     
     public void abortFlight(Player player) {

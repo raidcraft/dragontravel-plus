@@ -17,7 +17,7 @@ import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
-import net.minecraft.server.EntityTypes;
+import net.minecraft.server.v1_4_5.EntityTypes;
 
 import java.lang.reflect.Method;
 
@@ -134,7 +134,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
         };
 
         @Setting("conv-stage-select-dial-mode-speak") public String[] convSelectDialModeSpeak = new String[]{
-                "Hallo in %sn %pn!",
+                "Hallo in '%sn' %pn!",
                 "Du möchtest bestimmt mit meinem Drachen reisen!",
                 "Kann ich dir bei der Zielwahl helfen?"
         };
