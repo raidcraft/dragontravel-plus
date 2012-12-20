@@ -1,9 +1,12 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
+import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +25,33 @@ public class FlightNavigator {
         Flight flight = new Flight(start.getName() + "_" + destination.getName());
 
         List<Location> route = getRoute(StationManager.INST.getAllStationLocations(), start.getLocation(), destination.getLocation());
+        Bukkit.broadcastMessage("Route contains: " + route.size() + " Stations!");
+        flight.addWaypoint(start.getLocation());
 
-        for(Location wayPoint : route) {
-            flight.addWaypoint(wayPoint);
+        Location startWPLocation = null;
+        for(Location targetWPLocation : route) {
+            if(startWPLocation != null) {
+                // create unit vector
+                int xDif = targetWPLocation.getBlockX() - startWPLocation.getBlockX();
+                int zDif = targetWPLocation.getBlockZ() - startWPLocation.getBlockZ();
+                Vector unitVector = new Vector(xDif, 0, zDif).normalize();
+
+                int wayPointCount = (int) startWPLocation.distance(targetWPLocation) / DragonTravelPlusModule.inst.config.wayPointDistance;
+
+                for(int i = 1; i < wayPointCount; i++) {
+                    Location wpLocation = startWPLocation.clone();
+                    Vector unitVectorCopy = unitVector.clone();
+                    wpLocation.add(unitVectorCopy.multiply(i * DragonTravelPlusModule.inst.config.wayPointDistance));
+                    wpLocation = startWPLocation.getWorld().getHighestBlockAt(wpLocation).getLocation();
+                    wpLocation.setY(wpLocation.getY() + DragonTravelPlusModule.inst.config.flightHeight);
+
+                    flight.addWaypoint(wpLocation);
+                }
+            }
+            startWPLocation = targetWPLocation;
         }
 
+        flight.addWaypoint(destination.getLocation());
         return flight;
     }
 

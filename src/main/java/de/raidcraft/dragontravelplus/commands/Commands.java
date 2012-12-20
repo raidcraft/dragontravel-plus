@@ -133,5 +133,27 @@ public class Commands {
 
             ChatMessages.success((Player) sender, "Die Drachenstation '" + context.getString(0) + "' wurde gelöscht!");
         }
+
+        @Command(
+                aliases = {"warp", "tp"},
+                desc = "Teleports a player to a station"
+        )
+        @CommandPermissions("dragontravelplus.warp")
+        public void warp(CommandContext context, CommandSender sender) throws CommandException {
+
+            if(context.argsLength() < 1) {
+                ChatMessages.tooFewArguments((Player)sender);
+            }
+
+            DragonStation station = StationManager.INST.getDragonStation(context.getString(0));
+
+            if(station == null) {
+                ChatMessages.warn((Player)sender, "Es gibt keine Station mit diesem Namen!");
+                return;
+            }
+
+            ((Player)sender).teleport(station.getLocation());
+            ChatMessages.success((Player)sender, "Du wurdest erfolgreich zur Station '" + station.getName() + "' geportet!");
+        }
     }
 }
