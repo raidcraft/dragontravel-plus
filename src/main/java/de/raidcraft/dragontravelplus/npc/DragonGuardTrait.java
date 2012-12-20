@@ -118,7 +118,6 @@ public class DragonGuardTrait extends Trait {
         // add traits
         npc.addTrait(Spawned.class);
         npc.addTrait(LookClose.class);
-
         npc.addTrait(Owner.class);
 
 

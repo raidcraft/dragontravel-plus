@@ -5,6 +5,7 @@ import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
+import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
@@ -48,6 +49,7 @@ public class Commands {
 
             DragonTravelPlusModule.inst.loadConfig();
             StationManager.INST.loadExistingStations();
+            Conversation.conversations.clear();
             ChatMessages.successfulReloaded((Player)sender);
         }
 
