@@ -14,12 +14,12 @@ public class FlightCosts {
         if(destination.isEmergencyTarget() || (start.getCostLevel() == 0 && destination.getCostLevel() == 0)) {
             return 0;
         }
-        int costLevel = 1;
+        int costLevel;
         if(destination.getCostLevel() == 0) {
-            costLevel = destination.getCostLevel();
+            costLevel = start.getCostLevel();
         }
         else {
-            costLevel = start.getCostLevel();
+            costLevel = destination.getCostLevel();
         }
         return Math.round(costLevel * start.getLocation().distance(destination.getLocation()) * DragonTravelPlusModule.inst.config.pricePerBlock * 100.) / 100.;
     }
