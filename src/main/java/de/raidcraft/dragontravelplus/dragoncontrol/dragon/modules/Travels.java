@@ -63,29 +63,34 @@ public class Travels {
 	public static void removePlayerandDragon(Entity entity) {
 
 		// Getting player
-		Player player = (Player) entity.getPassenger();
+        Player player = null;
+        if(entity.getPassenger() instanceof Player) {
+		    player = (Player) entity.getPassenger();
+        }
 
-                // Teleport player to safe location
-                Location clone = player.getLocation().clone();
-                int offset = 1;
+        if(player != null) {
+            // Teleport player to safe location
+            Location clone = player.getLocation().clone();
+            int offset = 1;
 
-                for (;;) {
+            for (;;) {
 
-                    while (clone.getBlock().isEmpty() && clone.getY() != 0) {
-                        clone.setY(clone.getY() - offset);
-                    }
-
-                    if (clone.getY() != 0)
-                        break;
-
-                    clone.setY(256);
+                while (clone.getBlock().isEmpty() && clone.getY() != 0) {
+                    clone.setY(clone.getY() - offset);
                 }
 
-                clone.setY(clone.getY() + 2);
-                player.teleport(clone);
+                if (clone.getY() != 0)
+                    break;
 
-		clone.setY(clone.getY() + 2);
-		player.teleport(clone);
+                clone.setY(256);
+            }
+
+            clone.setY(clone.getY() + 2);
+            player.teleport(clone);
+
+            clone.setY(clone.getY() + 2);
+            player.teleport(clone);
+        }
 
 		// Remove dragon from world
 		entity.eject();

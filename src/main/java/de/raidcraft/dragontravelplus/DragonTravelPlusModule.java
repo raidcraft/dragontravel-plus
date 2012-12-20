@@ -7,6 +7,8 @@ import com.zachsthings.libcomponents.bukkit.BukkitComponent;
 import com.zachsthings.libcomponents.config.ConfigurationBase;
 import com.zachsthings.libcomponents.config.Setting;
 import de.raidcraft.dragontravelplus.commands.Commands;
+import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
+import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import de.raidcraft.dragontravelplus.listener.EntityListener;
 import de.raidcraft.dragontravelplus.listener.PlayerListener;
@@ -18,8 +20,10 @@ import de.raidcraft.dragontravelplus.tables.StationTable;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.minecraft.server.v1_4_5.EntityTypes;
+import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * Author: Philip
@@ -70,6 +74,16 @@ public class DragonTravelPlusModule extends BukkitComponent {
             }
         }, 0, 2*20);
     }
+    
+    @Override
+    public void disable() {
+        // remove all dragons in the world
+        for(Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
+            if(entry.getValue().isInAir()) {
+                DragonManager.INST.abortFlight(entry.getKey());
+            }
+        }
+    }
 
     public void loadConfig() {
 
@@ -82,9 +96,9 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("error-prevention-flight-timeout") public int flightTimeout = 30;
         @Setting("flight-cost-per-block") public double pricePerBlock = 0.1;
         @Setting("flight-warmup-time") public int flightWarmup = 1;
-        @Setting("flight-height") public int flightHeight = 5;
+        @Setting("flight-height") public int flightHeight = 15;
         @Setting("flight-speed") public double flightSpeed = 0.7;
-        @Setting("flight-waypoint-distance") public int wayPointDistance = 5;
+        @Setting("flight-waypoint-distance") public int wayPointDistance = 10;
         @Setting("forbidden-commands") public String[] forbiddenCommands = new String[] {
             "spawn",
             "home",

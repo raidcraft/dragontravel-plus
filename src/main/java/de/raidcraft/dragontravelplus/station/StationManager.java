@@ -4,7 +4,6 @@ import com.silthus.raidcraft.util.component.database.ComponentDatabase;
 import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
-import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import org.bukkit.Location;
@@ -34,23 +33,24 @@ public class StationManager {
         }
 
         // create npc if not exists
-        CommandBook.server().getScheduler().scheduleSyncDelayedTask(CommandBook.inst(), new Runnable() {
-            @Override
-            public void run() {
-                
-                if(DragonGuardTrait.dragonGuards.size() < StationManager.INST.existingStations.size()) {
-                    Map<String, DragonStation> existingStationsCopy = new HashMap<>(StationManager.INST.existingStations);
-                    
-                    for(Map.Entry<String, DragonGuardTrait> entry : DragonGuardTrait.dragonGuards.entrySet()) {
-                        existingStationsCopy.remove(entry.getKey());
-                    }
-
-                    for(Map.Entry<String, DragonStation> entry : existingStationsCopy.entrySet()) {
-                        DragonGuardTrait.createDragonGuard(entry.getValue().getLocation(), entry.getValue());
-                    }
-                }
-            }
-        }, 10*20);
+        // disabled because of doubling the dragon guards
+//        CommandBook.server().getScheduler().scheduleSyncDelayedTask(CommandBook.inst(), new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                if(DragonGuardTrait.dragonGuards.size() < StationManager.INST.existingStations.size()) {
+//                    Map<String, DragonStation> existingStationsCopy = new HashMap<>(StationManager.INST.existingStations);
+//
+//                    for(Map.Entry<String, DragonGuardTrait> entry : DragonGuardTrait.dragonGuards.entrySet()) {
+//                        existingStationsCopy.remove(entry.getKey());
+//                    }
+//
+//                    for(Map.Entry<String, DragonStation> entry : existingStationsCopy.entrySet()) {
+//                        DragonGuardTrait.createDragonGuard(entry.getValue().getLocation(), entry.getValue());
+//                    }
+//                }
+//            }
+//        }, 10*20);
         
         CommandBook.logger().info("[DTP] Es wurden " + i + " Stationen geladen!");
     }

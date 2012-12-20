@@ -4,8 +4,8 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -25,7 +25,6 @@ public class FlightNavigator {
         Flight flight = new Flight(start.getName() + "_" + destination.getName());
 
         List<Location> route = getRoute(StationManager.INST.getAllStationLocations(), start.getLocation(), destination.getLocation());
-        Bukkit.broadcastMessage("Route contains: " + route.size() + " Stations!");
         flight.addWaypoint(start.getLocation());
 
         Location startWPLocation = null;
@@ -37,21 +36,55 @@ public class FlightNavigator {
                 Vector unitVector = new Vector(xDif, 0, zDif).normalize();
 
                 int wayPointCount = (int) startWPLocation.distance(targetWPLocation) / DragonTravelPlusModule.inst.config.wayPointDistance;
-
+                double lastFlightHeight = -1;
                 for(int i = 1; i < wayPointCount; i++) {
                     Location wpLocation = startWPLocation.clone();
                     Vector unitVectorCopy = unitVector.clone();
                     wpLocation.add(unitVectorCopy.multiply(i * DragonTravelPlusModule.inst.config.wayPointDistance));
                     wpLocation = startWPLocation.getWorld().getHighestBlockAt(wpLocation).getLocation();
-                    wpLocation.setY(wpLocation.getY() + DragonTravelPlusModule.inst.config.flightHeight);
+                    
+                    double flightHeight = wpLocation.getY() + DragonTravelPlusModule.inst.config.flightHeight;
+                    if(lastFlightHeight > 0) {
+                        double flightHeightDiff = Math.abs(flightHeight - lastFlightHeight);
+                        if(flightHeightDiff > 5) {
+                            // descent
+                            if(flightHeight < lastFlightHeight) {
+                                if((lastFlightHeight - flightHeightDiff / 2) > 5) {
+                                    flightHeight += 5;
+                                }
+                                else {
+                                    flightHeight += lastFlightHeight - flightHeightDiff / 2;
+                                }
+                            }
+                            // climb
+                            else {
+                                double propFlightHeight;
+                                if(flightHeight > lastFlightHeight) {
+                                    propFlightHeight = flightHeight - (flightHeightDiff / 2.);
+                                }
+                                else {
+                                    propFlightHeight = flightHeight + (flightHeightDiff / 2.);
+                                }
+
+                                if(wpLocation.getBlock().getWorld()
+                                        .getBlockAt(wpLocation.getBlockX(), (int)propFlightHeight, wpLocation.getBlockZ()).getType() == Material.AIR) {
+                                    flightHeight = propFlightHeight;
+                                }
+                            }
+                        }
+                    }
+                    lastFlightHeight = flightHeight;
+                    wpLocation.setY(flightHeight);
 
                     flight.addWaypoint(wpLocation);
                 }
             }
             startWPLocation = targetWPLocation;
         }
-
-        flight.addWaypoint(destination.getLocation());
+        
+        Location optimizedDestination = destination.getLocation().clone();
+        optimizedDestination.setY(destination.getLocation().getY() - 5);
+        flight.addWaypoint(optimizedDestination);
         return flight;
     }
 
