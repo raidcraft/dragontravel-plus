@@ -70,6 +70,15 @@ public class DragonGuardTrait extends Trait {
             npc.setName(DragonTravelPlusModule.inst.config.npcDefaultName);
         }
 
+        // add equipment
+        //TODO XXX broken in current citizens build!
+//        npc.addTrait(Equipment.class);
+//        npc.getTrait(Equipment.class).set(0, new ItemStack(Material.SADDLE));
+//        npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET));
+//        npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE));
+//        npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS));
+//        npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS));
+
         // link station
         station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation());
         if(station == null) {
@@ -109,7 +118,7 @@ public class DragonGuardTrait extends Trait {
         // add traits
         npc.addTrait(Spawned.class);
         npc.addTrait(LookClose.class);
-//        npc.addTrait(Equipment.class);
+
         npc.addTrait(Owner.class);
 
 
@@ -118,13 +127,6 @@ public class DragonGuardTrait extends Trait {
         npc.getTrait(LookClose.class).toggle();
         npc.getTrait(Owner.class).setOwner("raidcraft");
         npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, true);
-
-        // add equipment
-//        npc.getTrait(Equipment.class).set(0, new ItemStack(Material.SADDLE));
-//        npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET));
-//        npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE));
-//        npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS));
-//        npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS));
 
         npc.spawn(location);
     }

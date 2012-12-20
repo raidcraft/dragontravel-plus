@@ -20,7 +20,8 @@ public class DynmapManager {
 
     public DynmapManager() {
 
-//        api = (DynmapAPI)CommandBook.server().getPluginManager().getPlugin("dynmap");
+        //TODO XXX broken in current dynmap build!
+//        api = (DynmapAPI) CommandBook.server().getPluginManager().getPlugin("dynmap");
 //        if(api == null) {
 //            return;
 //        }
