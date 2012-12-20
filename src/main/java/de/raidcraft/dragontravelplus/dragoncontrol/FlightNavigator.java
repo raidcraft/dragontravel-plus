@@ -46,25 +46,21 @@ public class FlightNavigator {
                     double flightHeight = wpLocation.getY() + DragonTravelPlusModule.inst.config.flightHeight;
                     if(lastFlightHeight > 0) {
                         double flightHeightDiff = Math.abs(flightHeight - lastFlightHeight);
+
                         if(flightHeightDiff > 5) {
                             // descent
                             if(flightHeight < lastFlightHeight) {
                                 if((lastFlightHeight - flightHeightDiff / 2) > 5) {
-                                    flightHeight += 5;
+                                    flightHeight = lastFlightHeight - 5;
                                 }
                                 else {
-                                    flightHeight += lastFlightHeight - flightHeightDiff / 2;
+                                    flightHeight += flightHeightDiff / 2;
                                 }
                             }
                             // climb
                             else {
                                 double propFlightHeight;
-                                if(flightHeight > lastFlightHeight) {
-                                    propFlightHeight = flightHeight - (flightHeightDiff / 2.);
-                                }
-                                else {
-                                    propFlightHeight = flightHeight + (flightHeightDiff / 2.);
-                                }
+                                propFlightHeight = flightHeight - (flightHeightDiff / 1.5);
 
                                 if(wpLocation.getBlock().getWorld()
                                         .getBlockAt(wpLocation.getBlockX(), (int)propFlightHeight, wpLocation.getBlockZ()).getType() == Material.AIR) {
