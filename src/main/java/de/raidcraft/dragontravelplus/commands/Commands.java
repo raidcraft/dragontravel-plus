@@ -58,10 +58,14 @@ public class Commands {
                 }
             }
 
+            // end all conversations
+            for(Map.Entry<String, Conversation> entry : Conversation.conversations.entrySet()) {
+                    entry.getValue().setCurrentStage(null);
+            }
+
             DragonManager.INST.flyingPlayers.clear();
             DragonTravelPlusModule.inst.loadConfig();
             StationManager.INST.loadExistingStations();
-            Conversation.conversations.clear();
             ChatMessages.successfulReloaded((Player)sender);
         }
 

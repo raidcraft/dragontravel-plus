@@ -68,8 +68,6 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(event.getPlayer());
-        
         for(String cmd : DragonTravelPlusModule.inst.config.forbiddenCommands) {
             if(event.getMessage().toLowerCase().startsWith(cmd.toLowerCase())) {
                 ChatMessages.warn(event.getPlayer(), "Dieser Befehl ist während dem Flug verboten!");

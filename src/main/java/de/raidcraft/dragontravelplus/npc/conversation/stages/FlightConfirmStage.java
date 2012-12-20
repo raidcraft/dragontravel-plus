@@ -78,6 +78,7 @@ public class FlightConfirmStage extends Stage {
         }
         else {
             takeoff();
+            getConversation().setCurrentStage(null);
         }
     }
 
