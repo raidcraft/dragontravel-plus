@@ -6,13 +6,17 @@ import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.Arrays;
 
 /**
  * Author: Philip
@@ -74,6 +78,36 @@ public class PlayerListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
+        }
+    }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event) {
+        if(!Conversation.conversations.containsKey(event.getPlayer().getName())) {
+            return;
+        }
+        Conversation conversation = Conversation.conversations.get(event.getPlayer().getName());
+
+        if(!conversation.inConversation()) {
+            return;
+        }
+
+        if(Arrays.asList(DragonTravelPlusModule.inst.config.exitWords).contains(event.getMessage())) {
+            DragonManager.INST.abortFlight(event.getPlayer());
+            conversation.abortConversation();
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.GRAY + "Gespräch verlassen...");
+            return;
+        }
+        if(conversation.getDragonGuard().getDragonStation().getLocation()
+                .distance(event.getPlayer().getLocation()) > DragonTravelPlusModule.inst.config.autoExitDistance) {
+            conversation.abortConversation();
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.GRAY + "Der Drachenwächter hört dir nichtmehr zu...");
+            return;
+        }
+        if(conversation.trigger(Conversation.TriggerType.CHAT_ANSWER, event.getMessage())) {
+            event.setCancelled(true);
         }
     }
 }

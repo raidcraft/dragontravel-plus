@@ -26,7 +26,7 @@ public class Conversation {
     private Player player;
     private NPC npc = null;
     DragonGuardTrait dragonGuard;
-    private Stage currentStage;
+    private Stage currentStage = null;
     private List<DragonStation> playerStations = null;
 
     public Conversation(Player player) {
@@ -55,20 +55,20 @@ public class Conversation {
             return true;
         }
 
-        if(DragonTravelPlusModule.inst.config.disabled && !player.hasPermission("dragontravelplus.ignore.disabled")) {
-            currentStage = new DisabledStage(this);
-        }
-        
-        if(!player.hasPermission("dragontravelplus.use")) {
-            currentStage = new NoPermissionStage(this);
-        }
-
         // start new conversation
         if(this.npc != npc || this.npc == null) {
             this.npc = npc;
             this.dragonGuard = npc.getTrait(DragonGuardTrait.class);
             updatePlayerStations();
             currentStage = null;
+        }
+
+        if(DragonTravelPlusModule.inst.config.disabled && !player.hasPermission("dragontravelplus.ignore.disabled")) {
+            currentStage = new DisabledStage(this);
+        }
+        
+        if(!player.hasPermission("dragontravelplus.use")) {
+            currentStage = new NoPermissionStage(this);
         }
 
         // player doesn't know this station

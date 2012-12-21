@@ -127,7 +127,6 @@ public class DragonGuardTrait extends Trait {
 
         // configure traits
         npc.getTrait(Spawned.class).setSpawned(true);
-        npc.getTrait(LookClose.class).toggle();
         npc.getTrait(Owner.class).setOwner("raidcraft");
         npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, true);
 
