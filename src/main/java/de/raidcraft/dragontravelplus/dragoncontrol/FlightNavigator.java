@@ -60,7 +60,7 @@ public class FlightNavigator {
                             // climb
                             else {
                                 double propFlightHeight;
-                                propFlightHeight = flightHeight - (flightHeightDiff / 1.5);
+                                propFlightHeight = flightHeight - (flightHeightDiff / 2);
 
                                 if(wpLocation.getBlock().getWorld()
                                         .getBlockAt(wpLocation.getBlockX(), (int)propFlightHeight, wpLocation.getBlockZ()).getType() == Material.AIR) {

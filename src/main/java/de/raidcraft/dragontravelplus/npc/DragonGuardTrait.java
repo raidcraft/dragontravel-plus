@@ -80,7 +80,7 @@ public class DragonGuardTrait extends Trait {
 //        npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS));
 
         // link station
-        station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation());
+        reloadDragonStation();
         if(station == null) {
             LivingEntity entity = npc.getBukkitEntity();
             CommandBook.logger().warning("[DTP] NPC despawned at"
@@ -98,6 +98,10 @@ public class DragonGuardTrait extends Trait {
     public void run() {
 
         super.run();
+    }
+
+    public void reloadDragonStation() {
+        station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation());
     }
 
     public void setDragonStation(DragonStation station) {

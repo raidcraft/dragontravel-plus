@@ -3,19 +3,14 @@ package de.raidcraft.dragontravelplus.commands;
 import com.silthus.raidcraft.util.component.DateUtil;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
-import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
-import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
-import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Map;
 
 /**
  * Author: Philip
@@ -51,21 +46,7 @@ public class Commands {
         @CommandPermissions("dragontravelplus.reload")
         public void reload(CommandContext context, CommandSender sender) throws CommandException {
 
-            // remove all dragons in the world
-            for(Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
-                if(entry.getValue().isInAir()) {
-                    DragonManager.INST.abortFlight(entry.getKey());
-                }
-            }
-
-            // end all conversations
-            for(Map.Entry<String, Conversation> entry : Conversation.conversations.entrySet()) {
-                    entry.getValue().setCurrentStage(null);
-            }
-
-            DragonManager.INST.flyingPlayers.clear();
-            DragonTravelPlusModule.inst.loadConfig();
-            StationManager.INST.loadExistingStations();
+            DragonTravelPlusModule.inst.reloadAll();
             ChatMessages.successfulReloaded((Player)sender);
         }
 
@@ -146,7 +127,7 @@ public class Commands {
 
             StationManager.INST.deleteStation(station);
             DynmapManager.INST.removeMarker(station);
-            StationManager.INST.loadExistingStations();
+            DragonTravelPlusModule.inst.reloadAll();
 
 
             ChatMessages.success((Player) sender, "Die Drachenstation '" + context.getString(0) + "' wurde gelöscht!");

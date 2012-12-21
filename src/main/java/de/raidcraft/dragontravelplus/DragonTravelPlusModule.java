@@ -14,6 +14,7 @@ import de.raidcraft.dragontravelplus.listener.EntityListener;
 import de.raidcraft.dragontravelplus.listener.PlayerListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.npc.NPCListener;
+import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
@@ -88,6 +89,28 @@ public class DragonTravelPlusModule extends BukkitComponent {
     public void loadConfig() {
 
         config = configure(new LocalDTPConfiguration());
+    }
+
+    public void reloadAll() {
+        // remove all dragons in the world
+        for(Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
+            if(entry.getValue().isInAir()) {
+                DragonManager.INST.abortFlight(entry.getKey());
+            }
+        }
+
+        // end all conversations
+        for(Map.Entry<String, Conversation> entry : Conversation.conversations.entrySet()) {
+            entry.getValue().setCurrentStage(null);
+        }
+
+        DragonManager.INST.flyingPlayers.clear();
+        DragonTravelPlusModule.inst.loadConfig();
+        StationManager.INST.loadExistingStations();
+        //
+        for(Map.Entry<String, DragonGuardTrait> entry : DragonGuardTrait.dragonGuards.entrySet()) {
+            entry.getValue().reloadDragonStation();
+        }
     }
 
     public class LocalDTPConfiguration extends ConfigurationBase {
