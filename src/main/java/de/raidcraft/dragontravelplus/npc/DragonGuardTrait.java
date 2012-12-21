@@ -8,13 +8,16 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.exception.NPCLoadException;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
+import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.api.trait.trait.Owner;
 import net.citizensnpcs.api.trait.trait.Spawned;
 import net.citizensnpcs.api.util.DataKey;
 import net.citizensnpcs.trait.LookClose;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,13 +74,14 @@ public class DragonGuardTrait extends Trait {
         }
 
         // add equipment
-        //TODO XXX broken in current citizens build!
-//        npc.addTrait(Equipment.class);
-//        npc.getTrait(Equipment.class).set(0, new ItemStack(Material.SADDLE));
-//        npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET));
-//        npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE));
-//        npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS));
-//        npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS));
+        if(!npc.hasTrait(Equipment.class)) {
+            npc.addTrait(Equipment.class);
+        }
+        npc.getTrait(Equipment.class).set(0, new ItemStack(Material.SADDLE, 1));
+        npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET, 1));
+        npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE, 1));
+        npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS, 1));
+        npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS, 1));
 
         // link station
         reloadDragonStation();
@@ -123,7 +127,6 @@ public class DragonGuardTrait extends Trait {
         npc.addTrait(Spawned.class);
         npc.addTrait(LookClose.class);
         npc.addTrait(Owner.class);
-
 
         // configure traits
         npc.getTrait(Spawned.class).setSpawned(true);
