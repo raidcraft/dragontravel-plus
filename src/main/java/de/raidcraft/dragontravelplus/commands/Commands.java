@@ -180,7 +180,7 @@ public class Commands {
                 }
 
                 ChatColor color = ChatColor.AQUA;
-                if(entry.getValue().getCostLevel() > 1) color = ChatColor.GOLD;
+                if(entry.getValue().getCostLevel() > 0) color = ChatColor.GOLD;
                 if(entry.getValue().isEmergencyTarget()) color = ChatColor.DARK_RED;
                 list += color + entry.getKey() + ChatColor.WHITE + ", ";
             }
