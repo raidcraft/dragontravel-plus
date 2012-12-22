@@ -51,8 +51,7 @@ public class Conversation {
         }
 
         if(triggerType == TriggerType.CHAT_ANSWER && currentStage != null) {
-            currentStage.processAnswer(data);
-            return true;
+            return currentStage.processAnswer(data);
         }
 
         // start new conversation

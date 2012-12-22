@@ -6,8 +6,6 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.event.NPCSpawnEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * Author: Philip
@@ -42,15 +40,5 @@ public class NPCListener implements Listener {
 
         Conversation conversation = Conversation.conversations.get(event.getClicker().getName());
         conversation.trigger(event.getNPC(), Conversation.TriggerType.LEFT_CLICK);
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        Conversation.conversations.put(event.getPlayer().getName(), new Conversation(event.getPlayer()));
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        Conversation.conversations.remove(event.getPlayer().getName());
     }
 }

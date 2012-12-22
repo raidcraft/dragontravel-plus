@@ -14,6 +14,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Arrays;
@@ -53,8 +54,13 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
+    public void onJoin(PlayerJoinEvent event) {
+        Conversation.conversations.put(event.getPlayer().getName(), new Conversation(event.getPlayer()));
+    }
 
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Conversation.conversations.remove(event.getPlayer().getName());
         DragonManager.INST.abortFlight(event.getPlayer());
     }
     
