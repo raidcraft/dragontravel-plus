@@ -74,8 +74,12 @@ public class StationManager {
     }
     
     public DragonStation getDragonStation(String name) {
-        
-        return existingStations.get(name);
+        for(Map.Entry<String, DragonStation> entry : existingStations.entrySet()) {
+            if(entry.getKey().equalsIgnoreCase(name)) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
     public DragonStation getNearbyStation(Location location) {

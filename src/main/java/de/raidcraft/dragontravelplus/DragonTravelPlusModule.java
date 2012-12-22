@@ -229,7 +229,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
         };
 
         @Setting("conv-stage-process-economy-confirm-question") public String[] convProcessEconomyConfirmQuestion = new String[]{
-                "Die Reise nach %sn kostet dich $%fp."
+                "Die Reise nach %sn kostet dich $%fp (%fd)."
         };
 
         @Setting("conv-stage-process-economy-goodbye") public String convProcessEconomyGoodbye =

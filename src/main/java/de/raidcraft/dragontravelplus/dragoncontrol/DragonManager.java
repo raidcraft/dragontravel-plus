@@ -7,6 +7,7 @@ import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.dragontravelplus.util.ChatMessages;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -44,6 +45,9 @@ public class DragonManager {
             CommandBook.server().getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
         }
         player.teleport(flyingPlayer.getStart().getLocation());   // teleport to start
+        if(player.isOnline()) {
+            ChatMessages.warn(player, "Der Flug wurde aus technischen Gründen abgebrochen, sry!");
+        }
         DragonManager.INST.flyingPlayers.remove(player);
     }
 

@@ -6,6 +6,7 @@ import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.util.FlightCosts;
+import de.raidcraft.dragontravelplus.util.FlightDistance;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
@@ -46,7 +47,9 @@ public class FlightConfirmStage extends Stage {
         List<String> reply = new ArrayList<>();
 
         for(String line : DragonTravelPlusModule.inst.config.convProcessEconomyConfirmQuestion) {
-            speech.add(line.replace("%sn", target.getName()).replace("%fp", String.valueOf(price)));
+            speech.add(line.replace("%sn", target.getName())
+                    .replace("%fp", String.valueOf(price))
+                    .replace("%fd", FlightDistance.getPrintDistance(getConversation().getDragonGuard().getDragonStation(), target)));
         }
         
         if(broke) {

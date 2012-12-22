@@ -5,6 +5,7 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.util.FlightCosts;
+import de.raidcraft.dragontravelplus.util.FlightDistance;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
@@ -50,9 +51,9 @@ public class TargetAssistListStage extends Stage {
             String strike = "";
             if(price > CorePlugin.get().getEconomy().getBalace(getConversation().getPlayer())) {
                 strike += ChatColor.STRIKETHROUGH;
-            };
+            }
             reply.add(strike + station.getName() + ChatColor.RESET + ChatColor.RED + " $"
-                    + price);
+                    + price + " " + ChatColor.DARK_GREEN + FlightDistance.getPrintDistance(getConversation().getDragonGuard().getDragonStation(), station));
         }
         if(stations.size() > maxPerPage) {
             i++;
