@@ -20,7 +20,7 @@ import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
-import net.minecraft.server.v1_4_5.EntityTypes;
+import net.minecraft.server.v1_4_6.EntityTypes;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
