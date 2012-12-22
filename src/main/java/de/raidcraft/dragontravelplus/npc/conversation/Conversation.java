@@ -62,16 +62,16 @@ public class Conversation {
             currentStage = null;
         }
 
-        if(DragonTravelPlusModule.inst.config.disabled && !player.hasPermission("dragontravelplus.ignore.disabled")) {
-            currentStage = new DisabledStage(this);
-        }
-        
+        // no permissions to use
         if(!player.hasPermission("dragontravelplus.use")) {
             currentStage = new NoPermissionStage(this);
         }
-
+        // dtp is disabled (only available for admins)
+        else if(DragonTravelPlusModule.inst.config.disabled && !player.hasPermission("dragontravelplus.ignore.disabled")) {
+            currentStage = new DisabledStage(this);
+        }
         // player doesn't know this station
-        if(!StationManager.INST.getPlayerStations(player.getName()).contains(npc.getTrait(DragonGuardTrait.class).getDragonStation())) {
+        else if(!StationManager.INST.getPlayerStations(player.getName()).contains(npc.getTrait(DragonGuardTrait.class).getDragonStation())) {
             currentStage = new FirstMeetStage(this);
         }
 
