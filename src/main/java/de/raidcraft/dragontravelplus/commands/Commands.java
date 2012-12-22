@@ -10,6 +10,7 @@ import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -47,7 +48,8 @@ public class Commands {
         public void reload(CommandContext context, CommandSender sender) throws CommandException {
 
             DragonTravelPlusModule.inst.reloadAll();
-            ChatMessages.successfulReloaded((Player)sender);
+            if(sender instanceof Player) ChatMessages.successfulReloaded((Player)sender);
+            if(sender instanceof ConsoleCommandSender) sender.sendMessage("[DTP] DragonTravelPlus config successfully reloaded!");
         }
 
         @Command(

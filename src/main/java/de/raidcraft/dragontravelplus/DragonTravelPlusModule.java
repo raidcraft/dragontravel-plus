@@ -87,11 +87,12 @@ public class DragonTravelPlusModule extends BukkitComponent {
     }
 
     public void loadConfig() {
-
         config = configure(new LocalDTPConfiguration());
     }
 
     public void reloadAll() {
+        reload();
+        DragonTravelPlusModule.inst.loadConfig();
         // remove all dragons in the world
         for(Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
             if(entry.getValue().isInAir()) {
@@ -105,11 +106,13 @@ public class DragonTravelPlusModule extends BukkitComponent {
         }
 
         DragonManager.INST.flyingPlayers.clear();
-        DragonTravelPlusModule.inst.loadConfig();
         StationManager.INST.loadExistingStations();
-        //
+        // reload assigned stations
         for(Map.Entry<String, DragonGuardTrait> entry : DragonGuardTrait.dragonGuards.entrySet()) {
+            // check if npc still exists
+            if(entry.getValue().getNPC() != null) {
             entry.getValue().reloadDragonStation();
+            }
         }
     }
 
@@ -121,6 +124,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("flight-warmup-time") public int flightWarmup = 1;
         @Setting("flight-height") public int flightHeight = 15;
         @Setting("flight-speed") public double flightSpeed = 0.7;
+        @Setting("dynamic-flight-route") public boolean useDynamicRouting = true;
         @Setting("flight-waypoint-distance") public int wayPointDistance = 10;
         @Setting("forbidden-commands") public String[] forbiddenCommands = new String[] {
             "spawn",

@@ -29,7 +29,6 @@ public class NPCListener implements Listener {
                 npc.getTrait(DragonGuardTrait.class).updateDragonGuardNPC();
             }
         }
-
     }
 
     @EventHandler
