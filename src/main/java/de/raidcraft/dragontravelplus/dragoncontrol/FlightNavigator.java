@@ -87,7 +87,7 @@ public class FlightNavigator {
         }
         
         Location optimizedDestination = destination.getLocation().clone();
-        optimizedDestination.setY(destination.getLocation().getY() - 5);
+        optimizedDestination.setY(destination.getLocation().getY() - 8);
         flight.addWaypoint(optimizedDestination);
         return flight;
     }

@@ -21,6 +21,7 @@ import de.raidcraft.dragontravelplus.tables.StationTable;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.minecraft.server.v1_4_6.EntityTypes;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
@@ -101,8 +102,9 @@ public class DragonTravelPlusModule extends BukkitComponent {
         }
 
         // end all conversations
-        for(Map.Entry<String, Conversation> entry : Conversation.conversations.entrySet()) {
-            entry.getValue().setCurrentStage(null);
+        Conversation.conversations.clear();
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            Conversation.conversations.put(player.getName(), new Conversation(player));
         }
 
         DragonManager.INST.flyingPlayers.clear();
