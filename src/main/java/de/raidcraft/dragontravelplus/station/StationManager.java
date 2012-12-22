@@ -21,7 +21,7 @@ import java.util.Map;
 public class StationManager {
     public static final StationManager INST = new StationManager();
 
-    private Map<String, DragonStation> existingStations = new HashMap<>();
+    public Map<String, DragonStation> existingStations = new HashMap<>();
 
     public void loadExistingStations() {
 

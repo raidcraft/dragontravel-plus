@@ -9,9 +9,12 @@ import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 /**
  * Author: Philip
@@ -155,6 +158,34 @@ public class Commands {
 
             ((Player)sender).teleport(station.getLocation());
             ChatMessages.success((Player)sender, "Du wurdest erfolgreich zur Station '" + station.getName() + "' geportet!");
+        }
+
+        @Command(
+                aliases = {"list"},
+                flags = "ec:",
+                desc = "Shows a list of all Stations"
+        )
+        public void list(CommandContext context, CommandSender sender) throws CommandException {
+
+            String list = "Alle verfügbaren Drachenstationen: ";
+            
+            for(Map.Entry<String, DragonStation> entry : StationManager.INST.existingStations.entrySet()) {
+
+                if(context.hasFlag('e')) {
+                    if(!entry.getValue().isEmergencyTarget()) continue;
+                }
+
+                if(context.hasFlag('c')) {
+                    if(!String.valueOf(entry.getValue().getCostLevel()).equalsIgnoreCase(context.getFlag('c'))) continue;
+                }
+
+                ChatColor color = ChatColor.AQUA;
+                if(entry.getValue().getCostLevel() > 0) color = ChatColor.GOLD;
+                if(entry.getValue().isEmergencyTarget()) color = ChatColor.DARK_RED;
+                list += color + entry.getKey() + ChatColor.WHITE + ", ";
+            }
+          
+            ChatMessages.success((Player)sender, list);
         }
     }
 }
