@@ -66,36 +66,7 @@ public class DragonGuardTrait extends Trait {
     public void onSpawn() {
         super.onSpawn();
 
-        NPC npc = getNPC();
-
-        // change name
-        if(!npc.getName().equalsIgnoreCase(DragonTravelPlusModule.inst.config.npcDefaultName)) {
-            npc.setName(DragonTravelPlusModule.inst.config.npcDefaultName);
-        }
-
-        // add equipment
-        if(!npc.hasTrait(Equipment.class)) {
-            npc.addTrait(Equipment.class);
-        }
-        npc.getTrait(Equipment.class).set(0, new ItemStack(Material.SADDLE, 1));
-        npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET, 1));
-        npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE, 1));
-        npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS, 1));
-        npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS, 1));
-
-        // link station
-        reloadDragonStation();
-        if(station == null) {
-            LivingEntity entity = npc.getBukkitEntity();
-            CommandBook.logger().warning("[DTP] NPC despawned at"
-                    + " x:" + entity.getLocation().getBlockX()
-                    + " y:" + entity.getLocation().getBlockY()
-                    + " z:" + entity.getLocation().getBlockZ()
-                    + "! Station not found!");
-            npc.destroy();
-            return;
-        }
-        dragonGuards.put(station.getName(), this);
+        updateDragonGuardNPC();
     }
 
     @Override
@@ -116,6 +87,44 @@ public class DragonGuardTrait extends Trait {
 
         return station;
     }
+
+    public void updateDragonGuardNPC() {
+        NPC npc = getNPC();
+        // change name
+        if(!npc.getName().equalsIgnoreCase(DragonTravelPlusModule.inst.config.npcDefaultName)) {
+            npc.setName(DragonTravelPlusModule.inst.config.npcDefaultName);
+        }
+
+        // add equipment
+        if(!npc.hasTrait(Equipment.class)) {
+            npc.addTrait(Equipment.class);
+        }
+        npc.getTrait(Equipment.class).set(0, new ItemStack(Material.SADDLE, 1));
+        npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET, 1));
+        npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE, 1));
+        npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS, 1));
+        npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS, 1));
+
+        //look close
+        if(!npc.hasTrait(LookClose.class)) {
+            npc.addTrait(LookClose.class);
+        }
+        npc.getTrait(LookClose.class).lookClose(true);
+
+        // link station
+        reloadDragonStation();
+        if(station == null) {
+            LivingEntity entity = npc.getBukkitEntity();
+            CommandBook.logger().warning("[DTP] NPC despawned at"
+                    + " x:" + entity.getLocation().getBlockX()
+                    + " y:" + entity.getLocation().getBlockY()
+                    + " z:" + entity.getLocation().getBlockZ()
+                    + "! Station not found!");
+            npc.destroy();
+            return;
+        }
+        dragonGuards.put(station.getName(), this);
+    }
     
     public static void createDragonGuard(Location location, DragonStation station) {
         NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, DragonTravelPlusModule.inst.config.npcDefaultName);
@@ -123,7 +132,7 @@ public class DragonGuardTrait extends Trait {
         npc.getTrait(DragonGuardTrait.class).setDragonStation(station);
 
 
-        // add traits
+        // add traits (even if there added in update method)
         npc.addTrait(Spawned.class);
         npc.addTrait(LookClose.class);
         npc.addTrait(Owner.class);
@@ -131,7 +140,6 @@ public class DragonGuardTrait extends Trait {
 
         // configure traits
         npc.getTrait(Spawned.class).setSpawned(true);
-        npc.getTrait(LookClose.class).lookClose(true);
         npc.getTrait(Owner.class).setOwner("raidcraft");
         npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, true);
 
