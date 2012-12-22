@@ -110,8 +110,8 @@ public class DragonTravelPlusModule extends BukkitComponent {
         // reload assigned stations
         for(Map.Entry<String, DragonGuardTrait> entry : DragonGuardTrait.dragonGuards.entrySet()) {
             // check if npc still exists
-            if(entry.getValue().getNPC() != null) {
-            entry.getValue().reloadDragonStation();
+            if(entry.getValue().getNPC() != null && entry.getValue().getNPC().getBukkitEntity() != null ) {
+                entry.getValue().reloadDragonStation();
             }
         }
     }
