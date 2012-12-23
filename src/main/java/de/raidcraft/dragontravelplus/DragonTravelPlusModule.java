@@ -128,6 +128,8 @@ public class DragonTravelPlusModule extends BukkitComponent {
         @Setting("flight-speed") public double flightSpeed = 0.7;
         @Setting("dynamic-flight-route") public boolean useDynamicRouting = true;
         @Setting("flight-waypoint-distance") public int wayPointDistance = 10;
+        @Setting("use-visible-wapoint-marker") public boolean useVisibleWaypoints = true;
+        @Setting("visible-marker-duration") public int markerDuration = 120;
         @Setting("forbidden-commands") public String[] forbiddenCommands = new String[] {
             "spawn",
             "home",

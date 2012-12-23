@@ -1,12 +1,20 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement;
 
+import com.sk89q.commandbook.CommandBook;
+import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Flight {
 
 	HashMap<Integer, Waypoint> waypoints = new HashMap<Integer, Waypoint>();
+    List<Block> markerBlocks = new ArrayList<>();
 	int currentwp = 0;
 	public int wpcreatenum = 0;
 	String name;
@@ -31,7 +39,7 @@ public class Flight {
 	}
     
     public void addWaypoint(Location location) {
-        addWaypoint(new Waypoint(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+        addWaypoint(new Waypoint(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ()));
     }
 
 	/**
@@ -61,7 +69,23 @@ public class Flight {
 	 */
 	public Waypoint getNextWaypoint() {
 		Waypoint wp = waypoints.get(currentwp);
-		currentwp++;
+		currentwp++;        
+        if(wp == null) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(CommandBook.inst(), new Runnable() {
+                @Override
+                public void run() {
+                    for(Block block : markerBlocks) {
+                        block.setType(Material.AIR);
+                    }
+                }
+            }, DragonTravelPlusModule.inst.config.markerDuration * 20);
+            return null;
+        }
+        if(DragonTravelPlusModule.inst.config.useVisibleWaypoints) {
+            Block markerBlock = Bukkit.getWorld(wp.getWorld()).getBlockAt((int) wp.getX(), (int) wp.getY(), (int) wp.getZ());
+            markerBlock.setType(Material.GLOWSTONE);
+            markerBlocks.add(markerBlock);
+        }
 		return wp;
 	}
 

@@ -13,10 +13,10 @@ public class FlightDistance {
         double distance = start.getLocation().distance(destination.getLocation());
         String distancePrint;
         if(distance >= 1000) {
-            distancePrint = (Math.round((distance/1000.) * 100.) / 100) + "km";
+            distancePrint = (Math.round((distance / 1000) * 100.) / 100.) + "km";
         }
         else {
-            distancePrint = (Math.round(distance * 100.) / 100) + "m";
+            distancePrint = (Math.round(distance * 100.) / 100.) + "m";
         }
         return distancePrint;
     }

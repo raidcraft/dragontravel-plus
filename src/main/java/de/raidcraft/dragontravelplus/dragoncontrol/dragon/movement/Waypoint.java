@@ -14,10 +14,12 @@ public class Waypoint {
 	private double x;
 	private double y;
 	private double z;
+    private String world;
 	private Block marker;
 
-    public Waypoint(double x, double y, double z) {
+    public Waypoint(String world, double x, double y, double z) {
 
+        this.world = world;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -51,4 +53,13 @@ public class Waypoint {
 		return this.z;
 	}
 
+    public String getWorld() {
+
+        return world;
+    }
+
+    public void setWorld(String world) {
+
+        this.world = world;
+    }
 }
