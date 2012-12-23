@@ -94,17 +94,20 @@ public class PlayerListener implements Listener {
         }
         Conversation conversation = Conversation.conversations.get(event.getPlayer().getName());
 
+        if(Arrays.asList(DragonTravelPlusModule.inst.config.exitWords).contains(event.getMessage())) {
+            DragonManager.INST.abortFlight(event.getPlayer());
+            if(conversation.inConversation()) {
+                conversation.abortConversation();
+                event.setCancelled(true);
+                event.getPlayer().sendMessage(ChatColor.GRAY + "Gespräch verlassen...");
+            }
+            return;
+        }
+
         if(!conversation.inConversation()) {
             return;
         }
 
-        if(Arrays.asList(DragonTravelPlusModule.inst.config.exitWords).contains(event.getMessage())) {
-            DragonManager.INST.abortFlight(event.getPlayer());
-            conversation.abortConversation();
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.GRAY + "Gespräch verlassen...");
-            return;
-        }
         if(conversation.getDragonGuard().getDragonStation().getLocation()
                 .distance(event.getPlayer().getLocation()) > DragonTravelPlusModule.inst.config.autoExitDistance) {
             conversation.abortConversation();
