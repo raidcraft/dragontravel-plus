@@ -93,15 +93,21 @@ public class PlayerListener implements Listener {
             return;
         }
         Conversation conversation = Conversation.conversations.get(event.getPlayer().getName());
+        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(event.getPlayer());
 
         if(Arrays.asList(DragonTravelPlusModule.inst.config.exitWords).contains(event.getMessage())) {
-            DragonManager.INST.abortFlight(event.getPlayer());
+            if(flyingPlayer != null && flyingPlayer.isInAir()) {
+                DragonManager.INST.abortFlight(event.getPlayer());
+                ChatMessages.success(event.getPlayer(), "Du hast den Flug abgebrochen!");
+                event.setCancelled(true);
+                return;
+            }
             if(conversation.inConversation()) {
                 conversation.abortConversation();
                 event.setCancelled(true);
                 event.getPlayer().sendMessage(ChatColor.GRAY + "Gespräch verlassen...");
+                return;
             }
-            return;
         }
 
         if(!conversation.inConversation()) {

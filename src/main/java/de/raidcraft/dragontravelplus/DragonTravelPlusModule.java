@@ -18,6 +18,7 @@ import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
+import de.raidcraft.dragontravelplus.util.ChatMessages;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.minecraft.server.v1_4_6.EntityTypes;
@@ -98,6 +99,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
         for(Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
             if(entry.getValue().isInAir()) {
                 DragonManager.INST.abortFlight(entry.getKey());
+                ChatMessages.warn(entry.getKey(), "Der Flug musste aus technischen Gründen abgebrochen werden!");
             }
         }
 
