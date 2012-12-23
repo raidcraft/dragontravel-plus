@@ -2,7 +2,6 @@ package de.raidcraft.dragontravelplus.dragoncontrol;
 
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
-import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,12 +20,12 @@ import java.util.TreeMap;
 public class FlightNavigator {
     public final static FlightNavigator INST = new FlightNavigator();
     
-    public Flight getFlight(DragonStation start, DragonStation destination) {
-        Flight flight = new Flight(start.getName() + "_" + destination.getName());
-        flight.addWaypoint(start.getLocation());
+    public Flight getFlight(Location start, Location destination) {
+        Flight flight = new Flight("dragontravelplus_flight");
+        flight.addWaypoint(start);
 
         if(DragonTravelPlusModule.inst.config.useDynamicRouting) {
-            List<Location> stationRoute = getRoute(StationManager.INST.getAllStationLocations(), start.getLocation(), destination.getLocation());
+            List<Location> stationRoute = getRoute(StationManager.INST.getAllStationLocations(), start, destination);
             List<Location> optimizedRoute = new ArrayList<>();
 
             // get all waypoints (without interpolation)
@@ -47,41 +46,6 @@ public class FlightNavigator {
                         wpLocation = startWPLocation.getWorld().getHighestBlockAt(wpLocation).getLocation();
                         wpLocation.setY(wpLocation.getY() + DragonTravelPlusModule.inst.config.flightHeight);
 
-//                        double flightHeight = wpLocation.getY() + DragonTravelPlusModule.inst.config.flightHeight;
-//                        if(lastFlightHeight > -1) {
-//                            double flightHeightDiff = Math.abs(flightHeight - lastFlightHeight);
-//
-//                            if(flightHeightDiff > 5) {
-//                                // descent
-//                                if(flightHeight < lastFlightHeight) {
-//                                    if((lastFlightHeight - flightHeightDiff / 2) > 15) {
-//                                        flightHeight = lastFlightHeight - 15;
-//                                    }
-//                                    else {
-//                                        flightHeight += flightHeightDiff / 2;
-//                                    }
-//                                }
-//                                // climb
-//                                else {
-//                                    double propFlightHeight;
-//                                    propFlightHeight = flightHeight - (flightHeightDiff / 2);
-//
-//                                    if(wpLocation.getBlock().getWorld()
-//                                            .getBlockAt(wpLocation.getBlockX(), (int)propFlightHeight, wpLocation.getBlockZ()).getType() == Material.AIR) {
-//                                        flightHeight = propFlightHeight;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        lastFlightHeight = flightHeight;
-//                        if(flightHeight > start.getLocation().getWorld().getMaxHeight()) {
-//                            flightHeight = start.getLocation().getWorld().getMaxHeight();
-//                        }
-//                        if(flightHeight < 0) {
-//                            flightHeight = 0;
-//                        }
-//                        wpLocation.setY(flightHeight);
-
                         optimizedRoute.add(wpLocation);
                     }
                 }
@@ -96,7 +60,7 @@ public class FlightNavigator {
             boolean skyIsle = false;
             for(Location location : optimizedRoute) {
                 int preY;
-                if(i == 0) preY = start.getLocation().getBlockY() + DragonTravelPlusModule.inst.config.flightHeight;
+                if(i == 0) preY = start.getBlockY() + DragonTravelPlusModule.inst.config.flightHeight;
                 else preY = optimizedRoute.get(i-1).getBlockY();
                 yDiff = location.getBlockY() - preY;
                 
@@ -104,14 +68,17 @@ public class FlightNavigator {
                     boolean isle = false;
                     boolean airType = true;
                     for(int j = optimizedRoute.size(); j > i; j--) {
-                        Location currLocation = destination.getLocation();
+                        Location currLocation = destination;
                         if(j < optimizedRoute.size()) {
                             currLocation = optimizedRoute.get(j);
                         }
 
                         if(j > i+15) continue;
                         // look if extreme height was only temporary  (island)
-                        if(!isle && (Math.abs(currLocation.getBlockY() - preY) < 10 || currLocation.getBlockY() <= preY)) {
+                        if(!isle && (Math.abs(currLocation.getBlockY() - preY) < 50 || currLocation.getBlockY() <= preY)
+                                && location.getWorld()
+                                    .getBlockAt(location.getBlockX(), preY, location.getBlockZ())
+                                    .getType() == Material.AIR) {
                             isle = true;
                         }
                         // if height was temporary, inspect previous waypoints if we can reduce height
@@ -161,8 +128,8 @@ public class FlightNavigator {
             }
         }
         
-        Location optimizedDestination = destination.getLocation().clone();
-        optimizedDestination.setY(destination.getLocation().getY() - 8);
+        Location optimizedDestination = destination.clone();
+        optimizedDestination.setY(destination.getY() - 8);
         flight.addWaypoint(optimizedDestination);
         return flight;
     }

@@ -65,7 +65,7 @@ public class DragonManager {
                 flyingPlayers.put(flyingPlayer.getPlayer(), flyingPlayer);
             }
 
-            Flight flight = FlightNavigator.INST.getFlight(flyingPlayer.getStart(), flyingPlayer.getDestination());
+            Flight flight = FlightNavigator.INST.getFlight(flyingPlayer.getStart().getLocation(), flyingPlayer.getDestination().getLocation());
             flyingPlayer.setInAir(true);
             FlightTravel.flyFlight(flight, flyingPlayer.getPlayer());
             CorePlugin.get().getEconomy().substract(flyingPlayer.getPlayer(), flyingPlayer.getPrice());
