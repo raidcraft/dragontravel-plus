@@ -1,15 +1,14 @@
 package de.raidcraft.dragontravelplus.listener;
 
+import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
-import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import de.raidcraft.dragontravelplus.events.DragonLandEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
-
-import java.util.Map;
 
 
 /**
@@ -30,12 +29,24 @@ public class EntityListener implements Listener {
     @EventHandler
     public void onDragonLand(DragonLandEvent event) {
         if(event.getPassenger() instanceof Player) {
-            for(Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
-                if(entry.getKey().getName().equalsIgnoreCase(((Player) event.getPassenger()).getName())) {
-                    DragonManager.INST.flyingPlayers.remove(entry.getKey());
-                    break;
-                }
-            }
+            PassengerRemover passengerRemover =
+                    new PassengerRemover(DragonManager.INST.getFlyingPlayer(((Player) event.getPassenger()).getName()).getPlayer());
+            Bukkit.getScheduler().scheduleSyncDelayedTask(CommandBook.inst(), passengerRemover, 7*10);
+        }
+    }
+    
+    public class PassengerRemover implements Runnable {
+
+        private Player player;
+
+        public PassengerRemover(Player player) {
+
+            this.player = player;
+        }
+
+        @Override
+        public void run() {
+            DragonManager.INST.flyingPlayers.remove(player);
         }
     }
 }

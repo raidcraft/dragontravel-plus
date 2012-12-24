@@ -15,7 +15,7 @@ public class FlyingPlayer {
     private RCDragon dragon = null;
     private DragonStation start;
     private DragonStation destination;
-    private boolean inAir;
+    private boolean inAir = false;
     private int waitingTaskID = 0;
     private long startTime = 0;
     private double price = 0;

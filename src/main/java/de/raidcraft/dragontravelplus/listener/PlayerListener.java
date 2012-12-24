@@ -33,13 +33,14 @@ public class PlayerListener implements Listener {
         if(!(event.getEntity() instanceof Player)) {
             return;
         }
+
         Player player = (Player)event.getEntity();
 
-        if(!DragonManager.INST.flyingPlayers.containsKey(player)) {
+        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
+        
+        if(flyingPlayer == null) {
             return;
         }
-
-        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
 
         if(flyingPlayer.isInAir()) {
             event.setCancelled(true);
@@ -76,13 +77,14 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
 
-        if(!DragonManager.INST.flyingPlayers.containsKey(event.getPlayer())
-                || !DragonManager.INST.flyingPlayers.get(event.getPlayer()).isInAir()) {
+        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(event.getPlayer().getName());
+
+        if(flyingPlayer == null || !flyingPlayer.isInAir()) {
             return;
         }
 
         for(String cmd : DragonTravelPlusModule.inst.config.forbiddenCommands) {
-            if(event.getMessage().toLowerCase().startsWith(cmd.toLowerCase())) {
+            if(event.getMessage().toLowerCase().startsWith("/" + cmd.toLowerCase())) {
                 ChatMessages.warn(event.getPlayer(), "Dieser Befehl ist während dem Flug verboten!");
                 event.setCancelled(true);
                 return;

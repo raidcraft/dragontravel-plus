@@ -132,7 +132,7 @@ public class FlightNavigator {
         }
         
         Location optimizedDestination = destination.clone();
-        optimizedDestination.setY(destination.getY() - 8);
+        optimizedDestination.setY(destination.getY() + 2);
         flight.addWaypoint(optimizedDestination);
         return flight;
     }

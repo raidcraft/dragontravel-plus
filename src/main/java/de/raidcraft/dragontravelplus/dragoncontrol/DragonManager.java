@@ -47,6 +47,15 @@ public class DragonManager {
         player.teleport(flyingPlayer.getStart().getLocation());   // teleport to start
         DragonManager.INST.flyingPlayers.remove(player);
     }
+    
+    public FlyingPlayer getFlyingPlayer(String name) {
+        for(Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
+            if(entry.getKey().getName().equalsIgnoreCase(name)) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
 
     public class DelayedTakeoffTask implements Runnable {
 
