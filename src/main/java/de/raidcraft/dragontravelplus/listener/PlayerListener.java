@@ -9,6 +9,7 @@ import de.raidcraft.dragontravelplus.util.ChatMessages;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -26,7 +27,7 @@ import java.util.Arrays;
  */
 public class PlayerListener implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent event) {
         
         if(!(event.getEntity() instanceof Player)) {
@@ -55,11 +56,13 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+
         Conversation.conversations.put(event.getPlayer().getName(), new Conversation(event.getPlayer()));
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+
         Conversation.conversations.remove(event.getPlayer().getName());
         DragonManager.INST.abortFlight(event.getPlayer());
     }
