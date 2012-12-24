@@ -75,7 +75,10 @@ public class FlightNavigator {
 
                         if(j > i+15) continue;
                         // look if extreme height was only temporary  (island)
-                        if(!isle && (Math.abs(currLocation.getBlockY() - preY) < 50 || currLocation.getBlockY() <= preY)
+                        if(!isle
+                                && (Math.abs(currLocation.getBlockY() - preY) < 50
+                                        || currLocation.getBlockY() <= preY
+                                        || currLocation.getBlockY() < location.getBlockY()-20)
                                 && location.getWorld()
                                     .getBlockAt(location.getBlockX(), preY, location.getBlockZ())
                                     .getType() == Material.AIR) {
