@@ -10,7 +10,7 @@ import de.raidcraft.dragontravelplus.commands.Commands;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
-import de.raidcraft.dragontravelplus.listener.EntityListener;
+import de.raidcraft.dragontravelplus.listener.DragonListener;
 import de.raidcraft.dragontravelplus.listener.PlayerListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.npc.NPCListener;
@@ -54,7 +54,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
                     CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
                     CommandBook.registerEvents(new NPCListener());
                     CommandBook.registerEvents(new PlayerListener());
-                    CommandBook.registerEvents(new EntityListener());
+                    CommandBook.registerEvents(new DragonListener());
                     registerCommands(Commands.class);
                     ComponentDatabase.INSTANCE.registerTable(StationTable.class, new StationTable());
                     ComponentDatabase.INSTANCE.registerTable(PlayerStations.class, new PlayerStations());

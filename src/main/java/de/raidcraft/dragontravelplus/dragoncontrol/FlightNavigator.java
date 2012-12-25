@@ -2,7 +2,9 @@ package de.raidcraft.dragontravelplus.dragoncontrol;
 
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
+import de.raidcraft.dragontravelplus.events.RoutingFinishedEvent;
 import de.raidcraft.dragontravelplus.station.StationManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.util.Vector;
@@ -20,7 +22,7 @@ import java.util.TreeMap;
 public class FlightNavigator {
     public final static FlightNavigator INST = new FlightNavigator();
     
-    public Flight getFlight(Location start, Location destination) {
+    public void calculateFlight(FlyingPlayer flyingPlayer, Location start, Location destination) {
         Flight flight = new Flight("dragontravelplus_flight");
         flight.addWaypoint(start);
 
@@ -134,7 +136,8 @@ public class FlightNavigator {
         Location optimizedDestination = destination.clone();
         optimizedDestination.setY(destination.getY() + 2);
         flight.addWaypoint(optimizedDestination);
-        return flight;
+
+        Bukkit.getPluginManager().callEvent(new RoutingFinishedEvent(flyingPlayer, flight));
     }
 
     private List<Location> getRoute(List<Location> availableLocations, Location start, Location destination) {

@@ -1,13 +1,9 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
-import com.silthus.raidcraft.bukkit.CorePlugin;
 import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.dragontravelplus.station.DragonStation;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -71,11 +67,7 @@ public class DragonManager {
                 flyingPlayers.put(flyingPlayer.getPlayer(), flyingPlayer);
             }
 
-            Flight flight = FlightNavigator.INST.getFlight(flyingPlayer.getStart().getLocation(), flyingPlayer.getDestination().getLocation());
-            flyingPlayer.setInAir(true);
-            FlightTravel.flyFlight(flight, flyingPlayer.getPlayer());
-            CorePlugin.get().getEconomy().substract(flyingPlayer.getPlayer(), flyingPlayer.getPrice());
-            flyingPlayer.getPlayer().sendMessage(ChatColor.GRAY + "Schreibe '" + DragonTravelPlusModule.inst.config.exitWords[0] + "' in den Chat um den Flug abzubrechen!");
+            FlightNavigator.INST.calculateFlight(flyingPlayer, flyingPlayer.getStart().getLocation(), flyingPlayer.getDestination().getLocation());
         }
     }
 }
