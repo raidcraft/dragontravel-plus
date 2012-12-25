@@ -41,7 +41,7 @@ public class DragonListener implements Listener {
     }
 
     /*
-     * Start flying after route calculation is finished
+     * Start flight after route calculation is finished
      */
     @EventHandler
     public void onRoutingFinished(RoutingFinishedEvent event) {

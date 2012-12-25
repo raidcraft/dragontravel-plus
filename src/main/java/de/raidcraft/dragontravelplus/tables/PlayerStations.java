@@ -3,6 +3,7 @@ package de.raidcraft.dragontravelplus.tables;
 import com.silthus.raidcraft.util.component.DateUtil;
 import com.silthus.raidcraft.util.component.database.Table;
 import com.sk89q.commandbook.CommandBook;
+import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 
 import java.sql.ResultSet;
@@ -25,7 +26,7 @@ public class PlayerStations extends Table {
     @Override
     public void createTable() {
         try {
-            getConnection().prepareStatement(
+            DragonTravelPlusModule.inst.getConnection().prepareStatement(
                     "CREATE TABLE `" + getTableName() + "` (" +
                             "`id` INT NOT NULL AUTO_INCREMENT, " +
                             "`player` VARCHAR( 32 ) NOT NULL, " +
@@ -42,7 +43,7 @@ public class PlayerStations extends Table {
 
         List<String> stations = new ArrayList<>();
         try {
-            ResultSet resultSet = getConnection().prepareStatement(
+            ResultSet resultSet = DragonTravelPlusModule.inst.getConnection().prepareStatement(
                     "SELECT * FROM " + getTableName() + " WHERE player = '" + player + "'").executeQuery();
 
             while (resultSet.next()) {
@@ -64,7 +65,7 @@ public class PlayerStations extends Table {
                     "'" + DateUtil.getCurrentDateString() + "'" +
                     ");";
 
-            Statement statement = getConnection().createStatement();
+            Statement statement = DragonTravelPlusModule.inst.getConnection().createStatement();
             statement.executeUpdate(query);
         } catch (SQLException e) {
             CommandBook.logger().warning(e.getMessage());

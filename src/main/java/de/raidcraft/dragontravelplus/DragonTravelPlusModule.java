@@ -26,6 +26,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Map;
 
 /**
@@ -42,6 +44,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
     public static DragonTravelPlusModule inst;
     public LocalDTPConfiguration config;
     private int startTaskId;
+    private Connection connection; 
 
     @Override
     public void enable() {
@@ -49,8 +52,9 @@ public class DragonTravelPlusModule extends BukkitComponent {
         loadConfig();
         startTaskId = CommandBook.inst().getServer().getScheduler().scheduleSyncRepeatingTask(CommandBook.inst(), new Runnable() {
             public void run() {
-                if(ComponentDatabase.INSTANCE.getConnection() != null) {
-
+                Connection conn = ComponentDatabase.INSTANCE.getNewConnection();
+                if(conn != null) {
+                    connection = conn;
                     CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
                     CommandBook.registerEvents(new NPCListener());
                     CommandBook.registerEvents(new PlayerListener());
@@ -86,6 +90,14 @@ public class DragonTravelPlusModule extends BukkitComponent {
                 DragonManager.INST.abortFlight(entry.getKey());
             }
         }
+        try {
+            connection.close();
+        } catch (SQLException e) {}
+    }
+
+    public Connection getConnection() {
+
+        return connection;
     }
 
     public void loadConfig() {
