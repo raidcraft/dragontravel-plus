@@ -93,6 +93,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
         try {
             connection.close();
         } catch (SQLException e) {}
+        super.disable();
     }
 
     public Connection getConnection() {

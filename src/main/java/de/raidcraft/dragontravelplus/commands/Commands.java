@@ -125,8 +125,8 @@ public class Commands {
                 return;
             }
 
-            if(DragonGuardTrait.dragonGuards.containsKey(context.getString(0))) {
-                DragonGuardTrait trait = DragonGuardTrait.dragonGuards.get(context.getString(0));
+            DragonGuardTrait trait = DragonGuardTrait.getDragonGuard(context.getString(0));
+            if(trait != null) {
                 trait.getNPC().destroy();
             }
 

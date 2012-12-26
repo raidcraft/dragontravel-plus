@@ -123,6 +123,15 @@ public class DragonGuardTrait extends Trait {
         dragonGuards.put(station.getName(), this);
     }
     
+    public static DragonGuardTrait getDragonGuard(String name) {
+        for(Map.Entry<String, DragonGuardTrait> entry : dragonGuards.entrySet()) {
+            if(entry.getKey().equalsIgnoreCase(name)) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+    
     public static void createDragonGuard(Location location, DragonStation station) {
         NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, DragonTravelPlusModule.inst.config.npcDefaultName);
         npc.addTrait(DragonGuardTrait.class);
