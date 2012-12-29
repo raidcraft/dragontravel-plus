@@ -117,7 +117,7 @@ public class DragonGuardTrait extends Trait {
                     + " y:" + entity.getLocation().getBlockY()
                     + " z:" + entity.getLocation().getBlockZ()
                     + "! Station not found!");
-            npc.destroy();
+            npc.despawn();
             return;
         }
         dragonGuards.put(station.getName(), this);
