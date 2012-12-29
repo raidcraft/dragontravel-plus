@@ -23,10 +23,13 @@ public class FlightNavigator {
     public final static FlightNavigator INST = new FlightNavigator();
     
     public void calculateFlight(FlyingPlayer flyingPlayer, Location start, Location destination) {
+
+        if(start.getWorld() != destination.getWorld()) return;
+
         Flight flight = new Flight("dragontravelplus_flight");
         flight.addWaypoint(start);
 
-        if(DragonTravelPlusModule.inst.config.useDynamicRouting) {
+        if(DragonTravelPlusModule.inst.config.useDynamicRouting && !start.getWorld().getName().equalsIgnoreCase("nether")) {
             List<Location> stationRoute = getRoute(StationManager.INST.getAllStationLocations(), start, destination);
             List<Location> optimizedRoute = new ArrayList<>();
 
@@ -152,6 +155,7 @@ public class FlightNavigator {
             ratedLocations.clear();
             
             for(Location location : availableLocations) {
+                if(location.getWorld() != start.getWorld()) continue;
                 
                 Integer rating = new Integer((int) (2 * Math.sqrt(Math.pow(nextStarpoint.distance(location), 2) + Math.pow(location.distance(destination), 2))));
                 if(nextStarpoint.distance(location) < location.distance(destination)) {

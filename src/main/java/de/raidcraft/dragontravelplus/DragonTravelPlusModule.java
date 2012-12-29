@@ -211,7 +211,7 @@ public class DragonTravelPlusModule extends BukkitComponent {
         };
 
         @Setting("conv-stage-flight-by-name-unknown-station") public String[] convFlightByNameUnknownStation = new String[]{
-                "Du hast noch keine Drachenstation mit diesem Namen entdeckt!"
+                "Du kennst in dieser Welt eine solche Drachenstation nicht!"
         };
 
         @Setting("conv-stage-flight-by-name-same-station") public String[] convFlightByNameSameStation = new String[]{
