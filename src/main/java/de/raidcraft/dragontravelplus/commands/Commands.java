@@ -157,7 +157,7 @@ public class Commands {
             }
 
             ((Player)sender).teleport(station.getLocation());
-            ChatMessages.success((Player)sender, "Du wurdest erfolgreich zur Station '" + station.getName() + "' geportet!");
+            ChatMessages.success((Player)sender, "Du wurdest zur Station '" + station.getName() + "' geportet!");
         }
 
         @Command(
