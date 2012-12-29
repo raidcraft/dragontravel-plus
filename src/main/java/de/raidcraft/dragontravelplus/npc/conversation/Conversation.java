@@ -71,7 +71,7 @@ public class Conversation {
             currentStage = new DisabledStage(this);
         }
         // player doesn't know this station
-        else if(!StationManager.INST.getPlayerStations(player.getName()).contains(npc.getTrait(DragonGuardTrait.class).getDragonStation())) {
+        else if(!StationManager.INST.getPlayerStations(player).contains(npc.getTrait(DragonGuardTrait.class).getDragonStation())) {
             currentStage = new FirstMeetStage(this);
         }
 
@@ -91,7 +91,9 @@ public class Conversation {
     }
 
     public void updatePlayerStations() {
-        playerStations = StationManager.INST.getPlayerStations(player.getName());
+
+        playerStations = StationManager.INST.getPlayerStations(player);
+
         if(getDragonGuard() != null) {
             playerStations.remove(getDragonGuard().getDragonStation());
         }

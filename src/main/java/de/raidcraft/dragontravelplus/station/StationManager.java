@@ -7,6 +7,7 @@ import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,26 +32,6 @@ public class StationManager {
             i++;
             existingStations.put(station.getName(), station);
         }
-
-        // create npc if not exists
-        // disabled because of doubling the dragon guards
-//        CommandBook.server().getScheduler().scheduleSyncDelayedTask(CommandBook.inst(), new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                if(DragonGuardTrait.dragonGuards.size() < StationManager.INST.existingStations.size()) {
-//                    Map<String, DragonStation> existingStationsCopy = new HashMap<>(StationManager.INST.existingStations);
-//
-//                    for(Map.Entry<String, DragonGuardTrait> entry : DragonGuardTrait.dragonGuards.entrySet()) {
-//                        existingStationsCopy.remove(entry.getKey());
-//                    }
-//
-//                    for(Map.Entry<String, DragonStation> entry : existingStationsCopy.entrySet()) {
-//                        DragonGuardTrait.createDragonGuard(entry.getValue().getLocation(), entry.getValue());
-//                    }
-//                }
-//            }
-//        }, 10*20);
         
         CommandBook.logger().info("[DTP] Es wurden " + i + " Stationen geladen!");
     }
@@ -93,21 +74,22 @@ public class StationManager {
         return existingStations.get(stations.get(0).getName());
     }
     
-    public List<DragonStation> getPlayerStations(String player) {
+    public List<DragonStation> getPlayerStations(Player player) {
         List<DragonStation> stations = new ArrayList<>();
-        List<String> stationNames = ComponentDatabase.INSTANCE.getTable(PlayerStations.class).getAllPlayerStations(player);
+        List<String> stationNames = ComponentDatabase.INSTANCE.getTable(PlayerStations.class).getAllPlayerStations(player.getName());
         stationNames.addAll(ComponentDatabase.INSTANCE.getTable(StationTable.class).getEmergencyStations());
         for(String name : stationNames) {
             DragonStation station = existingStations.get(name);
             if(station == null) continue;
             if(stations.contains(station)) continue;
+            if(station.getLocation().getWorld() != player.getWorld()) continue; // only stations on same world
 
             stations.add(station);
         }
         return stations;
     }
     
-    public DragonStation getPlayerStation(String player, String stationName) {
+    public DragonStation getPlayerStation(Player player, String stationName) {
         for(DragonStation station : getPlayerStations(player)) {
             if(station.getName().equalsIgnoreCase(stationName)) {
                 return station;
