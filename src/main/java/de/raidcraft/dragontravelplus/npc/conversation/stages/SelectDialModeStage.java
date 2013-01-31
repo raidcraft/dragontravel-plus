@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 
 /**
@@ -13,9 +14,9 @@ public class SelectDialModeStage extends Stage {
     public SelectDialModeStage(Conversation conversation) {
 
         super(conversation);
-        
-        setTextToSpeak(DragonTravelPlusModule.inst.config.convSelectDialModeSpeak);
-        setPlayerReply(DragonTravelPlusModule.inst.config.convSelectDialModeAnswers);
+
+        setTextToSpeak(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convSelectDialModeSpeak);
+        setPlayerReply(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convSelectDialModeAnswers);
     }
 
     @Override
@@ -28,8 +29,8 @@ public class SelectDialModeStage extends Stage {
     @Override
     public boolean processAnswer(String answer) {
 
-        try{
-            switch(Integer.parseInt(answer)) {
+        try {
+            switch (Integer.parseInt(answer)) {
                 case 1:
                     getConversation().setCurrentStage(new TargetAssistRegionStage(getConversation()));
                     getConversation().getCurrentStage().speak();
@@ -41,8 +42,7 @@ public class SelectDialModeStage extends Stage {
                 default:
                     wrongAnswerWarning();
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             wrongAnswerWarning();
         }
         return true;

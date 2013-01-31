@@ -1,7 +1,8 @@
 package de.raidcraft.dragontravelplus.listener;
 
 import com.sk89q.commandbook.CommandBook;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
@@ -29,24 +30,23 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent event) {
-        
-        if(!(event.getEntity() instanceof Player)) {
+
+        if (!(event.getEntity() instanceof Player)) {
             return;
         }
 
-        Player player = (Player)event.getEntity();
+        Player player = (Player) event.getEntity();
 
         FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
-        
-        if(flyingPlayer == null) {
+
+        if (flyingPlayer == null) {
             return;
         }
 
-        if(flyingPlayer.isInAir()) {
+        if (flyingPlayer.isInAir()) {
             event.setCancelled(true);
             return;
-        }
-        else {
+        } else {
             CommandBook.server().getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
             DragonManager.INST.flyingPlayers.remove(player);
             ChatMessages.warn(player, "Du hast schaden genommen, der Drache hat wieder abgedreht!");
@@ -67,7 +67,7 @@ public class PlayerListener implements Listener {
         Conversation.conversations.remove(event.getPlayer().getName());
         DragonManager.INST.abortFlight(event.getPlayer());
     }
-    
+
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
 
@@ -79,13 +79,13 @@ public class PlayerListener implements Listener {
 
         FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(event.getPlayer().getName());
 
-        if(flyingPlayer == null || !flyingPlayer.isInAir()) {
+        if (flyingPlayer == null || !flyingPlayer.isInAir()) {
             return;
         }
 
-        for(String cmd : DragonTravelPlusModule.inst.config.forbiddenCommands) {
-            
-            if(event.getMessage().toLowerCase().startsWith("/" + cmd.toLowerCase())) {
+        for (String cmd : RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.forbiddenCommands) {
+
+            if (event.getMessage().toLowerCase().startsWith("/" + cmd.toLowerCase())) {
                 ChatMessages.warn(event.getPlayer(), "Dieser Befehl ist während dem Flug verboten!");
                 event.setCancelled(true);
                 return;
@@ -95,20 +95,21 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        if(!Conversation.conversations.containsKey(event.getPlayer().getName())) {
+
+        if (!Conversation.conversations.containsKey(event.getPlayer().getName())) {
             return;
         }
         Conversation conversation = Conversation.conversations.get(event.getPlayer().getName());
         FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(event.getPlayer());
 
-        if(Arrays.asList(DragonTravelPlusModule.inst.config.exitWords).contains(event.getMessage())) {
-            if(flyingPlayer != null && flyingPlayer.isInAir()) {
+        if (Arrays.asList(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.exitWords).contains(event.getMessage())) {
+            if (flyingPlayer != null && flyingPlayer.isInAir()) {
                 DragonManager.INST.abortFlight(event.getPlayer());
                 ChatMessages.success(event.getPlayer(), "Du hast den Flug abgebrochen!");
                 event.setCancelled(true);
                 return;
             }
-            if(conversation.inConversation()) {
+            if (conversation.inConversation()) {
                 conversation.abortConversation();
                 event.setCancelled(true);
                 event.getPlayer().sendMessage(ChatColor.GRAY + "Gespräch verlassen...");
@@ -116,18 +117,18 @@ public class PlayerListener implements Listener {
             }
         }
 
-        if(!conversation.inConversation()) {
+        if (!conversation.inConversation()) {
             return;
         }
 
-        if(conversation.getDragonGuard().getDragonStation().getLocation()
-                .distance(event.getPlayer().getLocation()) > DragonTravelPlusModule.inst.config.autoExitDistance) {
+        if (conversation.getDragonGuard().getDragonStation().getLocation()
+                .distance(event.getPlayer().getLocation()) > RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.autoExitDistance) {
             conversation.abortConversation();
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.GRAY + "Der Drachenwächter hört dir nichtmehr zu...");
             return;
         }
-        if(conversation.trigger(Conversation.TriggerType.CHAT_ANSWER, event.getMessage())) {
+        if (conversation.trigger(Conversation.TriggerType.CHAT_ANSWER, event.getMessage())) {
             event.setCancelled(true);
         }
     }

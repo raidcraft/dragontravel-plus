@@ -10,12 +10,12 @@ import java.util.HashMap;
  */
 public class Waypoint {
 
-	public static HashMap<Block, Block> markers = new HashMap<Block, Block>();
-	private double x;
-	private double y;
-	private double z;
+    public static HashMap<Block, Block> markers = new HashMap<Block, Block>();
+    private double x;
+    private double y;
+    private double z;
     private String world;
-	private Block marker;
+    private Block marker;
 
     public Waypoint(String world, double x, double y, double z) {
 
@@ -25,33 +25,40 @@ public class Waypoint {
         this.z = z;
     }
 
-	public void removeMarker() {
-		marker.setType(Material.AIR);
-	}
+    public void removeMarker() {
 
-	public void setX(double x) {
-		this.x = x;
-	}
+        marker.setType(Material.AIR);
+    }
 
-	public double getX() {
-		return this.x;
-	}
+    public void setX(double x) {
 
-	public void setY(double y) {
-		this.y = y - 2;
-	}
+        this.x = x;
+    }
 
-	public double getY() {
-		return this.y;
-	}
+    public double getX() {
 
-	public void setZ(double z) {
-		this.z = z;
-	}
+        return this.x;
+    }
 
-	public double getZ() {
-		return this.z;
-	}
+    public void setY(double y) {
+
+        this.y = y - 2;
+    }
+
+    public double getY() {
+
+        return this.y;
+    }
+
+    public void setZ(double z) {
+
+        this.z = z;
+    }
+
+    public double getZ() {
+
+        return this.z;
+    }
 
     public String getWorld() {
 

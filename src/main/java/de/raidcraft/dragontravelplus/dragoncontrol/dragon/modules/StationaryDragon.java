@@ -1,8 +1,8 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules;
 
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
-import net.minecraft.server.v1_4_6.World;
-import org.bukkit.craftbukkit.v1_4_6.CraftWorld;
+import net.minecraft.server.v1_4_R1.World;
+import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 import org.bukkit.entity.Player;
 
 /**
@@ -11,12 +11,13 @@ import org.bukkit.entity.Player;
  */
 public class StationaryDragon {
 
-	/**
-	 * Creates a stationary dragon
-	 */
-	public static void createStatDragon(Player player) {
-		World notchWorld = ((CraftWorld) player.getWorld()).getHandle();
+    /**
+     * Creates a stationary dragon
+     */
+    public static void createStatDragon(Player player) {
+
+        World notchWorld = ((CraftWorld) player.getWorld()).getHandle();
         RCDragon dragon = new RCDragon(player.getLocation(), notchWorld);
-		notchWorld.addEntity(dragon);
+        notchWorld.addEntity(dragon);
     }
 }

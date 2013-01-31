@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 
 /**
@@ -13,7 +14,7 @@ public class NoStationsStage extends Stage {
     public NoStationsStage(Conversation conversation) {
 
         super(conversation);
-        
-        setTextToSpeak(DragonTravelPlusModule.inst.config.convNoStationsDiscovered);
+
+        setTextToSpeak(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convNoStationsDiscovered);
     }
 }

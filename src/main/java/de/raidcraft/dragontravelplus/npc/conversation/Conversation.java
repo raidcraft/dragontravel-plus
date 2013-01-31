@@ -1,8 +1,14 @@
 package de.raidcraft.dragontravelplus.npc.conversation;
 
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
-import de.raidcraft.dragontravelplus.npc.conversation.stages.*;
+import de.raidcraft.dragontravelplus.npc.conversation.stages.DisabledStage;
+import de.raidcraft.dragontravelplus.npc.conversation.stages.FirstMeetStage;
+import de.raidcraft.dragontravelplus.npc.conversation.stages.NoPermissionStage;
+import de.raidcraft.dragontravelplus.npc.conversation.stages.NoStationsStage;
+import de.raidcraft.dragontravelplus.npc.conversation.stages.SelectDialModeStage;
+import de.raidcraft.dragontravelplus.npc.conversation.stages.Stage;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import net.citizensnpcs.api.npc.NPC;
@@ -19,6 +25,7 @@ import java.util.Map;
  * Description:
  */
 public class Conversation {
+
     public static Map<String, Conversation> conversations = new HashMap<>();
 
     public final static ChatColor SPEAK_COLOR = ChatColor.AQUA;
@@ -38,24 +45,25 @@ public class Conversation {
 
         return trigger(null, triggerType, data);
     }
-    
+
     public boolean trigger(NPC npc, TriggerType triggerType) {
 
         return trigger(npc, triggerType, null);
     }
-    
+
     public boolean trigger(NPC npc, TriggerType triggerType, String data) {
 
-        if(playerStations == null) {
+        if (playerStations == null) {
             updatePlayerStations();
         }
 
-        if(triggerType == TriggerType.CHAT_ANSWER && currentStage != null) {
+        if (triggerType == TriggerType.CHAT_ANSWER && currentStage != null) {
             return currentStage.processAnswer(data);
         }
 
         // start new conversation
-        if(this.npc != npc || this.npc == null) {
+        // TODO: wtf is this if clause?
+        if (this.npc != npc || this.npc == null) {
             this.npc = npc;
             this.dragonGuard = npc.getTrait(DragonGuardTrait.class);
             updatePlayerStations();
@@ -63,28 +71,27 @@ public class Conversation {
         }
 
         // no permissions to use
-        if(!player.hasPermission("dragontravelplus.use")) {
+        if (!player.hasPermission("dragontravelplus.use")) {
             currentStage = new NoPermissionStage(this);
         }
         // dtp is disabled (only available for admins)
-        else if(DragonTravelPlusModule.inst.config.disabled && !player.hasPermission("dragontravelplus.ignore.disabled")) {
+        else if (RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.disabled && !player.hasPermission("dragontravelplus.ignore.disabled")) {
             currentStage = new DisabledStage(this);
         }
         // player doesn't know this station
-        else if(!StationManager.INST.getPlayerStations(player).contains(npc.getTrait(DragonGuardTrait.class).getDragonStation())) {
+        else if (!StationManager.INST.getPlayerStations(player).contains(npc.getTrait(DragonGuardTrait.class).getDragonStation())) {
             currentStage = new FirstMeetStage(this);
         }
 
-        if(currentStage == null) {
-            if(playerStations.size() == 0) {
+        if (currentStage == null) {
+            if (playerStations.size() == 0) {
                 currentStage = new NoStationsStage(this);
-            }
-            else {
+            } else {
                 currentStage = new SelectDialModeStage(this);
             }
         }
 
-        if(triggerType == TriggerType.LEFT_CLICK || triggerType == TriggerType.RIGHT_CLICK || triggerType == TriggerType.REPEAT) {
+        if (triggerType == TriggerType.LEFT_CLICK || triggerType == TriggerType.RIGHT_CLICK || triggerType == TriggerType.REPEAT) {
             currentStage.speak();
         }
         return false;
@@ -94,7 +101,7 @@ public class Conversation {
 
         playerStations = StationManager.INST.getPlayerStations(player);
 
-        if(getDragonGuard() != null) {
+        if (getDragonGuard() != null) {
             playerStations.remove(getDragonGuard().getDragonStation());
         }
     }
@@ -113,8 +120,9 @@ public class Conversation {
 
         return player;
     }
-    
+
     public List<DragonStation> getPlayerStations() {
+
         return playerStations;
     }
 
@@ -129,11 +137,13 @@ public class Conversation {
     }
 
     public void abortConversation() {
+
         setCurrentStage(null);
     }
 
     public boolean inConversation() {
-        if(currentStage != null) {
+
+        if (currentStage != null) {
             return true;
         }
         return false;

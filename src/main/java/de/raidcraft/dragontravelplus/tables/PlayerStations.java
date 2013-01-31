@@ -1,10 +1,9 @@
 package de.raidcraft.dragontravelplus.tables;
 
-import com.silthus.raidcraft.util.component.DateUtil;
-import com.silthus.raidcraft.util.component.database.Table;
 import com.sk89q.commandbook.CommandBook;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.api.database.Table;
 import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.util.DateUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,13 +19,15 @@ import java.util.List;
 public class PlayerStations extends Table {
 
     public PlayerStations() {
+
         super("players", "dragontp_");
     }
 
     @Override
     public void createTable() {
+
         try {
-            DragonTravelPlusModule.inst.getConnection().prepareStatement(
+            getConnection().prepareStatement(
                     "CREATE TABLE `" + getTableName() + "` (" +
                             "`id` INT NOT NULL AUTO_INCREMENT, " +
                             "`player` VARCHAR( 32 ) NOT NULL, " +
@@ -43,7 +44,7 @@ public class PlayerStations extends Table {
 
         List<String> stations = new ArrayList<>();
         try {
-            ResultSet resultSet = DragonTravelPlusModule.inst.getConnection().prepareStatement(
+            ResultSet resultSet = getConnection().prepareStatement(
                     "SELECT * FROM " + getTableName() + " WHERE player = '" + player + "'").executeQuery();
 
             while (resultSet.next()) {
@@ -65,7 +66,7 @@ public class PlayerStations extends Table {
                     "'" + DateUtil.getCurrentDateString() + "'" +
                     ");";
 
-            Statement statement = DragonTravelPlusModule.inst.getConnection().createStatement();
+            Statement statement = getConnection().createStatement();
             statement.executeUpdate(query);
         } catch (SQLException e) {
             CommandBook.logger().warning(e.getMessage());

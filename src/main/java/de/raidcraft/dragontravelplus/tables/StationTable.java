@@ -1,8 +1,7 @@
 package de.raidcraft.dragontravelplus.tables;
 
-import com.silthus.raidcraft.util.component.database.Table;
 import com.sk89q.commandbook.CommandBook;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.api.database.Table;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,15 +19,17 @@ import java.util.List;
  * Description:
  */
 public class StationTable extends Table {
-    
+
     public StationTable() {
+
         super("stations", "dragontp_");
     }
 
     @Override
     public void createTable() {
+
         try {
-            DragonTravelPlusModule.inst.getConnection().prepareStatement(
+            getConnection().prepareStatement(
                     "CREATE TABLE `" + getTableName() + "` (" +
                             "`id` INT NOT NULL AUTO_INCREMENT, " +
                             "`name` VARCHAR( 32 ) NOT NULL, " +
@@ -52,12 +53,12 @@ public class StationTable extends Table {
 
         List<DragonStation> stations = new ArrayList<>();
         try {
-            ResultSet resultSet = DragonTravelPlusModule.inst.getConnection().prepareStatement(
+            ResultSet resultSet = getConnection().prepareStatement(
                     "SELECT * FROM " + getTableName() + ";").executeQuery();
 
             while (resultSet.next()) {
                 World world = Bukkit.getWorld(resultSet.getString("world"));
-                if(world == null) continue;
+                if (world == null) continue;
 
                 DragonStation station = new DragonStation(resultSet.getString("name")
                         , new Location(world, resultSet.getDouble("x"), resultSet.getDouble("y"), resultSet.getDouble("z"))
@@ -66,7 +67,7 @@ public class StationTable extends Table {
                         , resultSet.getBoolean("emergency")
                         , resultSet.getString("creator")
                         , resultSet.getString("created"));
-                        
+
                 stations.add(station);
             }
         } catch (SQLException e) {
@@ -79,19 +80,19 @@ public class StationTable extends Table {
 
         List<DragonStation> stations = new ArrayList<>();
         try {
-            ResultSet resultSet = DragonTravelPlusModule.inst.getConnection().prepareStatement(
+            ResultSet resultSet = getConnection().prepareStatement(
                     "SELECT * FROM " + getTableName() + " WHERE " +
-                    "x >= " + (location.getBlockX() - radius) + " AND " +
-                    "x <= " + (location.getBlockX() + radius) + " AND " +
-                    "y >= " + (location.getBlockY() - radius) + " AND " +
-                    "y <= " + (location.getBlockY() + radius) + " AND " +
-                    "z >= " + (location.getBlockZ() - radius) + " AND " +
-                    "z <= " + (location.getBlockZ() + radius)
+                            "x >= " + (location.getBlockX() - radius) + " AND " +
+                            "x <= " + (location.getBlockX() + radius) + " AND " +
+                            "y >= " + (location.getBlockY() - radius) + " AND " +
+                            "y <= " + (location.getBlockY() + radius) + " AND " +
+                            "z >= " + (location.getBlockZ() - radius) + " AND " +
+                            "z <= " + (location.getBlockZ() + radius)
             ).executeQuery();
 
             while (resultSet.next()) {
                 World world = Bukkit.getWorld(resultSet.getString("world"));
-                if(world == null) continue;
+                if (world == null) continue;
 
                 DragonStation station = new DragonStation(resultSet.getString("name")
                         , new Location(world, resultSet.getDouble("x"), resultSet.getDouble("y"), resultSet.getDouble("z"))
@@ -108,11 +109,12 @@ public class StationTable extends Table {
         }
         return stations;
     }
-    
+
     public List<String> getEmergencyStations() {
+
         List<String> stations = new ArrayList<>();
         try {
-            ResultSet resultSet = DragonTravelPlusModule.inst.getConnection().prepareStatement(
+            ResultSet resultSet = getConnection().prepareStatement(
                     "SELECT * FROM " + getTableName() + " WHERE emergency = '1'"
             ).executeQuery();
 
@@ -142,7 +144,7 @@ public class StationTable extends Table {
                     "'" + station.getCreated() + "'" +
                     ");";
 
-            Statement statement = DragonTravelPlusModule.inst.getConnection().createStatement();
+            Statement statement = getConnection().createStatement();
             statement.executeUpdate(query);
         } catch (SQLException e) {
             CommandBook.logger().warning(e.getMessage());
@@ -151,12 +153,13 @@ public class StationTable extends Table {
     }
 
     public void deleteStation(DragonStation station) {
+
         try {
-            DragonTravelPlusModule.inst.getConnection().prepareStatement(
+            getConnection().prepareStatement(
                     "DELETE FROM " + getTableName() + " WHERE name = '" + station.getName() + "'").execute();
         } catch (SQLException e) {
-        CommandBook.logger().warning(e.getMessage());
-        e.printStackTrace();
+            CommandBook.logger().warning(e.getMessage());
+            e.printStackTrace();
         }
     }
 }

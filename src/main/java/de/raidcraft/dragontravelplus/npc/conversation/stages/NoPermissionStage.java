@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 
 /**
@@ -13,7 +14,7 @@ public class NoPermissionStage extends Stage {
     public NoPermissionStage(Conversation conversation) {
 
         super(conversation);
-        
-        setTextToSpeak(DragonTravelPlusModule.inst.config.convNoPermissionSpeak);
+
+        setTextToSpeak(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convNoPermissionSpeak);
     }
 }

@@ -1,318 +1,322 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon;
 
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
 import de.raidcraft.dragontravelplus.events.DragonLandEvent;
-import net.minecraft.server.v1_4_6.EntityEnderDragon;
-import net.minecraft.server.v1_4_6.World;
+import net.minecraft.server.v1_4_R1.EntityEnderDragon;
+import net.minecraft.server.v1_4_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
 public class RCDragon extends EntityEnderDragon {
 
-	// Travel
-	private double toX;
-	private double toY;
-	private double toZ;
-	private int maxY;
-	private boolean finalmove = false;
-	private boolean move = false;
+    // Travel
+    private double toX;
+    private double toY;
+    private double toZ;
+    private int maxY;
+    private boolean finalmove = false;
+    private boolean move = false;
 
-	// Flight
-	private Flight flight;
-	private Waypoint firstwp;
+    // Flight
+    private Flight flight;
+    private Waypoint firstwp;
 
-	// First Waypoint coords
-	private double fwpX;
-	private double fwpY;
-	private double fwpZ;
+    // First Waypoint coords
+    private double fwpX;
+    private double fwpY;
+    private double fwpZ;
 
-	// Amount to fly up/down during a flight
-	private double XTick;
-	private double YTick;
-	private double ZTick;
+    // Amount to fly up/down during a flight
+    private double XTick;
+    private double YTick;
+    private double ZTick;
 
-	// Distance to the right wp coords
-	private double distanceX;
-	private double distanceY;
-	private double distanceZ;
+    // Distance to the right wp coords
+    private double distanceX;
+    private double distanceY;
+    private double distanceZ;
 
-	// Start points for tick calculation
-	private double startX;
-	private double startY;
-	private double startZ;
+    // Start points for tick calculation
+    private double startX;
+    private double startY;
+    private double startZ;
 
-	// Basics
-	boolean isFlight = false;
-	boolean isTravel = false;
-	Entity entity;
+    // Basics
+    boolean isFlight = false;
+    boolean isTravel = false;
+    Entity entity;
 
-	// Start Location
-	Location start;
+    // Start Location
+    Location start;
 
-	public RCDragon(Location loca, World notchWorld) {
+    public RCDragon(Location loca, World notchWorld) {
 
-		super(notchWorld);
+        super(notchWorld);
 
-		this.start = loca;
-		setPosition(loca.getX(), loca.getY(), loca.getZ());
-		yaw = loca.getYaw() + 180;
-		while (yaw > 360)
-			yaw -= 360;
-		while (yaw < 0)
-			yaw += 360;
-		if (yaw < 45 || yaw > 315)
-			yaw = 0F;
-		else if (yaw < 135)
-			yaw = 90F;
-		else if (yaw < 225)
-			yaw = 180F;
-		else
-			yaw = 270F;
-	}
+        this.start = loca;
+        setPosition(loca.getX(), loca.getY(), loca.getZ());
+        yaw = loca.getYaw() + 180;
+        while (yaw > 360)
+            yaw -= 360;
+        while (yaw < 0)
+            yaw += 360;
+        if (yaw < 45 || yaw > 315)
+            yaw = 0F;
+        else if (yaw < 135)
+            yaw = 90F;
+        else if (yaw < 225)
+            yaw = 180F;
+        else
+            yaw = 270F;
+    }
 
-	public RCDragon(World world) {
-		super(world);
-	}
+    public RCDragon(World world) {
 
-	public void startTravel(Location loc) {
+        super(world);
+    }
 
-		toX = loc.getBlockX();
-		toY = loc.getBlockY();
-		toZ = loc.getBlockZ();
+    public void startTravel(Location loc) {
 
-		this.startX = start.getX();
-		this.startY = start.getY();
-		this.startZ = start.getZ();
+        toX = loc.getBlockX();
+        toY = loc.getBlockY();
+        toZ = loc.getBlockZ();
 
-		maxY = DragonTravelPlusModule.inst.config.flightHeight;
+        this.startX = start.getX();
+        this.startY = start.getY();
+        this.startZ = start.getZ();
 
-		setMoveTravel();
-		yaw = getCorrectYaw(toX, toZ);
-		isTravel = true;
-		move = true;
-	}
+        maxY = RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight;
 
-	public void startFlight(Flight flight) {
+        setMoveTravel();
+        yaw = getCorrectYaw(toX, toZ);
+        isTravel = true;
+        move = true;
+    }
 
-		entity = getBukkitEntity();
+    public void startFlight(Flight flight) {
 
-		this.flight = flight;
+        entity = getBukkitEntity();
 
-		this.firstwp = flight.getFirstWaypoint();
-		this.fwpX = firstwp.getX();
-		this.fwpY = firstwp.getY();
-		this.fwpZ = firstwp.getZ();
+        this.flight = flight;
 
-		this.startX = start.getX();
-		this.startY = start.getY();
-		this.startZ = start.getZ();
+        this.firstwp = flight.getFirstWaypoint();
+        this.fwpX = firstwp.getX();
+        this.fwpY = firstwp.getY();
+        this.fwpZ = firstwp.getZ();
 
-		toX = fwpX;
-		toY = fwpY;
-		toZ = fwpZ;
+        this.startX = start.getX();
+        this.startY = start.getY();
+        this.startZ = start.getZ();
 
-		setMoveFlight();
-		yaw = getCorrectYaw(toX, toZ);
-		move = true;
-		isFlight = true;
-	}
+        toX = fwpX;
+        toY = fwpY;
+        toZ = fwpZ;
 
-	/**
-	 * Gets the correct yaw for this specific path
-	 */
-	private float getCorrectYaw(double targetx, double targetz) {
-		if (this.locZ > targetz)
-			return (float) (-Math.toDegrees(Math.atan((this.locX - targetx) / (this.locZ - targetz))));
-		if (this.locZ < targetz) {
-			return (float) (-Math.toDegrees(Math.atan((this.locX - targetx) / (this.locZ - targetz)))) + 180.0F;
-		}
-		return this.yaw;
-	}
+        setMoveFlight();
+        yaw = getCorrectYaw(toX, toZ);
+        move = true;
+        isFlight = true;
+    }
 
-	/**
-	 * Sets the x,y,z move for each tick
-	 */
-	public void setMoveFlight() {
+    /**
+     * Gets the correct yaw for this specific path
+     */
+    private float getCorrectYaw(double targetx, double targetz) {
 
-		this.distanceX = this.startX - toX;
-		this.distanceY = this.startY - toY;
-		this.distanceZ = this.startZ - toZ;
+        if (this.locZ > targetz)
+            return (float) (-Math.toDegrees(Math.atan((this.locX - targetx) / (this.locZ - targetz))));
+        if (this.locZ < targetz) {
+            return (float) (-Math.toDegrees(Math.atan((this.locX - targetx) / (this.locZ - targetz)))) + 180.0F;
+        }
+        return this.yaw;
+    }
 
-		double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / DragonTravelPlusModule.inst.config.flightSpeed;
-		YTick = Math.abs(distanceY) / tick;
-		XTick = Math.abs(distanceX) / tick;
-		ZTick = Math.abs(distanceZ) / tick;
-	}
+    /**
+     * Sets the x,y,z move for each tick
+     */
+    public void setMoveFlight() {
 
-	/**
-	 * Sets the x,z move for each tick
-	 */
-	public void setMoveTravel() {
+        this.distanceX = this.startX - toX;
+        this.distanceY = this.startY - toY;
+        this.distanceZ = this.startZ - toZ;
 
-		this.distanceX = this.startX - toX;
-		this.distanceY = this.startY - toY;
-		this.distanceZ = this.startZ - toZ;
+        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
+        YTick = Math.abs(distanceY) / tick;
+        XTick = Math.abs(distanceX) / tick;
+        ZTick = Math.abs(distanceZ) / tick;
+    }
 
-		double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / DragonTravelPlusModule.inst.config.flightSpeed;
-		XTick = Math.abs(distanceX) / tick;
-		ZTick = Math.abs(distanceZ) / tick;
-	}
+    /**
+     * Sets the x,z move for each tick
+     */
+    public void setMoveTravel() {
 
-	@Override
-	public void c() {
+        this.distanceX = this.startX - toX;
+        this.distanceY = this.startY - toY;
+        this.distanceZ = this.startZ - toZ;
 
-		// Travel
-		if (isTravel) {
-			travel();
-			return;
-		}
+        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
+        XTick = Math.abs(distanceX) / tick;
+        ZTick = Math.abs(distanceZ) / tick;
+    }
 
-		// Flight
-		if (isFlight) {
-			flight();
-		}
-	}
+    @Override
+    public void c() {
 
-	/**
-	 * Flight with waypoints
-	 */
-	public void flight() {
+        // Travel
+        if (isTravel) {
+            travel();
+            return;
+        }
 
-		// Returns, the dragon won't move
-		if (!move)
-			return;
+        // Flight
+        if (isFlight) {
+            flight();
+        }
+    }
 
-		// Init move variables
-		double myX = locX;
-		double myY = locY;
-		double myZ = locZ;
+    /**
+     * Flight with waypoints
+     */
+    public void flight() {
 
-		if ((int) myX != (int) toX) {
-			if (myX < toX) {
-				myX += XTick;
-			} else {
-				myX -= XTick;
-			}
-		}
+        // Returns, the dragon won't move
+        if (!move)
+            return;
 
-		if ((int) myY != (int) toY) {
-			if (myY < toY) {
-				myY += YTick;
-			} else {
-				myY -= YTick;
-			}
-		}
+        // Init move variables
+        double myX = locX;
+        double myY = locY;
+        double myZ = locZ;
 
-		if ((int) myZ != (int) toZ) {
-			if (myZ < toZ) {
-				myZ += ZTick;
-			} else {
-				myZ -= ZTick;
-			}
-		}
+        if ((int) myX != (int) toX) {
+            if (myX < toX) {
+                myX += XTick;
+            } else {
+                myX -= XTick;
+            }
+        }
 
-		// If myZ = toZ, then we will load the next waypoint or
-		// finish the flight, in case it was the last waypoint to fly
-		if (((int) myZ >= (int) toZ-2 &&  (int)myZ <= (int) toZ+2)
-                && ((int) myY >= (int) toY-2 &&  (int)myY <= (int) toY+2)
-                && ((int) myX >= (int) toX-2 &&  (int)myX <= (int) toX+2)) {
-			Waypoint wp = flight.getNextWaypoint();
+        if ((int) myY != (int) toY) {
+            if (myY < toY) {
+                myY += YTick;
+            } else {
+                myY -= YTick;
+            }
+        }
 
-			// Removing the entity and dismouting the player
-			if (wp == null) {
+        if ((int) myZ != (int) toZ) {
+            if (myZ < toZ) {
+                myZ += ZTick;
+            } else {
+                myZ -= ZTick;
+            }
+        }
 
-                if(passenger != null) {
+        // If myZ = toZ, then we will load the next waypoint or
+        // finish the flight, in case it was the last waypoint to fly
+        if (((int) myZ >= (int) toZ - 2 && (int) myZ <= (int) toZ + 2)
+                && ((int) myY >= (int) toY - 2 && (int) myY <= (int) toY + 2)
+                && ((int) myX >= (int) toX - 2 && (int) myX <= (int) toX + 2)) {
+            Waypoint wp = flight.getNextWaypoint();
+
+            // Removing the entity and dismouting the player
+            if (wp == null) {
+
+                if (passenger != null) {
                     Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
                 }
                 Travels.removePlayerandDragon(entity);
-				return;
-			}
+                return;
+            }
 
-			this.startX = locX;
-			this.startY = locY;
-			this.startZ = locZ;
+            this.startX = locX;
+            this.startY = locY;
+            this.startZ = locZ;
 
-			toX = wp.getX();
-			toY = wp.getY();
-			toZ = wp.getZ();
-			setMoveFlight();
-			yaw = getCorrectYaw(toX, toZ);
-			return;
-		}
+            toX = wp.getX();
+            toY = wp.getY();
+            toZ = wp.getZ();
+            setMoveFlight();
+            yaw = getCorrectYaw(toX, toZ);
+            return;
+        }
 
-		setPosition(myX, myY, myZ);
-	}
+        setPosition(myX, myY, myZ);
+    }
 
-	/**
-	 * Normal Travel
-	 */
-	public void travel() {
+    /**
+     * Normal Travel
+     */
+    public void travel() {
 
-		// Returns, the dragon won't move
-		if (!move)
-			return;
+        // Returns, the dragon won't move
+        if (!move)
+            return;
 
-		Entity entity = getBukkitEntity();
+        Entity entity = getBukkitEntity();
 
-		if (entity.getPassenger() == null)
-			return;
+        if (entity.getPassenger() == null)
+            return;
 
-		double myX = locX;
-		double myY = locY;
-		double myZ = locZ;
+        double myX = locX;
+        double myY = locY;
+        double myZ = locZ;
 
-		if (finalmove) {
+        if (finalmove) {
 
-			// Flying down on end
-			if ((int) locY > (int) toY)
-				myY -= DragonTravelPlusModule.inst.config.flightSpeed;
+            // Flying down on end
+            if ((int) locY > (int) toY)
+                myY -= RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
 
-			// Flying up on end
-			else if ((int) locY < (int) toY)
-				myY += DragonTravelPlusModule.inst.config.flightSpeed;
+                // Flying up on end
+            else if ((int) locY < (int) toY)
+                myY += RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
 
-			// Removing entity
-			else {
+                // Removing entity
+            else {
 
-                if(passenger != null) {
+                if (passenger != null) {
                     Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
                 }
                 Travels.removePlayerandDragon(entity);
-				return;
-			}
+                return;
+            }
 
-			setPosition(myX, myY, myZ);
-			return;
-		}
+            setPosition(myX, myY, myZ);
+            return;
+        }
 
-		// Getting the correct height
-		if ((int) locY < maxY) {
-			myY += DragonTravelPlusModule.inst.config.flightSpeed;
-		}
+        // Getting the correct height
+        if ((int) locY < maxY) {
+            myY += RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
+        }
 
-		if (myX < toX) {
-			myX += XTick;
-		} else {
-			myX -= XTick;
-		}
+        if (myX < toX) {
+            myX += XTick;
+        } else {
+            myX -= XTick;
+        }
 
-		if (myZ < toZ) {
-			myZ += ZTick;
-		} else {
-			myZ -= ZTick;
-		}
+        if (myZ < toZ) {
+            myZ += ZTick;
+        } else {
+            myZ -= ZTick;
+        }
 
-		if ((int) myZ == (int) toZ)
-			finalmove = true;
+        if ((int) myZ == (int) toZ)
+            finalmove = true;
 
-		setPosition(myX, myY, myZ);
-	}
+        setPosition(myX, myY, myZ);
+    }
 
-	public double x_() {
-		return 3;
-	}
+    public double x_() {
+
+        return 3;
+    }
 }

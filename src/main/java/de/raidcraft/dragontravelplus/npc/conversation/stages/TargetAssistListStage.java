@@ -1,7 +1,7 @@
 package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
-import com.silthus.raidcraft.bukkit.CorePlugin;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.util.FlightCosts;
@@ -19,6 +19,7 @@ import java.util.Map;
  * Description:
  */
 public class TargetAssistListStage extends Stage {
+
     private List<DragonStation> stations = new ArrayList<>();
     private Map<Integer, DragonStation> answerAssignment = new HashMap<>();
     private Map<Integer, SpecialAnswers> specialAnswers = new HashMap<>();
@@ -34,37 +35,38 @@ public class TargetAssistListStage extends Stage {
     }
 
     private void init() {
+
         specialAnswers.clear();
         answerAssignment.clear();
-        int maxPerPage = DragonTravelPlusModule.inst.config.maxStationPerPage;
-        if(page > Math.ceil((double)stations.size()/(double)maxPerPage) - 1) {
+        int maxPerPage = RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.maxStationPerPage;
+        if (page > Math.ceil((double) stations.size() / (double) maxPerPage) - 1) {
             page = 0;
         }
-        int endIndex = page*maxPerPage + maxPerPage;
-        if(endIndex > stations.size()) endIndex = stations.size();
+        int endIndex = page * maxPerPage + maxPerPage;
+        if (endIndex > stations.size()) endIndex = stations.size();
         int i = 0;
         List<String> reply = new ArrayList<>();
-        for(DragonStation station : stations.subList(page*maxPerPage,endIndex)) {
+        for (DragonStation station : stations.subList(page * maxPerPage, endIndex)) {
             i++;
             answerAssignment.put(i, station);
             double price = FlightCosts.getPrice(getConversation().getDragonGuard().getDragonStation(), station);
             String strike = "";
-            if(price > CorePlugin.get().getEconomy().getBalace(getConversation().getPlayer())) {
+            if (price > RaidCraft.getEconomy().getBalance(getConversation().getPlayer().getName())) {
                 strike += ChatColor.STRIKETHROUGH;
             }
             reply.add(strike + station.getName() + ChatColor.RESET + ChatColor.RED + " $"
                     + price + " " + ChatColor.DARK_GREEN + FlightDistance.getPrintDistance(getConversation().getDragonGuard().getDragonStation(), station));
         }
-        if(stations.size() > maxPerPage) {
+        if (stations.size() > maxPerPage) {
             i++;
             specialAnswers.put(i, SpecialAnswers.MORE);
-            reply.add(ChatColor.GOLD + DragonTravelPlusModule.inst.config.convTargetAssistListTellMore);
+            reply.add(ChatColor.GOLD + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convTargetAssistListTellMore);
         }
         i++;
         specialAnswers.put(i, SpecialAnswers.BACK);
-        reply.add(ChatColor.GOLD + DragonTravelPlusModule.inst.config.convTargetAssistListGoBack);
+        reply.add(ChatColor.GOLD + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convTargetAssistListGoBack);
 
-        setTextToSpeak(DragonTravelPlusModule.inst.config.convTargetAssistListSpeak);
+        setTextToSpeak(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convTargetAssistListSpeak);
         setPlayerReply(reply.toArray(new String[reply.size()]));
     }
 
@@ -80,21 +82,19 @@ public class TargetAssistListStage extends Stage {
 
         try {
             int choice = Integer.parseInt(answer);
-            if(specialAnswers.containsKey(choice)) {
-                if(specialAnswers.get(choice) == SpecialAnswers.MORE) {
+            if (specialAnswers.containsKey(choice)) {
+                if (specialAnswers.get(choice) == SpecialAnswers.MORE) {
                     page++;
                     init();
                     speak();
-                }
-                else if(specialAnswers.get(choice) == SpecialAnswers.BACK) {
+                } else if (specialAnswers.get(choice) == SpecialAnswers.BACK) {
                     getConversation().setCurrentStage(new TargetAssistRegionStage(getConversation()));
                     getConversation().getCurrentStage().speak();
                 }
                 return true;
-            }
-            else {
+            } else {
                 DragonStation station = answerAssignment.get(choice);
-                if(station != null) {
+                if (station != null) {
                     getConversation().setCurrentStage(new FlightConfirmStage(getConversation()
                             , this
                             , station));
@@ -102,8 +102,8 @@ public class TargetAssistListStage extends Stage {
                     return true;
                 }
             }
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
         wrongAnswerWarning();
         return true;
     }

@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.entity.Player;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
  * Description:
  */
 public class FlyingPlayer {
+
     private Player player;
     private RCDragon dragon = null;
     private DragonStation start;
@@ -29,15 +31,12 @@ public class FlyingPlayer {
     }
 
     public boolean hasIncorrectState() {
-        if(inAir && !player.isInsideVehicle()) {
-            return true;
-        }
 
-        if(inAir &&
-                (System.currentTimeMillis() - startTime) > DragonTravelPlusModule.inst.config.flightTimeout*1000*60) {
-            return true;
-        }
-        return false;
+        return inAir
+                && !player.isInsideVehicle()
+                || inAir
+                && (System.currentTimeMillis() - startTime) > RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightTimeout * 1000 * 60;
+
     }
 
     public Player getPlayer() {

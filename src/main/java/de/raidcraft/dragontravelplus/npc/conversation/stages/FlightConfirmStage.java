@@ -1,7 +1,7 @@
 package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
-import com.silthus.raidcraft.bukkit.CorePlugin;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
@@ -20,18 +20,21 @@ import java.util.Map;
  * Description:
  */
 public class FlightConfirmStage extends Stage {
+
     private Map<Integer, Answer> answers = new HashMap<>();
     private DragonStation target;
     private Stage previousStageInstance;
     private boolean confirm;
     private boolean broke;
     private double price;
-    
+
     public FlightConfirmStage(Conversation conversation, Stage previousStageInstance, DragonStation target) {
+
         this(conversation, previousStageInstance, target, false);
     }
 
     public FlightConfirmStage(Conversation conversation, Stage previousStageInstance, DragonStation target, boolean confirm) {
+
         super(conversation);
 
         this.target = target;
@@ -39,35 +42,34 @@ public class FlightConfirmStage extends Stage {
         this.confirm = confirm;
 
         price = FlightCosts.getPrice(getConversation().getDragonGuard().getDragonStation(), target);
-        double balance = CorePlugin.get().getEconomy().getBalace(getConversation().getPlayer());
+        double balance = RaidCraft.getEconomy().getBalance(getConversation().getPlayer().getName());
 
         broke = (price > balance);
 
         List<String> speech = new ArrayList<>();
         List<String> reply = new ArrayList<>();
 
-        for(String line : DragonTravelPlusModule.inst.config.convProcessEconomyConfirmQuestion) {
+        for (String line : RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convProcessEconomyConfirmQuestion) {
             speech.add(line.replace("%sn", target.getName())
                     .replace("%fp", String.valueOf(price))
                     .replace("%fd", FlightDistance.getPrintDistance(getConversation().getDragonGuard().getDragonStation(), target)));
         }
-        
-        if(broke) {
-            for(String line : DragonTravelPlusModule.inst.config.convProcessEconomyBroke) {
+
+        if (broke) {
+            for (String line : RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convProcessEconomyBroke) {
                 speech.add(ChatColor.RED + line);
             }
             answers.put(1, Answer.BACK);
-            reply.add(DragonTravelPlusModule.inst.config.convProcessEconomyGoBack);
+            reply.add(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convProcessEconomyGoBack);
             answers.put(2, Answer.EXIT);
-            reply.add(DragonTravelPlusModule.inst.config.convProcessEconomyExit);
-        }
-        else {
+            reply.add(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convProcessEconomyExit);
+        } else {
             answers.put(1, Answer.CONFIRM);
-            reply.add(DragonTravelPlusModule.inst.config.convProcessEconomyConfirm);
+            reply.add(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convProcessEconomyConfirm);
             answers.put(2, Answer.BACK);
-            reply.add(DragonTravelPlusModule.inst.config.convProcessEconomyGoBack);
+            reply.add(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convProcessEconomyGoBack);
         }
-        
+
         setTextToSpeak(speech.toArray(new String[speech.size()]));
         setPlayerReply(reply.toArray(new String[reply.size()]));
     }
@@ -75,11 +77,10 @@ public class FlightConfirmStage extends Stage {
     @Override
     public void speak() {
 
-        if(broke ||confirm) {
+        if (broke || confirm) {
             super.speak();
             showAnswers();
-        }
-        else {
+        } else {
             takeoff();
             getConversation().setCurrentStage(null);
         }
@@ -90,32 +91,31 @@ public class FlightConfirmStage extends Stage {
 
         try {
             int choice = Integer.parseInt(input);
-            
+
             Answer answer = answers.get(choice);
-            if(answer == null) {
+            if (answer == null) {
                 wrongAnswerWarning();
                 return true;
             }
-            
-            if(answer == Answer.BACK) {
+
+            if (answer == Answer.BACK) {
                 getConversation().setCurrentStage(previousStageInstance);
                 getConversation().getCurrentStage().speak();
                 return true;
             }
-            
-            if(answer == Answer.EXIT) {
-                speak(new String[] {DragonTravelPlusModule.inst.config.convProcessEconomyGoodbye});
+
+            if (answer == Answer.EXIT) {
+                speak(new String[]{RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convProcessEconomyGoodbye});
                 getConversation().setCurrentStage(null);
                 return true;
             }
-            
-            if(answer == Answer.CONFIRM) {
+
+            if (answer == Answer.CONFIRM) {
                 takeoff();
                 getConversation().setCurrentStage(null);
                 return true;
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
         }
         wrongAnswerWarning();
         return true;
@@ -124,7 +124,7 @@ public class FlightConfirmStage extends Stage {
     private void takeoff() {
 
         List<String> replacedMsg = new ArrayList<>();
-        for(String line : DragonTravelPlusModule.inst.config.convProcessEconomyTakeoff) {
+        for (String line : RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convProcessEconomyTakeoff) {
             replacedMsg.add(line.replace("%sn", target.getName()));
         }
         speak(replacedMsg.toArray(new String[replacedMsg.size()]));

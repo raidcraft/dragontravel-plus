@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 
@@ -14,8 +15,8 @@ public class FirstMeetStage extends Stage {
     public FirstMeetStage(Conversation conversation) {
 
         super(conversation);
-        
-        setTextToSpeak(DragonTravelPlusModule.inst.config.convFirstMeetSpeak);
+
+        setTextToSpeak(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convFirstMeetSpeak);
     }
 
     @Override

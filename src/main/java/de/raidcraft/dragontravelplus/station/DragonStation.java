@@ -8,6 +8,7 @@ import org.bukkit.Location;
  * Description:
  */
 public class DragonStation {
+
     private String name;
     private Location location;
     private MapLocation mapLocation;
@@ -78,10 +79,11 @@ public class DragonStation {
         NORTH_WEST("Nordwesten"),
         SOUTH_EAST("Südosten"),
         SOUTH_WEST("Südwesten");
-        
+
         private String name;
-        
+
         private MapLocation(String name) {
+
             this.name = name;
         }
 
@@ -91,13 +93,14 @@ public class DragonStation {
         }
 
         public static MapLocation getMapLocation(Location location) {
-            if(location.getBlockX() >= 0 && location.getZ() >= 0) {
+
+            if (location.getBlockX() >= 0 && location.getZ() >= 0) {
                 return SOUTH_EAST;
             }
-            if(location.getBlockX() <= 0 && location.getZ() >= 0) {
+            if (location.getBlockX() <= 0 && location.getZ() >= 0) {
                 return SOUTH_WEST;
             }
-            if(location.getBlockX() <= 0 && location.getZ() <= 0) {
+            if (location.getBlockX() <= 0 && location.getZ() <= 0) {
                 return NORTH_WEST;
             }
             return NORTH_EAST;

@@ -20,11 +20,12 @@ public class NPCListener implements Listener {
 
     @EventHandler
     public void onSpawn(NPCSpawnEvent event) {
+
         NPC npc = event.getNPC();
-        if(npc.getBukkitEntity().getType() == EntityType.PLAYER && !npc.hasTrait(DragonGuardTrait.class)) {
+        if (npc.getBukkitEntity().getType() == EntityType.PLAYER && !npc.hasTrait(DragonGuardTrait.class)) {
             DragonStation station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation());
 
-            if(station != null) {
+            if (station != null) {
                 npc.addTrait(DragonGuardTrait.class);
                 npc.getTrait(DragonGuardTrait.class).updateDragonGuardNPC();
             }
@@ -33,7 +34,8 @@ public class NPCListener implements Listener {
 
     @EventHandler
     public void onRightClick(NPCRightClickEvent event) {
-        if(!event.getNPC().hasTrait(DragonGuardTrait.class)) {
+
+        if (!event.getNPC().hasTrait(DragonGuardTrait.class)) {
             return;
         }
 
@@ -43,7 +45,8 @@ public class NPCListener implements Listener {
 
     @EventHandler
     public void onLeftClick(NPCLeftClickEvent event) {
-        if(!event.getNPC().hasTrait(DragonGuardTrait.class)) {
+
+        if (!event.getNPC().hasTrait(DragonGuardTrait.class)) {
             return;
         }
 

@@ -12,6 +12,7 @@ import org.dynmap.markers.MarkerSet;
  * Description:
  */
 public class DynmapManager {
+
     public static final DynmapManager INST = new DynmapManager();
 
     private DynmapAPI api;
@@ -21,16 +22,17 @@ public class DynmapManager {
     public DynmapManager() {
 
         //TODO XXX broken in current dynmap build!
-//        api = (DynmapAPI) CommandBook.server().getPluginManager().getPlugin("dynmap");
-//        if(api == null) {
-//            return;
-//        }
-//        markerAPI = api.getMarkerAPI();
-//        dragonSet = markerAPI.getMarkerSet("drachenmeister");
+        //        api = (DynmapAPI) CommandBook.server().getPluginManager().getPlugin("dynmap");
+        //        if(api == null) {
+        //            return;
+        //        }
+        //        markerAPI = api.getMarkerAPI();
+        //        dragonSet = markerAPI.getMarkerSet("drachenmeister");
     }
 
     public void addStationMarker(DragonStation station) {
-        if(markerAPI == null) {
+
+        if (markerAPI == null) {
             return;
         }
         dragonSet.createMarker(station.getName().toLowerCase().replace(" ", "_")
@@ -42,13 +44,14 @@ public class DynmapManager {
                 , markerAPI.getMarkerIcon("sign")
                 , true);
     }
-    
+
     public void removeMarker(DragonStation station) {
-        if(dragonSet == null) {
+
+        if (dragonSet == null) {
             return;
         }
-        for(Marker marker : dragonSet.getMarkers()) {
-            if(marker.getLabel().equalsIgnoreCase(station.getName())) {
+        for (Marker marker : dragonSet.getMarkers()) {
+            if (marker.getLabel().equalsIgnoreCase(station.getName())) {
                 marker.deleteMarker();
             }
         }

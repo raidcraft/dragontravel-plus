@@ -1,7 +1,8 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement;
 
 import com.sk89q.commandbook.CommandBook;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,80 +14,87 @@ import java.util.List;
 
 public class Flight {
 
-	HashMap<Integer, Waypoint> waypoints = new HashMap<Integer, Waypoint>();
+    HashMap<Integer, Waypoint> waypoints = new HashMap<Integer, Waypoint>();
     List<Block> markerBlocks = new ArrayList<>();
-	int currentwp = 0;
-	public int wpcreatenum = 0;
-	String name;
+    int currentwp = 0;
+    public int wpcreatenum = 0;
+    String name;
 
-	/**
-	 * Flight object, containing a flight-name and waypoints
-	 * 
-	 * @param name
-	 */
-	public Flight(String name) {
-		this.name = name;
-	}
+    /**
+     * Flight object, containing a flight-name and waypoints
+     *
+     * @param name
+     */
+    public Flight(String name) {
 
-	/**
-	 * Adds a waypoint to the db as a key/keyvalue
-	 * 
-	 * @param wp
-	 */
-	public void addWaypoint(Waypoint wp) {
-		waypoints.put(wpcreatenum, wp);
-		wpcreatenum++;
-	}
-    
+        this.name = name;
+    }
+
+    /**
+     * Adds a waypoint to the db as a key/keyvalue
+     *
+     * @param wp
+     */
+    public void addWaypoint(Waypoint wp) {
+
+        waypoints.put(wpcreatenum, wp);
+        wpcreatenum++;
+    }
+
     public void addWaypoint(Location location) {
+
         addWaypoint(new Waypoint(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ()));
     }
 
-	/**
-	 * Removes the last waypoint
-	 */
-	public void removeWaypoint() {
-		if (wpcreatenum == 0)
-			return;
-		wpcreatenum--;
-		waypoints.get(wpcreatenum).removeMarker();
-		waypoints.remove(wpcreatenum);
-	}
+    /**
+     * Removes the last waypoint
+     */
+    public void removeWaypoint() {
 
-	/**
-	 * Gets the firstwaypoint
-	 * 
-	 * @return
-	 */
-	public Waypoint getFirstWaypoint() {
-		Waypoint wp = waypoints.get(currentwp);
-		currentwp++;
-		return wp;
-	}
+        if (wpcreatenum == 0)
+            return;
+        wpcreatenum--;
+        waypoints.get(wpcreatenum).removeMarker();
+        waypoints.remove(wpcreatenum);
+    }
 
-	/**
-	 * Gets the next waypoint for this flight
-	 */
-	public Waypoint getNextWaypoint() {
-		Waypoint wp = waypoints.get(currentwp);
-		currentwp++;        
-        if(wp == null) {
+    /**
+     * Gets the firstwaypoint
+     *
+     * @return
+     */
+    public Waypoint getFirstWaypoint() {
+
+        Waypoint wp = waypoints.get(currentwp);
+        currentwp++;
+        return wp;
+    }
+
+    /**
+     * Gets the next waypoint for this flight
+     */
+    public Waypoint getNextWaypoint() {
+
+        Waypoint wp = waypoints.get(currentwp);
+        currentwp++;
+        if (wp == null) {
             Bukkit.getScheduler().scheduleSyncDelayedTask(CommandBook.inst(), new Runnable() {
                 @Override
                 public void run() {
-                    for(Block block : markerBlocks) {
+
+                    for (Block block : markerBlocks) {
                         block.setType(Material.AIR);
                     }
                 }
-            }, DragonTravelPlusModule.inst.config.markerDuration * 20);
+            }, RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.markerDuration * 20);
             return null;
         }
-        if(DragonTravelPlusModule.inst.config.useVisibleWaypoints) {
+        if (RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.useVisibleWaypoints) {
             Block markerBlock = Bukkit.getWorld(wp.getWorld()).getBlockAt((int) wp.getX(), (int) wp.getY(), (int) wp.getZ());
             markerBlock.setType(Material.GLOWSTONE);
             markerBlocks.add(markerBlock);
         }
-		return wp;
-	}
+        return wp;
+    }
 
 }

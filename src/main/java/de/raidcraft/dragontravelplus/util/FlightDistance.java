@@ -10,12 +10,12 @@ import de.raidcraft.dragontravelplus.station.DragonStation;
 public class FlightDistance {
 
     public static String getPrintDistance(DragonStation start, DragonStation destination) {
+
         double distance = start.getLocation().distance(destination.getLocation());
         String distancePrint;
-        if(distance >= 1000) {
+        if (distance >= 1000) {
             distancePrint = (Math.round((distance / 1000) * 100.) / 100.) + "km";
-        }
-        else {
+        } else {
             distancePrint = (Math.round(distance * 100.) / 100.) + "m";
         }
         return distancePrint;

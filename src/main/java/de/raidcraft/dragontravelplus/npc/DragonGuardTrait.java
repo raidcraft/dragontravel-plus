@@ -1,7 +1,8 @@
 package de.raidcraft.dragontravelplus.npc;
 
 import com.sk89q.commandbook.CommandBook;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import net.citizensnpcs.api.CitizensAPI;
@@ -28,10 +29,12 @@ import java.util.Map;
  * Description:
  */
 public class DragonGuardTrait extends Trait {
+
     public static Map<String, DragonGuardTrait> dragonGuards = new HashMap<>();
     private DragonStation station;
 
     public DragonGuardTrait() {
+
         super("dragonguard");
     }
 
@@ -51,19 +54,21 @@ public class DragonGuardTrait extends Trait {
     public void onDespawn() {
 
         station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation());
-        if(station != null) {
+        if (station != null) {
             dragonGuards.remove(station.getName());
         }
-        
+
         super.onDespawn();
     }
 
     @Override
     public void onRemove() {
+
     }
 
     @Override
     public void onSpawn() {
+
         super.onSpawn();
 
         updateDragonGuardNPC();
@@ -76,10 +81,12 @@ public class DragonGuardTrait extends Trait {
     }
 
     public void reloadDragonStation() {
+
         station = StationManager.INST.getNearbyStation(getNPC().getBukkitEntity().getLocation());
     }
 
     public void setDragonStation(DragonStation station) {
+
         this.station = station;
     }
 
@@ -89,14 +96,15 @@ public class DragonGuardTrait extends Trait {
     }
 
     public void updateDragonGuardNPC() {
+
         NPC npc = getNPC();
         // change name
-        if(!npc.getName().equalsIgnoreCase(DragonTravelPlusModule.inst.config.npcDefaultName)) {
-            npc.setName(DragonTravelPlusModule.inst.config.npcDefaultName);
+        if (!npc.getName().equalsIgnoreCase(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.npcDefaultName)) {
+            npc.setName(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.npcDefaultName);
         }
 
         // add equipment
-        if(npc.hasTrait(Equipment.class)) {
+        if (npc.hasTrait(Equipment.class)) {
             npc.getTrait(Equipment.class).set(0, new ItemStack(Material.SADDLE, 1));
             npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET, 1));
             npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE, 1));
@@ -104,13 +112,13 @@ public class DragonGuardTrait extends Trait {
             npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS, 1));
         }
         //look close
-        if(npc.hasTrait(LookClose.class)) {
+        if (npc.hasTrait(LookClose.class)) {
             npc.getTrait(LookClose.class).lookClose(true);
         }
 
         // link station
         reloadDragonStation();
-        if(station == null) {
+        if (station == null) {
             LivingEntity entity = npc.getBukkitEntity();
             CommandBook.logger().warning("[DTP] NPC despawned at"
                     + " x:" + entity.getLocation().getBlockX()
@@ -122,18 +130,20 @@ public class DragonGuardTrait extends Trait {
         }
         dragonGuards.put(station.getName(), this);
     }
-    
+
     public static DragonGuardTrait getDragonGuard(String name) {
-        for(Map.Entry<String, DragonGuardTrait> entry : dragonGuards.entrySet()) {
-            if(entry.getKey().equalsIgnoreCase(name)) {
+
+        for (Map.Entry<String, DragonGuardTrait> entry : dragonGuards.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(name)) {
                 return entry.getValue();
             }
         }
         return null;
     }
-    
+
     public static void createDragonGuard(Location location, DragonStation station) {
-        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, DragonTravelPlusModule.inst.config.npcDefaultName);
+
+        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.npcDefaultName);
         npc.addTrait(DragonGuardTrait.class);
         npc.getTrait(DragonGuardTrait.class).setDragonStation(station);
 

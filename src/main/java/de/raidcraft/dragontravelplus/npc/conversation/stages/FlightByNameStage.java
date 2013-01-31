@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
@@ -15,8 +16,8 @@ public class FlightByNameStage extends Stage {
     public FlightByNameStage(Conversation conversation) {
 
         super(conversation);
-        
-        setTextToSpeak(DragonTravelPlusModule.inst.config.convFlightByNameSpeak);
+
+        setTextToSpeak(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convFlightByNameSpeak);
     }
 
     @Override
@@ -30,13 +31,13 @@ public class FlightByNameStage extends Stage {
 
         DragonStation station = StationManager.INST.getPlayerStation(getConversation().getPlayer(), answer);
 
-        if(station == null) {
-            wrongAnswerWarning(DragonTravelPlusModule.inst.config.convFlightByNameUnknownStation);
+        if (station == null) {
+            wrongAnswerWarning(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convFlightByNameUnknownStation);
             return true;
         }
 
-        if(station.getName() == getConversation().getDragonGuard().getDragonStation().getName()) {
-            wrongAnswerWarning(DragonTravelPlusModule.inst.config.convFlightByNameSameStation);
+        if (station.getName() == getConversation().getDragonGuard().getDragonStation().getName()) {
+            wrongAnswerWarning(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convFlightByNameSameStation);
             return true;
         }
 

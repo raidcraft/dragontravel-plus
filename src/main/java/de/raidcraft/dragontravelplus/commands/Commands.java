@@ -1,14 +1,19 @@
 package de.raidcraft.dragontravelplus.commands;
 
-import com.silthus.raidcraft.util.component.DateUtil;
-import com.sk89q.minecraft.util.commands.*;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import com.sk89q.minecraft.util.commands.Command;
+import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.sk89q.minecraft.util.commands.NestedCommand;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
+import de.raidcraft.util.DateUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -22,7 +27,8 @@ import java.util.Map;
  * Description:
  */
 public class Commands {
-    public Commands(DragonTravelPlusModule module) {
+
+    public Commands(DragonTravelPlusPlugin module) {
 
     }
 
@@ -32,13 +38,14 @@ public class Commands {
     )
     @NestedCommand(NestedDragonGuardCommands.class)
     public void dragontravelplus(CommandContext context, CommandSender sender) throws CommandException {
+
     }
 
     public static class NestedDragonGuardCommands {
 
-        private final DragonTravelPlusModule module;
+        private final DragonTravelPlusPlugin module;
 
-        public NestedDragonGuardCommands(DragonTravelPlusModule module) {
+        public NestedDragonGuardCommands(DragonTravelPlusPlugin module) {
 
             this.module = module;
         }
@@ -50,9 +57,9 @@ public class Commands {
         @CommandPermissions("dragontravelplus.reload")
         public void reload(CommandContext context, CommandSender sender) throws CommandException {
 
-            DragonTravelPlusModule.inst.reloadAll();
-            if(sender instanceof Player) ChatMessages.successfulReloaded((Player)sender);
-            if(sender instanceof ConsoleCommandSender) sender.sendMessage("[DTP] DragonTravelPlus config successfully reloaded!");
+            RaidCraft.getComponent(DragonTravelPlusPlugin.class).reload();
+            if (sender instanceof Player) ChatMessages.successfulReloaded((Player) sender);
+            if (sender instanceof ConsoleCommandSender) sender.sendMessage("[DTP] DragonTravelPlus config successfully reloaded!");
         }
 
         @Command(
@@ -63,23 +70,23 @@ public class Commands {
         @CommandPermissions("dragontravelplus.create")
         public void create(CommandContext context, CommandSender sender) throws CommandException {
 
-            if(context.argsLength() < 1) {
-                ChatMessages.tooFewArguments((Player)sender);
+            if (context.argsLength() < 1) {
+                ChatMessages.tooFewArguments((Player) sender);
             }
 
             int costLevel = 1;
             boolean mainStation = false;
             boolean emergencyTarget = false;
 
-            if(context.hasFlag('c')) {
+            if (context.hasFlag('c')) {
                 costLevel = context.getFlagInteger('c', 1);
             }
 
-            if(context.hasFlag('m')) {
+            if (context.hasFlag('m')) {
                 mainStation = true;
             }
 
-            if(context.hasFlag('e')) {
+            if (context.hasFlag('e')) {
                 emergencyTarget = true;
             }
 
@@ -90,11 +97,11 @@ public class Commands {
                     , emergencyTarget
                     , sender.getName()
                     , DateUtil.getCurrentDateString());
-;
+            ;
             try {
                 StationManager.INST.addNewStation(station);
             } catch (AlreadyExistsException e) {
-                ChatMessages.warn(((Player)sender), e.getMessage());
+                ChatMessages.warn(((Player) sender), e.getMessage());
                 return;
             }
 
@@ -103,7 +110,7 @@ public class Commands {
             // dynmap
             DynmapManager.INST.addStationMarker(station);
 
-            ChatMessages.success(((Player)sender), "Du hast erfolgreich die Drachenstation '" + context.getString(0) + "' erstellt!");
+            ChatMessages.success(((Player) sender), "Du hast erfolgreich die Drachenstation '" + context.getString(0) + "' erstellt!");
         }
 
         @Command(
@@ -113,26 +120,26 @@ public class Commands {
         @CommandPermissions("dragontravelplus.remove")
         public void remove(CommandContext context, CommandSender sender) throws CommandException {
 
-            if(context.argsLength() < 1) {
-                ChatMessages.tooFewArguments((Player)sender);
+            if (context.argsLength() < 1) {
+                ChatMessages.tooFewArguments((Player) sender);
                 return;
             }
 
             DragonStation station = StationManager.INST.getDragonStation(context.getString(0));
 
-            if(station == null) {
-                ChatMessages.warn((Player)sender, "Es gibt keine Station mit diesem Namen!");
+            if (station == null) {
+                ChatMessages.warn((Player) sender, "Es gibt keine Station mit diesem Namen!");
                 return;
             }
 
             DragonGuardTrait trait = DragonGuardTrait.getDragonGuard(context.getString(0));
-            if(trait != null) {
+            if (trait != null) {
                 trait.getNPC().destroy();
             }
 
             StationManager.INST.deleteStation(station);
             DynmapManager.INST.removeMarker(station);
-            DragonTravelPlusModule.inst.reloadAll();
+            RaidCraft.getComponent(DragonTravelPlusPlugin.class).reload();
 
 
             ChatMessages.success((Player) sender, "Die Drachenstation '" + context.getString(0) + "' wurde gelöscht!");
@@ -145,19 +152,19 @@ public class Commands {
         @CommandPermissions("dragontravelplus.warp")
         public void warp(CommandContext context, CommandSender sender) throws CommandException {
 
-            if(context.argsLength() < 1) {
-                ChatMessages.tooFewArguments((Player)sender);
+            if (context.argsLength() < 1) {
+                ChatMessages.tooFewArguments((Player) sender);
             }
 
             DragonStation station = StationManager.INST.getDragonStation(context.getString(0));
 
-            if(station == null) {
-                ChatMessages.warn((Player)sender, "Es gibt keine Station mit diesem Namen!");
+            if (station == null) {
+                ChatMessages.warn((Player) sender, "Es gibt keine Station mit diesem Namen!");
                 return;
             }
 
-            ((Player)sender).teleport(station.getLocation());
-            ChatMessages.success((Player)sender, "Du wurdest zur Station '" + station.getName() + "' geportet!");
+            ((Player) sender).teleport(station.getLocation());
+            ChatMessages.success((Player) sender, "Du wurdest zur Station '" + station.getName() + "' geportet!");
         }
 
         @Command(
@@ -168,24 +175,24 @@ public class Commands {
         public void list(CommandContext context, CommandSender sender) throws CommandException {
 
             String list = "Alle verfügbaren Drachenstationen: ";
-            
-            for(Map.Entry<String, DragonStation> entry : StationManager.INST.existingStations.entrySet()) {
 
-                if(context.hasFlag('e')) {
-                    if(!entry.getValue().isEmergencyTarget()) continue;
+            for (Map.Entry<String, DragonStation> entry : StationManager.INST.existingStations.entrySet()) {
+
+                if (context.hasFlag('e')) {
+                    if (!entry.getValue().isEmergencyTarget()) continue;
                 }
 
-                if(context.hasFlag('c')) {
-                    if(!String.valueOf(entry.getValue().getCostLevel()).equalsIgnoreCase(context.getFlag('c'))) continue;
+                if (context.hasFlag('c')) {
+                    if (!String.valueOf(entry.getValue().getCostLevel()).equalsIgnoreCase(context.getFlag('c'))) continue;
                 }
 
                 ChatColor color = ChatColor.AQUA;
-                if(entry.getValue().getCostLevel() > 0) color = ChatColor.GOLD;
-                if(entry.getValue().isEmergencyTarget()) color = ChatColor.DARK_RED;
+                if (entry.getValue().getCostLevel() > 0) color = ChatColor.GOLD;
+                if (entry.getValue().isEmergencyTarget()) color = ChatColor.DARK_RED;
                 list += color + entry.getKey() + ChatColor.WHITE + ", ";
             }
-          
-            ChatMessages.success((Player)sender, list);
+
+            ChatMessages.success((Player) sender, list);
         }
     }
 }

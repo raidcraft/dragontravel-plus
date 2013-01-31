@@ -1,8 +1,8 @@
 package de.raidcraft.dragontravelplus.station;
 
-import com.silthus.raidcraft.util.component.database.ComponentDatabase;
 import com.sk89q.commandbook.CommandBook;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
@@ -20,6 +20,7 @@ import java.util.Map;
  * Description:
  */
 public class StationManager {
+
     public static final StationManager INST = new StationManager();
 
     public Map<String, DragonStation> existingStations = new HashMap<>();
@@ -28,35 +29,37 @@ public class StationManager {
 
         existingStations.clear();
         int i = 0;
-        for(DragonStation station : ComponentDatabase.INSTANCE.getTable(StationTable.class).getAllStations()) {
+        for (DragonStation station : RaidCraft.getTable(StationTable.class).getAllStations()) {
             i++;
             existingStations.put(station.getName(), station);
         }
-        
+
         CommandBook.logger().info("[DTP] Es wurden " + i + " Stationen geladen!");
     }
-    
+
     public void addNewStation(DragonStation dragonStation) throws AlreadyExistsException {
-        
-        if(existingStations.containsKey(dragonStation.getName())) {
+
+        if (existingStations.containsKey(dragonStation.getName())) {
             throw new AlreadyExistsException("Eine Station mit diesem Namen existiert bereits!");
         }
-    
+
         existingStations.put(dragonStation.getName(), dragonStation);
-        ComponentDatabase.INSTANCE.getTable(StationTable.class).addStation(dragonStation);
+        RaidCraft.getTable(StationTable.class).addStation(dragonStation);
     }
-    
+
     public List<Location> getAllStationLocations() {
+
         List<Location> locations = new ArrayList<>();
-        for(Map.Entry<String, DragonStation> entry : existingStations.entrySet()) {
+        for (Map.Entry<String, DragonStation> entry : existingStations.entrySet()) {
             locations.add(entry.getValue().getLocation());
         }
         return locations;
     }
-    
+
     public DragonStation getDragonStation(String name) {
-        for(Map.Entry<String, DragonStation> entry : existingStations.entrySet()) {
-            if(entry.getKey().equalsIgnoreCase(name)) {
+
+        for (Map.Entry<String, DragonStation> entry : existingStations.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(name)) {
                 return entry.getValue();
             }
         }
@@ -65,45 +68,49 @@ public class StationManager {
 
     public DragonStation getNearbyStation(Location location) {
 
-        List<DragonStation> stations =  ComponentDatabase.INSTANCE.getTable(
+        List<DragonStation> stations = RaidCraft.getTable(
                 StationTable.class).getNearbyStations(location,
-                DragonTravelPlusModule.inst.config.npcStationSearchRadius);
-        if(stations.size() == 0) {
+                RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.npcStationSearchRadius);
+        if (stations.size() == 0) {
             return null;
         }
         return existingStations.get(stations.get(0).getName());
     }
-    
+
     public List<DragonStation> getPlayerStations(Player player) {
+
         List<DragonStation> stations = new ArrayList<>();
-        List<String> stationNames = ComponentDatabase.INSTANCE.getTable(PlayerStations.class).getAllPlayerStations(player.getName());
-        stationNames.addAll(ComponentDatabase.INSTANCE.getTable(StationTable.class).getEmergencyStations());
-        for(String name : stationNames) {
+        List<String> stationNames = RaidCraft.getTable(PlayerStations.class).getAllPlayerStations(player.getName());
+        stationNames.addAll(RaidCraft.getTable(StationTable.class).getEmergencyStations());
+        for (String name : stationNames) {
             DragonStation station = existingStations.get(name);
-            if(station == null) continue;
-            if(stations.contains(station)) continue;
-            if(station.getLocation().getWorld() != player.getWorld()) continue; // only stations on same world
+            if (station == null) continue;
+            if (stations.contains(station)) continue;
+            if (station.getLocation().getWorld() != player.getWorld()) continue; // only stations on same world
 
             stations.add(station);
         }
         return stations;
     }
-    
+
     public DragonStation getPlayerStation(Player player, String stationName) {
-        for(DragonStation station : getPlayerStations(player)) {
-            if(station.getName().equalsIgnoreCase(stationName)) {
+
+        for (DragonStation station : getPlayerStations(player)) {
+            if (station.getName().equalsIgnoreCase(stationName)) {
                 return station;
             }
         }
         return null;
     }
-    
+
     public void assignStationWithPlayer(String player, DragonStation station) {
-        ComponentDatabase.INSTANCE.getTable(PlayerStations.class).addStation(player, station);
+
+        RaidCraft.getTable(PlayerStations.class).addStation(player, station);
     }
 
     public void deleteStation(DragonStation station) {
-        ComponentDatabase.INSTANCE.getTable(StationTable.class).deleteStation(station);
+
+        RaidCraft.getTable(StationTable.class).deleteStation(station);
     }
 
 }

@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.npc.conversation.stages;
 
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import org.bukkit.ChatColor;
 
@@ -10,53 +11,63 @@ import org.bukkit.ChatColor;
  * Description:
  */
 public abstract class Stage {
+
     private Conversation conversation;
     private String[] textToSpeak = new String[]{};
     private String[] playerReply = new String[]{};
-    private String[] wrongAnswerReply = DragonTravelPlusModule.inst.config.convWrongAnswerWarning;
+    private String[] wrongAnswerReply = RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convWrongAnswerWarning;
 
     public Stage(Conversation conversation) {
+
         this.conversation = conversation;
     }
 
     public void speak() {
+
         speak(textToSpeak);
     }
-    
+
     public void showAnswers() {
-        conversation.getPlayer().sendMessage(DragonTravelPlusModule.inst.config.chatDelimiter);
+
+        conversation.getPlayer().sendMessage(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.chatDelimiter);
         int i = 0;
-        for(String line : playerReply) {
+        for (String line : playerReply) {
             i++;
             conversation.getPlayer().sendMessage(i + " : " + Conversation.ANSWER_COLOR + replaceParameters(line));
         }
     }
 
     public boolean processAnswer(String answer) {
+
         return false;
     }
-    
+
     public String replaceParameters(String line) {
+
         line = line.replace("%pn", getConversation().getPlayer().getName());
         line = line.replace("%sn", getConversation().getDragonGuard().getDragonStation().getName());
         return line;
     }
 
     public void wrongAnswerWarning() {
+
         wrongAnswerWarning(wrongAnswerReply);
     }
-    
+
     public void wrongAnswerWarning(String[] warning) {
+
         speak(warning, ChatColor.RED);
     }
-    
+
     public void speak(String[] msg) {
+
         speak(msg, Conversation.SPEAK_COLOR);
     }
 
     public void speak(String[] msg, ChatColor color) {
-        conversation.getPlayer().sendMessage(DragonTravelPlusModule.inst.config.chatDelimiter);
-        for(String line : msg) {
+
+        conversation.getPlayer().sendMessage(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.chatDelimiter);
+        for (String line : msg) {
 
             conversation.getPlayer().sendMessage(color + replaceParameters(line));
         }

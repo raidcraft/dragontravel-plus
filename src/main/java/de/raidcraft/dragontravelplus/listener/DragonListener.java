@@ -1,8 +1,8 @@
 package de.raidcraft.dragontravelplus.listener;
 
-import com.silthus.raidcraft.bukkit.CorePlugin;
 import com.sk89q.commandbook.CommandBook;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
@@ -33,10 +33,11 @@ public class DragonListener implements Listener {
 
     @EventHandler
     public void onDragonLand(DragonLandEvent event) {
-        if(event.getPassenger() instanceof Player) {
+
+        if (event.getPassenger() instanceof Player) {
             PassengerRemover passengerRemover =
                     new PassengerRemover(DragonManager.INST.getFlyingPlayer(((Player) event.getPassenger()).getName()).getPlayer());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(CommandBook.inst(), passengerRemover, 7*10);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(CommandBook.inst(), passengerRemover, 7 * 10);
         }
     }
 
@@ -45,12 +46,13 @@ public class DragonListener implements Listener {
      */
     @EventHandler
     public void onRoutingFinished(RoutingFinishedEvent event) {
+
         event.getFlyingPlayer().setInAir(true);
         FlightTravel.flyFlight(event.getFlight(), event.getFlyingPlayer().getPlayer());
-        CorePlugin.get().getEconomy().substract(event.getFlyingPlayer().getPlayer(), event.getFlyingPlayer().getPrice());
-        event.getFlyingPlayer().getPlayer().sendMessage(ChatColor.GRAY + "Schreibe '" + DragonTravelPlusModule.inst.config.exitWords[0] + "' in den Chat um den Flug abzubrechen!");
+        RaidCraft.getEconomy().withdrawPlayer(event.getFlyingPlayer().getPlayer().getName(), event.getFlyingPlayer().getPrice());
+        event.getFlyingPlayer().getPlayer().sendMessage(ChatColor.GRAY + "Schreibe '" + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.exitWords[0] + "' in den Chat um den Flug abzubrechen!");
     }
-    
+
     public class PassengerRemover implements Runnable {
 
         private Player player;
@@ -62,6 +64,7 @@ public class DragonListener implements Listener {
 
         @Override
         public void run() {
+
             DragonManager.INST.flyingPlayers.remove(player);
         }
     }

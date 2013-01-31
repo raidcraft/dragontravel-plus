@@ -7,18 +7,18 @@ import org.bukkit.entity.Player;
 
 public class FlightTravel {
 
-	public static void flyFlight(Flight flight, Player player) {
+    public static void flyFlight(Flight flight, Player player) {
 
-		// Mounting the player
-		if (!Travels.mountDragon(player))
-			return;
+        // Mounting the player
+        if (!Travels.mountDragon(player))
+            return;
 
-		// Getting the dragon
+        // Getting the dragon
         RCDragon dragon = DragonManager.INST.flyingPlayers.get(player).getDragon();
 
-		if (dragon == null)
-			return;
+        if (dragon == null)
+            return;
 
-		dragon.startFlight(flight);
-	}
+        dragon.startFlight(flight);
+    }
 }

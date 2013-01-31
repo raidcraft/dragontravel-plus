@@ -1,7 +1,8 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
 import com.sk89q.commandbook.CommandBook;
-import de.raidcraft.dragontravelplus.DragonTravelPlusModule;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.entity.Player;
@@ -15,38 +16,39 @@ import java.util.Map;
  * Description:
  */
 public class DragonManager {
+
     public Map<Player, FlyingPlayer> flyingPlayers = new HashMap<>();
     public final static DragonManager INST = new DragonManager();
-    
+
     public void takeoff(Player player, DragonStation start, DragonStation destination, double price) {
 
         FlyingPlayer flyingPlayer = new FlyingPlayer(player, start, destination, price);
         CommandBook.inst().getServer().getScheduler()
-                .scheduleAsyncDelayedTask(CommandBook.inst(), new DelayedTakeoffTask(flyingPlayer), DragonTravelPlusModule.inst.config.flightWarmup * 20);
+                .scheduleAsyncDelayedTask(CommandBook.inst(), new DelayedTakeoffTask(flyingPlayer), RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightWarmup * 20);
     }
-    
+
     public void abortFlight(Player player) {
-        if(!DragonManager.INST.flyingPlayers.containsKey(player)) {
+
+        if (!DragonManager.INST.flyingPlayers.containsKey(player)) {
             return;
         }
 
         FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
 
 
-
-        if(flyingPlayer.isInAir()) {
+        if (flyingPlayer.isInAir()) {
             Travels.removePlayerandDragon(flyingPlayer.getDragon().getBukkitEntity());
-        }
-        else {
+        } else {
             CommandBook.server().getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
         }
         player.teleport(flyingPlayer.getStart().getLocation());   // teleport to start
         DragonManager.INST.flyingPlayers.remove(player);
     }
-    
+
     public FlyingPlayer getFlyingPlayer(String name) {
-        for(Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
-            if(entry.getKey().getName().equalsIgnoreCase(name)) {
+
+        for (Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
+            if (entry.getKey().getName().equalsIgnoreCase(name)) {
                 return entry.getValue();
             }
         }
@@ -58,12 +60,14 @@ public class DragonManager {
         private FlyingPlayer flyingPlayer;
 
         public DelayedTakeoffTask(FlyingPlayer flyingPlayer) {
+
             this.flyingPlayer = flyingPlayer;
         }
 
         @Override
         public void run() {
-            if(!flyingPlayers.containsKey(flyingPlayer.getPlayer())) {
+
+            if (!flyingPlayers.containsKey(flyingPlayer.getPlayer())) {
                 flyingPlayers.put(flyingPlayer.getPlayer(), flyingPlayer);
             }
 

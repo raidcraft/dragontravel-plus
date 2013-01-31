@@ -13,18 +13,22 @@ public class ChatMessages {
     private final static String CHAT_PREFIX = ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "DTPlus" + ChatColor.DARK_GRAY + "] " + ChatColor.WHITE;
 
     public static void noDragonGuardSelected(Player player) {
+
         warn(player, "Du hast kein Dragonguard ausgewählt!");
     }
 
     public static void tooFewArguments(Player player) {
+
         warn(player, "Du hast zu wenig Parameter angegeben!");
     }
 
     public static void stationNameSuccessfullyChanged(Player player) {
+
         success(player, "Der Stationsname wurde erfolgreich geändert!");
     }
 
     public static void successfulReloaded(Player player) {
+
         success(player, "DragonTravelPlus wurde neugeladen!");
     }
 
