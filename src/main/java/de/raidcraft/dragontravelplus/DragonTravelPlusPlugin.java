@@ -1,7 +1,6 @@
 package de.raidcraft.dragontravelplus;
 
 import de.raidcraft.api.BasePlugin;
-import de.raidcraft.api.Component;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
 import de.raidcraft.dragontravelplus.commands.Commands;
@@ -31,46 +30,38 @@ import java.util.Map;
  * Date: 22.11.12 - 06:01
  * Description:
  */
-public class DragonTravelPlusPlugin extends BasePlugin implements Component {
+public class DragonTravelPlusPlugin extends BasePlugin {
 
     public LocalDTPConfiguration config;
-    private int startTaskId;
 
     @Override
     public void enable() {
 
+        // Add our new entity to minecraft entities
+        try {
+            Method method = EntityTypes.class.getDeclaredMethod("a", new Class[]{Class.class, String.class, int.class});
+            method.setAccessible(true);
+            method.invoke(EntityTypes.class, RCDragon.class, "RCDragon", 63);
+            getLogger().warning("[DragonTravelPlus] Successfully registered RCDragon entity!");
+        } catch (Exception e) {
+            getLogger().warning("[DragonTravelPlus] Error registering Entity! DISABLING!");
+            disable();
+            return;
+        }
+
         loadConfig();
-        startTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-            public void run() {
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
 
-                CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
+        registerEvents(new NPCListener());
+        registerEvents(new PlayerListener());
+        registerEvents(new DragonListener());
 
-                registerEvents(new NPCListener());
-                registerEvents(new PlayerListener());
-                registerEvents(new DragonListener());
+        registerCommands(Commands.class);
 
-                registerCommands(Commands.class);
+        registerTable(StationTable.class, new StationTable());
+        registerTable(PlayerStations.class, new PlayerStations());
 
-                registerTable(StationTable.class, new StationTable());
-                registerTable(PlayerStations.class, new PlayerStations());
-
-                StationManager.INST.loadExistingStations();
-                Bukkit.getScheduler().cancelTask(startTaskId);
-
-                // Add our new entity to minecrafts entities
-                try {
-                    Method method = EntityTypes.class.getDeclaredMethod("a", new Class[]{Class.class, String.class, int.class});
-                    method.setAccessible(true);
-                    method.invoke(EntityTypes.class, RCDragon.class, "RCDragon", 63);
-                } catch (Exception e) {
-                    getLogger().warning("[DragonTravelPlus] Error registering Entity! DISABLING!");
-                    disable();
-                    return;
-                }
-
-                getLogger().info("[DragonTravelPlus] Found DB connection, init DTPlus module...");
-            }
-        }, 0, 2 * 20);
+        StationManager.INST.loadExistingStations();
     }
 
     @Override
