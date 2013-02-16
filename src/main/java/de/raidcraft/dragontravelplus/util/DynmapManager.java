@@ -1,7 +1,7 @@
 package de.raidcraft.dragontravelplus.util;
 
-import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.dragontravelplus.station.DragonStation;
+import org.bukkit.Bukkit;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.Marker;
 import org.dynmap.markers.MarkerAPI;
@@ -22,7 +22,7 @@ public class DynmapManager {
 
     public DynmapManager() {
 
-        api = (DynmapAPI) CommandBook.server().getPluginManager().getPlugin("dynmap");
+        api = (DynmapAPI) Bukkit.getServer().getPluginManager().getPlugin("dynmap");
         if(api == null) {
             return;
         }

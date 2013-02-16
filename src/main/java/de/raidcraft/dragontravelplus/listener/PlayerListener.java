@@ -1,12 +1,12 @@
 package de.raidcraft.dragontravelplus.listener;
 
-import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -47,7 +47,7 @@ public class PlayerListener implements Listener {
             event.setCancelled(true);
             return;
         } else {
-            CommandBook.server().getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
+            Bukkit.getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
             DragonManager.INST.flyingPlayers.remove(player);
             ChatMessages.warn(player, "Du hast schaden genommen, der Drache hat wieder abgedreht!");
             Conversation.conversations.remove(player.getName());

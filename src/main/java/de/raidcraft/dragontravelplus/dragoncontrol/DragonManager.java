@@ -1,10 +1,10 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
-import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.station.DragonStation;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -23,8 +23,8 @@ public class DragonManager {
     public void takeoff(Player player, DragonStation start, DragonStation destination, double price) {
 
         FlyingPlayer flyingPlayer = new FlyingPlayer(player, start, destination, price);
-        CommandBook.inst().getServer().getScheduler()
-                .scheduleAsyncDelayedTask(CommandBook.inst(), new DelayedTakeoffTask(flyingPlayer), RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightWarmup * 20);
+        Bukkit.getScheduler()
+                .scheduleAsyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DelayedTakeoffTask(flyingPlayer), RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightWarmup * 20);
     }
 
     public void abortFlight(Player player) {
@@ -39,7 +39,7 @@ public class DragonManager {
         if (flyingPlayer.isInAir()) {
             Travels.removePlayerandDragon(flyingPlayer.getDragon().getBukkitEntity());
         } else {
-            CommandBook.server().getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
+            Bukkit.getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
         }
         player.teleport(flyingPlayer.getStart().getLocation());   // teleport to start
         DragonManager.INST.flyingPlayers.remove(player);

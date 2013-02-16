@@ -1,6 +1,5 @@
 package de.raidcraft.dragontravelplus.listener;
 
-import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
@@ -37,7 +36,7 @@ public class DragonListener implements Listener {
         if (event.getPassenger() instanceof Player) {
             PassengerRemover passengerRemover =
                     new PassengerRemover(DragonManager.INST.getFlyingPlayer(((Player) event.getPassenger()).getName()).getPlayer());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(CommandBook.inst(), passengerRemover, 7 * 10);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), passengerRemover, 7 * 10);
         }
     }
 

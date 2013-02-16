@@ -1,6 +1,6 @@
 package de.raidcraft.dragontravelplus.tables;
 
-import com.sk89q.commandbook.CommandBook;
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.Bukkit;
@@ -45,7 +45,7 @@ public class StationTable extends Table {
                             "PRIMARY KEY ( `id` )" +
                             ")").execute();
         } catch (SQLException e) {
-            CommandBook.logger().warning(e.getMessage());
+            RaidCraft.LOGGER.warning(e.getMessage());
         }
     }
 
@@ -71,7 +71,7 @@ public class StationTable extends Table {
                 stations.add(station);
             }
         } catch (SQLException e) {
-            CommandBook.logger().warning(e.getMessage());
+            RaidCraft.LOGGER.warning(e.getMessage());
         }
         return stations;
     }
@@ -105,7 +105,7 @@ public class StationTable extends Table {
                 stations.add(station);
             }
         } catch (SQLException e) {
-            CommandBook.logger().warning(e.getMessage());
+            RaidCraft.LOGGER.warning(e.getMessage());
         }
         return stations;
     }
@@ -122,7 +122,7 @@ public class StationTable extends Table {
                 stations.add(resultSet.getString("name"));
             }
         } catch (SQLException e) {
-            CommandBook.logger().warning(e.getMessage());
+            RaidCraft.LOGGER.warning(e.getMessage());
         }
         return stations;
     }
@@ -147,7 +147,7 @@ public class StationTable extends Table {
             Statement statement = getConnection().createStatement();
             statement.executeUpdate(query);
         } catch (SQLException e) {
-            CommandBook.logger().warning(e.getMessage());
+            RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
         }
     }
@@ -158,7 +158,7 @@ public class StationTable extends Table {
             getConnection().prepareStatement(
                     "DELETE FROM " + getTableName() + " WHERE name = '" + station.getName() + "'").execute();
         } catch (SQLException e) {
-            CommandBook.logger().warning(e.getMessage());
+            RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
         }
     }

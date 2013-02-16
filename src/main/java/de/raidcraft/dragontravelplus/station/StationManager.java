@@ -1,6 +1,5 @@
 package de.raidcraft.dragontravelplus.station;
 
-import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
@@ -34,7 +33,7 @@ public class StationManager {
             existingStations.put(station.getName(), station);
         }
 
-        CommandBook.logger().info("[DTP] Es wurden " + i + " Stationen geladen!");
+        RaidCraft.LOGGER.info("[DTP] Es wurden " + i + " Stationen geladen!");
     }
 
     public void addNewStation(DragonStation dragonStation) throws AlreadyExistsException {

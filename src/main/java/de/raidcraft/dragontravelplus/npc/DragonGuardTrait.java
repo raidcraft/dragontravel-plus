@@ -1,6 +1,5 @@
 package de.raidcraft.dragontravelplus.npc;
 
-import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.station.DragonStation;
@@ -120,7 +119,7 @@ public class DragonGuardTrait extends Trait {
         reloadDragonStation();
         if (station == null) {
             LivingEntity entity = npc.getBukkitEntity();
-            CommandBook.logger().warning("[DTP] NPC despawned at"
+            RaidCraft.LOGGER.warning("[DTP] NPC despawned at"
                     + " x:" + entity.getLocation().getBlockX()
                     + " y:" + entity.getLocation().getBlockY()
                     + " z:" + entity.getLocation().getBlockZ()

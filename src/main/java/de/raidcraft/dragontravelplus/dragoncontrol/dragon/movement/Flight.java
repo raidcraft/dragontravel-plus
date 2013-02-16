@@ -1,6 +1,5 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement;
 
-import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import org.bukkit.Bukkit;
@@ -78,7 +77,7 @@ public class Flight {
         Waypoint wp = waypoints.get(currentwp);
         currentwp++;
         if (wp == null) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(CommandBook.inst(), new Runnable() {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
                 @Override
                 public void run() {
 

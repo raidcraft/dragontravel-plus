@@ -1,6 +1,6 @@
 package de.raidcraft.dragontravelplus.tables;
 
-import com.sk89q.commandbook.CommandBook;
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.util.DateUtil;
@@ -36,7 +36,7 @@ public class PlayerStations extends Table {
                             "PRIMARY KEY ( `id` )" +
                             ")").execute();
         } catch (SQLException e) {
-            CommandBook.logger().warning(e.getMessage());
+            RaidCraft.LOGGER.warning(e.getMessage());
         }
     }
 
@@ -51,7 +51,7 @@ public class PlayerStations extends Table {
                 stations.add(resultSet.getString("station_name"));
             }
         } catch (SQLException e) {
-            CommandBook.logger().warning(e.getMessage());
+            RaidCraft.LOGGER.warning(e.getMessage());
         }
         return stations;
     }
@@ -69,7 +69,7 @@ public class PlayerStations extends Table {
             Statement statement = getConnection().createStatement();
             statement.executeUpdate(query);
         } catch (SQLException e) {
-            CommandBook.logger().warning(e.getMessage());
+            RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
         }
     }
