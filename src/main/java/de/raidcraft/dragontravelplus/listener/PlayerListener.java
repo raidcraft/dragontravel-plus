@@ -121,7 +121,8 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if (conversation.getDragonGuard().getDragonStation().getLocation()
+        if (conversation.getDragonGuard().getDragonStation().getLocation().getWorld() != event.getPlayer().getLocation().getWorld()
+                || conversation.getDragonGuard().getDragonStation().getLocation()
                 .distance(event.getPlayer().getLocation()) > RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.autoExitDistance) {
             conversation.abortConversation();
             event.setCancelled(true);
