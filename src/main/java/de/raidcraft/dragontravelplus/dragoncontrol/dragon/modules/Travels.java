@@ -3,7 +3,6 @@ package de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import net.minecraft.server.v1_4_R1.World;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 import org.bukkit.entity.EnderDragon;
@@ -12,13 +11,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
-import java.util.ArrayList;
-
 public class Travels {
-
-    public static ArrayList<String> togglers = new ArrayList<String>();
-    private static ChatColor red = ChatColor.RED;
-    private static ChatColor white = ChatColor.WHITE;
 
     /**
      * Spawns a RCDragon and mounts the player on it

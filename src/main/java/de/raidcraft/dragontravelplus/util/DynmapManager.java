@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus.util;
 
+import com.sk89q.commandbook.CommandBook;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.Marker;
@@ -21,13 +22,12 @@ public class DynmapManager {
 
     public DynmapManager() {
 
-        //TODO XXX broken in current dynmap build!
-        //        api = (DynmapAPI) CommandBook.server().getPluginManager().getPlugin("dynmap");
-        //        if(api == null) {
-        //            return;
-        //        }
-        //        markerAPI = api.getMarkerAPI();
-        //        dragonSet = markerAPI.getMarkerSet("drachenmeister");
+        api = (DynmapAPI) CommandBook.server().getPluginManager().getPlugin("dynmap");
+        if(api == null) {
+            return;
+        }
+        markerAPI = api.getMarkerAPI();
+        dragonSet = markerAPI.getMarkerSet("drachenmeister");
     }
 
     public void addStationMarker(DragonStation station) {
