@@ -4,20 +4,21 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 import java.util.Arrays;
 
@@ -132,5 +133,30 @@ public class PlayerListener implements Listener {
         if (conversation.trigger(Conversation.TriggerType.CHAT_ANSWER, event.getMessage())) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+
+        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(event.getPlayer().getName());
+
+        if(flyingPlayer == null || !flyingPlayer.isInAir()) {
+            return;
+        }
+        RCDragon dragon = flyingPlayer.getDragon();
+        if(!dragon.isControlled()) {
+            return;
+        }
+
+        Location target;
+
+        if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            target = event.getPlayer().getTargetBlock(null, 100).getLocation();
+        }
+        else {
+            target = event.getPlayer().getLocation();
+        }
+
+        dragon.setNextTarget(new Waypoint(target.getWorld().getName(), target.getBlockX(), target.getBlockY(), target.getBlockZ()));
     }
 }

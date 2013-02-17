@@ -21,4 +21,19 @@ public class FlightTravel {
 
         dragon.startFlight(flight);
     }
+
+    public static void flyControlled(ControlledFlight controlledFlight, Player player) {
+
+        // Mounting the player
+        if (!Travels.mountDragon(player))
+            return;
+
+        // Getting the dragon
+        RCDragon dragon = DragonManager.INST.flyingPlayers.get(player).getDragon();
+
+        if (dragon == null)
+            return;
+
+        dragon.startControlled(controlledFlight);
+    }
 }

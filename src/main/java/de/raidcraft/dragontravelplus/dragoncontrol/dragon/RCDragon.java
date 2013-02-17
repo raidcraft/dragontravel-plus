@@ -3,6 +3,7 @@ package de.raidcraft.dragontravelplus.dragoncontrol.dragon;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
 import de.raidcraft.dragontravelplus.events.DragonLandEvent;
@@ -41,6 +42,10 @@ public class RCDragon extends EntityEnderDragon {
     private double distanceY;
     private double distanceZ;
 
+    // Controlled Flight
+    private ControlledFlight controlledFlight;
+    private Waypoint nextTarget;
+
     // Start points for tick calculation
     private double startX;
     private double startY;
@@ -49,6 +54,7 @@ public class RCDragon extends EntityEnderDragon {
     // Basics
     boolean isFlight = false;
     boolean isTravel = false;
+    boolean isControlled = false;
     Entity entity;
 
     // Start Location
@@ -123,6 +129,21 @@ public class RCDragon extends EntityEnderDragon {
         isFlight = true;
     }
 
+    public void startControlled(ControlledFlight controlledFlight) {
+
+        entity = getBukkitEntity();
+        this.controlledFlight = controlledFlight;
+
+        this.startX = start.getX();
+        this.startY = start.getY();
+        this.startZ = start.getZ();
+
+        setMoveControlled();
+        yaw = getCorrectYaw(toX, toZ);
+        move = true;
+        isControlled = true;
+    }
+
     /**
      * Gets the correct yaw for this specific path
      */
@@ -165,23 +186,39 @@ public class RCDragon extends EntityEnderDragon {
         ZTick = Math.abs(distanceZ) / tick;
     }
 
+    public void setMoveControlled() {
+
+        this.distanceX = this.startX - toX;
+        this.distanceY = this.startY - toY;
+        this.distanceZ = this.startZ - toZ;
+
+        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
+        XTick = Math.abs(distanceX) / tick;
+        ZTick = Math.abs(distanceZ) / tick;
+    }
+
     @Override
     public void c() {
 
         // Travel
-        if (isTravel) {
+        if(isTravel) {
             travel();
             return;
         }
 
         // Flight
-        if (isFlight) {
+        if(isFlight) {
             flight();
+        }
+
+        // Controlled flight
+        if(isControlled) {
+            control();
         }
     }
 
     /**
-     * Flight with waypoints
+     * Is called during flight with with waypoints
      */
     public void flight() {
 
@@ -251,7 +288,7 @@ public class RCDragon extends EntityEnderDragon {
     }
 
     /**
-     * Normal Travel
+     * Is called during normal Travel
      */
     public void travel() {
 
@@ -315,8 +352,78 @@ public class RCDragon extends EntityEnderDragon {
         setPosition(myX, myY, myZ);
     }
 
+    /*
+     * Is called during flight controlled by players line of sight
+     */
+    public void control() {
+
+        // Returns, the dragon won't move
+        if (!move)
+            return;
+
+        // Init move variables
+        double myX = locX;
+        double myY = locY;
+        double myZ = locZ;
+
+        if ((int) myX != (int) toX) {
+            if (myX < toX) {
+                myX += XTick;
+            } else {
+                myX -= XTick;
+            }
+        }
+
+        if ((int) myY != (int) toY) {
+            if (myY < toY) {
+                myY += YTick;
+            } else {
+                myY -= YTick;
+            }
+        }
+
+        if ((int) myZ != (int) toZ) {
+            if (myZ < toZ) {
+                myZ += ZTick;
+            } else {
+                myZ -= ZTick;
+            }
+        }
+
+        // if nextTarget way point isn't null then fly to new target
+        if (nextTarget != null) {
+
+            this.startX = locX;
+            this.startY = locY;
+            this.startZ = locZ;
+
+            toX = nextTarget.getX();
+            toY = nextTarget.getY();
+            toZ = nextTarget.getZ();
+            setMoveFlight();
+            yaw = getCorrectYaw(toX, toZ);
+
+            // clear nextTarget
+            nextTarget = null;
+
+            return;
+        }
+
+        setPosition(myX, myY, myZ);
+    }
+
     public double x_() {
 
         return 3;
+    }
+
+    public void setNextTarget(Waypoint nextTarget) {
+
+        this.nextTarget = nextTarget;
+    }
+
+    public boolean isControlled() {
+
+        return isControlled;
     }
 }

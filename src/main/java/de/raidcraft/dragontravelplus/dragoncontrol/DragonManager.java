@@ -22,7 +22,7 @@ public class DragonManager {
 
     public void takeoff(Player player, DragonStation start, DragonStation destination, double price) {
 
-        FlyingPlayer flyingPlayer = new FlyingPlayer(player, start, destination, price);
+        FlyingPlayer flyingPlayer = new FlyingPlayer(player, start.getLocation(), destination.getLocation(), price);
         Bukkit.getScheduler()
                 .scheduleAsyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DelayedTakeoffTask(flyingPlayer), RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightWarmup * 20);
     }
@@ -41,7 +41,7 @@ public class DragonManager {
         } else {
             Bukkit.getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
         }
-        player.teleport(flyingPlayer.getStart().getLocation());   // teleport to start
+        player.teleport(flyingPlayer.getStart());   // teleport to start
         DragonManager.INST.flyingPlayers.remove(player);
     }
 
@@ -71,7 +71,7 @@ public class DragonManager {
                 flyingPlayers.put(flyingPlayer.getPlayer(), flyingPlayer);
             }
 
-            FlightNavigator.INST.calculateFlight(flyingPlayer, flyingPlayer.getStart().getLocation(), flyingPlayer.getDestination().getLocation());
+            FlightNavigator.INST.calculateFlight(flyingPlayer, flyingPlayer.getStart(), flyingPlayer.getDestination());
         }
     }
 }

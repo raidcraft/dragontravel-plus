@@ -1,12 +1,12 @@
 package de.raidcraft.dragontravelplus.commands;
 
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.minecraft.util.commands.NestedCommand;
+import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
+import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.station.DragonStation;
@@ -193,6 +193,27 @@ public class Commands {
             }
 
             ChatMessages.success((Player) sender, list);
+        }
+
+        @Command(
+                aliases = {"fly"},
+                desc = "Start controlledflyght"
+        )
+        @CommandPermissions("dragontravelplus.fly.controlled")
+        public void controlledFlight(CommandContext context, CommandSender sender) throws CommandException {
+
+            if(sender instanceof ConsoleCommandSender) {
+                sender.sendMessage("Player context required!");
+                return;
+            }
+            Player player = (Player)sender;
+
+            ControlledFlight controlledFlight = new ControlledFlight(20, 100);
+            FlyingPlayer flyingPlayer = new FlyingPlayer(player, player.getLocation());
+            flyingPlayer.setInAir(true);
+            DragonManager.INST.flyingPlayers.put(player, flyingPlayer);
+            FlightTravel.flyControlled(controlledFlight, player);
+            ChatMessages.success(player, "Started Controlled Flight!");
         }
     }
 }

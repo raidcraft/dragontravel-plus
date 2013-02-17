@@ -3,7 +3,7 @@ package de.raidcraft.dragontravelplus.dragoncontrol;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
-import de.raidcraft.dragontravelplus.station.DragonStation;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -15,19 +15,25 @@ public class FlyingPlayer {
 
     private Player player;
     private RCDragon dragon = null;
-    private DragonStation start;
-    private DragonStation destination;
+    private Location start;
+    private Location destination;
     private boolean inAir = false;
     private int waitingTaskID = 0;
     private long startTime = 0;
     private double price = 0;
 
-    public FlyingPlayer(Player player, DragonStation start, DragonStation destination, double price) {
+    public FlyingPlayer(Player player, Location start, Location destination, double price) {
 
         this.player = player;
         this.start = start;
         this.destination = destination;
         this.price = price;
+    }
+
+    public FlyingPlayer(Player player, Location start) {
+
+        this.player = player;
+        this.start = start;
     }
 
     public boolean hasIncorrectState() {
@@ -54,12 +60,12 @@ public class FlyingPlayer {
         this.dragon = dragon;
     }
 
-    public DragonStation getStart() {
+    public Location getStart() {
 
         return start;
     }
 
-    public DragonStation getDestination() {
+    public Location getDestination() {
 
         return destination;
     }
