@@ -122,6 +122,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         public int flightHeight = 15;
         @Setting("flight-speed")
         public double flightSpeed = 0.7;
+        @Setting("controlled-flight-speed")
+        public double controlledFlightSpeed = 0.4;
         @Setting("dynamic-flight-route")
         public boolean useDynamicRouting = true;
         @Setting("flight-waypoint-distance")

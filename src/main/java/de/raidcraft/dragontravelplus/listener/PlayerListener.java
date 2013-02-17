@@ -5,12 +5,12 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
+import de.raidcraft.dragontravelplus.events.DragonLandEvent;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -148,15 +148,14 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        Location target;
-
+        // toggle control state
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            target = event.getPlayer().getTargetBlock(null, 100).getLocation();
+            dragon.toggleControlled();
         }
+        // dismount
         else {
-            target = event.getPlayer().getLocation();
+            Bukkit.getPluginManager().callEvent(new DragonLandEvent(dragon.getBukkitEntity()));
+            Travels.removePlayerandDragon(dragon.getBukkitEntity());
         }
-
-        dragon.setNextTarget(new Waypoint(target.getWorld().getName(), target.getBlockX(), target.getBlockY(), target.getBlockZ()));
     }
 }

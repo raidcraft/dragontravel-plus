@@ -12,6 +12,7 @@ import net.minecraft.server.v1_4_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 public class RCDragon extends EntityEnderDragon {
 
@@ -44,7 +45,8 @@ public class RCDragon extends EntityEnderDragon {
 
     // Controlled Flight
     private ControlledFlight controlledFlight;
-    private Waypoint nextTarget;
+    private boolean currentlyControlled = true;
+    private boolean toggleControl = false;
 
     // Start points for tick calculation
     private double startX;
@@ -134,9 +136,13 @@ public class RCDragon extends EntityEnderDragon {
         entity = getBukkitEntity();
         this.controlledFlight = controlledFlight;
 
-        this.startX = start.getX();
-        this.startY = start.getY();
-        this.startZ = start.getZ();
+        startX = start.getX();
+        startY = start.getY();
+        startZ = start.getZ();
+
+        toX = startX;
+        toY = startY;
+        toZ = startZ;
 
         setMoveControlled();
         yaw = getCorrectYaw(toX, toZ);
@@ -192,7 +198,7 @@ public class RCDragon extends EntityEnderDragon {
         this.distanceY = this.startY - toY;
         this.distanceZ = this.startZ - toZ;
 
-        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
+        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.controlledFlightSpeed;
         XTick = Math.abs(distanceX) / tick;
         ZTick = Math.abs(distanceZ) / tick;
     }
@@ -366,6 +372,41 @@ public class RCDragon extends EntityEnderDragon {
         double myY = locY;
         double myZ = locZ;
 
+        if(toggleControl) {
+            toggleControl = false;
+            // stop dragon
+            if(currentlyControlled) {
+                toX = locX;
+                toY = locY;
+                toZ = locZ;
+                currentlyControlled = false;
+                return;
+            }
+            else {
+                currentlyControlled = true;
+            }
+        }
+
+        if (currentlyControlled) {
+
+            this.startX = locX;
+            this.startY = locY;
+            this.startZ = locZ;
+
+            if(!(entity.getPassenger() instanceof Player)) {
+                return;
+            }
+            Player player = (Player) entity.getPassenger();
+
+            Location target = player.getTargetBlock(null, 20).getLocation();
+
+            toX = target.getX();
+            toY = target.getY();
+            toZ = target.getZ();
+            setMoveFlight();
+            yaw = getCorrectYaw(toX, toZ);
+        }
+
         if ((int) myX != (int) toX) {
             if (myX < toX) {
                 myX += XTick;
@@ -390,25 +431,6 @@ public class RCDragon extends EntityEnderDragon {
             }
         }
 
-        // if nextTarget way point isn't null then fly to new target
-        if (nextTarget != null) {
-
-            this.startX = locX;
-            this.startY = locY;
-            this.startZ = locZ;
-
-            toX = nextTarget.getX();
-            toY = nextTarget.getY();
-            toZ = nextTarget.getZ();
-            setMoveFlight();
-            yaw = getCorrectYaw(toX, toZ);
-
-            // clear nextTarget
-            nextTarget = null;
-
-            return;
-        }
-
         setPosition(myX, myY, myZ);
     }
 
@@ -417,9 +439,9 @@ public class RCDragon extends EntityEnderDragon {
         return 3;
     }
 
-    public void setNextTarget(Waypoint nextTarget) {
+    public void toggleControlled() {
 
-        this.nextTarget = nextTarget;
+        toggleControl = true;
     }
 
     public boolean isControlled() {
