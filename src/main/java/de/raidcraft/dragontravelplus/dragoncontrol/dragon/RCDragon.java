@@ -47,6 +47,8 @@ public class RCDragon extends EntityEnderDragon {
     private ControlledFlight controlledFlight;
     private boolean currentlyControlled = true;
     private boolean toggleControl = false;
+    private Waypoint landingPlace = null;
+    private boolean landing = false;
 
     // Start points for tick calculation
     private double startX;
@@ -387,6 +389,28 @@ public class RCDragon extends EntityEnderDragon {
             }
         }
 
+        // set landing place
+        if(landingPlace != null) {
+            toX = landingPlace.getX();
+            toY = landingPlace.getY();
+            toZ = landingPlace.getZ();
+            landingPlace = null;
+            currentlyControlled = false;
+        }
+
+        // check if landing place is reached
+        if(landing &&
+                ((int) myZ >= (int) toZ - 2 && (int) myZ <= (int) toZ + 2)
+                && ((int) myY >= (int) toY - 2 && (int) myY <= (int) toY + 2)
+                && ((int) myX >= (int) toX - 2 && (int) myX <= (int) toX + 2)) {
+            if(entity.getPassenger() != null) {
+                Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
+            }
+            Travels.removePlayerandDragon(entity);
+            return;
+        }
+
+        // set new target direction if controlled by player
         if (currentlyControlled) {
 
             this.startX = locX;
@@ -442,6 +466,18 @@ public class RCDragon extends EntityEnderDragon {
     public void toggleControlled() {
 
         toggleControl = true;
+        landing = false;
+    }
+
+    public void setLandingPlace(Waypoint landingPlace) {
+
+        this.landingPlace = landingPlace;
+        landing = true;
+    }
+
+    public boolean isLanding() {
+
+        return landing;
     }
 
     public boolean isControlled() {
