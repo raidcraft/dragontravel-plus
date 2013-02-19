@@ -5,13 +5,10 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -151,23 +148,26 @@ public class PlayerListener implements Listener {
 
         // toggle control state
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            dragon.toggleControlled();
+            if(dragon.isForceLanding()) {
+                ChatMessages.info(event.getPlayer(), "Die Landung kann nicht abgebrochen werden!");
+            }
+            else {
+                dragon.toggleControlled();
+            }
         }
         // set landing place
         else {
             if(dragon.isLanding()) {
-                dragon.toggleControlled();
-                ChatMessages.info(event.getPlayer(), "Landeanflug abgebrochen!");
+                if(dragon.isForceLanding()) {
+                    ChatMessages.info(event.getPlayer(), "Die Landung kann nicht abgebrochen werden!");
+                }
+                else {
+                    dragon.toggleControlled();
+                    ChatMessages.info(event.getPlayer(), "Landeanflug abgebrochen!");
+                }
             }
             else {
-                Block targetBLock = dragon.getBukkitEntity().getLocation().getBlock();
-
-                // search first hard block
-                while(targetBLock.getType() == Material.AIR) {
-                    targetBLock = targetBLock.getRelative(0, -1, 0);
-                }
-                targetBLock = targetBLock.getRelative(2, -5, 2);
-                dragon.setLandingPlace(new Waypoint(targetBLock.getLocation()));
+                dragon.land();
                 ChatMessages.info(event.getPlayer(), "Landeanflug gestartet!");
             }
         }

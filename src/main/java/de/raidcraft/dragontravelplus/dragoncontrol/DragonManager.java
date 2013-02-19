@@ -37,6 +37,7 @@ public class DragonManager {
 
 
         if (flyingPlayer.isInAir()) {
+            flyingPlayer.getDragon().cancelDurationTask();
             Travels.removePlayerandDragon(flyingPlayer.getDragon().getBukkitEntity());
         } else {
             Bukkit.getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());

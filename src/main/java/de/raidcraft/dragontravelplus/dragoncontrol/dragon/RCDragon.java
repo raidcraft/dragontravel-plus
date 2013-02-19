@@ -7,10 +7,13 @@ import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFli
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
 import de.raidcraft.dragontravelplus.events.DragonLandEvent;
+import de.raidcraft.dragontravelplus.util.ChatMessages;
 import net.minecraft.server.v1_4_R1.EntityEnderDragon;
 import net.minecraft.server.v1_4_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -49,6 +52,8 @@ public class RCDragon extends EntityEnderDragon {
     private boolean toggleControl = false;
     private Waypoint landingPlace = null;
     private boolean landing = false;
+    private boolean forceLanding = false;
+    private int durationTaskId = 0;
 
     // Start points for tick calculation
     private double startX;
@@ -138,6 +143,20 @@ public class RCDragon extends EntityEnderDragon {
         entity = getBukkitEntity();
         this.controlledFlight = controlledFlight;
 
+        // start duration control timer
+        if(controlledFlight.getDuration() > 0) {
+            durationTaskId = Bukkit.getScheduler().scheduleSyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
+                @Override
+                public void run() {
+                    if(entity.getPassenger() instanceof Player) {
+                        ChatMessages.info((Player)entity.getPassenger(), "Die Flugzeit ist abgelaufen, der Drache landet nun...");
+                    }
+                    forceLanding = true;
+                    land();
+                }
+            }, controlledFlight.getDuration() * 20);
+        }
+
         startX = start.getX();
         startY = start.getY();
         startZ = start.getZ();
@@ -201,6 +220,7 @@ public class RCDragon extends EntityEnderDragon {
         this.distanceZ = this.startZ - toZ;
 
         double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.controlledFlightSpeed;
+        YTick = Math.abs(distanceY) / tick;
         XTick = Math.abs(distanceX) / tick;
         ZTick = Math.abs(distanceZ) / tick;
     }
@@ -427,7 +447,7 @@ public class RCDragon extends EntityEnderDragon {
             toX = target.getX();
             toY = target.getY();
             toZ = target.getZ();
-            setMoveFlight();
+            setMoveControlled();
             yaw = getCorrectYaw(toX, toZ);
         }
 
@@ -444,6 +464,10 @@ public class RCDragon extends EntityEnderDragon {
                 myY += YTick;
             } else {
                 myY -= YTick;
+                // speed up landing
+                if(landing) {
+                    myY -= 0.5;
+                }
             }
         }
 
@@ -463,16 +487,33 @@ public class RCDragon extends EntityEnderDragon {
         return 3;
     }
 
+    public void cancelDurationTask() {
+        Bukkit.getScheduler().cancelTask(durationTaskId);
+    }
+
     public void toggleControlled() {
 
         toggleControl = true;
         landing = false;
     }
 
-    public void setLandingPlace(Waypoint landingPlace) {
+    public void land() {
 
-        this.landingPlace = landingPlace;
+        Block targetBLock = getBukkitEntity().getLocation().getBlock();
+
+        // search first hard block
+        while(targetBLock.getType() == Material.AIR) {
+            targetBLock = targetBLock.getRelative(0, -1, 0);
+        }
+        targetBLock = targetBLock.getRelative(0, -5, 0);
+
+        landingPlace = new Waypoint(targetBLock.getLocation());
         landing = true;
+    }
+
+    public boolean isForceLanding() {
+
+        return forceLanding;
     }
 
     public boolean isLanding() {

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
  */
 public class ChatMessages {
 
-    private final static String CHAT_PREFIX = ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "DTPlus" + ChatColor.DARK_GRAY + "] " + ChatColor.WHITE;
+    private final static String CHAT_PREFIX = ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Dragon" + ChatColor.DARK_GRAY + "] " + ChatColor.WHITE;
 
     public static void noDragonGuardSelected(Player player) {
 
