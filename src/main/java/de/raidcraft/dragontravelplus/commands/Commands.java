@@ -208,7 +208,7 @@ public class Commands {
             }
             Player player = (Player)sender;
 
-            int duration = 30;
+            int duration = 0;
 
             if(context.argsLength() > 0) {
                 duration = context.getInteger(0);
