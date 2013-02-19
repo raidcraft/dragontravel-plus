@@ -442,7 +442,7 @@ public class RCDragon extends EntityEnderDragon {
             }
             Player player = (Player) entity.getPassenger();
 
-            Location target = player.getTargetBlock(null, 20).getLocation();
+            Location target = player.getTargetBlock(null, RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.controlledTargetDistance).getLocation();
 
             toX = target.getX();
             toY = target.getY();

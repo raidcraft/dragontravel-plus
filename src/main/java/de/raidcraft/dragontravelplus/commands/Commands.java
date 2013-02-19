@@ -214,7 +214,7 @@ public class Commands {
                 duration = context.getInteger(0);
             }
 
-            ControlledFlight controlledFlight = new ControlledFlight(20);
+            ControlledFlight controlledFlight = new ControlledFlight(duration);
             FlyingPlayer flyingPlayer = new FlyingPlayer(player, player.getLocation());
             flyingPlayer.setInAir(true);
             DragonManager.INST.flyingPlayers.put(player, flyingPlayer);

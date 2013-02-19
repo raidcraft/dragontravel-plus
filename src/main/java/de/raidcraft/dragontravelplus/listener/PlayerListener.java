@@ -163,12 +163,12 @@ public class PlayerListener implements Listener {
                 }
                 else {
                     dragon.toggleControlled();
-                    ChatMessages.info(event.getPlayer(), "Landeanflug abgebrochen!");
+                    ChatMessages.info(event.getPlayer(), "Landen abgebrochen!");
                 }
             }
             else {
                 dragon.land();
-                ChatMessages.info(event.getPlayer(), "Landeanflug gestartet!");
+                ChatMessages.info(event.getPlayer(), "Landen...");
             }
         }
     }
