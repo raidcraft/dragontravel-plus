@@ -447,6 +447,11 @@ public class RCDragon extends EntityEnderDragon {
             toX = target.getX();
             toY = target.getY();
             toZ = target.getZ();
+
+            if(toY > entity.getWorld().getMaxHeight()) {
+                toY = entity.getWorld().getMaxHeight();
+            }
+
             setMoveControlled();
             yaw = getCorrectYaw(toX, toZ);
         }

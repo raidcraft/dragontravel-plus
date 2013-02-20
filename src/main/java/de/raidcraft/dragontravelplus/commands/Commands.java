@@ -214,8 +214,15 @@ public class Commands {
                 duration = context.getInteger(0);
             }
 
+            FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
+
+            if(flyingPlayer != null && flyingPlayer.isInAir()) {
+                ChatMessages.warn(player, "Du befindest dich bereits im Flug!");
+                return;
+            }
+
             ControlledFlight controlledFlight = new ControlledFlight(duration);
-            FlyingPlayer flyingPlayer = new FlyingPlayer(player, player.getLocation());
+            flyingPlayer = new FlyingPlayer(player, player.getLocation());
             flyingPlayer.setInAir(true);
             DragonManager.INST.flyingPlayers.put(player, flyingPlayer);
             FlightTravel.flyControlled(controlledFlight, player);
