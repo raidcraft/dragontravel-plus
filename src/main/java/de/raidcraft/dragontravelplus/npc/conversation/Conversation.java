@@ -3,12 +3,7 @@ package de.raidcraft.dragontravelplus.npc.conversation;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
-import de.raidcraft.dragontravelplus.npc.conversation.stages.DisabledStage;
-import de.raidcraft.dragontravelplus.npc.conversation.stages.FirstMeetStage;
-import de.raidcraft.dragontravelplus.npc.conversation.stages.NoPermissionStage;
-import de.raidcraft.dragontravelplus.npc.conversation.stages.NoStationsStage;
-import de.raidcraft.dragontravelplus.npc.conversation.stages.SelectDialModeStage;
-import de.raidcraft.dragontravelplus.npc.conversation.stages.Stage;
+import de.raidcraft.dragontravelplus.npc.conversation.stages.*;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import net.citizensnpcs.api.npc.NPC;
@@ -62,7 +57,6 @@ public class Conversation {
         }
 
         // start new conversation
-        // TODO: wtf is this if clause?
         if (this.npc != npc || this.npc == null) {
             this.npc = npc;
             this.dragonGuard = npc.getTrait(DragonGuardTrait.class);
