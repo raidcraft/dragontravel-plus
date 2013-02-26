@@ -2,6 +2,7 @@ package de.raidcraft.dragontravelplus.dragoncontrol;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.EnqueuedNavigationTask;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.Bukkit;
@@ -18,13 +19,24 @@ import java.util.Map;
 public class DragonManager {
 
     public Map<Player, FlyingPlayer> flyingPlayers = new HashMap<>();
+    public Map<FlyingPlayer, EnqueuedNavigationTask> enqueuedNavigationTasks = new HashMap<>();
+
     public final static DragonManager INST = new DragonManager();
 
     public void takeoff(Player player, DragonStation start, DragonStation destination, double price) {
 
         FlyingPlayer flyingPlayer = new FlyingPlayer(player, start.getLocation(), destination.getLocation(), price);
+
+        // check periodically if route is calculated
+        EnqueuedNavigationTask enqueuedNavigation = new EnqueuedNavigationTask(flyingPlayer);
+        int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), enqueuedNavigation, 20, 2*20);
+        enqueuedNavigation.setWaitingTaskId(taskId);
+        enqueuedNavigationTasks.put(flyingPlayer, enqueuedNavigation);
+
+        // start asynchronous route calculation
         Bukkit.getScheduler()
-                .scheduleAsyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DelayedTakeoffTask(flyingPlayer), RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightWarmup * 20);
+                .scheduleAsyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DelayedTakeoffTask(flyingPlayer),
+                        RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightWarmup * 20);
     }
 
     public void abortFlight(Player player) {

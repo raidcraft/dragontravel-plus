@@ -2,10 +2,9 @@ package de.raidcraft.dragontravelplus.dragoncontrol;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.EnqueuedNavigationTask;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
-import de.raidcraft.dragontravelplus.events.RoutingFinishedEvent;
 import de.raidcraft.dragontravelplus.station.StationManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.util.Vector;
@@ -141,7 +140,9 @@ public class FlightNavigator {
         optimizedDestination.setY(destination.getY() + 2);
         flight.addWaypoint(optimizedDestination);
 
-        Bukkit.getPluginManager().callEvent(new RoutingFinishedEvent(flyingPlayer, flight));
+        EnqueuedNavigationTask enqueuedNavigationTask = DragonManager.INST.enqueuedNavigationTasks.get(flyingPlayer);
+        enqueuedNavigationTask.setFlight(flight);
+        enqueuedNavigationTask.setCalculated(true);
     }
 
     private List<Location> getRoute(List<Location> availableLocations, Location start, Location destination) {
