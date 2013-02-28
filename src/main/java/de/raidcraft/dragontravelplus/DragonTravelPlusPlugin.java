@@ -111,7 +111,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     public class LocalDTPConfiguration extends ConfigurationBase<DragonTravelPlusPlugin> {
 
         @Setting("disabled")
-        public boolean disabled = true;
+        public boolean disabled = false;
         @Setting("error-prevention-flight-timeout")
         public int flightTimeout = 30;
         @Setting("flight-cost-per-block")
