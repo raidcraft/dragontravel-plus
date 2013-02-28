@@ -1,9 +1,12 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
-import de.raidcraft.dragontravelplus.events.RoutingFinishedEvent;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 /**
  * @author Philip
@@ -40,8 +43,11 @@ public class EnqueuedNavigationTask implements Runnable {
     public void run() {
         if(waitingTaskId != 0 && calculated) {
             calculated = false;
-            Bukkit.getPluginManager().callEvent(new RoutingFinishedEvent(flyingPlayer, flight));
             Bukkit.getScheduler().cancelTask(waitingTaskId);
+            flyingPlayer.setInAir(true);
+            FlightTravel.flyFlight(flight, flyingPlayer.getPlayer());
+            RaidCraft.getEconomy().withdrawPlayer(flyingPlayer.getPlayer().getName(), flyingPlayer.getPrice());
+            flyingPlayer.getPlayer().sendMessage(ChatColor.GRAY + "Schreibe '" + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.exitWords[0] + "' in den Chat um den Flug abzubrechen!");
         }
     }
 }
