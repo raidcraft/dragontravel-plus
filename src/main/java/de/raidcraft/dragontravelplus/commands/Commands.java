@@ -174,7 +174,7 @@ public class Commands {
         )
         public void list(CommandContext context, CommandSender sender) throws CommandException {
 
-            String list = "Alle verfügbaren Drachenstationen: ";
+            String list = "Alle verfügbaren Drachenstationen dieser Welt: ";
 
             for (Map.Entry<String, DragonStation> entry : StationManager.INST.existingStations.entrySet()) {
 
@@ -184,6 +184,10 @@ public class Commands {
 
                 if (context.hasFlag('c')) {
                     if (!String.valueOf(entry.getValue().getCostLevel()).equalsIgnoreCase(context.getFlag('c'))) continue;
+                }
+
+                if(!entry.getValue().getLocation().getWorld().getName().equalsIgnoreCase(((Player)sender).getLocation().getWorld().getName())) {
+                    continue;
                 }
 
                 ChatColor color = ChatColor.AQUA;
