@@ -174,7 +174,8 @@ public class Commands {
         )
         public void list(CommandContext context, CommandSender sender) throws CommandException {
 
-            String list = "Alle verfügbaren Drachenstationen dieser Welt: ";
+            ChatMessages.success((Player) sender, "Alle verfügbaren Drachenstationen in dieser Welt:");
+            String list = "";
 
             for (Map.Entry<String, DragonStation> entry : StationManager.INST.existingStations.entrySet()) {
 
@@ -196,7 +197,7 @@ public class Commands {
                 list += color + entry.getKey() + ChatColor.WHITE + ", ";
             }
 
-            ChatMessages.success((Player) sender, list);
+            sender.sendMessage(list);
         }
 
         @Command(
