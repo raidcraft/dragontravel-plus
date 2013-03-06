@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import net.minecraft.server.v1_4_R1.World;
@@ -32,6 +33,9 @@ public class Travels {
             Entity dra = dragon.getBukkitEntity();
             removePlayerandDragon(dra);
         }
+
+        // log
+        RaidCraft.LOGGER.info("Spawn RCDragon for player: " + player.getName());
 
         // Spawning RCDragon
         World notchWorld = ((CraftWorld) player.getWorld()).getHandle();
