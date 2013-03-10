@@ -20,7 +20,7 @@ public class Travels {
      *
      * @param player
      */
-    public static synchronized boolean mountDragon(Player player) {
+    public static boolean mountDragon(Player player) {
 
         if (!DragonManager.INST.flyingPlayers.containsKey(player)) {
             return false;

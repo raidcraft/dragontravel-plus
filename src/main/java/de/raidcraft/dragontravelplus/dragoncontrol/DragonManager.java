@@ -67,7 +67,7 @@ public class DragonManager {
         return null;
     }
 
-    public synchronized void calculationFinished(FlyingPlayer flyingPlayer, Flight flight) {
+    public void calculationFinished(FlyingPlayer flyingPlayer, Flight flight) {
 
         RaidCraft.LOGGER.info("[DTP] Flight calculation finished!");
         EnqueuedNavigationTask enqueuedNavigationTask = DragonManager.INST.enqueuedNavigationTasks.get(flyingPlayer);
