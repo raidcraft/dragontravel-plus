@@ -2,6 +2,7 @@ package de.raidcraft.dragontravelplus.dragoncontrol.dragon;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
@@ -18,6 +19,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class RCDragon extends EntityEnderDragon {
+
+    private FlyingPlayer flyingPlayer;
 
     // Travel
     private double toX;
@@ -95,7 +98,10 @@ public class RCDragon extends EntityEnderDragon {
         super(world);
     }
 
-    public void startTravel(Location loc) {
+    public void startTravel(FlyingPlayer flyingPlayer, Location loc) {
+
+        this.flyingPlayer = flyingPlayer;
+        entity = getBukkitEntity();
 
         toX = loc.getBlockX();
         toY = loc.getBlockY();
@@ -113,8 +119,9 @@ public class RCDragon extends EntityEnderDragon {
         move = true;
     }
 
-    public void startFlight(Flight flight) {
+    public void startFlight(FlyingPlayer flyingPlayer, Flight flight) {
 
+        this.flyingPlayer = flyingPlayer;
         entity = getBukkitEntity();
 
         this.flight = flight;
@@ -138,8 +145,9 @@ public class RCDragon extends EntityEnderDragon {
         isFlight = true;
     }
 
-    public void startControlled(ControlledFlight controlledFlight) {
+    public void startControlled(FlyingPlayer flyingPlayer, ControlledFlight controlledFlight) {
 
+        this.flyingPlayer = flyingPlayer;
         entity = getBukkitEntity();
         this.controlledFlight = controlledFlight;
 
@@ -296,7 +304,7 @@ public class RCDragon extends EntityEnderDragon {
                 if (passenger != null) {
                     Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
                 }
-                Travels.removePlayerandDragon(entity);
+                Travels.removePlayerAndDragon(flyingPlayer);
                 return;
             }
 
@@ -349,7 +357,7 @@ public class RCDragon extends EntityEnderDragon {
                 if (passenger != null) {
                     Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
                 }
-                Travels.removePlayerandDragon(entity);
+                Travels.removePlayerAndDragon(flyingPlayer);
                 return;
             }
 
@@ -426,7 +434,7 @@ public class RCDragon extends EntityEnderDragon {
             if(entity.getPassenger() != null) {
                 Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
             }
-            Travels.removePlayerandDragon(entity);
+            Travels.removePlayerAndDragon(flyingPlayer);
             return;
         }
 

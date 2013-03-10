@@ -2,6 +2,7 @@ package de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
+import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import net.minecraft.server.v1_4_R1.World;
 import org.bukkit.Location;
@@ -26,16 +27,16 @@ public class Travels {
         }
 
         RCDragon dragon;
-
+        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
         // Removing dragon if already mounted
-        if (DragonManager.INST.flyingPlayers.get(player).getDragon() != null) {
-            dragon = DragonManager.INST.flyingPlayers.get(player).getDragon();
+        if (flyingPlayer.getDragon() != null) {
+            dragon = flyingPlayer.getDragon();
             Entity dra = dragon.getBukkitEntity();
-            removePlayerandDragon(dra);
+            removePlayerAndDragon(flyingPlayer);
         }
 
         // log
-        RaidCraft.LOGGER.info("Spawn RCDragon for player: " + player.getName());
+        RaidCraft.LOGGER.info("[DTP] Spawn RCDragon for player: " + player.getName());
 
         // Spawning RCDragon
         World notchWorld = ((CraftWorld) player.getWorld()).getHandle();
@@ -46,7 +47,7 @@ public class Travels {
         // Set the player as passenger to the RCDragon
         dragonEntity.setPassenger(player);
         // Adding RCDragon and Player to static hashmaps
-        DragonManager.INST.flyingPlayers.get(player).setDragon(dragon);
+        flyingPlayer.setDragon(dragon);
         return true;
     }
 
@@ -54,9 +55,14 @@ public class Travels {
      * Removes the player of the HashMap "TravelInformation" and removes the
      * dragon out of the world, also dismounts the player.
      *
-     * @param entity the dragon entity used to do stuff
      */
-    public static void removePlayerandDragon(Entity entity) {
+    public static void removePlayerAndDragon(FlyingPlayer flyingPlayer) {
+
+        if(flyingPlayer.getDragon() == null) {
+            return;
+        }
+
+        Entity entity = flyingPlayer.getDragon().getBukkitEntity();
 
         // Getting player
         Player player = null;
@@ -91,6 +97,7 @@ public class Travels {
         // Remove dragon from world
         entity.eject();
         entity.remove();
+        flyingPlayer.setDragon(null);
     }
 
     /**
@@ -158,12 +165,13 @@ public class Travels {
 
         mountDragon(player);
 
+        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
         RCDragon dragon = DragonManager.INST.flyingPlayers.get(player).getDragon();
         if (dragon == null)
             return;
 
         Location location = new Location(player.getWorld(), x, y, z);
 
-        dragon.startTravel(location);
+        dragon.startTravel(flyingPlayer, location);
     }
 }

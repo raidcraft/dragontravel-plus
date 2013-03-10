@@ -4,6 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.EnqueuedNavigationTask;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,7 +20,7 @@ import java.util.Map;
 public class DragonManager {
 
     public Map<Player, FlyingPlayer> flyingPlayers = new HashMap<>();
-    public Map<FlyingPlayer, EnqueuedNavigationTask> enqueuedNavigationTasks = new HashMap<>();
+    private Map<FlyingPlayer, EnqueuedNavigationTask> enqueuedNavigationTasks = new HashMap<>();
 
     public final static DragonManager INST = new DragonManager();
 
@@ -34,9 +35,7 @@ public class DragonManager {
         enqueuedNavigationTasks.put(flyingPlayer, enqueuedNavigation);
 
         // start asynchronous route calculation
-        Bukkit.getScheduler()
-                .scheduleAsyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DelayedTakeoffTask(flyingPlayer),
-                        RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightWarmup * 20);
+        Bukkit.getScheduler().runTaskAsynchronously(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DelayedTakeoffTask(flyingPlayer));
     }
 
     public void abortFlight(Player player) {
@@ -50,7 +49,7 @@ public class DragonManager {
 
         if (flyingPlayer.isInAir()) {
             flyingPlayer.getDragon().cancelDurationTask();
-            Travels.removePlayerandDragon(flyingPlayer.getDragon().getBukkitEntity());
+            Travels.removePlayerAndDragon(flyingPlayer);
         } else {
             Bukkit.getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
         }
@@ -66,6 +65,14 @@ public class DragonManager {
             }
         }
         return null;
+    }
+
+    public synchronized void calculationFinished(FlyingPlayer flyingPlayer, Flight flight) {
+
+        RaidCraft.LOGGER.info("[DTP] Flight calculation finished!");
+        EnqueuedNavigationTask enqueuedNavigationTask = DragonManager.INST.enqueuedNavigationTasks.get(flyingPlayer);
+        enqueuedNavigationTask.setFlight(flight);
+        enqueuedNavigationTask.setCalculated(true);
     }
 
     public class DelayedTakeoffTask implements Runnable {
