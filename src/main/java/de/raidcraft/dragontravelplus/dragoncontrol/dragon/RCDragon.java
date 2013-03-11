@@ -6,7 +6,7 @@ import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.WayPoint;
 import de.raidcraft.dragontravelplus.events.DragonLandEvent;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import net.minecraft.server.v1_4_R1.EntityEnderDragon;
@@ -18,23 +18,36 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class RCDragon extends EntityEnderDragon {
 
+    public enum FLIGHT_TYPE {
+        TRAVEL,
+        FLIGHT,
+        CONTROLLED_FLIGHT,
+        DYNAMIC
+    }
+
+    private FLIGHT_TYPE flightType;
+    private Entity entity;
     private FlyingPlayer flyingPlayer;
+    private Location target;
 
     // Travel
-    private double toX;
-    private double toY;
-    private double toZ;
     private int maxY;
-    private boolean finalmove = false;
+    private boolean finalMove = false;
     private boolean move = false;
 
     // Flight
     private Flight flight;
-    private Waypoint firstwp;
+    private WayPoint firstwp;
 
-    // First Waypoint coords
+    // Dynamic Flight
+    private List<Location> route;
+    private int routeIndex = 0;
+
+    // First WayPoint coords
     private double fwpX;
     private double fwpY;
     private double fwpZ;
@@ -53,7 +66,7 @@ public class RCDragon extends EntityEnderDragon {
     private ControlledFlight controlledFlight;
     private boolean currentlyControlled = true;
     private boolean toggleControl = false;
-    private Waypoint landingPlace = null;
+    private WayPoint landingPlace = null;
     private boolean landing = false;
     private boolean forceLanding = false;
     private int durationTaskId = 0;
@@ -63,11 +76,6 @@ public class RCDragon extends EntityEnderDragon {
     private double startY;
     private double startZ;
 
-    // Basics
-    boolean isFlight = false;
-    boolean isTravel = false;
-    boolean isControlled = false;
-    Entity entity;
 
     // Start Location
     Location start;
@@ -103,9 +111,9 @@ public class RCDragon extends EntityEnderDragon {
         this.flyingPlayer = flyingPlayer;
         entity = getBukkitEntity();
 
-        toX = loc.getBlockX();
-        toY = loc.getBlockY();
-        toZ = loc.getBlockZ();
+        target.setX(loc.getBlockX());
+        target.setY(loc.getBlockY());
+        target.setZ(loc.getBlockZ());
 
         this.startX = start.getX();
         this.startY = start.getY();
@@ -114,8 +122,8 @@ public class RCDragon extends EntityEnderDragon {
         maxY = RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight;
 
         setMoveTravel();
-        yaw = getCorrectYaw(toX, toZ);
-        isTravel = true;
+        yaw = getCorrectYaw(target.getX(), target.getZ());
+        flightType = FLIGHT_TYPE.TRAVEL;
         move = true;
     }
 
@@ -135,14 +143,14 @@ public class RCDragon extends EntityEnderDragon {
         this.startY = start.getY();
         this.startZ = start.getZ();
 
-        toX = fwpX;
-        toY = fwpY;
-        toZ = fwpZ;
+        target.setX(fwpX);
+        target.setY(fwpY);
+        target.setZ(fwpZ);
 
         setMoveFlight();
-        yaw = getCorrectYaw(toX, toZ);
+        yaw = getCorrectYaw(target.getX(), target.getZ());
         move = true;
-        isFlight = true;
+        flightType = FLIGHT_TYPE.FLIGHT;
     }
 
     public void startControlled(FlyingPlayer flyingPlayer, ControlledFlight controlledFlight) {
@@ -169,14 +177,36 @@ public class RCDragon extends EntityEnderDragon {
         startY = start.getY();
         startZ = start.getZ();
 
-        toX = startX;
-        toY = startY;
-        toZ = startZ;
+        target.setX(startX);
+        target.setY(startY);
+        target.setZ(startZ);
 
         setMoveControlled();
-        yaw = getCorrectYaw(toX, toZ);
+        yaw = getCorrectYaw(target.getX(), target.getZ());
         move = true;
-        isControlled = true;
+        flightType = FLIGHT_TYPE.CONTROLLED_FLIGHT;
+    }
+
+    public void startDynamicFlight(FlyingPlayer flyingPlayer, List<Location> route) {
+
+        this.flyingPlayer = flyingPlayer;
+        entity = getBukkitEntity();
+
+        this.route = route;
+        this.routeIndex = 1;
+
+        this.startX = start.getX();
+        this.startY = start.getY();
+        this.startZ = start.getZ();
+
+        target.setX(route.get(routeIndex).getX());
+        target.setY(route.get(routeIndex).getY());
+        target.setZ(route.get(routeIndex).getZ());
+
+        setMoveFlight();
+        yaw = getCorrectYaw(target.getX(), target.getZ());
+        move = true;
+        flightType = FLIGHT_TYPE.DYNAMIC;
     }
 
     /**
@@ -197,9 +227,9 @@ public class RCDragon extends EntityEnderDragon {
      */
     public void setMoveFlight() {
 
-        this.distanceX = this.startX - toX;
-        this.distanceY = this.startY - toY;
-        this.distanceZ = this.startZ - toZ;
+        this.distanceX = this.startX - target.getX();
+        this.distanceY = this.startY - target.getY();
+        this.distanceZ = this.startZ - target.getZ();
 
         double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
         YTick = Math.abs(distanceY) / tick;
@@ -212,9 +242,9 @@ public class RCDragon extends EntityEnderDragon {
      */
     public void setMoveTravel() {
 
-        this.distanceX = this.startX - toX;
-        this.distanceY = this.startY - toY;
-        this.distanceZ = this.startZ - toZ;
+        this.distanceX = this.startX - target.getX();
+        this.distanceY = this.startY - target.getY();
+        this.distanceZ = this.startZ - target.getZ();
 
         double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
         XTick = Math.abs(distanceX) / tick;
@@ -223,9 +253,9 @@ public class RCDragon extends EntityEnderDragon {
 
     public void setMoveControlled() {
 
-        this.distanceX = this.startX - toX;
-        this.distanceY = this.startY - toY;
-        this.distanceZ = this.startZ - toZ;
+        this.distanceX = this.startX - target.getX();
+        this.distanceY = this.startY - target.getY();
+        this.distanceZ = this.startZ - target.getZ();
 
         double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.controlledFlightSpeed;
         YTick = Math.abs(distanceY) / tick;
@@ -237,19 +267,24 @@ public class RCDragon extends EntityEnderDragon {
     public void c() {
 
         // Travel
-        if(isTravel) {
+        if(flightType == FLIGHT_TYPE.TRAVEL) {
             travel();
             return;
         }
 
         // Flight
-        if(isFlight) {
+        if(flightType == FLIGHT_TYPE.FLIGHT) {
             flight();
         }
 
+        // Dynamic Flight
+        if(flightType == FLIGHT_TYPE.DYNAMIC) {
+            dynamic();
+        }
+
         // Controlled flight
-        if(isControlled) {
-            control();
+        if(flightType == FLIGHT_TYPE.CONTROLLED_FLIGHT) {
+            controlled();
         }
     }
 
@@ -267,24 +302,24 @@ public class RCDragon extends EntityEnderDragon {
         double myY = locY;
         double myZ = locZ;
 
-        if ((int) myX != (int) toX) {
-            if (myX < toX) {
+        if ((int) myX != (int) target.getX()) {
+            if (myX < target.getX()) {
                 myX += XTick;
             } else {
                 myX -= XTick;
             }
         }
 
-        if ((int) myY != (int) toY) {
-            if (myY < toY) {
+        if ((int) myY != (int) target.getY()) {
+            if (myY < target.getY()) {
                 myY += YTick;
             } else {
                 myY -= YTick;
             }
         }
 
-        if ((int) myZ != (int) toZ) {
-            if (myZ < toZ) {
+        if ((int) myZ != (int) target.getZ()) {
+            if (myZ < target.getZ()) {
                 myZ += ZTick;
             } else {
                 myZ -= ZTick;
@@ -293,10 +328,10 @@ public class RCDragon extends EntityEnderDragon {
 
         // If myZ = toZ, then we will load the next waypoint or
         // finish the flight, in case it was the last waypoint to fly
-        if (((int) myZ >= (int) toZ - 2 && (int) myZ <= (int) toZ + 2)
-                && ((int) myY >= (int) toY - 2 && (int) myY <= (int) toY + 2)
-                && ((int) myX >= (int) toX - 2 && (int) myX <= (int) toX + 2)) {
-            Waypoint wp = flight.getNextWaypoint();
+        if (((int) myZ >= (int) target.getZ() - 2 && (int) myZ <= (int) target.getZ() + 2)
+                && ((int) myY >= (int) target.getY() - 2 && (int) myY <= (int) target.getY() + 2)
+                && ((int) myX >= (int) target.getX() - 2 && (int) myX <= (int) target.getX() + 2)) {
+            WayPoint wp = flight.getNextWaypoint();
 
             // Removing the entity and dismouting the player
             if (wp == null) {
@@ -312,11 +347,11 @@ public class RCDragon extends EntityEnderDragon {
             this.startY = locY;
             this.startZ = locZ;
 
-            toX = wp.getX();
-            toY = wp.getY();
-            toZ = wp.getZ();
+            target.setX(wp.getX());
+            target.setY(wp.getY());
+            target.setZ(wp.getZ());
             setMoveFlight();
-            yaw = getCorrectYaw(toX, toZ);
+            yaw = getCorrectYaw(target.getX(), target.getZ());
             return;
         }
 
@@ -341,14 +376,14 @@ public class RCDragon extends EntityEnderDragon {
         double myY = locY;
         double myZ = locZ;
 
-        if (finalmove) {
+        if (finalMove) {
 
             // Flying down on end
-            if ((int) locY > (int) toY)
+            if ((int) locY > (int) target.getY())
                 myY -= RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
 
                 // Flying up on end
-            else if ((int) locY < (int) toY)
+            else if ((int) locY < (int) target.getY())
                 myY += RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
 
                 // Removing entity
@@ -370,20 +405,95 @@ public class RCDragon extends EntityEnderDragon {
             myY += RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
         }
 
-        if (myX < toX) {
+        if (myX < target.getX()) {
             myX += XTick;
         } else {
             myX -= XTick;
         }
 
-        if (myZ < toZ) {
+        if (myZ < target.getZ()) {
             myZ += ZTick;
         } else {
             myZ -= ZTick;
         }
 
-        if ((int) myZ == (int) toZ)
-            finalmove = true;
+        if ((int) myZ == (int) target.getZ())
+            finalMove = true;
+
+        setPosition(myX, myY, myZ);
+    }
+
+    /*
+     * Is called during dynamic flight
+     */
+    public void dynamic() {
+
+        // Returns, the dragon won't move
+        if (!move)
+            return;
+
+        // Init move variables
+        double myX = locX;
+        double myY = locY;
+        double myZ = locZ;
+
+        if ((int) myX != (int) target.getX()) {
+            if (myX < target.getX()) {
+                myX += XTick;
+            } else {
+                myX -= XTick;
+            }
+        }
+
+        if ((int) myY != (int) target.getY()) {
+            if (myY < target.getY()) {
+                myY += YTick;
+            } else {
+                myY -= YTick;
+            }
+        }
+
+        if ((int) myZ != (int) target.getZ()) {
+            if (myZ < target.getZ()) {
+                myZ += ZTick;
+            } else {
+                myZ -= ZTick;
+            }
+        }
+
+        // If myZ = toZ, then we will load the next waypoint or
+        // finish the flight, in case it was the last waypoint to fly
+        if (((int) myZ >= (int) target.getZ() - 2 && (int) myZ <= (int) target.getZ() + 2)
+                && ((int) myY >= (int) target.getY() - 2 && (int) myY <= (int) target.getY() + 2)
+                && ((int) myX >= (int) target.getX() - 2 && (int) myX <= (int) target.getX() + 2)) {
+
+            Location nextCheckpoint = null;
+            routeIndex++;
+            if(routeIndex < route.size()) {
+                nextCheckpoint = route.get(routeIndex);
+            }
+
+            // Removing the entity and dismounting the player
+            if (nextCheckpoint == null) {
+
+                if (passenger != null) {
+                    Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
+                }
+                Travels.removePlayerAndDragon(flyingPlayer);
+                return;
+            }
+
+            this.startX = locX;
+            this.startY = locY;
+            this.startZ = locZ;
+
+            target.setX(nextCheckpoint.getX());
+            target.setY(nextCheckpoint.getY());
+            target.setZ(nextCheckpoint.getZ());
+            setMoveFlight();
+            yaw = getCorrectYaw(target.getX(), target.getZ());
+            return;
+        }
 
         setPosition(myX, myY, myZ);
     }
@@ -391,7 +501,7 @@ public class RCDragon extends EntityEnderDragon {
     /*
      * Is called during flight controlled by players line of sight
      */
-    public void control() {
+    public void controlled() {
 
         // Returns, the dragon won't move
         if (!move)
@@ -406,9 +516,9 @@ public class RCDragon extends EntityEnderDragon {
             toggleControl = false;
             // stop dragon
             if(currentlyControlled) {
-                toX = locX;
-                toY = locY;
-                toZ = locZ;
+                target.setX(locX);
+                target.setY(locY);
+                target.setZ(locZ);
                 currentlyControlled = false;
                 return;
             }
@@ -419,18 +529,18 @@ public class RCDragon extends EntityEnderDragon {
 
         // set landing place
         if(landingPlace != null) {
-            toX = landingPlace.getX();
-            toY = landingPlace.getY();
-            toZ = landingPlace.getZ();
+            target.setX(landingPlace.getX());
+            target.setY(landingPlace.getY());
+            target.setZ(landingPlace.getZ());
             landingPlace = null;
             currentlyControlled = false;
         }
 
         // check if landing place is reached
         if(landing &&
-                ((int) myZ >= (int) toZ - 2 && (int) myZ <= (int) toZ + 2)
-                && ((int) myY >= (int) toY - 2 && (int) myY <= (int) toY + 2)
-                && ((int) myX >= (int) toX - 2 && (int) myX <= (int) toX + 2)) {
+                ((int) myZ >= (int) target.getZ() - 2 && (int) myZ <= (int) target.getZ() + 2)
+                && ((int) myY >= (int) target.getY() - 2 && (int) myY <= (int) target.getY() + 2)
+                && ((int) myX >= (int) target.getX() - 2 && (int) myX <= (int) target.getX() + 2)) {
             if(entity.getPassenger() != null) {
                 Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
             }
@@ -452,28 +562,28 @@ public class RCDragon extends EntityEnderDragon {
 
             Location target = player.getTargetBlock(null, RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.controlledTargetDistance).getLocation();
 
-            toX = target.getX();
-            toY = target.getY();
-            toZ = target.getZ();
+            target.setX(target.getX());
+            target.setY(target.getY());
+            target.setZ(target.getZ());
 
-            if(toY > entity.getWorld().getMaxHeight()) {
-                toY = entity.getWorld().getMaxHeight();
+            if(target.getY() > entity.getWorld().getMaxHeight()) {
+                target.setY(entity.getWorld().getMaxHeight());
             }
 
             setMoveControlled();
-            yaw = getCorrectYaw(toX, toZ);
+            yaw = getCorrectYaw(target.getX(), target.getZ());
         }
 
-        if ((int) myX != (int) toX) {
-            if (myX < toX) {
+        if ((int) myX != (int) target.getX()) {
+            if (myX < target.getX()) {
                 myX += XTick;
             } else {
                 myX -= XTick;
             }
         }
 
-        if ((int) myY != (int) toY) {
-            if (myY < toY) {
+        if ((int) myY != (int) target.getY()) {
+            if (myY < target.getY()) {
                 myY += YTick;
             } else {
                 myY -= YTick;
@@ -484,8 +594,8 @@ public class RCDragon extends EntityEnderDragon {
             }
         }
 
-        if ((int) myZ != (int) toZ) {
-            if (myZ < toZ) {
+        if ((int) myZ != (int) target.getZ()) {
+            if (myZ < target.getZ()) {
                 myZ += ZTick;
             } else {
                 myZ -= ZTick;
@@ -520,7 +630,7 @@ public class RCDragon extends EntityEnderDragon {
         }
         targetBLock = targetBLock.getRelative(0, -5, 0);
 
-        landingPlace = new Waypoint(targetBLock.getLocation());
+        landingPlace = new WayPoint(targetBLock.getLocation());
         landing = true;
     }
 
@@ -534,8 +644,8 @@ public class RCDragon extends EntityEnderDragon {
         return landing;
     }
 
-    public boolean isControlled() {
+    public FLIGHT_TYPE getFlightType() {
 
-        return isControlled;
+        return flightType;
     }
 }

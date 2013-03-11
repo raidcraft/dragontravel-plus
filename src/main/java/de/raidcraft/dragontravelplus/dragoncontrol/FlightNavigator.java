@@ -48,8 +48,7 @@ public class FlightNavigator {
                         Location wpLocation = startWPLocation.clone();
                         Vector unitVectorCopy = unitVector.clone();
                         wpLocation.add(unitVectorCopy.multiply(i * RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.wayPointDistance));
-                        wpLocation = startWPLocation.getWorld().getHighestBlockAt(wpLocation).getLocation();
-                        wpLocation.setY(wpLocation.getY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight);
+                        wpLocation.setY(150);
 
                         optimizedRoute.add(wpLocation);
                     }
@@ -60,15 +59,26 @@ public class FlightNavigator {
             // interpolation variables
             int yDiff;
             int i = 0;
-
-            // interpolate sky islands
             boolean skyIsle = false;
+
             for (Location location : optimizedRoute) {
+                // first step take highest block + flight height for way point
+                location.setY(start.getWorld().getHighestBlockAt(location).getY() +
+                            RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight);
+
+                // get previous way point height
                 int preY;
-                if (i == 0) preY = start.getBlockY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight;
-                else preY = optimizedRoute.get(i - 1).getBlockY();
+                if (i == 0) {
+                    preY = start.getBlockY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight;
+                }
+                else {
+                    preY = optimizedRoute.get(i - 1).getBlockY();
+                }
+
+                // get height difference between previous and current way point
                 yDiff = location.getBlockY() - preY;
 
+                // if difference too big check if this is because of sky isles
                 if (yDiff > 20) {
                     boolean isle = false;
                     boolean airType = true;
@@ -89,7 +99,7 @@ public class FlightNavigator {
                                 .getType() == Material.AIR) {
                             isle = true;
                         }
-                        // if height was temporary, inspect previous waypoints if we can reduce height
+                        // if height was temporary, inspect previous way points if we can reduce height
                         else if (isle) {
                             if (location.getWorld()
                                     .getBlockAt(currLocation.getBlockX(), preY, currLocation.getBlockZ())
@@ -105,6 +115,7 @@ public class FlightNavigator {
                     }
                 }
 
+                // if no sky island -> interpolate normally
                 if (!skyIsle) {
                     // interpolate climb
                     if (i > 1 && yDiff > 10) {
@@ -169,5 +180,9 @@ public class FlightNavigator {
         }
 
         return route;
+    }
+
+    public void optimizeNextWayPoint(int wayPointIndex, List<Location> route) {
+
     }
 }

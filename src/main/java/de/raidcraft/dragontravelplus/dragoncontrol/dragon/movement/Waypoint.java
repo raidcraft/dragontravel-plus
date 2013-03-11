@@ -9,7 +9,7 @@ import java.util.HashMap;
 /**
  * Defines location out of coordinates x,y,z
  */
-public class Waypoint {
+public class WayPoint {
 
     public static HashMap<Block, Block> markers = new HashMap<Block, Block>();
     private double x;
@@ -18,7 +18,7 @@ public class Waypoint {
     private String world;
     private Block marker;
 
-    public Waypoint(String world, double x, double y, double z) {
+    public WayPoint(String world, double x, double y, double z) {
 
         this.world = world;
         this.x = x;
@@ -26,7 +26,7 @@ public class Waypoint {
         this.z = z;
     }
 
-    public Waypoint(Location location) {
+    public WayPoint(Location location) {
         this.world = location.getWorld().getName();
         this.x = location.getX();
         this.y = location.getY();
