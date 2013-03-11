@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
 
@@ -47,6 +48,8 @@ public class RCDragon extends EntityEnderDragon {
     // Dynamic Flight
     private List<Location> route;
     private int routeIndex = 0;
+    private boolean runAsyncRouting = false;
+    private BukkitTask dynamicRoutingTask = null;
 
     // First WayPoint coords
     private double fwpX;
@@ -191,12 +194,12 @@ public class RCDragon extends EntityEnderDragon {
         flightType = FLIGHT_TYPE.CONTROLLED_FLIGHT;
     }
 
-    public void startDynamicFlight(FlyingPlayer flyingPlayer, List<Location> route) {
+    public void startDynamicFlight(FlyingPlayer flyingPlayer, List<Location> newRoute) {
 
         this.flyingPlayer = flyingPlayer;
         entity = getBukkitEntity();
 
-        this.route = route;
+        this.route = newRoute;
         this.routeIndex = 1;
 
         this.startX = start.getX();
@@ -211,6 +214,16 @@ public class RCDragon extends EntityEnderDragon {
         yaw = getCorrectYaw(target.getX(), target.getZ());
         move = true;
         flightType = FLIGHT_TYPE.DYNAMIC;
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
+            @Override
+            public void run() {
+                if(runAsyncRouting) {
+                    runAsyncRouting = false;
+                    FlightNavigator.INST.optimizeCheckpoint(routeIndex + 1, route);
+                }
+            }
+        }, 10, 10);
     }
 
     /**
@@ -456,6 +469,10 @@ public class RCDragon extends EntityEnderDragon {
                 myY -= YTick;
             }
         }
+        // prevent wrong entity height
+        if(myY > 256) {
+            myY = 256;
+        }
 
         if ((int) myZ != (int) target.getZ()) {
             if (myZ < target.getZ()) {
@@ -488,7 +505,7 @@ public class RCDragon extends EntityEnderDragon {
 
             // optimize next checkpoint (dynamic routing!!!)
             if(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.useDynamicRouting) {
-                FlightNavigator.INST.optimizeCheckpoint(routeIndex + 1, route);
+                runAsyncRouting = true;
             }
 
             this.startX = myX;
@@ -618,8 +635,11 @@ public class RCDragon extends EntityEnderDragon {
         return 3;
     }
 
-    public void cancelDurationTask() {
+    public void cancelTasks() {
         Bukkit.getScheduler().cancelTask(durationTaskId);
+        if(dynamicRoutingTask != null) {
+            dynamicRoutingTask.cancel();
+        }
     }
 
     public void toggleControlled() {

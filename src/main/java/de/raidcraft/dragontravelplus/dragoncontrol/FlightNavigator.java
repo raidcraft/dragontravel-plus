@@ -4,7 +4,6 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -60,8 +59,8 @@ public class FlightNavigator {
         checkpointRoute.add(optimizedDestination);
 
         // optimize
-        optimizeCheckpoint(0, checkpointRoute);
         optimizeCheckpoint(1, checkpointRoute);
+        optimizeCheckpoint(2, checkpointRoute);
 
         DragonManager.INST.calculationFinished(flyingPlayer, checkpointRoute);
     }
@@ -97,6 +96,9 @@ public class FlightNavigator {
 
     public void optimizeCheckpoint(int wayPointIndex, List<Location> route) {
 
+        if(wayPointIndex == 0) {
+            return;
+        }
         if(wayPointIndex >= route.size() - 1) {
             return;
         }
@@ -106,81 +108,34 @@ public class FlightNavigator {
 
         // interpolation variables
         int yDiff;
-        boolean skyIsle = false;
 
         // first step take highest block + flight height for way point
         location.setY(start.getWorld().getHighestBlockAt(location).getY() +
                 RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight);
 
         // get previous way point height
-        int preY;
-        if (wayPointIndex == 0) {
-            preY = start.getBlockY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight;
-        }
-        else {
-            preY = route.get(wayPointIndex - 1).getBlockY();
-        }
+        int preY = route.get(wayPointIndex - 1).getBlockY();
 
         // get height difference between previous and current way point
         yDiff = location.getBlockY() - preY;
 
-        // if difference too big check if this is because of sky isles
-        if (yDiff > 20) {
-            boolean isle = false;
-            boolean airType = true;
-            for (int j = route.size(); j > wayPointIndex; j--) {
-                Location currLocation = route.get(route.size() - 1);
-                if (j < route.size()) {
-                    currLocation = route.get(j);
-                }
+        // interpolate climb
+        if (wayPointIndex > 1 && yDiff > 10) {
 
-                if (j > wayPointIndex + 15) continue;
-                // look if extreme height was only temporary  (island)
-                if (!isle
-                        && (Math.abs(currLocation.getBlockY() - preY) < 50
-                        || currLocation.getBlockY() <= preY
-                        || currLocation.getBlockY() < location.getBlockY() - 20)
-                        && location.getWorld()
-                        .getBlockAt(location.getBlockX(), preY, location.getBlockZ())
-                        .getType() == Material.AIR) {
-                    isle = true;
-                }
-                // if height was temporary, inspect previous way points if we can reduce height
-                else if (isle) {
-                    if (location.getWorld()
-                            .getBlockAt(currLocation.getBlockX(), preY, currLocation.getBlockZ())
-                            .getType() != Material.AIR) {
-                        airType = false;
-                    }
-                }
+            int prepreY = route.get(wayPointIndex - 2).getBlockY();
+            int newpreY = preY;
+            // calculate average flight height
+            if (prepreY > location.getY()) {
+                newpreY = location.getBlockY() + Math.abs((prepreY - location.getBlockY()) / 2);
+            } else {
+                newpreY = location.getBlockY() - Math.abs((prepreY - location.getBlockY()) / 2);
             }
-            // set new height
-            if (airType && isle) {
-                skyIsle = true;
-                location.setY(preY);
-            }
+            route.get(wayPointIndex - 1).setY(newpreY);
         }
 
-        // if no sky island -> interpolate normally
-        if (!skyIsle) {
-            // interpolate climb
-            if (wayPointIndex > 1 && yDiff > 10) {
-
-                int prepreY = route.get(wayPointIndex - 2).getBlockY();
-                int newpreY = preY;
-                // calculate average flight height
-                if (prepreY > location.getY()) {
-                    newpreY = location.getBlockY() + Math.abs((prepreY - location.getBlockY()) / 2);
-                } else {
-                    newpreY = location.getBlockY() - Math.abs((prepreY - location.getBlockY()) / 2);
-                }
-                route.get(wayPointIndex - 1).setY(newpreY);
-            }
-
-            // interpolate descent
-            if (wayPointIndex > 1 && yDiff < -15) {
-                location.setY(preY - 15);
-            }
+        // interpolate descent
+        if (wayPointIndex > 1 && yDiff < -15) {
+            location.setY(preY - 15);
         }
     }
 }
