@@ -4,7 +4,10 @@ import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class FlightTravel {
 
@@ -40,5 +43,22 @@ public class FlightTravel {
             return;
 
         dragon.startControlled(flyingPlayer, controlledFlight);
+    }
+
+    public static void flyDynamic(List<Location> route, Player player) {
+
+        // Mounting the player
+        if (!Travels.mountDragon(player))
+            return;
+
+        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
+
+        // Getting the dragon
+        RCDragon dragon = flyingPlayer.getDragon();
+
+        if (dragon == null)
+            return;
+
+        dragon.startDynamicFlight(flyingPlayer, route);
     }
 }

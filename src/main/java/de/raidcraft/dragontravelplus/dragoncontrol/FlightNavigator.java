@@ -2,7 +2,6 @@ package de.raidcraft.dragontravelplus.dragoncontrol;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,163 +25,162 @@ public class FlightNavigator {
 
         if (start.getWorld() != destination.getWorld()) return;
 
-        Flight flight = new Flight("dragontravelplus_flight");
-        flight.addWaypoint(start);
+        List<Location> stationRoute = getRoute(StationManager.INST.getAllStationLocations(), start, destination);
+        List<Location> checkpointRoute = new ArrayList<>();
 
-        if (RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.useDynamicRouting && !start.getWorld().getName().equalsIgnoreCase("nether")) {
-            List<Location> stationRoute = getRoute(StationManager.INST.getAllStationLocations(), start, destination);
-            List<Location> optimizedRoute = new ArrayList<>();
+        // get all way points (without interpolation)
+        Location startWPLocation = null;
+        for (Location targetWPLocation : stationRoute) {
+            if (startWPLocation != null) {
+                // create unit vector
+                int xDif = targetWPLocation.getBlockX() - startWPLocation.getBlockX();
+                int yDif = targetWPLocation.getBlockY() - startWPLocation.getBlockY();
+                int zDif = targetWPLocation.getBlockZ() - startWPLocation.getBlockZ();
+                Vector unitVector = new Vector(xDif, yDif, zDif).normalize();
 
-            // get all waypoints (without interpolation)
-            Location startWPLocation = null;
-            for (Location targetWPLocation : stationRoute) {
-                if (startWPLocation != null) {
-                    // create unit vector
-                    int xDif = targetWPLocation.getBlockX() - startWPLocation.getBlockX();
-                    int zDif = targetWPLocation.getBlockZ() - startWPLocation.getBlockZ();
-                    Vector unitVector = new Vector(xDif, 0, zDif).normalize();
+                int wayPointCount = (int) startWPLocation.distance(targetWPLocation) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.wayPointDistance;
+                for (int i = 1; i < wayPointCount; i++) {
+                    Location wpLocation = startWPLocation.clone();
+                    Vector unitVectorCopy = unitVector.clone();
+                    wpLocation.add(unitVectorCopy.multiply(i * RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.wayPointDistance));
 
-                    int wayPointCount = (int) startWPLocation.distance(targetWPLocation) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.wayPointDistance;
-                    double lastFlightHeight = -1;
-                    for (int i = 1; i < wayPointCount; i++) {
-                        Location wpLocation = startWPLocation.clone();
-                        Vector unitVectorCopy = unitVector.clone();
-                        wpLocation.add(unitVectorCopy.multiply(i * RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.wayPointDistance));
-                        wpLocation.setY(150);
-
-                        optimizedRoute.add(wpLocation);
-                    }
+                    checkpointRoute.add(wpLocation);
                 }
-                startWPLocation = targetWPLocation;
             }
-
-            // interpolation variables
-            int yDiff;
-            int i = 0;
-            boolean skyIsle = false;
-
-            for (Location location : optimizedRoute) {
-                // first step take highest block + flight height for way point
-                location.setY(start.getWorld().getHighestBlockAt(location).getY() +
-                            RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight);
-
-                // get previous way point height
-                int preY;
-                if (i == 0) {
-                    preY = start.getBlockY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight;
-                }
-                else {
-                    preY = optimizedRoute.get(i - 1).getBlockY();
-                }
-
-                // get height difference between previous and current way point
-                yDiff = location.getBlockY() - preY;
-
-                // if difference too big check if this is because of sky isles
-                if (yDiff > 20) {
-                    boolean isle = false;
-                    boolean airType = true;
-                    for (int j = optimizedRoute.size(); j > i; j--) {
-                        Location currLocation = destination;
-                        if (j < optimizedRoute.size()) {
-                            currLocation = optimizedRoute.get(j);
-                        }
-
-                        if (j > i + 15) continue;
-                        // look if extreme height was only temporary  (island)
-                        if (!isle
-                                && (Math.abs(currLocation.getBlockY() - preY) < 50
-                                || currLocation.getBlockY() <= preY
-                                || currLocation.getBlockY() < location.getBlockY() - 20)
-                                && location.getWorld()
-                                .getBlockAt(location.getBlockX(), preY, location.getBlockZ())
-                                .getType() == Material.AIR) {
-                            isle = true;
-                        }
-                        // if height was temporary, inspect previous way points if we can reduce height
-                        else if (isle) {
-                            if (location.getWorld()
-                                    .getBlockAt(currLocation.getBlockX(), preY, currLocation.getBlockZ())
-                                    .getType() != Material.AIR) {
-                                airType = false;
-                            }
-                        }
-                    }
-                    // set new height
-                    if (airType && isle) {
-                        skyIsle = true;
-                        location.setY(preY);
-                    }
-                }
-
-                // if no sky island -> interpolate normally
-                if (!skyIsle) {
-                    // interpolate climb
-                    if (i > 1 && yDiff > 10) {
-
-                        int prepreY = optimizedRoute.get(i - 2).getBlockY();
-                        int newpreY = preY;
-                        // calculate average flight height
-                        if (prepreY > location.getY()) {
-                            newpreY = location.getBlockY() + Math.abs((prepreY - location.getBlockY()) / 2);
-                        } else {
-                            newpreY = location.getBlockY() - Math.abs((prepreY - location.getBlockY()) / 2);
-                        }
-                        optimizedRoute.get(i - 1).setY(newpreY);
-                    }
-
-                    // interpolate descent
-                    if (i > 1 && yDiff < -15) {
-                        location.setY(preY - 15);
-                    }
-                }
-                skyIsle = false;
-                i++;
+            // first checkpoint
+            else {
+                checkpointRoute.add(targetWPLocation);
             }
-
-            // add all waypoint locations to flight
-            for (Location location : optimizedRoute) {
-                flight.addWaypoint(location);
-            }
+            startWPLocation = targetWPLocation;
         }
 
-        Location optimizedDestination = destination.clone();
-        optimizedDestination.setY(destination.getY() + 2);
-        flight.addWaypoint(optimizedDestination);
 
-        DragonManager.INST.calculationFinished(flyingPlayer, flight);
+        Location optimizedDestination = destination.clone();
+        optimizedDestination.setY(destination.getY() - 5);
+        checkpointRoute.add(optimizedDestination);
+
+        // optimize
+        optimizeCheckpoint(0, checkpointRoute);
+        optimizeCheckpoint(1, checkpointRoute);
+
+        DragonManager.INST.calculationFinished(flyingPlayer, checkpointRoute);
     }
 
     private List<Location> getRoute(List<Location> availableLocations, Location start, Location destination) {
 
         SortedMap<Integer, Location> ratedLocations = new TreeMap<>();
         List<Location> route = new ArrayList<>();
-        Location nextStarpoint = start;
-        route.add(nextStarpoint);
-        availableLocations.remove(nextStarpoint);
+        Location nextStarPoint = start;
+        route.add(nextStarPoint);
+        availableLocations.remove(nextStarPoint);
 
-        while (nextStarpoint != destination) {
+        while (nextStarPoint != destination) {
             ratedLocations.clear();
 
             for (Location location : availableLocations) {
                 if (location.getWorld() != start.getWorld()) continue;
 
-                Integer rating = new Integer((int) (2 * Math.sqrt(Math.pow(nextStarpoint.distance(location), 2) + Math.pow(location.distance(destination), 2))));
-                if (nextStarpoint.distance(location) < location.distance(destination)) {
+                Integer rating = new Integer((int) (2 * Math.sqrt(Math.pow(nextStarPoint.distance(location), 2) + Math.pow(location.distance(destination), 2))));
+                if (nextStarPoint.distance(location) < location.distance(destination)) {
                     rating += 1000;
                 }
 
                 ratedLocations.put(rating, location);
             }
-            nextStarpoint = ratedLocations.get(ratedLocations.firstKey());
-            availableLocations.remove(nextStarpoint);
-            route.add(nextStarpoint);
+            nextStarPoint = ratedLocations.get(ratedLocations.firstKey());
+            availableLocations.remove(nextStarPoint);
+            route.add(nextStarPoint);
         }
 
         return route;
     }
 
-    public void optimizeNextWayPoint(int wayPointIndex, List<Location> route) {
+    public void optimizeCheckpoint(int wayPointIndex, List<Location> route) {
 
+        if(wayPointIndex >= route.size() - 1) {
+            return;
+        }
+
+        Location start = route.get(0);
+        Location location = route.get(wayPointIndex);
+
+        // interpolation variables
+        int yDiff;
+        boolean skyIsle = false;
+
+        // first step take highest block + flight height for way point
+        location.setY(start.getWorld().getHighestBlockAt(location).getY() +
+                RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight);
+
+        // get previous way point height
+        int preY;
+        if (wayPointIndex == 0) {
+            preY = start.getBlockY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight;
+        }
+        else {
+            preY = route.get(wayPointIndex - 1).getBlockY();
+        }
+
+        // get height difference between previous and current way point
+        yDiff = location.getBlockY() - preY;
+
+        // if difference too big check if this is because of sky isles
+        if (yDiff > 20) {
+            boolean isle = false;
+            boolean airType = true;
+            for (int j = route.size(); j > wayPointIndex; j--) {
+                Location currLocation = route.get(route.size() - 1);
+                if (j < route.size()) {
+                    currLocation = route.get(j);
+                }
+
+                if (j > wayPointIndex + 15) continue;
+                // look if extreme height was only temporary  (island)
+                if (!isle
+                        && (Math.abs(currLocation.getBlockY() - preY) < 50
+                        || currLocation.getBlockY() <= preY
+                        || currLocation.getBlockY() < location.getBlockY() - 20)
+                        && location.getWorld()
+                        .getBlockAt(location.getBlockX(), preY, location.getBlockZ())
+                        .getType() == Material.AIR) {
+                    isle = true;
+                }
+                // if height was temporary, inspect previous way points if we can reduce height
+                else if (isle) {
+                    if (location.getWorld()
+                            .getBlockAt(currLocation.getBlockX(), preY, currLocation.getBlockZ())
+                            .getType() != Material.AIR) {
+                        airType = false;
+                    }
+                }
+            }
+            // set new height
+            if (airType && isle) {
+                skyIsle = true;
+                location.setY(preY);
+            }
+        }
+
+        // if no sky island -> interpolate normally
+        if (!skyIsle) {
+            // interpolate climb
+            if (wayPointIndex > 1 && yDiff > 10) {
+
+                int prepreY = route.get(wayPointIndex - 2).getBlockY();
+                int newpreY = preY;
+                // calculate average flight height
+                if (prepreY > location.getY()) {
+                    newpreY = location.getBlockY() + Math.abs((prepreY - location.getBlockY()) / 2);
+                } else {
+                    newpreY = location.getBlockY() - Math.abs((prepreY - location.getBlockY()) / 2);
+                }
+                route.get(wayPointIndex - 1).setY(newpreY);
+            }
+
+            // interpolate descent
+            if (wayPointIndex > 1 && yDiff < -15) {
+                location.setY(preY - 15);
+            }
+        }
     }
 }

@@ -97,6 +97,7 @@ public class Travels {
         // Remove dragon from world
         entity.eject();
         entity.remove();
+        flyingPlayer.getDragon().cancelDurationTask();
         flyingPlayer.setDragon(null);
     }
 

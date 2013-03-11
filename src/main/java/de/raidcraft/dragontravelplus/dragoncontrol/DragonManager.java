@@ -4,12 +4,13 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.EnqueuedNavigationTask;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,7 +49,6 @@ public class DragonManager {
 
 
         if (flyingPlayer.isInAir()) {
-            flyingPlayer.getDragon().cancelDurationTask();
             Travels.removePlayerAndDragon(flyingPlayer);
         } else {
             Bukkit.getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
@@ -67,11 +67,10 @@ public class DragonManager {
         return null;
     }
 
-    public void calculationFinished(FlyingPlayer flyingPlayer, Flight flight) {
+    public void calculationFinished(FlyingPlayer flyingPlayer, List<Location> route) {
 
-        RaidCraft.LOGGER.info("[DTP] Flight calculation finished!");
         EnqueuedNavigationTask enqueuedNavigationTask = DragonManager.INST.enqueuedNavigationTasks.get(flyingPlayer);
-        enqueuedNavigationTask.setFlight(flight);
+        enqueuedNavigationTask.setRoute(route);
         enqueuedNavigationTask.setCalculated(true);
     }
 

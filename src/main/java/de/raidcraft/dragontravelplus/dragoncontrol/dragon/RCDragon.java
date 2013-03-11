@@ -2,6 +2,7 @@ package de.raidcraft.dragontravelplus.dragoncontrol.dragon;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.dragoncontrol.FlightNavigator;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
@@ -80,13 +81,16 @@ public class RCDragon extends EntityEnderDragon {
     // Start Location
     Location start;
 
-    public RCDragon(Location loca, World notchWorld) {
+    public RCDragon(Location start, World notchWorld) {
 
         super(notchWorld);
 
-        this.start = loca;
-        setPosition(loca.getX(), loca.getY(), loca.getZ());
-        yaw = loca.getYaw() + 180;
+        this.start = start;
+        this.target = start;
+
+        setPosition(start.getX(), start.getY(), start.getZ());
+
+        yaw = start.getYaw() + 180;
         while (yaw > 360)
             yaw -= 360;
         while (yaw < 0)
@@ -461,8 +465,7 @@ public class RCDragon extends EntityEnderDragon {
             }
         }
 
-        // If myZ = toZ, then we will load the next waypoint or
-        // finish the flight, in case it was the last waypoint to fly
+        // check if checkpoint reached and load next one. If nothing over -> end flight
         if (((int) myZ >= (int) target.getZ() - 2 && (int) myZ <= (int) target.getZ() + 2)
                 && ((int) myY >= (int) target.getY() - 2 && (int) myY <= (int) target.getY() + 2)
                 && ((int) myX >= (int) target.getX() - 2 && (int) myX <= (int) target.getX() + 2)) {
@@ -473,7 +476,7 @@ public class RCDragon extends EntityEnderDragon {
                 nextCheckpoint = route.get(routeIndex);
             }
 
-            // Removing the entity and dismounting the player
+            // removing the entity and dismounting the player
             if (nextCheckpoint == null) {
 
                 if (passenger != null) {
@@ -483,9 +486,14 @@ public class RCDragon extends EntityEnderDragon {
                 return;
             }
 
-            this.startX = locX;
-            this.startY = locY;
-            this.startZ = locZ;
+            // optimize next checkpoint (dynamic routing!!!)
+            if(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.useDynamicRouting) {
+                FlightNavigator.INST.optimizeCheckpoint(routeIndex + 1, route);
+            }
+
+            this.startX = myX;
+            this.startY = myY;
+            this.startZ = myZ;
 
             target.setX(nextCheckpoint.getX());
             target.setY(nextCheckpoint.getY());
@@ -622,15 +630,15 @@ public class RCDragon extends EntityEnderDragon {
 
     public void land() {
 
-        Block targetBLock = getBukkitEntity().getLocation().getBlock();
+        Block targetBlock = getBukkitEntity().getLocation().getBlock();
 
         // search first hard block
-        while(targetBLock.getType() == Material.AIR) {
-            targetBLock = targetBLock.getRelative(0, -1, 0);
+        while(targetBlock.getType() == Material.AIR) {
+            targetBlock = targetBlock.getRelative(0, -1, 0);
         }
-        targetBLock = targetBLock.getRelative(0, -5, 0);
+        targetBlock = targetBlock.getRelative(0, -5, 0);
 
-        landingPlace = new WayPoint(targetBLock.getLocation());
+        landingPlace = new WayPoint(targetBlock.getLocation());
         landing = true;
     }
 
