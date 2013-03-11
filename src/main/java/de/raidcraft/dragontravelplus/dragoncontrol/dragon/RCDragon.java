@@ -7,7 +7,7 @@ import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.WayPointFake;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Waypoint;
 import de.raidcraft.dragontravelplus.events.DragonLandEvent;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import net.minecraft.server.v1_4_R1.EntityEnderDragon;
@@ -42,7 +42,7 @@ public class RCDragon extends EntityEnderDragon {
 
     // Flight
     private Flight flight;
-    private WayPointFake firstwp;
+    private Waypoint firstwp;
 
     // Dynamic Flight
     private List<Location> route;
@@ -67,7 +67,7 @@ public class RCDragon extends EntityEnderDragon {
     private ControlledFlight controlledFlight;
     private boolean currentlyControlled = true;
     private boolean toggleControl = false;
-    private WayPointFake landingPlace = null;
+    private Waypoint landingPlace = null;
     private boolean landing = false;
     private boolean forceLanding = false;
     private int durationTaskId = 0;
@@ -335,7 +335,7 @@ public class RCDragon extends EntityEnderDragon {
         if (((int) myZ >= (int) target.getZ() - 2 && (int) myZ <= (int) target.getZ() + 2)
                 && ((int) myY >= (int) target.getY() - 2 && (int) myY <= (int) target.getY() + 2)
                 && ((int) myX >= (int) target.getX() - 2 && (int) myX <= (int) target.getX() + 2)) {
-            WayPointFake wp = flight.getNextWaypoint();
+            Waypoint wp = flight.getNextWaypoint();
 
             // Removing the entity and dismouting the player
             if (wp == null) {
@@ -638,7 +638,7 @@ public class RCDragon extends EntityEnderDragon {
         }
         targetBlock = targetBlock.getRelative(0, -5, 0);
 
-        landingPlace = new WayPointFake(targetBlock.getLocation());
+        landingPlace = new Waypoint(targetBlock.getLocation());
         landing = true;
     }
 
