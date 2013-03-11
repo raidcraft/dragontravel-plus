@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Flight {
 
-    HashMap<Integer, WaypointFake> waypoints = new HashMap<Integer, WaypointFake>();
+    HashMap<Integer, WayPoint> waypoints = new HashMap<Integer, WayPoint>();
     List<Block> markerBlocks = new ArrayList<>();
     int currentwp = 0;
     public int wpcreatenum = 0;
@@ -34,7 +34,7 @@ public class Flight {
      *
      * @param wp
      */
-    public void addWaypoint(WaypointFake wp) {
+    public void addWaypoint(WayPoint wp) {
 
         waypoints.put(wpcreatenum, wp);
         wpcreatenum++;
@@ -42,7 +42,7 @@ public class Flight {
 
     public void addWaypoint(Location location) {
 
-        addWaypoint(new WaypointFake(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+        addWaypoint(new WayPoint(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ()));
     }
 
     /**
@@ -62,9 +62,9 @@ public class Flight {
      *
      * @return
      */
-    public WaypointFake getFirstWaypoint() {
+    public WayPoint getFirstWaypoint() {
 
-        WaypointFake wp = waypoints.get(currentwp);
+        WayPoint wp = waypoints.get(currentwp);
         currentwp++;
         return wp;
     }
@@ -72,9 +72,9 @@ public class Flight {
     /**
      * Gets the next waypoint for this flight
      */
-    public WaypointFake getNextWaypoint() {
+    public WayPoint getNextWaypoint() {
 
-        WaypointFake wp = waypoints.get(currentwp);
+        WayPoint wp = waypoints.get(currentwp);
         currentwp++;
         if (wp == null) {
             Bukkit.getScheduler().scheduleSyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
