@@ -69,7 +69,7 @@ public class FlightEditor implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
 
             Flight flight = editors.get(player);
-            Waypoint wp = new Waypoint(loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ());
+            WaypointFake wp = new WaypointFake(loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ());
             flight.addWaypoint(wp);
         }
     }
