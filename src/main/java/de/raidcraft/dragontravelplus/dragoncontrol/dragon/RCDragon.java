@@ -165,6 +165,8 @@ public class RCDragon extends EntityEnderDragon {
         this.flyingPlayer = flyingPlayer;
         entity = getBukkitEntity();
         this.controlledFlight = controlledFlight;
+        this.currentlyControlled = true;
+        this.toggleControl = false;
 
         // start duration control timer
         if(controlledFlight.getDuration() > 0) {
@@ -215,7 +217,8 @@ public class RCDragon extends EntityEnderDragon {
         move = true;
         flightType = FLIGHT_TYPE.DYNAMIC;
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
+        runAsyncRouting = false;
+        dynamicRoutingTask = Bukkit.getScheduler().runTaskTimerAsynchronously(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
             @Override
             public void run() {
                 if(runAsyncRouting) {

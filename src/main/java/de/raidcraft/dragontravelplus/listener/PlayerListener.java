@@ -142,7 +142,7 @@ public class PlayerListener implements Listener {
             return;
         }
         RCDragon dragon = flyingPlayer.getDragon();
-        if(dragon.getFlightType() == RCDragon.FLIGHT_TYPE.CONTROLLED_FLIGHT) {
+        if(dragon.getFlightType() != RCDragon.FLIGHT_TYPE.CONTROLLED_FLIGHT) {
             return;
         }
 
