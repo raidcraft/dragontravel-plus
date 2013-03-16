@@ -96,7 +96,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         for (Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
             if (entry.getValue().isInAir()) {
                 DragonManager.INST.abortFlight(entry.getKey());
-                ChatMessages.warn(entry.getKey(), "Der Flug musste aus technischen Gründen abgebrochen werden!");
+                ChatMessages.warn(entry.getKey(), "Der Flug musste aus technischen Gruenden abgebrochen werden!");
             }
         }
 
@@ -182,7 +182,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         @Setting("conv-stage-disabled-speak")
         public String[] convDisabledSpeak = new String[]{
                 "Ich habe meinen Drachen schon seit Tagen nichtmehr gesehen.",
-                "Schaue später nochmal vorbei vielleicht kann ich dir dann weiterhelfen!"
+                "Schaue spaeter nochmal vorbei vielleicht kann ich dir dann weiterhelfen!"
         };
 
         @Setting("conv-no-stations-discovered")
@@ -207,7 +207,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         @Setting("conv-stage-select-dial-mode-speak")
         public String[] convSelectDialModeSpeak = new String[]{
                 "Hallo in '%sn' %pn!",
-                "Du möchtest bestimmt mit meinem Drachen reisen!",
+                "Du moechtest bestimmt mit meinem Drachen reisen!",
                 "Kann ich dir bei der Zielwahl helfen?"
         };
 
@@ -230,7 +230,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         @Setting("conv-stage-flight-by-name-same-station")
         public String[] convFlightByNameSameStation = new String[]{
-                "Du bist bereits bei deiner gewählten Station!"
+                "Du bist bereits bei deiner gewaehlten Station!"
         };
 
         @Setting("conv-stage-target-assist-region-speak")
@@ -249,11 +249,11 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         @Setting("conv-stage-target-assist-list-go-back")
         public String convTargetAssistListGoBack =
-                "Ich möchte doch eine andere Himmelsrichtung wählen!";
+                "Ich moechte doch eine andere Himmelsrichtung waehlen!";
 
         @Setting("conv-stage-process-economy-back")
         public String convProcessEconomyGoBack =
-                "Ich möchte ein anderes Ziel wählen.";
+                "Ich moechte ein anderes Ziel waehlen.";
 
         @Setting("conv-stage-process-economy-exit")
         public String convProcessEconomyExit =
@@ -265,7 +265,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         @Setting("conv-stage-process-economy-broke")
         public String[] convProcessEconomyBroke = new String[]{
-                "Du hast leider nicht genug Geld für diesen Flug!"
+                "Du hast leider nicht genug Geld fuer diesen Flug!"
         };
 
         @Setting("conv-stage-process-economy-confirm-question")
@@ -275,11 +275,11 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         @Setting("conv-stage-process-economy-goodbye")
         public String convProcessEconomyGoodbye =
-                "Tschüss, bis zum nächsten mal!";
+                "Tschuess, bis zum naechsten mal!";
 
         @Setting("conv-stage-process-economy-takeoff")
         public String[] convProcessEconomyTakeoff = new String[]{
-                "Mein Drache wird in Kürze mit dir nach %sn fliegen!"
+                "Mein Drache wird in Kuerze mit dir nach %sn fliegen!"
         };
 
         public LocalDTPConfiguration(DragonTravelPlusPlugin plugin) {
