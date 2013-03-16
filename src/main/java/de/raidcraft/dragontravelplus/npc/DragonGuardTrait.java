@@ -159,5 +159,7 @@ public class DragonGuardTrait extends Trait {
         npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, true);
 
         npc.spawn(location);
+
+        RaidCraft.getComponent(DragonTravelPlusPlugin.class).citizens.storeNPCs();
     }
 }

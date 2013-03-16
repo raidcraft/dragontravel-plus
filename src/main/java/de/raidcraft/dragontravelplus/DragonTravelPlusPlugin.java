@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
@@ -16,6 +17,7 @@ import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
+import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.minecraft.server.v1_4_R1.EntityTypes;
@@ -32,6 +34,7 @@ import java.util.Map;
  */
 public class DragonTravelPlusPlugin extends BasePlugin {
 
+    public Citizens citizens;
     public LocalDTPConfiguration config;
 
     @Override
@@ -50,9 +53,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         }
 
         loadConfig();
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
 
-        registerEvents(new NPCListener());
         registerEvents(new PlayerListener());
         registerEvents(new DragonListener());
 
@@ -62,6 +63,14 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         registerTable(PlayerStations.class, new PlayerStations());
 
         StationManager.INST.loadExistingStations();
+
+        try {
+            registerEvents(new NPCListener());
+            CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
+            citizens = (Citizens)Bukkit.getPluginManager().getPlugin("Citizens");
+        } catch (Exception e) {
+            RaidCraft.LOGGER.warning("[DTP] Can't load NPC stuff! Citizens not found!");
+        }
     }
 
     @Override
