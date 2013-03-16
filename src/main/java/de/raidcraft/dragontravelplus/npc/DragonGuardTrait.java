@@ -5,6 +5,7 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.command.CommandContext;
 import net.citizensnpcs.api.exception.NPCLoadException;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
@@ -160,6 +161,6 @@ public class DragonGuardTrait extends Trait {
 
         npc.spawn(location);
 
-        RaidCraft.getComponent(DragonTravelPlusPlugin.class).citizens.storeNPCs();
+        RaidCraft.getComponent(DragonTravelPlusPlugin.class).citizens.storeNPCs(new CommandContext(new String[]{}));
     }
 }
