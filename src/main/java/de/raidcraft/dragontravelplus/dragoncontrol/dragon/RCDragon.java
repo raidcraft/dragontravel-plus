@@ -348,9 +348,9 @@ public class RCDragon extends EntityEnderDragon {
 
         // If myZ = toZ, then we will load the next waypoint or
         // finish the flight, in case it was the last waypoint to fly
-        if (((int) myZ >= (int) target.getZ() - 2 && (int) myZ <= (int) target.getZ() + 2)
-                && ((int) myY >= (int) target.getY() - 2 && (int) myY <= (int) target.getY() + 2)
-                && ((int) myX >= (int) target.getX() - 2 && (int) myX <= (int) target.getX() + 2)) {
+        if (((int) myZ >= (int) target.getZ() - 1 && (int) myZ <= (int) target.getZ() + 1)
+                && ((int) myY >= (int) target.getY() - 1 && (int) myY <= (int) target.getY() + 1)
+                && ((int) myX >= (int) target.getX() - 1 && (int) myX <= (int) target.getX() + 1)) {
             WayPoint wp = flight.getNextWaypoint();
 
             // Removing the entity and dismouting the player
@@ -486,9 +486,9 @@ public class RCDragon extends EntityEnderDragon {
         }
 
         // check if checkpoint reached and load next one. If nothing over -> end flight
-        if (((int) myZ >= (int) target.getZ() - 2 && (int) myZ <= (int) target.getZ() + 2)
-                && ((int) myY >= (int) target.getY() - 2 && (int) myY <= (int) target.getY() + 2)
-                && ((int) myX >= (int) target.getX() - 2 && (int) myX <= (int) target.getX() + 2)) {
+        if (((int) myZ >= (int) target.getZ() - 1 && (int) myZ <= (int) target.getZ() + 1)
+                && ((int) myY >= (int) target.getY() - 1 && (int) myY <= (int) target.getY() + 1)
+                && ((int) myX >= (int) target.getX() - 1 && (int) myX <= (int) target.getX() + 1)) {
 
             Location nextCheckpoint = null;
             routeIndex++;
@@ -566,9 +566,9 @@ public class RCDragon extends EntityEnderDragon {
 
         // check if landing place is reached
         if(landing &&
-                ((int) myZ >= (int) target.getZ() - 2 && (int) myZ <= (int) target.getZ() + 2)
-                && ((int) myY >= (int) target.getY() - 2 && (int) myY <= (int) target.getY() + 2)
-                && ((int) myX >= (int) target.getX() - 2 && (int) myX <= (int) target.getX() + 2)) {
+                ((int) myZ >= (int) target.getZ() - 1 && (int) myZ <= (int) target.getZ() + 1)
+                && ((int) myY >= (int) target.getY() - 1 && (int) myY <= (int) target.getY() + 1)
+                && ((int) myX >= (int) target.getX() - 1 && (int) myX <= (int) target.getX() + 1)) {
             if(entity.getPassenger() != null) {
                 Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
             }
