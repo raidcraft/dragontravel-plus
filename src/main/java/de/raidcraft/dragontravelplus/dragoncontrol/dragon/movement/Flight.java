@@ -1,7 +1,9 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.database.Database;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,6 +20,14 @@ public class Flight {
     int currentwp = 0;
     public int wpcreatenum = 0;
     String name;
+
+    public static void removeFlight(String flightName) {
+        Database.getTable(FlightWayPointsTable.class).deleteFlight(flightName);
+    }
+
+    public static Flight loadFlight(String flightName) {
+        return Database.getTable(FlightWayPointsTable.class).getFlight(flightName);
+    }
 
     /**
      * Flight object, containing a flight-name and waypoints
@@ -55,6 +65,11 @@ public class Flight {
         wpcreatenum--;
         waypoints.get(wpcreatenum).removeMarker();
         waypoints.remove(wpcreatenum);
+    }
+
+    public WayPoint getFirstWaypointCopy() {
+
+        return waypoints.get(0);
     }
 
     /**
@@ -96,4 +111,20 @@ public class Flight {
         return wp;
     }
 
+    public String getName() {
+
+        return name;
+    }
+
+    public int waypointCount() {
+        return waypoints.size();
+    }
+
+    public String getFlightWorld() {
+        return waypoints.get(0).getWorld();
+    }
+
+    public void save(String creator) {
+        Database.getTable(FlightWayPointsTable.class).addFlight(this, creator);
+    }
 }

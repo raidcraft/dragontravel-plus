@@ -8,12 +8,14 @@ import de.raidcraft.dragontravelplus.commands.Commands;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightEditorListener;
 import de.raidcraft.dragontravelplus.listener.DragonListener;
 import de.raidcraft.dragontravelplus.listener.PlayerListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.npc.NPCListener;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.StationManager;
+import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
 import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
@@ -56,11 +58,13 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         registerEvents(new PlayerListener());
         registerEvents(new DragonListener());
+        registerEvents(new FlightEditorListener());
 
         registerCommands(Commands.class);
 
         registerTable(StationTable.class, new StationTable());
         registerTable(PlayerStations.class, new PlayerStations());
+        registerTable(FlightWayPointsTable.class, new FlightWayPointsTable());
 
         StationManager.INST.loadExistingStations();
 
@@ -130,9 +134,11 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         @Setting("flight-height")
         public int flightHeight = 15;
         @Setting("flight-speed")
-        public double flightSpeed = 0.7;
+        public double flightSpeed = 0.3;
         @Setting("controlled-flight-speed")
         public double controlledFlightSpeed = 0.3;
+        @Setting("dynamic-flight-speed")
+        public double dynamicFlightSpeed = 0.7;
         @Setting("controlled-target-distance")
         public int controlledTargetDistance = 30;
         @Setting("dynamic-flight-route")
@@ -143,6 +149,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         public boolean useVisibleWaypoints = false;
         @Setting("visible-marker-duration")
         public int markerDuration = 30;
+        @Setting("flight-editor-item")
+        public int flightEditorItem = 122;
         @Setting("forbidden-commands")
         public String[] forbiddenCommands = new String[]{
                 "spawn",

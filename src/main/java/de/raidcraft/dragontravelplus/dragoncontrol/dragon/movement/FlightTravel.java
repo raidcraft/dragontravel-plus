@@ -13,6 +13,9 @@ public class FlightTravel {
 
     public static void flyFlight(Flight flight, Player player) {
 
+        // port player to start
+        player.teleport(flight.getFirstWaypointCopy().getLocation());
+
         // Mounting the player
         if (!Travels.mountDragon(player))
             return;
@@ -24,6 +27,8 @@ public class FlightTravel {
 
         if (dragon == null)
             return;
+
+
 
         dragon.startFlight(flyingPlayer, flight);
     }

@@ -1,7 +1,7 @@
 package de.raidcraft.dragontravelplus.util;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 /**
  * Author: Philip
@@ -12,39 +12,39 @@ public class ChatMessages {
 
     private final static String CHAT_PREFIX = ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Dragon" + ChatColor.DARK_GRAY + "] " + ChatColor.WHITE;
 
-    public static void noDragonGuardSelected(Player player) {
+    public static void noDragonGuardSelected(CommandSender player) {
 
         warn(player, "Du hast kein Dragonguard ausgewählt!");
     }
 
-    public static void tooFewArguments(Player player) {
+    public static void tooFewArguments(CommandSender player) {
 
         warn(player, "Du hast zu wenig Parameter angegeben!");
     }
 
-    public static void stationNameSuccessfullyChanged(Player player) {
+    public static void stationNameSuccessfullyChanged(CommandSender player) {
 
         success(player, "Der Stationsname wurde erfolgreich geändert!");
     }
 
-    public static void successfulReloaded(Player player) {
+    public static void successfulReloaded(CommandSender player) {
 
         success(player, "DragonTravelPlus wurde neugeladen!");
     }
 
-    public static void success(Player player, String msg) {
+    public static void success(CommandSender player, String msg) {
 
         player.sendMessage(CHAT_PREFIX + ChatColor.GREEN + msg
         );
     }
 
-    public static void info(Player player, String msg) {
+    public static void info(CommandSender player, String msg) {
 
         player.sendMessage(CHAT_PREFIX + ChatColor.YELLOW + msg
         );
     }
 
-    public static void warn(Player player, String msg) {
+    public static void warn(CommandSender player, String msg) {
 
         player.sendMessage(CHAT_PREFIX + ChatColor.RED + msg
         );

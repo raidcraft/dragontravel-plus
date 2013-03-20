@@ -1,7 +1,9 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import java.util.HashMap;
@@ -31,6 +33,13 @@ public class WayPoint {
         this.x = location.getX();
         this.y = location.getY();
         this.z = location.getZ();
+    }
+
+    public Location getLocation() {
+        World bukkitWorld = Bukkit.getWorld(world);
+        if(bukkitWorld == null) return null;
+
+        return new Location(bukkitWorld, x, y, z);
     }
 
     public void removeMarker() {

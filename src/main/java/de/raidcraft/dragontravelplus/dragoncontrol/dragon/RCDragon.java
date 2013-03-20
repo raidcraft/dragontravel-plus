@@ -212,7 +212,7 @@ public class RCDragon extends EntityEnderDragon {
         target.setY(route.get(routeIndex).getY());
         target.setZ(route.get(routeIndex).getZ());
 
-        setMoveFlight();
+        setMoveDynamic();
         yaw = getCorrectYaw(target.getX(), target.getZ());
         move = true;
         flightType = FLIGHT_TYPE.DYNAMIC;
@@ -252,6 +252,18 @@ public class RCDragon extends EntityEnderDragon {
         this.distanceZ = this.startZ - target.getZ();
 
         double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
+        YTick = Math.abs(distanceY) / tick;
+        XTick = Math.abs(distanceX) / tick;
+        ZTick = Math.abs(distanceZ) / tick;
+    }
+
+    public void setMoveDynamic() {
+
+        this.distanceX = this.startX - target.getX();
+        this.distanceY = this.startY - target.getY();
+        this.distanceZ = this.startZ - target.getZ();
+
+        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.dynamicFlightSpeed;
         YTick = Math.abs(distanceY) / tick;
         XTick = Math.abs(distanceX) / tick;
         ZTick = Math.abs(distanceZ) / tick;
@@ -518,7 +530,7 @@ public class RCDragon extends EntityEnderDragon {
             target.setX(nextCheckpoint.getX());
             target.setY(nextCheckpoint.getY());
             target.setZ(nextCheckpoint.getZ());
-            setMoveFlight();
+            setMoveDynamic();
             yaw = getCorrectYaw(target.getX(), target.getZ());
             return;
         }
