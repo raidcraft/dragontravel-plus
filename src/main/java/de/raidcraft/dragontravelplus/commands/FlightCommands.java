@@ -79,7 +79,6 @@ public class FlightCommands {
             if(FlightEditorListener.editors.get(playerName).waypointCount() > 0) {
                 ChatMessages.warn(sender, "Du hast dein Flug noch nicht gespeichert!");
                 ChatMessages.warn(sender, "Nutze '/dtp editor save'.");
-                ChatMessages.info(sender, "Mit '/rcconfirm' kannst du den Flugeditor verlassen!");
                 try {
                     new QueuedCommand(sender, this, "leaveEditor", sender);
                 } catch (NoSuchMethodException e) {
@@ -123,7 +122,6 @@ public class FlightCommands {
             String playerName = sender.getName();
             String flightName = context.getString(0);
 
-            ChatMessages.warn(sender, "Bestätige das Löschen mit '/rcconfirm'!");
             try {
                 new QueuedCommand(sender, this, "deleteFlight", sender, flightName);
             } catch (NoSuchMethodException e) {
