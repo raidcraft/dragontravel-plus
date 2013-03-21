@@ -6,7 +6,6 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
@@ -233,32 +232,6 @@ public class DTPCommands {
             if(duration > 0) {
                 ChatMessages.info(player, "Flugzeit: " + duration + "s");
             }
-        }
-
-        @Command(
-                aliases = {"flight"},
-                desc = "Fly flight",
-                min = 1
-        )
-        @CommandPermissions("dragontravelplus.fly.flight")
-        public void flight(CommandContext context, CommandSender sender) throws CommandException {
-
-            String flightName = context.getString(0);
-            Flight flight = Flight.loadFlight(flightName);
-            Player player = (Player)sender;
-
-            if(flight == null) {
-                throw new CommandException("Es existiert kein Flug mit diesem Namen!");
-            }
-
-            FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
-
-            if(flyingPlayer != null && flyingPlayer.isInAir()) {
-                ChatMessages.warn(player, "Du befindest dich bereits im Flug!");
-                return;
-            }
-
-            FlightTravel.flyFlight(flight, player);
         }
     }
 }

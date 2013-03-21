@@ -1,10 +1,7 @@
-package de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement;
+package de.raidcraft.dragontravelplus.flight;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.database.Database;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,6 +9,7 @@ import org.bukkit.block.Block;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Flight {
 
@@ -58,13 +56,12 @@ public class Flight {
     /**
      * Removes the last waypoint
      */
-    public void removeWaypoint() {
+    public WayPoint removeWaypoint() {
 
         if (wpcreatenum == 0)
-            return;
+            return null;
         wpcreatenum--;
-        waypoints.get(wpcreatenum).removeMarker();
-        waypoints.remove(wpcreatenum);
+        return waypoints.remove(wpcreatenum);
     }
 
     public WayPoint getFirstWaypointCopy() {
@@ -92,21 +89,7 @@ public class Flight {
         WayPoint wp = waypoints.get(currentwp);
         currentwp++;
         if (wp == null) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
-                @Override
-                public void run() {
-
-                    for (Block block : markerBlocks) {
-                        block.setType(Material.AIR);
-                    }
-                }
-            }, RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.markerDuration * 20);
             return null;
-        }
-        if (RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.useVisibleWaypoints) {
-            Block markerBlock = Bukkit.getWorld(wp.getWorld()).getBlockAt((int) wp.getX(), (int) wp.getY(), (int) wp.getZ());
-            markerBlock.setType(Material.GLOWSTONE);
-            markerBlocks.add(markerBlock);
         }
         return wp;
     }
@@ -126,5 +109,17 @@ public class Flight {
 
     public void save(String creator) {
         Database.getTable(FlightWayPointsTable.class).addFlight(this, creator);
+
+        removeMarkers();
+    }
+
+    public void removeMarkers() {
+
+        for(Map.Entry<Integer, WayPoint> entry : waypoints.entrySet()) {
+            Block block = entry.getValue().getLocation().getBlock();
+            if(block.getType() == FlightEditorListener.MARKER_MATERIAL) {
+                block.setType(Material.AIR);
+            }
+        }
     }
 }

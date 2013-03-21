@@ -2,8 +2,8 @@ package de.raidcraft.dragontravelplus.tables;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.database.Table;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.WayPoint;
+import de.raidcraft.dragontravelplus.flight.Flight;
+import de.raidcraft.dragontravelplus.flight.WayPoint;
 import de.raidcraft.util.DateUtil;
 
 import java.sql.PreparedStatement;
@@ -121,7 +121,7 @@ public class FlightWayPointsTable extends Table {
                 statement.setString(1, flight.getName().toLowerCase());
                 statement.setString(2, flight.getFlightWorld());
                 statement.setDouble(3, wayPoint.getX());
-                statement.setDouble(4, wayPoint.getY());
+                statement.setDouble(4, wayPoint.getY() - 3); // offset because of wrong dragon midpoint
                 statement.setDouble(5, wayPoint.getZ());
                 statement.setString(6, creator);
                 statement.setString(7, DateUtil.getCurrentDateString());

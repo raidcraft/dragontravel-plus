@@ -9,7 +9,7 @@ import de.raidcraft.dragontravelplus.commands.FlightCommands;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightEditorListener;
+import de.raidcraft.dragontravelplus.flight.FlightEditorListener;
 import de.raidcraft.dragontravelplus.listener.DragonListener;
 import de.raidcraft.dragontravelplus.listener.PlayerListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;

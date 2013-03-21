@@ -1,9 +1,12 @@
-package de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement;
+package de.raidcraft.dragontravelplus.flight;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +16,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import java.util.HashMap;
 
 public class FlightEditorListener implements Listener {
+
+    public static final Material MARKER_MATERIAL = Material.GLOWSTONE;
 
     public static HashMap<String, Flight> editors = new HashMap<>();
 
@@ -47,7 +52,10 @@ public class FlightEditorListener implements Listener {
      */
     public static void removePlayer(String player) {
 
-        editors.remove(player);
+        Flight flight = editors.remove(player);
+        if(flight != null) {
+            flight.removeMarkers();
+        }
     }
 
     @EventHandler
@@ -67,8 +75,11 @@ public class FlightEditorListener implements Listener {
         //remove wp
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
             if(flight.waypointCount() != 0) {
-                editors.get(player.getName()).removeWaypoint();
-                ChatMessages.info(player, "Letzter Wegpunkt entfernt!");
+                WayPoint wp = editors.get(player.getName()).removeWaypoint();
+                if(wp != null && wp.getLocation().getBlock().getType() == MARKER_MATERIAL) {
+                    wp.getLocation().getBlock().setType(Material.AIR);
+                }
+                ChatMessages.info(player, "Wegpunkt entfernt! (" + flight.waypointCount() + " übrig)");
                 return;
             }
             else {
@@ -85,10 +96,27 @@ public class FlightEditorListener implements Listener {
                 return;
             }
 
-            location.setY(location.getY() - 3);
+            if(location.getBlock().getType() == Material.AIR) {
+                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class),
+                        new MarkerTask(location.getBlock()), 30);
+            }
             WayPoint wp = new WayPoint(location);
             flight.addWaypoint(wp);
             ChatMessages.success(player, flight.waypointCount() + ". Wegpunkt hinzugefügt!");
+        }
+    }
+
+    public class MarkerTask implements Runnable {
+
+        Block block;
+
+        public MarkerTask(Block block) {
+
+            this.block = block;
+        }
+
+        public void run() {
+            block.setType(MARKER_MATERIAL);
         }
     }
 

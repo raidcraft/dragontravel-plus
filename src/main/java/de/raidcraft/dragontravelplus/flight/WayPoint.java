@@ -1,8 +1,7 @@
-package de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement;
+package de.raidcraft.dragontravelplus.flight;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
@@ -40,11 +39,6 @@ public class WayPoint {
         if(bukkitWorld == null) return null;
 
         return new Location(bukkitWorld, x, y, z);
-    }
-
-    public void removeMarker() {
-
-        marker.setType(Material.AIR);
     }
 
     public void setX(double x) {

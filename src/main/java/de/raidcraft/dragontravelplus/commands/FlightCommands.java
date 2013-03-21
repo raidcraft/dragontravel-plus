@@ -4,12 +4,16 @@ import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightEditorListener;
+import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
+import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
+import de.raidcraft.dragontravelplus.flight.Flight;
+import de.raidcraft.dragontravelplus.flight.FlightEditorListener;
 import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -153,6 +157,33 @@ public class FlightCommands {
                 out += name + ", ";
             }
             sender.sendMessage(out);
+        }
+
+
+        @Command(
+                aliases = {"fly"},
+                desc = "Fly",
+                min = 1
+        )
+        @CommandPermissions("dragontravelplus.fly.flight")
+        public void fly(CommandContext context, CommandSender sender) throws CommandException {
+
+            String flightName = context.getString(0);
+            Flight flight = Flight.loadFlight(flightName);
+            Player player = (Player)sender;
+
+            if(flight == null) {
+                throw new CommandException("Es existiert kein Flug mit diesem Namen!");
+            }
+
+            FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
+
+            if(flyingPlayer != null && flyingPlayer.isInAir()) {
+                ChatMessages.warn(player, "Du befindest dich bereits im Flug!");
+                return;
+            }
+
+            FlightTravel.flyFlight(flight, player);
         }
 
         public void leaveEditor(CommandSender player) {

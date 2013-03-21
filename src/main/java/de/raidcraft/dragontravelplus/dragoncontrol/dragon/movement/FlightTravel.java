@@ -6,6 +6,7 @@ import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
+import de.raidcraft.dragontravelplus.flight.Flight;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -34,7 +35,9 @@ public class FlightTravel {
         Location departure = flight.getFirstWaypointCopy().getLocation();
         if(player.getLocation().getWorld().getName().equalsIgnoreCase(departure.getWorld().getName())
                 && player.getLocation().distance(departure) > 15) {
-            player.teleport(flight.getFirstWaypointCopy().getLocation());
+            Location location = flight.getFirstWaypointCopy().getLocation();
+            location.setY(location.getY() + 4);
+            player.teleport(location);
             delay += 2;
         }
 
