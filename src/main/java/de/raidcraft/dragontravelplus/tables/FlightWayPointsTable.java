@@ -9,6 +9,8 @@ import de.raidcraft.util.DateUtil;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Philip
@@ -81,6 +83,22 @@ public class FlightWayPointsTable extends Table {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
         return false;
+    }
+
+    public List<String> getExistingFlightNames() {
+
+        List<String> flightNames = new ArrayList<>();
+        try {
+            ResultSet resultSet = getConnection().prepareStatement(
+                    "SELECT * FROM " + getTableName() + " GROUP BY flight;").executeQuery();
+
+            while (resultSet.next()) {
+                flightNames.add(resultSet.getString("flight"));
+            }
+        } catch (SQLException e) {
+            RaidCraft.LOGGER.warning(e.getMessage());
+        }
+        return flightNames;
     }
 
     public void addFlight(Flight flight, String creator) {

@@ -2,20 +2,16 @@ package de.raidcraft.dragontravelplus.commands;
 
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.commands.QueuedCommand;
-import de.raidcraft.api.database.Database;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.Flight;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightEditorListener;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
-import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
 import de.raidcraft.util.DateUtil;
@@ -31,9 +27,9 @@ import java.util.Map;
  * Date: 25.11.12 - 19:01
  * Description:
  */
-public class Commands {
+public class DTPCommands {
 
-    public Commands(DragonTravelPlusPlugin module) {
+    public DTPCommands(DragonTravelPlusPlugin module) {
 
     }
 
@@ -264,126 +260,5 @@ public class Commands {
 
             FlightTravel.flyFlight(flight, player);
         }
-
-        @Command(
-                aliases = {"editor"},
-                desc = "Editor mode"
-        )
-        @CommandPermissions("dragontravelplus.editor")
-        @NestedCommand(NestedFlightEditorCommands.class)
-        public void editor(CommandContext context, CommandSender sender) throws CommandException {
-        }
     }
-
-    public static class NestedFlightEditorCommands {
-
-        private final DragonTravelPlusPlugin module;
-
-        public NestedFlightEditorCommands(DragonTravelPlusPlugin module) {
-
-            this.module = module;
-        }
-
-        @Command(
-                aliases = {"new"},
-                desc = "Open editor mode",
-                min = 1
-        )
-        @CommandPermissions("dragontravelplus.editor.new")
-        public void editor(CommandContext context, CommandSender sender) throws CommandException {
-
-            String playerName = sender.getName();
-            String flightName = context.getString(0);
-
-            if(FlightEditorListener.hasEditorMode(playerName)) {
-                throw new CommandException("Du bist bereits im Flugeditor Modus");
-            }
-
-            if(Database.getTable(FlightWayPointsTable.class).exists(flightName)) {
-                throw new CommandException("Einen Flug mit diesem Namen existiert bereits!");
-            }
-
-            FlightEditorListener.addPlayer(playerName, flightName);
-            ChatMessages.success(sender, "Flugeditor betreten!");
-        }
-
-        @Command(
-                aliases = {"exit", "end", "close"},
-                desc = "Close editor mode"
-        )
-        @CommandPermissions("dragontravelplus.editor.close")
-        public void exit(CommandContext context, CommandSender sender) throws CommandException {
-
-            String playerName = sender.getName();
-
-            if(!FlightEditorListener.hasEditorMode(playerName)) {
-                throw new CommandException("Du bist nicht im Flugeditor!");
-            }
-
-            if(FlightEditorListener.editors.get(playerName).waypointCount() > 0) {
-                ChatMessages.warn(sender, "Du hast dein Flug noch nicht gespeichert!");
-                ChatMessages.warn(sender, "Nutze '/dtp editor save'.");
-                ChatMessages.info(sender, "Mit '/rcconfirm' kannst du den Flugeditor verlassen!");
-                try {
-                    new QueuedCommand(sender, this, "leaveEditor", sender);
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-                leaveEditor(sender);
-            }
-        }
-
-        @Command(
-                aliases = {"save"},
-                desc = "Save flight"
-        )
-        @CommandPermissions("dragontravelplus.editor.save")
-        public void save(CommandContext context, CommandSender sender) throws CommandException {
-
-            String playerName = sender.getName();
-
-            if(!FlightEditorListener.hasEditorMode(playerName)) {
-                throw new CommandException("Du bist nicht im Flugeditor und kannst deshalb keinen Flug speichern!");
-            }
-
-            Flight fly = FlightEditorListener.editors.get(playerName);
-            fly.save(playerName);
-            String flightName = fly.getName();
-            FlightEditorListener.removePlayer(playerName);
-            ChatMessages.success(sender, "Dein Flug namens '" + flightName + "' wurde gespeichert!");
-            leaveEditor(sender);
-        }
-
-        @Command(
-                aliases = {"delete", "remove"},
-                desc = "Delete flight",
-                min = 1
-        )
-        @CommandPermissions("dragontravelplus.editor.delete")
-        public void delete(CommandContext context, CommandSender sender) throws CommandException {
-
-            String playerName = sender.getName();
-            String flightName = context.getString(0);
-
-            ChatMessages.warn(sender, "Bestätige das Löschen mit '/rcconfirm'!");
-            try {
-                new QueuedCommand(sender, this, "deleteFlight", sender, flightName);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-        }
-
-        public void leaveEditor(CommandSender player) {
-            FlightEditorListener.removePlayer(player.getName());
-            ChatMessages.info(player, "Flugeditor verlassen!");
-        }
-
-        public void deleteFlight(CommandSender sender, String flightName) {
-            Flight.removeFlight(flightName);
-            ChatMessages.info(sender, "Der Flug namens '" + flightName + "' wurde gelöscht!");
-        }
-    }
-
 }

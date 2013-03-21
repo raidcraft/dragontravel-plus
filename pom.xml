@@ -31,7 +31,7 @@
         </repository>
         <repository>
             <id>everything</id>
-            <url>http://repo.citizensnpcs.com</url>
+            <url>http://repo.mikeprimm.com/</url>
         </repository>
     </repositories>
 
@@ -43,16 +43,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.4.7-R1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>raidcraft-api</artifactId>
             <version>1.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.dynmap</groupId>
-            <artifactId>Dynmap</artifactId>
+            <artifactId>dynmap-api</artifactId>
             <version>1.3</version>
         </dependency>
-
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizens</artifactId>

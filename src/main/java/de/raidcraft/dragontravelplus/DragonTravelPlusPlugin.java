@@ -4,7 +4,8 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
-import de.raidcraft.dragontravelplus.commands.Commands;
+import de.raidcraft.dragontravelplus.commands.DTPCommands;
+import de.raidcraft.dragontravelplus.commands.FlightCommands;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
@@ -60,7 +61,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         registerEvents(new DragonListener());
         registerEvents(new FlightEditorListener());
 
-        registerCommands(Commands.class);
+        registerCommands(DTPCommands.class);
+        registerCommands(FlightCommands.class);
 
         registerTable(StationTable.class, new StationTable());
         registerTable(PlayerStations.class, new PlayerStations());
