@@ -232,9 +232,6 @@ public class Commands {
             }
 
             ControlledFlight controlledFlight = new ControlledFlight(duration);
-            flyingPlayer = new FlyingPlayer(player, player.getLocation());
-            flyingPlayer.setInAir(true);
-            DragonManager.INST.flyingPlayers.put(player, flyingPlayer);
             FlightTravel.flyControlled(controlledFlight, player);
             ChatMessages.success(player, "Freier Flug gestartet!");
             if(duration > 0) {
@@ -265,9 +262,6 @@ public class Commands {
                 return;
             }
 
-            flyingPlayer = new FlyingPlayer(player, player.getLocation());
-            flyingPlayer.setInAir(true);
-            DragonManager.INST.flyingPlayers.put(player, flyingPlayer);
             FlightTravel.flyFlight(flight, player);
         }
 
