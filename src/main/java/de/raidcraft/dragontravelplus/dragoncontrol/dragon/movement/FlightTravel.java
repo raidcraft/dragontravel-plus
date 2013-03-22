@@ -38,11 +38,11 @@ public class FlightTravel {
             Location location = flight.getFirstWaypointCopy().getLocation();
             location.setY(location.getY() + 4);
             player.teleport(location);
-            delay += 2;
+            delay += 20;
         }
 
         StartFlightTask startFlightTask = new StartFlightTask(flyingPlayer, flight);
-        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), startFlightTask, delay * 20);
+        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), startFlightTask, delay);
     }
 
     public static void flyControlled(ControlledFlight controlledFlight, Player player) {

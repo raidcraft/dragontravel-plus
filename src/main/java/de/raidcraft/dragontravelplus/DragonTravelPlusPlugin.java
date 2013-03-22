@@ -15,11 +15,14 @@ import de.raidcraft.dragontravelplus.listener.PlayerListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.npc.NPCListener;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
+import de.raidcraft.dragontravelplus.rcconversations.FlyControlledAction;
+import de.raidcraft.dragontravelplus.rcconversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
 import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
+import de.raidcraft.rcconversations.actions.ActionManager;
 import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
@@ -76,6 +79,13 @@ public class DragonTravelPlusPlugin extends BasePlugin {
             citizens = (Citizens)Bukkit.getPluginManager().getPlugin("Citizens");
         } catch (Exception e) {
             RaidCraft.LOGGER.warning("[DTP] Can't load NPC stuff! Citizens not found!");
+        }
+
+        try {
+            ActionManager.registerAction(new FlyFlightAction());
+            ActionManager.registerAction(new FlyControlledAction());
+        } catch (Exception e) {
+            RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
         }
     }
 
