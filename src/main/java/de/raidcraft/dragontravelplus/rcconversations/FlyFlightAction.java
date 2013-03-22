@@ -12,9 +12,16 @@ import de.raidcraft.rcconversations.api.conversation.Conversation;
  */
 public class FlyFlightAction extends AbstractAction {
 
+    private String name;
+
+    public FlyFlightAction(String name) {
+
+        this.name = name;
+    }
+
     @Override
     public String getName() {
-        return "DTP_FLIGHT";
+        return name;
     }
 
     @Override

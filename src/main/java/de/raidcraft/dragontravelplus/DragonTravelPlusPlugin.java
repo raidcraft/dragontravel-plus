@@ -82,8 +82,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         }
 
         try {
-            ActionManager.registerAction(new FlyFlightAction());
-            ActionManager.registerAction(new FlyControlledAction());
+            ActionManager.registerAction(new FlyFlightAction("DTP_FLIGHT"));
+            ActionManager.registerAction(new FlyControlledAction("DTP_CONTROLLED"));
         } catch (Exception e) {
             RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
         }
