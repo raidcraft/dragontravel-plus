@@ -28,7 +28,6 @@ public class FlightTravel {
         }
 
         flyingPlayer = new FlyingPlayer(player, player.getLocation());
-        flyingPlayer.setInAir(true);
         DragonManager.INST.flyingPlayers.put(player, flyingPlayer);
 
         // port player to start
@@ -111,6 +110,7 @@ public class FlightTravel {
                 return;
 
             // start flight
+            flyingPlayer.setInAir(true);
             dragon.startFlight(flyingPlayer, flight);
         }
     }
