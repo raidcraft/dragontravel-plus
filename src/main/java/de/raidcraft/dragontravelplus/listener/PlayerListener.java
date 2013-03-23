@@ -27,7 +27,7 @@ import java.util.Arrays;
  */
 public class PlayerListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageEvent event) {
 
         if (!(event.getEntity() instanceof Player)) {
