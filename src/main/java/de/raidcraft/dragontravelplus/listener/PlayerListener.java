@@ -49,7 +49,7 @@ public class PlayerListener implements Listener {
             Bukkit.getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
             DragonManager.INST.flyingPlayers.remove(player);
             ChatMessages.warn(player, "Du hast schaden genommen, der Drache hat wieder abgedreht!");
-            Conversation.conversations.remove(player.getName());
+            Conversation.conversations.get(player.getName()).abortConversation();
             return;
         }
     }
