@@ -10,8 +10,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bukkit:craftbukkit:1.4.7-R1.0" level="project" />
     <orderEntry type="library" name="Maven: de.raidcraft:raidcraft-api:1.4-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bukkit:craftbukkit:1.5-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: net.milkbowl.vault:vault:1.2.24" level="project" />
     <orderEntry type="library" name="Maven: com.comphenix.protocol:ProtocolLib:2.2.0" level="project" />
     <orderEntry type="library" name="Maven: com.sk89q:worldedit:5.5-SNAPSHOT" level="project" />
