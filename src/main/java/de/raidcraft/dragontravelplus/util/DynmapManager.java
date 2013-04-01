@@ -36,7 +36,7 @@ public class DynmapManager {
             return;
         }
         dragonSet.createMarker(station.getName().toLowerCase().replace(" ", "_")
-                , station.getName()
+                , station.getFriendlyName()
                 , station.getLocation().getWorld().getName()
                 , station.getLocation().getBlockX()
                 , station.getLocation().getBlockY()

@@ -35,6 +35,11 @@ public class DragonStation {
         return name;
     }
 
+    public String getFriendlyName() {
+
+        return name.replace("_", " ");
+    }
+
     public Location getLocation() {
 
         return location;

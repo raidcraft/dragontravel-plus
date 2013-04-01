@@ -485,8 +485,8 @@ public class RCDragon extends EntityEnderDragon {
             }
         }
         // prevent wrong entity height
-        if(myY > 256) {
-            myY = 256;
+        if(myY > 250) {
+            myY = 250;
         }
 
         if ((int) myZ != (int) target.getZ()) {

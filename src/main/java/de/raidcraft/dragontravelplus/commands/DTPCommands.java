@@ -153,18 +153,18 @@ public class DTPCommands {
         public void warp(CommandContext context, CommandSender sender) throws CommandException {
 
             if (context.argsLength() < 1) {
-                ChatMessages.tooFewArguments((Player) sender);
+                ChatMessages.tooFewArguments(sender);
             }
 
             DragonStation station = StationManager.INST.getDragonStation(context.getString(0));
 
             if (station == null) {
-                ChatMessages.warn((Player) sender, "Es gibt keine Station mit diesem Namen!");
+                ChatMessages.warn(sender, "Es gibt keine Station mit diesem Namen!");
                 return;
             }
 
             ((Player) sender).teleport(station.getLocation());
-            ChatMessages.success((Player) sender, "Du wurdest zur Station '" + station.getName() + "' geportet!");
+            ChatMessages.success(sender, "Du wurdest zur Station '" + station.getFriendlyName() + "' geportet!");
         }
 
         @Command(
