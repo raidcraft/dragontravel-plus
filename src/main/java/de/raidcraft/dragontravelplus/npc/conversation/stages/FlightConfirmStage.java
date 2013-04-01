@@ -50,7 +50,7 @@ public class FlightConfirmStage extends Stage {
         List<String> reply = new ArrayList<>();
 
         for (String line : RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convProcessEconomyConfirmQuestion) {
-            speech.add(line.replace("%sn", target.getName())
+            speech.add(line.replace("%sn", target.getFriendlyName())
                     .replace("%fp", String.valueOf(price))
                     .replace("%fd", FlightDistance.getPrintDistance(getConversation().getDragonGuard().getDragonStation(), target)));
         }
@@ -125,7 +125,7 @@ public class FlightConfirmStage extends Stage {
 
         List<String> replacedMsg = new ArrayList<>();
         for (String line : RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convProcessEconomyTakeoff) {
-            replacedMsg.add(line.replace("%sn", target.getName()));
+            replacedMsg.add(line.replace("%sn", target.getFriendlyName()));
         }
         speak(replacedMsg.toArray(new String[replacedMsg.size()]));
 
