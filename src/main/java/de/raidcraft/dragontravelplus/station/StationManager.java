@@ -55,6 +55,15 @@ public class StationManager {
         return locations;
     }
 
+    public List<DragonStation> getStations() {
+
+        List<DragonStation> stations = new ArrayList<>();
+        for (Map.Entry<String, DragonStation> entry : existingStations.entrySet()) {
+            stations.add(entry.getValue());
+        }
+        return stations;
+    }
+
     public DragonStation getDragonStation(String name) {
 
         for (Map.Entry<String, DragonStation> entry : existingStations.entrySet()) {

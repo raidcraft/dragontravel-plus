@@ -204,8 +204,8 @@ public class DTPCommands {
                 aliases = {"fly"},
                 desc = "Start controlledflyght"
         )
-        @CommandPermissions("dragontravelplus.fly.controlled")
-        public void controlledFlight(CommandContext context, CommandSender sender) throws CommandException {
+                 @CommandPermissions("dragontravelplus.fly.controlled")
+                 public void controlledFlight(CommandContext context, CommandSender sender) throws CommandException {
 
             if(sender instanceof ConsoleCommandSender) {
                 sender.sendMessage("Player context required!");
@@ -232,6 +232,23 @@ public class DTPCommands {
             if(duration > 0) {
                 ChatMessages.info(player, "Flugzeit: " + duration + "s");
             }
+        }
+
+        @Command(
+                aliases = {"markers"},
+                desc = "Recreate dynmap markers"
+        )
+        @CommandPermissions("dragontravelplus.markers")
+        public void markers(CommandContext context, CommandSender sender) throws CommandException {
+
+            ChatMessages.info(sender, "Dynmap Stationsmarker werden neu erstellt...");
+            int i = 0;
+            for(DragonStation station : StationManager.INST.getStations()) {
+
+                DynmapManager.INST.addStationMarker(station);
+                i++;
+            }
+            ChatMessages.success(sender, "Es wurden " + i + " Marker neu erstellt!");
         }
     }
 }
