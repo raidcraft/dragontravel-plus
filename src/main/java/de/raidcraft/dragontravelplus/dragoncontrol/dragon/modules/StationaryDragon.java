@@ -1,8 +1,8 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules;
 
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
-import net.minecraft.server.v1_4_R1.World;
-import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
+import net.minecraft.server.v1_5_R2.World;
+import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
 import org.bukkit.entity.Player;
 
 /**
