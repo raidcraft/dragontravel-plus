@@ -81,12 +81,19 @@ public class DragonTravelPlusPlugin extends BasePlugin {
             RaidCraft.LOGGER.warning("[DTP] Can't load NPC stuff! Citizens not found!");
         }
 
-        try {
-            ActionManager.registerAction(new FlyFlightAction("DTP_FLIGHT"));
-            ActionManager.registerAction(new FlyControlledAction("DTP_CONTROLLED"));
-        } catch (Exception e) {
-            RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
-        }
+        // lets trigger a delayed load to make sure all plugins are loaded
+        Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    ActionManager.registerAction(new FlyFlightAction("DTP_FLIGHT"));
+                    ActionManager.registerAction(new FlyControlledAction("DTP_CONTROLLED"));
+                } catch (Exception e) {
+                    RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
+                }
+            }
+        }, 1L);
     }
 
     @Override
