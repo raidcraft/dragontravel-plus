@@ -88,6 +88,15 @@ public class StationManager {
     public List<DragonStation> getPlayerStations(Player player) {
 
         List<DragonStation> stations = new ArrayList<>();
+
+        if(player.hasPermission("dragontravelplus.stations.all")) {
+
+            for(Map.Entry<String, DragonStation> entry : existingStations.entrySet()) {
+                stations.add(entry.getValue());
+            }
+            return stations;
+        }
+
         List<String> stationNames = RaidCraft.getTable(PlayerStations.class).getAllPlayerStations(player.getName());
         stationNames.addAll(RaidCraft.getTable(StationTable.class).getEmergencyStations());
         for (String name : stationNames) {
