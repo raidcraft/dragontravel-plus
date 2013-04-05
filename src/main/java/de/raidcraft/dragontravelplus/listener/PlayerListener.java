@@ -92,7 +92,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent event) {
 
         Player player = event.getPlayer();
