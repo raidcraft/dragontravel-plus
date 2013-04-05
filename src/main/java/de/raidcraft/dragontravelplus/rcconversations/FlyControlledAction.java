@@ -15,16 +15,9 @@ import org.bukkit.entity.Player;
  */
 public class FlyControlledAction extends AbstractAction {
 
-    private String name;
-
     public FlyControlledAction(String name) {
 
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        super(name);
     }
 
     @Override
