@@ -49,12 +49,12 @@ public class StationTable extends Table {
         }
     }
 
-    public List<DragonStation> getAllStations() {
+    public List<DragonStation> getAllStations(String worldName) {
 
         List<DragonStation> stations = new ArrayList<>();
         try {
             ResultSet resultSet = getConnection().prepareStatement(
-                    "SELECT * FROM " + getTableName() + ";").executeQuery();
+                    "SELECT * FROM " + getTableName() + " WHERE world = '" + worldName + "';").executeQuery();
 
             while (resultSet.next()) {
                 World world = Bukkit.getWorld(resultSet.getString("world"));

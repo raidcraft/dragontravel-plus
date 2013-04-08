@@ -5,7 +5,9 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.tables.PlayerStations;
 import de.raidcraft.dragontravelplus.tables.StationTable;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -28,9 +30,11 @@ public class StationManager {
 
         existingStations.clear();
         int i = 0;
-        for (DragonStation station : RaidCraft.getTable(StationTable.class).getAllStations()) {
-            i++;
-            existingStations.put(station.getName(), station);
+        for(World world : Bukkit.getWorlds()) {
+            for (DragonStation station : RaidCraft.getTable(StationTable.class).getAllStations(world.getName())) {
+                i++;
+                existingStations.put(station.getName(), station);
+            }
         }
 
         RaidCraft.LOGGER.info("[DTP] Es wurden " + i + " Stationen geladen!");
