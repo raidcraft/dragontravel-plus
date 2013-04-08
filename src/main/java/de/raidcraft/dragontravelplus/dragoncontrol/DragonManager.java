@@ -21,10 +21,7 @@ public class DragonManager {
 
     public void takeoff(Player player, DragonStation start, DragonStation destination, double price) {
 
-        FlyingPlayer flyingPlayer = new FlyingPlayer(player, start.getLocation(), destination.getLocation(), price);
-        flyingPlayers.put(player, flyingPlayer);
-
-        Navigator navigator = new Navigator(flyingPlayer);
+        Navigator navigator = new Navigator(player, start.getLocation(), destination.getLocation(), price);
         navigator.startFlight();
     }
 
@@ -54,26 +51,5 @@ public class DragonManager {
             }
         }
         return null;
-    }
-
-    public class DelayedTakeoffTask implements Runnable {
-
-        private FlyingPlayer flyingPlayer;
-
-        public DelayedTakeoffTask(FlyingPlayer flyingPlayer) {
-
-            this.flyingPlayer = flyingPlayer;
-        }
-
-        @Override
-        public void run() {
-
-            if (!flyingPlayers.containsKey(flyingPlayer.getPlayer())) {
-                flyingPlayers.put(flyingPlayer.getPlayer(), flyingPlayer);
-            }
-
-            Navigator navigator = new Navigator(flyingPlayer);
-            navigator.startFlight();
-        }
     }
 }

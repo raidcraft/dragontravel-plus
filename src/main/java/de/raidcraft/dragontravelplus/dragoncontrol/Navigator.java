@@ -6,6 +6,7 @@ import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.dragontravelplus.flight.Flight;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
@@ -19,7 +20,11 @@ import java.util.TreeMap;
  */
 public class Navigator {
 
-    private FlyingPlayer flyingPlayer;
+    private Player player;
+    private Location start;
+    private Location destination;
+    private double price;
+
     private boolean started = false;
     private BukkitTask task;
     private Flight flight = null;
@@ -29,10 +34,12 @@ public class Navigator {
     private int processStage = 0;
     private int processedRouteEntry = 1; //!!! set to 1 - first entry must be ignored
 
+    public Navigator(Player player, Location start, Location destination, double price) {
 
-    public Navigator(FlyingPlayer flyingPlayer) {
-
-        this.flyingPlayer = flyingPlayer;
+        this.player = player;
+        this.start = start;
+        this.destination = destination;
+        this.price = price;
     }
 
     public void startFlight() {
@@ -42,7 +49,7 @@ public class Navigator {
         started = true;
 
         // get the route between the dragon stations
-        stationRoute = getStationRoute(StationManager.INST.getAllStationLocations(), flyingPlayer.getStart(), flyingPlayer.getDestination());
+        stationRoute = getStationRoute(StationManager.INST.getAllStationLocations(), start, destination);
 
         task = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
             @Override
@@ -52,7 +59,6 @@ public class Navigator {
                     case 0:
 
                         if(processedRouteEntry >= stationRoute.size()) {
-                            RaidCraft.LOGGER.info("DTP: 1");
                             processedRouteEntry = 1; //!!! set to 1 - first entry must be ignored
                             processStage++;
                             return;
@@ -67,9 +73,7 @@ public class Navigator {
 
                     case 1:
 
-                        RaidCraft.LOGGER.info("DTP: 2");
                         if(processedRouteEntry >= optimizedRoute.size()) {
-                            RaidCraft.LOGGER.info("DTP: 3");
                             processStage++;
                             return;
                         }
@@ -80,14 +84,13 @@ public class Navigator {
 
                     case 2:
 
-                        RaidCraft.LOGGER.info("DTP: 4");
                         flight = new Flight();
 
                         for(Location wayPoint : optimizedRoute) {
                             flight.addWaypoint(wayPoint);
                         }
 
-                        Location optimizedDestination = flyingPlayer.getDestination().clone();
+                        Location optimizedDestination = destination.clone();
                         optimizedDestination.setY(optimizedDestination.getY() + 5);
                         flight.addWaypoint(optimizedDestination);
 
@@ -169,10 +172,9 @@ public class Navigator {
 
         task.cancel(); // if takeoff is called cancel calculation task
         if(flight == null) return;
-        flyingPlayer.setInAir(true);
-        FlightTravel.flyFlight(flight, flyingPlayer.getPlayer());
-        RaidCraft.getEconomy().withdrawPlayer(flyingPlayer.getPlayer().getName(), flyingPlayer.getPrice());
-        flyingPlayer.getPlayer().sendMessage(ChatColor.GRAY + "Schreibe '" + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.exitWords[0] + "' in den Chat um den Flug abzubrechen!");
+        FlightTravel.flyFlight(flight, player);
+        RaidCraft.getEconomy().withdrawPlayer(player.getName(), price);
+        player.sendMessage(ChatColor.GRAY + "Schreibe '" + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.exitWords[0] + "' in den Chat um den Flug abzubrechen!");
     }
 
 }
