@@ -2,7 +2,6 @@ package de.raidcraft.dragontravelplus.dragoncontrol.dragon;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.dragoncontrol.FlightNavigator;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
@@ -18,17 +17,13 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
-
-import java.util.List;
 
 public class RCDragon extends EntityEnderDragon {
 
     public enum FLIGHT_TYPE {
         TRAVEL,
         FLIGHT,
-        CONTROLLED_FLIGHT,
-        DYNAMIC
+        CONTROLLED_FLIGHT
     }
 
     private FLIGHT_TYPE flightType;
@@ -44,12 +39,6 @@ public class RCDragon extends EntityEnderDragon {
     // Flight
     private Flight flight;
     private WayPoint firstwp;
-
-    // Dynamic Flight
-    private List<Location> route;
-    private int routeIndex = 0;
-    private boolean runAsyncRouting = false;
-    private BukkitTask dynamicRoutingTask = null;
 
     // First WayPoint coords
     private double fwpX;
@@ -196,39 +185,6 @@ public class RCDragon extends EntityEnderDragon {
         flightType = FLIGHT_TYPE.CONTROLLED_FLIGHT;
     }
 
-    public void startDynamicFlight(FlyingPlayer flyingPlayer, List<Location> newRoute) {
-
-        this.flyingPlayer = flyingPlayer;
-        entity = getBukkitEntity();
-
-        this.route = newRoute;
-        this.routeIndex = 1;
-
-        this.startX = start.getX();
-        this.startY = start.getY();
-        this.startZ = start.getZ();
-
-        target.setX(route.get(routeIndex).getX());
-        target.setY(route.get(routeIndex).getY());
-        target.setZ(route.get(routeIndex).getZ());
-
-        setMoveDynamic();
-        yaw = getCorrectYaw(target.getX(), target.getZ());
-        move = true;
-        flightType = FLIGHT_TYPE.DYNAMIC;
-
-        runAsyncRouting = false;
-        dynamicRoutingTask = Bukkit.getScheduler().runTaskTimerAsynchronously(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
-            @Override
-            public void run() {
-                if(runAsyncRouting) {
-                    runAsyncRouting = false;
-                    FlightNavigator.INST.optimizeCheckpoint(routeIndex + 1, route);
-                }
-            }
-        }, 10, 10);
-    }
-
     /**
      * Gets the correct yaw for this specific path
      */
@@ -252,18 +208,6 @@ public class RCDragon extends EntityEnderDragon {
         this.distanceZ = this.startZ - target.getZ();
 
         double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
-        YTick = Math.abs(distanceY) / tick;
-        XTick = Math.abs(distanceX) / tick;
-        ZTick = Math.abs(distanceZ) / tick;
-    }
-
-    public void setMoveDynamic() {
-
-        this.distanceX = this.startX - target.getX();
-        this.distanceY = this.startY - target.getY();
-        this.distanceZ = this.startZ - target.getZ();
-
-        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.dynamicFlightSpeed;
         YTick = Math.abs(distanceY) / tick;
         XTick = Math.abs(distanceX) / tick;
         ZTick = Math.abs(distanceZ) / tick;
@@ -307,11 +251,6 @@ public class RCDragon extends EntityEnderDragon {
         // Flight
         if(flightType == FLIGHT_TYPE.FLIGHT) {
             flight();
-        }
-
-        // Dynamic Flight
-        if(flightType == FLIGHT_TYPE.DYNAMIC) {
-            dynamic();
         }
 
         // Controlled flight
@@ -456,89 +395,6 @@ public class RCDragon extends EntityEnderDragon {
     }
 
     /*
-     * Is called during dynamic flight
-     */
-    public void dynamic() {
-
-        // Returns, the dragon won't move
-        if (!move)
-            return;
-
-        // Init move variables
-        double myX = locX;
-        double myY = locY;
-        double myZ = locZ;
-
-        if ((int) myX != (int) target.getX()) {
-            if (myX < target.getX()) {
-                myX += XTick;
-            } else {
-                myX -= XTick;
-            }
-        }
-
-        if ((int) myY != (int) target.getY()) {
-            if (myY < target.getY()) {
-                myY += YTick;
-            } else {
-                myY -= YTick;
-            }
-        }
-        // prevent wrong entity height
-        if(myY > 250) {
-            myY = 250;
-        }
-
-        if ((int) myZ != (int) target.getZ()) {
-            if (myZ < target.getZ()) {
-                myZ += ZTick;
-            } else {
-                myZ -= ZTick;
-            }
-        }
-
-        // check if checkpoint reached and load next one. If nothing over -> end flight
-        if (((int) myZ >= (int) target.getZ() - 1 && (int) myZ <= (int) target.getZ() + 1)
-                && ((int) myY >= (int) target.getY() - 1 && (int) myY <= (int) target.getY() + 1)
-                && ((int) myX >= (int) target.getX() - 1 && (int) myX <= (int) target.getX() + 1)) {
-
-            Location nextCheckpoint = null;
-            routeIndex++;
-            if(routeIndex < route.size()) {
-                nextCheckpoint = route.get(routeIndex);
-            }
-
-            // removing the entity and dismounting the player
-            if (nextCheckpoint == null) {
-
-                if (passenger != null) {
-                    Bukkit.getPluginManager().callEvent(new DragonLandEvent(passenger.getBukkitEntity()));
-                }
-                Travels.removePlayerAndDragon(flyingPlayer);
-                return;
-            }
-
-            // optimize next checkpoint (dynamic routing!!!)
-            if(RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.useDynamicRouting) {
-                runAsyncRouting = true;
-            }
-
-            this.startX = myX;
-            this.startY = myY;
-            this.startZ = myZ;
-
-            target.setX(nextCheckpoint.getX());
-            target.setY(nextCheckpoint.getY());
-            target.setZ(nextCheckpoint.getZ());
-            setMoveDynamic();
-            yaw = getCorrectYaw(target.getX(), target.getZ());
-            return;
-        }
-
-        setPosition(myX, myY, myZ);
-    }
-
-    /*
      * Is called during flight controlled by players line of sight
      */
     public void controlled() {
@@ -652,9 +508,6 @@ public class RCDragon extends EntityEnderDragon {
 
     public void cancelTasks() {
         Bukkit.getScheduler().cancelTask(durationTaskId);
-        if(dynamicRoutingTask != null) {
-            dynamicRoutingTask.cancel();
-        }
     }
 
     public void toggleControlled() {

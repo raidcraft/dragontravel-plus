@@ -1,16 +1,11 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
-import de.raidcraft.RaidCraft;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.EnqueuedNavigationTask;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,22 +16,16 @@ import java.util.Map;
 public class DragonManager {
 
     public Map<Player, FlyingPlayer> flyingPlayers = new HashMap<>();
-    private Map<FlyingPlayer, EnqueuedNavigationTask> enqueuedNavigationTasks = new HashMap<>();
 
     public final static DragonManager INST = new DragonManager();
 
     public void takeoff(Player player, DragonStation start, DragonStation destination, double price) {
 
         FlyingPlayer flyingPlayer = new FlyingPlayer(player, start.getLocation(), destination.getLocation(), price);
+        flyingPlayers.put(player, flyingPlayer);
 
-        // check periodically if route is calculated
-        EnqueuedNavigationTask enqueuedNavigation = new EnqueuedNavigationTask(flyingPlayer);
-        int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), enqueuedNavigation, 20, 2*20);
-        enqueuedNavigation.setWaitingTaskId(taskId);
-        enqueuedNavigationTasks.put(flyingPlayer, enqueuedNavigation);
-
-        // start asynchronous route calculation
-        Bukkit.getScheduler().runTaskAsynchronously(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DelayedTakeoffTask(flyingPlayer));
+        Navigator navigator = new Navigator(flyingPlayer);
+        navigator.startFlight();
     }
 
     public void abortFlight(Player player) {
@@ -67,13 +56,6 @@ public class DragonManager {
         return null;
     }
 
-    public void calculationFinished(FlyingPlayer flyingPlayer, List<Location> route) {
-
-        EnqueuedNavigationTask enqueuedNavigationTask = DragonManager.INST.enqueuedNavigationTasks.get(flyingPlayer);
-        enqueuedNavigationTask.setRoute(route);
-        enqueuedNavigationTask.setCalculated(true);
-    }
-
     public class DelayedTakeoffTask implements Runnable {
 
         private FlyingPlayer flyingPlayer;
@@ -90,7 +72,8 @@ public class DragonManager {
                 flyingPlayers.put(flyingPlayer.getPlayer(), flyingPlayer);
             }
 
-            FlightNavigator.INST.calculateFlight(flyingPlayer, flyingPlayer.getStart(), flyingPlayer.getDestination());
+            Navigator navigator = new Navigator(flyingPlayer);
+            navigator.startFlight();
         }
     }
 }

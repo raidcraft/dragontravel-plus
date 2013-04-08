@@ -37,6 +37,11 @@ public class Flight {
         this.name = name;
     }
 
+    public Flight() {
+
+        this.name = "Flight";
+    }
+
     /**
      * Adds a waypoint to the db as a key/keyvalue
      *
