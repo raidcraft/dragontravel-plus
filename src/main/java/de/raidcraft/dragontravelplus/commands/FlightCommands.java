@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.commands;
 
 import com.sk89q.minecraft.util.commands.*;
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
@@ -183,7 +184,7 @@ public class FlightCommands {
                 return;
             }
 
-            FlightTravel.flyFlight(flight, player);
+            FlightTravel.flyFlight(flight, player, RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed);
         }
 
         public void leaveEditor(CommandSender player) {

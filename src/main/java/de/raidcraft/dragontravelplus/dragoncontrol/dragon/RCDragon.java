@@ -39,6 +39,7 @@ public class RCDragon extends EntityEnderDragon {
     // Flight
     private Flight flight;
     private WayPoint firstwp;
+    private double speed = 1;
 
     // First WayPoint coords
     private double fwpX;
@@ -123,9 +124,10 @@ public class RCDragon extends EntityEnderDragon {
         move = true;
     }
 
-    public void startFlight(FlyingPlayer flyingPlayer, Flight flight) {
+    public void startFlight(FlyingPlayer flyingPlayer, Flight flight, double speed) {
 
         this.flyingPlayer = flyingPlayer;
+        this.speed = speed;
         entity = getBukkitEntity();
 
         this.flight = flight;
@@ -207,7 +209,7 @@ public class RCDragon extends EntityEnderDragon {
         this.distanceY = this.startY - target.getY();
         this.distanceZ = this.startZ - target.getZ();
 
-        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
+        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / speed;
         YTick = Math.abs(distanceY) / tick;
         XTick = Math.abs(distanceX) / tick;
         ZTick = Math.abs(distanceZ) / tick;

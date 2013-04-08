@@ -1,5 +1,7 @@
 package de.raidcraft.dragontravelplus.rcconversations;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.dragontravelplus.flight.Flight;
 import de.raidcraft.rcconversations.api.action.AbstractAction;
@@ -29,6 +31,6 @@ public class FlyFlightAction extends AbstractAction {
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Flight '" + flightName + "' does not exists!");
         }
 
-        FlightTravel.flyFlight(flight, conversation.getPlayer(), delay);
+        FlightTravel.flyFlight(flight, conversation.getPlayer(), RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed, delay);
     }
 }

@@ -13,11 +13,11 @@ import org.bukkit.entity.Player;
 
 public class FlightTravel {
 
-    public static void flyFlight(Flight flight, Player player) {
-        flyFlight(flight, player, 0);
+    public static void flyFlight(Flight flight, Player player, double speed) {
+        flyFlight(flight, player, speed, 0);
     }
 
-    public static void flyFlight(Flight flight, Player player, int delay) {
+    public static void flyFlight(Flight flight, Player player, double speed, int delay) {
 
         FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
 
@@ -38,7 +38,7 @@ public class FlightTravel {
             delay += 20;
         }
 
-        StartFlightTask startFlightTask = new StartFlightTask(flyingPlayer, flight);
+        StartFlightTask startFlightTask = new StartFlightTask(flyingPlayer, flight, speed);
         Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), startFlightTask, delay);
     }
 
@@ -71,11 +71,13 @@ public class FlightTravel {
 
         private FlyingPlayer flyingPlayer;
         private Flight flight;
+        private double speed;
 
-        public StartFlightTask(FlyingPlayer flyingPlayer, Flight flight) {
+        public StartFlightTask(FlyingPlayer flyingPlayer, Flight flight, double speed) {
 
             this.flyingPlayer = flyingPlayer;
             this.flight = flight;
+            this.speed = speed;
         }
 
         public void run() {
@@ -92,7 +94,7 @@ public class FlightTravel {
 
             // start flight
             flyingPlayer.setInAir(true);
-            dragon.startFlight(flyingPlayer, flight);
+            dragon.startFlight(flyingPlayer, flight, speed);
         }
     }
 }
