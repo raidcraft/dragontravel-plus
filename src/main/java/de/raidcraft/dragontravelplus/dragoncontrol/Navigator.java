@@ -52,6 +52,7 @@ public class Navigator {
                     case 0:
 
                         if(processedRouteEntry >= stationRoute.size()) {
+                            RaidCraft.LOGGER.info("DTP: 1");
                             processedRouteEntry = 1; //!!! set to 1 - first entry must be ignored
                             processStage++;
                             return;
@@ -66,7 +67,9 @@ public class Navigator {
 
                     case 1:
 
+                        RaidCraft.LOGGER.info("DTP: 2");
                         if(processedRouteEntry >= optimizedRoute.size()) {
+                            RaidCraft.LOGGER.info("DTP: 3");
                             processStage++;
                             return;
                         }
@@ -75,8 +78,9 @@ public class Navigator {
 
                         break;
 
-                    case 3:
+                    case 2:
 
+                        RaidCraft.LOGGER.info("DTP: 4");
                         flight = new Flight();
 
                         for(Location wayPoint : optimizedRoute) {
