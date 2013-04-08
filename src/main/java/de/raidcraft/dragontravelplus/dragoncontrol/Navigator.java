@@ -91,7 +91,7 @@ public class Navigator {
                         }
 
                         Location optimizedDestination = destination.clone();
-                        optimizedDestination.setY(optimizedDestination.getY() + 5);
+//                        optimizedDestination.setY(optimizedDestination.getY() + 5);
                         flight.addWaypoint(optimizedDestination);
 
                         takeoff();
@@ -124,7 +124,9 @@ public class Navigator {
             Vector unitVectorCopy = unitVector.clone();
             wpLocation.add(unitVectorCopy.multiply(i * RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.wayPointDistance));
             wpLocation = world.getHighestBlockAt(wpLocation).getLocation();
-            wpLocation.setY(wpLocation.getY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight);
+            if(optimizedRoute.size() > 0) {
+                wpLocation.setY(wpLocation.getY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight);
+            }
 
             // add way point to route map
             optimizedRoute.add(wpLocation);

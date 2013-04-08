@@ -130,14 +130,14 @@ public class RCDragon extends EntityEnderDragon {
 
         this.flight = flight;
 
-        this.firstwp = flight.getFirstWaypoint();
-        this.fwpX = firstwp.getX();
-        this.fwpY = firstwp.getY();
-        this.fwpZ = firstwp.getZ();
+        firstwp = flight.getFirstWaypoint();
+        fwpX = firstwp.getX();
+        fwpY = firstwp.getY();
+        fwpZ = firstwp.getZ();
 
-        this.startX = start.getX();
-        this.startY = start.getY();
-        this.startZ = start.getZ();
+        startX = start.getX();
+        startY = start.getY();
+        startZ = start.getZ();
 
         target.setX(fwpX);
         target.setY(fwpY);
