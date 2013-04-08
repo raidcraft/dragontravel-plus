@@ -24,7 +24,7 @@ public class Navigator {
     private BukkitTask task;
     private Flight flight = null;
     private List<Location> stationRoute;
-    private List<Location> optimizedRoute;
+    private List<Location> optimizedRoute = new ArrayList<>();
 
     private int processStage = 0;
     private int processedRouteEntry = 1; //!!! set to 1 - first entry must be ignored
