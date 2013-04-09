@@ -63,7 +63,7 @@ public class FlightWayPointsTable extends Table {
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
-        if(flight.waypointCount() == 0) {
+        if(flight.size() == 0) {
             return null;
         }
         return flight;
@@ -115,7 +115,7 @@ public class FlightWayPointsTable extends Table {
 
             getConnection().setAutoCommit(false);
 
-            for(int i = 0; i < flight.waypointCount(); i++) {
+            for(int i = 0; i < flight.size(); i++) {
                 WayPoint wayPoint = flight.getNextWaypoint();
 
                 statement.setString(1, flight.getName().toLowerCase());

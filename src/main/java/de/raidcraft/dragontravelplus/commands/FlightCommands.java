@@ -81,7 +81,7 @@ public class FlightCommands {
                 throw new CommandException("Du bist nicht im Flugeditor!");
             }
 
-            if(FlightEditorListener.editors.get(playerName).waypointCount() > 0) {
+            if(FlightEditorListener.editors.get(playerName).size() > 0) {
                 ChatMessages.warn(sender, "Du hast dein Flug noch nicht gespeichert!");
                 ChatMessages.warn(sender, "Nutze '/dtp editor save'.");
                 try {

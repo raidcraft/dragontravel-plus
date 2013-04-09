@@ -80,4 +80,8 @@ public class WayPoint {
 
         this.world = world;
     }
+
+    public WayPoint clone() {
+        return new WayPoint(world, x, y, z);
+    }
 }

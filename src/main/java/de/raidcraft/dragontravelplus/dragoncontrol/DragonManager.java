@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
+import de.raidcraft.dragontravelplus.navigator.Navigator;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ public class DragonManager {
 
     public void takeoff(Player player, DragonStation start, DragonStation destination, double price) {
 
-        Navigator navigator = new Navigator(player, start.getLocation(), destination.getLocation(), price);
+        Navigator navigator = new Navigator(player, start, destination, price);
         navigator.startFlight();
     }
 

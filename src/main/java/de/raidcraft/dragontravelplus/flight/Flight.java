@@ -14,7 +14,6 @@ import java.util.Map;
 public class Flight {
 
     HashMap<Integer, WayPoint> waypoints = new HashMap<Integer, WayPoint>();
-    List<Block> markerBlocks = new ArrayList<>();
     int currentwp = 0;
     public int wpcreatenum = 0;
     String name;
@@ -56,6 +55,13 @@ public class Flight {
     public void addWaypoint(Location location) {
 
         addWaypoint(new WayPoint(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+    }
+
+    public void addFlight(Flight flight) {
+
+        for(WayPoint wayPoint : flight.getWayPoints()) {
+            addWaypoint(wayPoint.clone());
+        }
     }
 
     /**
@@ -104,8 +110,17 @@ public class Flight {
         return name;
     }
 
-    public int waypointCount() {
+    public int size() {
         return waypoints.size();
+    }
+
+    public List<WayPoint> getWayPoints() {
+
+        List<WayPoint> wayPointList = new ArrayList<>();
+        for(Map.Entry<Integer, WayPoint> entry : waypoints.entrySet()) {
+            wayPointList.add(entry.getValue());
+        }
+        return wayPointList;
     }
 
     public String getFlightWorld() {

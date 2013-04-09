@@ -74,12 +74,12 @@ public class FlightEditorListener implements Listener {
 
         //remove wp
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            if(flight.waypointCount() != 0) {
+            if(flight.size() != 0) {
                 WayPoint wp = editors.get(player.getName()).removeWaypoint();
                 if(wp != null && wp.getLocation().getBlock().getType() == MARKER_MATERIAL) {
                     wp.getLocation().getBlock().setType(Material.AIR);
                 }
-                ChatMessages.info(player, "Wegpunkt entfernt! (" + flight.waypointCount() + " übrig)");
+                ChatMessages.info(player, "Wegpunkt entfernt! (" + flight.size() + " übrig)");
                 return;
             }
             else {
@@ -90,7 +90,7 @@ public class FlightEditorListener implements Listener {
         // add wp
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
 
-            if(flight.waypointCount() != 0 && !flight.getFlightWorld().equalsIgnoreCase(location.getWorld().getName())) {
+            if(flight.size() != 0 && !flight.getFlightWorld().equalsIgnoreCase(location.getWorld().getName())) {
                 ChatMessages.warn(player, "Du hast im Flugeditor die Welt gewechselt!");
                 ChatMessages.warn(player, "Beende den Editor oder gehe zurück auf die Welt '" + flight.getFlightWorld() + "'!");
                 return;
@@ -102,7 +102,7 @@ public class FlightEditorListener implements Listener {
             }
             WayPoint wp = new WayPoint(location);
             flight.addWaypoint(wp);
-            ChatMessages.success(player, flight.waypointCount() + ". Wegpunkt hinzugefügt!");
+            ChatMessages.success(player, flight.size() + ". Wegpunkt hinzugefügt!");
         }
     }
 
