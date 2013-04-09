@@ -29,12 +29,11 @@ public class FlightTravel {
         DragonManager.INST.flyingPlayers.put(player, flyingPlayer);
 
         // port player to start
-        Location departure = flight.getFirstWaypointCopy().getLocation();
+        Location departure = flight.getWayPoint(0).getLocation();
         if(player.getLocation().getWorld().getName().equalsIgnoreCase(departure.getWorld().getName())
                 && player.getLocation().distance(departure) > 15) {
-            Location location = flight.getFirstWaypointCopy().getLocation();
-            location.setY(location.getY() + 4);
-            player.teleport(location);
+            departure.setY(departure.getY() + 4);
+            player.teleport(departure);
             delay += 20;
         }
 

@@ -4,6 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.dragontravelplus.flight.Flight;
+import de.raidcraft.dragontravelplus.flight.WayPoint;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import org.bukkit.*;
@@ -69,7 +70,7 @@ public class Navigator {
                         section = stationRoute.get(processedSection);
                         if(processedRouteEntry == 0) {
                             // skip if route already load from db
-                            if(section.getFlight().size() == 0) {
+                            if(section.getFlight().size() > 0) {
                                 processedSection++;
                                 return;
                             }
@@ -109,6 +110,17 @@ public class Navigator {
 //                        optimizedDestination.setY(optimizedDestination.getY() + 5);
                         flight.addWaypoint(optimizedDestination);
 
+                        //fix first way point
+                        flight.setWayPoint(0, new WayPoint(start.getLocation()));
+
+//                        RaidCraft.LOGGER.info("-------------------------------");
+//                        int ct = 0;
+//                        for(WayPoint wp : flight.getWayPoints()) {
+//                            RaidCraft.LOGGER.info(ct + " | X:" + wp.getX() + " | Y:" + wp.getY() + " | Z:" + wp.getZ());
+//                            ct++;
+//                        }
+//                        RaidCraft.LOGGER.info("-------------------------------");
+
                         takeoff();
                         break;
                 }
@@ -145,6 +157,7 @@ public class Navigator {
             wpLocation.setY(wpLocation.getY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight);
 
             section.getFlight().addWaypoint(wpLocation);
+            RaidCraft.LOGGER.info("X:" + wpLocation.getX() + " | Y:" + wpLocation.getY() + " | Z:" + wpLocation.getZ());
         }
 
         if(unload) {

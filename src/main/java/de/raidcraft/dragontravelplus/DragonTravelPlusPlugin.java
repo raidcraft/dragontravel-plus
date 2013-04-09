@@ -164,10 +164,6 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         public boolean useDynamicRouting = true;
         @Setting("flight-waypoint-distance")
         public int wayPointDistance = 10;
-        @Setting("use-visible-wapoint-marker")
-        public boolean useVisibleWaypoints = false;
-        @Setting("visible-marker-duration")
-        public int markerDuration = 30;
         @Setting("flight-editor-item")
         public int flightEditorItem = 122;
         @Setting("forbidden-commands")

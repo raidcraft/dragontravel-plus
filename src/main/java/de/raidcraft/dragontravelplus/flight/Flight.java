@@ -75,11 +75,6 @@ public class Flight {
         return waypoints.remove(wpcreatenum);
     }
 
-    public WayPoint getFirstWaypointCopy() {
-
-        return waypoints.get(0);
-    }
-
     /**
      * Gets the firstwaypoint
      *
@@ -117,10 +112,21 @@ public class Flight {
     public List<WayPoint> getWayPoints() {
 
         List<WayPoint> wayPointList = new ArrayList<>();
-        for(Map.Entry<Integer, WayPoint> entry : waypoints.entrySet()) {
-            wayPointList.add(entry.getValue());
+
+        // must be realized by counting loop!!! Do not change!!!
+        for(int i = 0; i < waypoints.size(); i++) {
+            wayPointList.add(waypoints.get(i));
         }
         return wayPointList;
+    }
+
+    public WayPoint getWayPoint(int index) {
+        return waypoints.get(index);
+    }
+
+    public void setWayPoint(int index, WayPoint wayPoint) {
+
+        waypoints.put(index, wayPoint);
     }
 
     public String getFlightWorld() {
