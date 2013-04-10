@@ -106,11 +106,8 @@ public class Navigator {
                             flight.addFlight(routeSection.getFlight());
                         }
 
-                        Location optimizedDestination = destination.getLocation().clone();
-//                        optimizedDestination.setY(optimizedDestination.getY() + 5);
-                        flight.addWaypoint(optimizedDestination);
-
-                        //fix first way point
+                        // optimize first and last way point
+                        flight.setWayPoint(flight.size()-1, new WayPoint(destination.getLocation()));
                         flight.setWayPoint(0, new WayPoint(start.getLocation()));
 
 //                        RaidCraft.LOGGER.info("-------------------------------");
@@ -157,7 +154,6 @@ public class Navigator {
             wpLocation.setY(wpLocation.getY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight);
 
             section.getFlight().addWaypoint(wpLocation);
-            RaidCraft.LOGGER.info("X:" + wpLocation.getX() + " | Y:" + wpLocation.getY() + " | Z:" + wpLocation.getZ());
         }
 
         if(unload) {
@@ -167,6 +163,23 @@ public class Navigator {
 
     private void interpolateSection(RouteSection section, int currentIndex) {
 
+        // don't optimize first or last way point
+        if(currentIndex == 0 || currentIndex == section.getFlight().size() - 1) {
+            return;
+        }
+
+
+        Location currentLocation = section.getFlight().getWayPoint(currentIndex).getLocation();
+        Location preLocation = section.getFlight().getWayPoint(currentIndex - 1).getLocation();
+        Location nextLocation = section.getFlight().getWayPoint(currentIndex + 1).getLocation();
+
+        double newY = currentLocation.getY();
+        double preDiff = (int)(currentLocation.getY() - preLocation.getY());
+        double nextDiff = (int)(currentLocation.getY() - nextLocation.getY());
+
+        if(Math.abs(preDiff - nextDiff) < 10) {
+
+        }
     }
 
     private List<RouteSection> getStationRoute() {

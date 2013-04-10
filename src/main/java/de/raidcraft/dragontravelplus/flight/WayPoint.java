@@ -5,14 +5,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-import java.util.HashMap;
-
 /**
  * Defines location out of coordinates x,y,z
  */
 public class WayPoint {
 
-    public static HashMap<Block, Block> markers = new HashMap<Block, Block>();
     private double x;
     private double y;
     private double z;
