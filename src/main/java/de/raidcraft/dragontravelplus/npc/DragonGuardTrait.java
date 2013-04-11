@@ -6,13 +6,11 @@ import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.command.CommandContext;
-import net.citizensnpcs.api.exception.NPCLoadException;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.api.trait.trait.Owner;
 import net.citizensnpcs.api.trait.trait.Spawned;
-import net.citizensnpcs.api.util.DataKey;
 import net.citizensnpcs.trait.LookClose;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,18 +37,6 @@ public class DragonGuardTrait extends Trait {
     }
 
     @Override
-    public void load(DataKey key) throws NPCLoadException {
-
-        super.load(key);
-    }
-
-    @Override
-    public void onAttach() {
-
-        super.onAttach();
-    }
-
-    @Override
     public void onDespawn() {
 
         station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation());
@@ -59,11 +45,6 @@ public class DragonGuardTrait extends Trait {
         }
 
         super.onDespawn();
-    }
-
-    @Override
-    public void onRemove() {
-
     }
 
     @Override
@@ -120,15 +101,17 @@ public class DragonGuardTrait extends Trait {
         reloadDragonStation();
         if (station == null) {
             LivingEntity entity = npc.getBukkitEntity();
-            RaidCraft.LOGGER.warning("[DTP] NPC despawned at"
+            RaidCraft.LOGGER.warning("[DTP] No Station found at"
                     + " x:" + entity.getLocation().getBlockX()
                     + " y:" + entity.getLocation().getBlockY()
                     + " z:" + entity.getLocation().getBlockZ()
-                    + "! Station not found!");
-            npc.despawn();
+                    + "!");
+            npc.setName("Alter Drachenmeister");
             return;
         }
-        dragonGuards.put(station.getName(), this);
+        else {
+            dragonGuards.put(station.getName(), this);
+        }
     }
 
     public static DragonGuardTrait getDragonGuard(String name) {

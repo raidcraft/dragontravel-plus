@@ -28,7 +28,7 @@ public class FlightWayPointsTable extends Table {
     public void createTable() {
 
         try {
-            getConnection().prepareStatement(
+            executeUpdate(
                     "CREATE TABLE `" + getTableName() + "` (" +
                             "`id` INT NOT NULL AUTO_INCREMENT, " +
                             "`flight` VARCHAR( 32 ) NOT NULL, " +
@@ -39,7 +39,7 @@ public class FlightWayPointsTable extends Table {
                             "`creator` VARCHAR ( 32 ) NOT NULL, " +
                             "`created` VARCHAR ( 32 ) NOT NULL, " +
                             "PRIMARY KEY ( `id` )" +
-                            ")").execute();
+                            ")");
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
@@ -60,6 +60,7 @@ public class FlightWayPointsTable extends Table {
                         resultSet.getDouble("z"));
                 flight.addWaypoint(wayPoint);
             }
+            resultSet.close();
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
