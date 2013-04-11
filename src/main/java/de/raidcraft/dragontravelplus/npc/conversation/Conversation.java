@@ -48,7 +48,7 @@ public class Conversation {
 
     public boolean trigger(NPC npc, TriggerType triggerType, String data) {
 
-        if(npc.getTrait(DragonGuardTrait.class).getDragonStation() == null) {
+        if(npc != null && npc.getTrait(DragonGuardTrait.class).getDragonStation() == null) {
             player.sendMessage(ChatColor.AQUA + "Es tut mir leid, mein Drache ist schon lange tot.");
             return false;
         }
