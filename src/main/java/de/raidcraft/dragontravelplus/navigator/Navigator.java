@@ -178,12 +178,15 @@ public class Navigator {
         double preDiff = (int)(currentLocation.getY() - preLocation.getY());
         double nextDiff = (int)(currentLocation.getY() - nextLocation.getY());
 
-        /*
-         * Case 1:      Pre and next Y are on same high but current Y is in a hole or sharp mountain block
-         * Solution:    Set current Y to pre/next Y
-         */
-        if(Math.abs(preDiff - nextDiff) < 10 && Math.abs(currentY-preDiff) > 10) {
+        // check if block is sky isle
+        if(currentY > 200 && preDiff > 20
+                && currentLocation.getWorld().getBlockAt(currentLocation.getBlockX(), preLocation.getBlockY(), currentLocation.getBlockZ())
+                .getType() == Material.AIR) {
+            newY = preLocation.getY();
         }
+
+        currentLocation.setY(newY);
+        section.getFlight().setWayPoint(currentIndex, new WayPoint(currentLocation));
     }
 
     private List<RouteSection> getStationRoute() {
