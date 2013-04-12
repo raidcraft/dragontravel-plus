@@ -173,12 +173,16 @@ public class Navigator {
         Location preLocation = section.getFlight().getWayPoint(currentIndex - 1).getLocation();
         Location nextLocation = section.getFlight().getWayPoint(currentIndex + 1).getLocation();
 
+        double currentY = currentLocation.getY();
         double newY = currentLocation.getY();
         double preDiff = (int)(currentLocation.getY() - preLocation.getY());
         double nextDiff = (int)(currentLocation.getY() - nextLocation.getY());
 
-        if(Math.abs(preDiff - nextDiff) < 10) {
-
+        /*
+         * Case 1:      Pre and next Y are on same high but current Y is in a hole or sharp mountain block
+         * Solution:    Set current Y to pre/next Y
+         */
+        if(Math.abs(preDiff - nextDiff) < 10 && Math.abs(currentY-preDiff) > 10) {
         }
     }
 

@@ -85,17 +85,20 @@ public class DragonGuardTrait extends Trait {
         }
 
         // add equipment
-        if (npc.hasTrait(Equipment.class)) {
-            npc.getTrait(Equipment.class).set(0, new ItemStack(Material.SADDLE, 1));
-            npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET, 1));
-            npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE, 1));
-            npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS, 1));
-            npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS, 1));
+        if (!npc.hasTrait(Equipment.class)) {
+            npc.addTrait(Equipment.class);
         }
+        npc.getTrait(Equipment.class).set(0, new ItemStack(Material.SADDLE, 1));
+        npc.getTrait(Equipment.class).set(1, new ItemStack(Material.LEATHER_HELMET, 1));
+        npc.getTrait(Equipment.class).set(2, new ItemStack(Material.LEATHER_CHESTPLATE, 1));
+        npc.getTrait(Equipment.class).set(3, new ItemStack(Material.LEATHER_LEGGINGS, 1));
+        npc.getTrait(Equipment.class).set(4, new ItemStack(Material.LEATHER_BOOTS, 1));
+
         //look close
-        if (npc.hasTrait(LookClose.class)) {
-            npc.getTrait(LookClose.class).lookClose(true);
+        if (!npc.hasTrait(LookClose.class)) {
+            npc.addTrait(LookClose.class);
         }
+        npc.getTrait(LookClose.class).lookClose(true);
 
         // link station
         reloadDragonStation();
