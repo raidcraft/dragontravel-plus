@@ -301,9 +301,7 @@ public class RCDragon extends EntityEnderDragon {
 
         // If myZ = toZ, then we will load the next waypoint or
         // finish the flight, in case it was the last waypoint to fly
-        if (((int) myZ >= (int) target.getZ() - 1 && (int) myZ <= (int) target.getZ() + 1)
-                && ((int) myY >= (int) target.getY() - 1 && (int) myY <= (int) target.getY() + 1)
-                && ((int) myX >= (int) target.getX() - 1 && (int) myX <= (int) target.getX() + 1)) {
+        if (((int)myZ == (int)target.getZ()) && (int)myY == (int)target.getY() && (int)myX == (int)target.getX()) {
             WayPoint wp = flight.getNextWaypoint();
 
             // Removing the entity and dismouting the player
