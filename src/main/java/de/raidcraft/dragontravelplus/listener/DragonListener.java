@@ -33,7 +33,7 @@ public class DragonListener implements Listener {
         if (event.getPassenger() instanceof Player) {
             PassengerRemover passengerRemover =
                     new PassengerRemover(DragonManager.INST.getFlyingPlayer(((Player) event.getPassenger()).getName()).getPlayer());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), passengerRemover, 7 * 10);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), passengerRemover, 3 * 20);
         }
     }
 

@@ -99,7 +99,7 @@ public class Travels {
         entity.remove();
         flyingPlayer.getDragon().cancelTasks();
         flyingPlayer.setDragon(null);
-        flyingPlayer.setInAir(false);
+//        flyingPlayer.setInAir(false);
     }
 
     /**
