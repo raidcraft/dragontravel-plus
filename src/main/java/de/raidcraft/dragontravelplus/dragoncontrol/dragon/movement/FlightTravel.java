@@ -93,6 +93,7 @@ public class FlightTravel {
 
             // start flight
             flyingPlayer.setInAir(true);
+            dragon.setCustomNameVisible(false);
             dragon.startFlight(flyingPlayer, flight, speed);
         }
     }
