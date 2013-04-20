@@ -28,7 +28,7 @@ public class StationTable extends Table {
     public void createTable() {
 
         try {
-            getConnection().prepareStatement(
+            executeUpdate(
                     "CREATE TABLE `" + getTableName() + "` (" +
                             "`id` INT NOT NULL AUTO_INCREMENT, " +
                             "`name` VARCHAR( 32 ) NOT NULL, " +
@@ -42,7 +42,7 @@ public class StationTable extends Table {
                             "`creator` VARCHAR ( 32 ) NOT NULL, " +
                             "`created` VARCHAR ( 32 ) NOT NULL, " +
                             "PRIMARY KEY ( `id` )" +
-                            ")").execute();
+                            ")");
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
@@ -52,8 +52,8 @@ public class StationTable extends Table {
 
         List<DragonStation> stations = new ArrayList<>();
         try {
-            ResultSet resultSet = getConnection().prepareStatement(
-                    "SELECT * FROM " + getTableName() + " WHERE world = '" + worldName + "';").executeQuery();
+            ResultSet resultSet = executeQuery(
+                    "SELECT * FROM " + getTableName() + " WHERE world = '" + worldName + "';");
 
             while (resultSet.next()) {
                 World world = Bukkit.getWorld(resultSet.getString("world"));
@@ -69,6 +69,7 @@ public class StationTable extends Table {
 
                 stations.add(station);
             }
+            resultSet.close();
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
@@ -79,7 +80,7 @@ public class StationTable extends Table {
 
         List<DragonStation> stations = new ArrayList<>();
         try {
-            ResultSet resultSet = getConnection().prepareStatement(
+            ResultSet resultSet = executeQuery(
                     "SELECT * FROM " + getTableName() + " WHERE " +
                             "x >= " + (location.getBlockX() - radius) + " AND " +
                             "x <= " + (location.getBlockX() + radius) + " AND " +
@@ -87,7 +88,7 @@ public class StationTable extends Table {
                             "y <= " + (location.getBlockY() + radius) + " AND " +
                             "z >= " + (location.getBlockZ() - radius) + " AND " +
                             "z <= " + (location.getBlockZ() + radius)
-            ).executeQuery();
+            );
 
             while (resultSet.next()) {
                 World world = Bukkit.getWorld(resultSet.getString("world"));
@@ -103,6 +104,7 @@ public class StationTable extends Table {
 
                 stations.add(station);
             }
+            resultSet.close();
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
@@ -113,13 +115,14 @@ public class StationTable extends Table {
 
         List<String> stations = new ArrayList<>();
         try {
-            ResultSet resultSet = getConnection().prepareStatement(
+            ResultSet resultSet = executeQuery(
                     "SELECT * FROM " + getTableName() + " WHERE emergency = '1'"
-            ).executeQuery();
+            );
 
             while (resultSet.next()) {
                 stations.add(resultSet.getString("name"));
             }
+            resultSet.close();
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
@@ -143,7 +146,7 @@ public class StationTable extends Table {
                     "'" + station.getCreated() + "'" +
                     ");";
 
-            executeQuery(query);
+            executeUpdate(query);
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
@@ -153,7 +156,7 @@ public class StationTable extends Table {
     public void deleteStation(DragonStation station) {
 
         try {
-            executeQuery(
+            executeUpdate(
                     "DELETE FROM " + getTableName() + " WHERE name = '" + station.getName() + "'");
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());

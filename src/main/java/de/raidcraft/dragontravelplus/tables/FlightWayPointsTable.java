@@ -50,8 +50,8 @@ public class FlightWayPointsTable extends Table {
         flightName = flightName.toLowerCase();
         Flight flight = new Flight(flightName);
         try {
-            ResultSet resultSet = getConnection().prepareStatement(
-                    "SELECT * FROM " + getTableName() + " WHERE flight = '" + flightName + "' ORDER BY id").executeQuery();
+            ResultSet resultSet = executeQuery(
+                    "SELECT * FROM " + getTableName() + " WHERE flight = '" + flightName + "' ORDER BY id");
 
             while (resultSet.next()) {
                 WayPoint wayPoint = new WayPoint(resultSet.getString("world"),
@@ -74,12 +74,14 @@ public class FlightWayPointsTable extends Table {
 
         flightName = flightName.toLowerCase();
         try {
-            ResultSet resultSet = getConnection().prepareStatement(
-                    "SELECT * FROM " + getTableName() + " WHERE flight = '" + flightName + "';").executeQuery();
+            ResultSet resultSet = executeQuery(
+                    "SELECT * FROM " + getTableName() + " WHERE flight = '" + flightName + "';");
 
             while (resultSet.next()) {
+                resultSet.close();
                 return true;
             }
+            resultSet.close();
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
@@ -90,12 +92,13 @@ public class FlightWayPointsTable extends Table {
 
         List<String> flightNames = new ArrayList<>();
         try {
-            ResultSet resultSet = getConnection().prepareStatement(
-                    "SELECT * FROM " + getTableName() + " GROUP BY flight;").executeQuery();
+            ResultSet resultSet = executeQuery(
+                    "SELECT * FROM " + getTableName() + " GROUP BY flight;");
 
             while (resultSet.next()) {
                 flightNames.add(resultSet.getString("flight"));
             }
+            resultSet.close();
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
@@ -107,12 +110,13 @@ public class FlightWayPointsTable extends Table {
         // delete existing flight
         deleteFlight(flight.getName());
 
+        PreparedStatement statement = null;
         try {
 
             String query = "INSERT INTO " + getTableName() + " (flight, world, x, y, z, creator, created) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
-            PreparedStatement statement = getConnection().prepareStatement(query);
+            statement = getConnection().prepareStatement(query);
 
             getConnection().setAutoCommit(false);
 
@@ -134,6 +138,7 @@ public class FlightWayPointsTable extends Table {
             }
             getConnection().commit();
             getConnection().setAutoCommit(true);
+            statement.close();
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
@@ -144,8 +149,8 @@ public class FlightWayPointsTable extends Table {
 
         flightName = flightName.toLowerCase();
         try {
-            getConnection().prepareStatement(
-                    "DELETE FROM " + getTableName() + " WHERE flight = '" + flightName + "'").execute();
+            executeUpdate(
+                    "DELETE FROM " + getTableName() + " WHERE flight = '" + flightName + "'");
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();

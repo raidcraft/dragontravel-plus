@@ -7,7 +7,6 @@ import de.raidcraft.util.DateUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,14 +26,14 @@ public class PlayerStations extends Table {
     public void createTable() {
 
         try {
-            getConnection().prepareStatement(
+            executeUpdate(
                     "CREATE TABLE `" + getTableName() + "` (" +
                             "`id` INT NOT NULL AUTO_INCREMENT, " +
                             "`player` VARCHAR( 32 ) NOT NULL, " +
                             "`station_name` VARCHAR( 32 ) NOT NULL, " +
                             "`discovered` VARCHAR ( 32 ) NOT NULL, " +
                             "PRIMARY KEY ( `id` )" +
-                            ")").execute();
+                            ")");
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
@@ -44,12 +43,13 @@ public class PlayerStations extends Table {
 
         List<String> stations = new ArrayList<>();
         try {
-            ResultSet resultSet = getConnection().prepareStatement(
-                    "SELECT * FROM " + getTableName() + " WHERE player = '" + player + "'").executeQuery();
+            ResultSet resultSet = executeQuery(
+                    "SELECT * FROM " + getTableName() + " WHERE player = '" + player + "'");
 
             while (resultSet.next()) {
                 stations.add(resultSet.getString("station_name"));
             }
+            resultSet.close();
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
@@ -66,8 +66,7 @@ public class PlayerStations extends Table {
                     "'" + DateUtil.getCurrentDateString() + "'" +
                     ");";
 
-            Statement statement = getConnection().createStatement();
-            statement.executeUpdate(query);
+            executeUpdate(query);
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
