@@ -206,7 +206,7 @@ public class Navigator {
                     continue;
                 }
 
-                Integer rating = new Integer((int) (2 * Math.sqrt(Math.pow(lastStarPoint.getLocation().distance(station.getLocation()), 2) + Math.pow(station.getLocation().distance(destination.getLocation()), 2))));
+                Integer rating = (int) (2 * Math.sqrt(Math.pow(lastStarPoint.getLocation().distance(station.getLocation()), 2) + Math.pow(station.getLocation().distance(destination.getLocation()), 2)));
                 if (lastStarPoint.getLocation().distance(station.getLocation()) < station.getLocation().distance(destination.getLocation())) {
                     rating += 1000;
                 }
