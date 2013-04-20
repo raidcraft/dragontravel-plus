@@ -9,7 +9,6 @@ import org.bukkit.World;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,8 +143,7 @@ public class StationTable extends Table {
                     "'" + station.getCreated() + "'" +
                     ");";
 
-            Statement statement = getConnection().createStatement();
-            statement.executeUpdate(query);
+            executeQuery(query);
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
@@ -155,8 +153,8 @@ public class StationTable extends Table {
     public void deleteStation(DragonStation station) {
 
         try {
-            getConnection().prepareStatement(
-                    "DELETE FROM " + getTableName() + " WHERE name = '" + station.getName() + "'").execute();
+            executeQuery(
+                    "DELETE FROM " + getTableName() + " WHERE name = '" + station.getName() + "'");
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
