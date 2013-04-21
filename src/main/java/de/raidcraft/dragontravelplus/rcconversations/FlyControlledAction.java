@@ -5,7 +5,9 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.rcconversations.api.action.AbstractAction;
+import de.raidcraft.rcconversations.api.action.ActionArgumentException;
 import de.raidcraft.rcconversations.api.action.ActionArgumentList;
+import de.raidcraft.rcconversations.api.action.ActionInformation;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,18 +15,14 @@ import org.bukkit.entity.Player;
 /**
  * @author Philip
  */
+@ActionInformation(name = "DTP_CONTROLLED")
 public class FlyControlledAction extends AbstractAction {
 
-    public FlyControlledAction(String name) {
-
-        super(name);
-    }
-
     @Override
-    public void run(Conversation conversation, ActionArgumentList args) throws Throwable {
+    public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
 
-        int delay = args.getInteger("delay", 0);
-        int duration = args.getInteger("duration", 0);
+        int delay = args.getInt("delay", 0);
+        int duration = args.getInt("duration", 0);
 
         StartControlledFlightTask task = new StartControlledFlightTask(conversation.getPlayer(), duration);
         Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), task, delay);
