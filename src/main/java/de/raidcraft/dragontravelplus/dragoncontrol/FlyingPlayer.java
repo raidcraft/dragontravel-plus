@@ -1,17 +1,9 @@
 package de.raidcraft.dragontravelplus.dragoncontrol;
 
-import com.comphenix.protocol.Packets;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ConnectionSide;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.packets.Packet28EntityMetadata;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 /**
@@ -43,7 +35,7 @@ public class FlyingPlayer {
 
         this.player = player;
         this.start = start;
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
+/*        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
                 RaidCraft.getComponent(DragonTravelPlusPlugin.class),
                 ConnectionSide.SERVER_SIDE,
                 Packets.Server.ENTITY_METADATA
@@ -64,7 +56,7 @@ public class FlyingPlayer {
                     event.setPacket(packet.getHandle());
                 }
             }
-        });
+        });*/
     }
 
     public boolean hasIncorrectState() {

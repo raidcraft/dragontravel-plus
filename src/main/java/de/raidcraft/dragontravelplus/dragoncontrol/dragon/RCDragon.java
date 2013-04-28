@@ -16,6 +16,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class RCDragon extends EntityEnderDragon {
@@ -80,6 +81,10 @@ public class RCDragon extends EntityEnderDragon {
 
         this.start = start;
         this.target = start;
+        // hide the healthbar
+        if (getBukkitEntity() instanceof LivingEntity) {
+            ((LivingEntity) getBukkitEntity()).setCustomNameVisible(false);
+        }
 
         setPosition(start.getX(), start.getY(), start.getZ());
 
