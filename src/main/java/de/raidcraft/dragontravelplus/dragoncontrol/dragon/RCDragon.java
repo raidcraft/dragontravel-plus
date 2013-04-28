@@ -85,6 +85,7 @@ public class RCDragon extends EntityEnderDragon {
         if (getBukkitEntity() instanceof LivingEntity) {
             ((LivingEntity) getBukkitEntity()).setCustomNameVisible(false);
         }
+        getGoalTarget().setCustomNameVisible(false);
 
         setPosition(start.getX(), start.getY(), start.getZ());
 
