@@ -83,14 +83,6 @@ public class RCDragon extends EntityEnderDragon {
 
         setPosition(start.getX(), start.getY(), start.getZ());
 
-        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
-            @Override
-            public void run() {
-
-                getGoalTarget().setCustomNameVisible(false);
-            }
-        }, 1L);
-
         yaw = start.getYaw() + 180;
         while (yaw > 360)
             yaw -= 360;
