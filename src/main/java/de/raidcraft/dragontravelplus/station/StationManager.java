@@ -80,6 +80,8 @@ public class StationManager {
 
     public DragonStation getNearbyStation(Location location) {
 
+        assert location != null : "Location is null!";
+
         List<DragonStation> stations = RaidCraft.getTable(
                 StationTable.class).getNearbyStations(location,
                 RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.npcStationSearchRadius);
