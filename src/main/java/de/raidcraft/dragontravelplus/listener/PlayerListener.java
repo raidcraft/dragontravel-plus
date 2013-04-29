@@ -139,7 +139,7 @@ public class PlayerListener implements Listener {
 
         FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(event.getPlayer().getName());
 
-        if(flyingPlayer == null || !flyingPlayer.isInAir()) {
+        if(flyingPlayer == null || !flyingPlayer.isInAir() || flyingPlayer.getDragon() == null) {
             return;
         }
         RCDragon dragon = flyingPlayer.getDragon();
