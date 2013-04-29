@@ -305,6 +305,11 @@ public class DragonTravelPlusPlugin extends BasePlugin {
                 "Mein Drache wird in Kuerze mit dir nach %sn fliegen!"
         };
 
+        @Setting("conv-stage-already-in-air")
+        public String[] convAlreadyInAir = new String[]{
+                "Du kannst dich mit mir nicht während des Fluges unterhalten!"
+        };
+
         public LocalDTPConfiguration(DragonTravelPlusPlugin plugin) {
 
             super(plugin, "config.yml");

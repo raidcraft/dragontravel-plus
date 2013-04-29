@@ -2,6 +2,7 @@ package de.raidcraft.dragontravelplus.npc.conversation;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.npc.conversation.stages.*;
 import de.raidcraft.dragontravelplus.station.DragonStation;
@@ -80,6 +81,10 @@ public class Conversation {
         // player doesn't know this station
         else if (!StationManager.INST.getPlayerStations(player).contains(npc.getTrait(DragonGuardTrait.class).getDragonStation())) {
             currentStage = new FirstMeetStage(this);
+        }
+        // player is already in air
+        else if(DragonManager.INST.getFlyingPlayer(player.getName()) != null && DragonManager.INST.getFlyingPlayer(player.getName()).isInAir()) {
+            currentStage = new AlreadyInAirStage(this);
         }
 
         if (currentStage == null) {
