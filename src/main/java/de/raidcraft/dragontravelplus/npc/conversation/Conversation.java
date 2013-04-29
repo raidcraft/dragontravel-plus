@@ -86,6 +86,9 @@ public class Conversation {
         else if(DragonManager.INST.getFlyingPlayer(player.getName()) != null && DragonManager.INST.getFlyingPlayer(player.getName()).isInAir()) {
             currentStage = new AlreadyInAirStage(this);
         }
+        else if(currentStage.getClass() == AlreadyInAirStage .class) {
+            currentStage = null;
+        }
 
         if (currentStage == null) {
             if (playerStations.size() == 0) {
