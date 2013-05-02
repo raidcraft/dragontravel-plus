@@ -26,7 +26,7 @@ import de.raidcraft.rcconversations.actions.ActionManager;
 import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
-import net.minecraft.server.v1_5_R2.EntityTypes;
+import net.minecraft.server.v1_5_R3.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
