@@ -82,9 +82,12 @@ public class StationManager {
 
         assert location != null : "Location is null!";
 
-        List<DragonStation> stations = RaidCraft.getTable(
-                StationTable.class).getNearbyStations(location,
-                RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.npcStationSearchRadius);
+        StationTable stationTable = RaidCraft.getTable(StationTable.class);
+        DragonTravelPlusPlugin plugin = RaidCraft.getComponent(DragonTravelPlusPlugin.class);
+
+        if(stationTable == null || plugin == null) return null; // prevent npe during shutdown
+
+        List<DragonStation> stations = stationTable.getNearbyStations(location, plugin.config.npcStationSearchRadius);
         if (stations.size() == 0) {
             return null;
         }
