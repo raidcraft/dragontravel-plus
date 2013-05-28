@@ -51,7 +51,7 @@ public class FlightConfirmStage extends Stage {
 
         for (String line : RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.convProcessEconomyConfirmQuestion) {
             speech.add(line.replace("%sn", target.getFriendlyName())
-                    .replace("%fp", String.valueOf(price))
+                    .replace("%fp", RaidCraft.getEconomy().getFormattedAmount(price))
                     .replace("%fd", FlightDistance.getPrintDistance(getConversation().getDragonGuard().getDragonStation(), target)));
         }
 

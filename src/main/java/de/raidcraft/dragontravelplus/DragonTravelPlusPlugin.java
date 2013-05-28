@@ -293,7 +293,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         @Setting("conv-stage-process-economy-confirm-question")
         public String[] convProcessEconomyConfirmQuestion = new String[]{
-                "Die Reise nach %sn kostet dich $%fp (%fd)."
+                "Die Reise nach %sn kostet dich %fp"
         };
 
         @Setting("conv-stage-process-economy-goodbye")
