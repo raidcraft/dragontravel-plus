@@ -54,7 +54,7 @@ public class TargetAssistListStage extends Stage {
             if (price > RaidCraft.getEconomy().getBalance(getConversation().getPlayer().getName())) {
                 strike += ChatColor.STRIKETHROUGH;
             }
-            reply.add(strike + station.getFriendlyName() + ChatColor.RESET + RaidCraft.getEconomy().getFormattedAmount(price) + " " + ChatColor.DARK_GREEN + FlightDistance.getPrintDistance(getConversation().getDragonGuard().getDragonStation(), station));
+            reply.add(strike + station.getFriendlyName() + ChatColor.RESET + " " + RaidCraft.getEconomy().getFormattedAmount(price) + " " + ChatColor.DARK_GREEN + FlightDistance.getPrintDistance(getConversation().getDragonGuard().getDragonStation(), station));
         }
         if (stations.size() > maxPerPage) {
             i++;
