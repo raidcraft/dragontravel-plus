@@ -51,7 +51,7 @@ public class TargetAssistListStage extends Stage {
             answerAssignment.put(i, station);
             double price = FlightCosts.getPrice(getConversation().getDragonGuard().getDragonStation(), station);
             String strike = "";
-            if (price > RaidCraft.getEconomy().getBalance(getConversation().getPlayer().getName())) {
+            if (price > 0 && price > RaidCraft.getEconomy().getBalance(getConversation().getPlayer().getName())) {
                 strike += ChatColor.STRIKETHROUGH;
             }
             reply.add(strike + station.getFriendlyName() + ChatColor.RESET + " " + RaidCraft.getEconomy().getFormattedAmount(price) + " " + ChatColor.DARK_GREEN + FlightDistance.getPrintDistance(getConversation().getDragonGuard().getDragonStation(), station));
