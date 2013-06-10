@@ -1,6 +1,10 @@
 package de.raidcraft.dragontravelplus.commands;
 
-import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.minecraft.util.commands.Command;
+import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.sk89q.minecraft.util.commands.NestedCommand;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
@@ -65,7 +69,9 @@ public class DTPCommands {
         @Command(
                 aliases = {"create", "new", "add"},
                 flags = "mec:",
-                desc = "Create new station"
+                desc = "Create new station",
+                min = 1,
+                usage = "<name>"
         )
         @CommandPermissions("dragontravelplus.create")
         public void create(CommandContext context, CommandSender sender) throws CommandException {
@@ -115,15 +121,12 @@ public class DTPCommands {
 
         @Command(
                 aliases = {"delete", "remove"},
-                desc = "Remove dragon station"
+                desc = "Remove dragon station",
+                min = 1,
+                usage = "<name>"
         )
         @CommandPermissions("dragontravelplus.remove")
         public void remove(CommandContext context, CommandSender sender) throws CommandException {
-
-            if (context.argsLength() < 1) {
-                ChatMessages.tooFewArguments((Player) sender);
-                return;
-            }
 
             DragonStation station = StationManager.INST.getDragonStation(context.getString(0));
 
@@ -147,14 +150,12 @@ public class DTPCommands {
 
         @Command(
                 aliases = {"warp", "tp"},
-                desc = "Teleports a player to a station"
+                desc = "Teleports a player to a station",
+                min = 1,
+                usage = "<name>"
         )
         @CommandPermissions("dragontravelplus.warp")
         public void warp(CommandContext context, CommandSender sender) throws CommandException {
-
-            if (context.argsLength() < 1) {
-                ChatMessages.tooFewArguments(sender);
-            }
 
             DragonStation station = StationManager.INST.getDragonStation(context.getString(0));
 
@@ -204,8 +205,8 @@ public class DTPCommands {
                 aliases = {"fly"},
                 desc = "Start controlledflyght"
         )
-                 @CommandPermissions("dragontravelplus.fly.controlled")
-                 public void controlledFlight(CommandContext context, CommandSender sender) throws CommandException {
+        @CommandPermissions("dragontravelplus.fly.controlled")
+        public void controlledFlight(CommandContext context, CommandSender sender) throws CommandException {
 
             if(sender instanceof ConsoleCommandSender) {
                 sender.sendMessage("Player context required!");

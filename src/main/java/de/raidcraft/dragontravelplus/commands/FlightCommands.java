@@ -1,6 +1,10 @@
 package de.raidcraft.dragontravelplus.commands;
 
-import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.minecraft.util.commands.Command;
+import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.sk89q.minecraft.util.commands.NestedCommand;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.database.Database;
@@ -48,7 +52,8 @@ public class FlightCommands {
         @Command(
                 aliases = {"new"},
                 desc = "Open editor mode",
-                min = 1
+                min = 1,
+                usage = "<name>"
         )
         @CommandPermissions("dragontravelplus.editor.new")
         public void editor(CommandContext context, CommandSender sender) throws CommandException {
@@ -119,7 +124,8 @@ public class FlightCommands {
         @Command(
                 aliases = {"delete", "remove"},
                 desc = "Delete flight",
-                min = 1
+                min = 1,
+                usage = "<name>"
         )
         @CommandPermissions("dragontravelplus.editor.delete")
         public void delete(CommandContext context, CommandSender sender) throws CommandException {
@@ -164,7 +170,8 @@ public class FlightCommands {
         @Command(
                 aliases = {"fly"},
                 desc = "Fly",
-                min = 1
+                min = 1,
+                usage = "<name>"
         )
         @CommandPermissions("dragontravelplus.fly.flight")
         public void fly(CommandContext context, CommandSender sender) throws CommandException {
