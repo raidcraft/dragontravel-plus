@@ -44,7 +44,7 @@ public class FlightConfirmStage extends Stage {
         price = FlightCosts.getPrice(getConversation().getDragonGuard().getDragonStation(), target);
         double balance = RaidCraft.getEconomy().getBalance(getConversation().getPlayer().getName());
 
-        broke = (price == 0 || price > balance);
+        broke = (price > 0 && price > balance);
 
         List<String> speech = new ArrayList<>();
         List<String> reply = new ArrayList<>();
