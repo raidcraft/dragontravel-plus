@@ -90,7 +90,7 @@ public class Navigator {
                         }
 
                         section = stationRoute.get(processedSection);
-                        if(processedRouteEntry >= section.getFlight().size()) {
+                        if(section.isLoaded() || processedRouteEntry >= section.getFlight().size()) {
                             processedSection++;
                             return;
                         }
@@ -105,6 +105,7 @@ public class Navigator {
 
                         for(RouteSection routeSection : stationRoute) {
                             flight.addFlight(routeSection.getFlight());
+                            routeSection.saveIfNew();
                         }
 
                         // optimize first and last way point

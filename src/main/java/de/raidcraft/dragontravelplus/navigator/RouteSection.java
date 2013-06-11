@@ -11,6 +11,7 @@ public class RouteSection {
     private DragonStation start;
     private DragonStation destination;
     private Flight flight;
+    private boolean loaded;
 
     public RouteSection(DragonStation start, DragonStation destination) {
 
@@ -21,6 +22,10 @@ public class RouteSection {
         flight = Flight.loadFlight(flightName);
         if(flight == null) {
             flight = new Flight(flightName);
+            loaded = false;
+        }
+        else {
+            loaded = true;
         }
     }
 
@@ -37,5 +42,17 @@ public class RouteSection {
     public Flight getFlight() {
 
         return flight;
+    }
+
+    public void saveIfNew() {
+
+        if(!loaded) {
+            flight.save("Navigator");
+        }
+    }
+
+    public boolean isLoaded() {
+
+        return loaded;
     }
 }
