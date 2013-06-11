@@ -134,7 +134,7 @@ public class Flight {
     }
 
     public void save(String creator) {
-        Database.getTable(FlightWayPointsTable.class).addFlight(this, creator);
+        Database.getTable(FlightWayPointsTable.class).saveFlight(this, creator);
 
         removeMarkers();
     }

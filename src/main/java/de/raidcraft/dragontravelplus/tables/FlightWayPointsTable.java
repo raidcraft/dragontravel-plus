@@ -105,7 +105,7 @@ public class FlightWayPointsTable extends Table {
         return flightNames;
     }
 
-    public void addFlight(Flight flight, String creator) {
+    public void saveFlight(Flight flight, String creator) {
 
         // delete existing flight
         deleteFlight(flight.getName());
