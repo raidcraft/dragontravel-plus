@@ -134,7 +134,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onInteract(PlayerInteractEvent event) {
 
         FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(event.getPlayer().getName());
@@ -143,6 +143,11 @@ public class PlayerListener implements Listener {
             return;
         }
         RCDragon dragon = flyingPlayer.getDragon();
+
+        if(dragon.getFlightType() == RCDragon.FLIGHT_TYPE.FLIGHT || dragon.getFlightType() == RCDragon.FLIGHT_TYPE.TRAVEL) {
+            event.setCancelled(true);
+        }
+
         if(dragon.getFlightType() != RCDragon.FLIGHT_TYPE.CONTROLLED_FLIGHT) {
             return;
         }
