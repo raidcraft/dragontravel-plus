@@ -6,6 +6,7 @@ import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
+import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
@@ -89,6 +90,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
                 try {
                     ActionManager.registerAction(new FlyFlightAction());
                     ActionManager.registerAction(new FlyControlledAction());
+                    ActionManager.registerAction(new FlyToStationAction());
                 } catch (Exception e) {
                     RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
                 }
