@@ -35,7 +35,7 @@ public class FlyToStationAction extends AbstractAction {
 
         DragonStation start;
         if(startName == null) {
-            start = new DragonStation(conversation.getName(), conversation.getPlayer().getLocation());
+            start = new DragonStation(conversation.getName(), conversation.getPlayer().getLocation().clone());
         }
         else {
             start = StationManager.INST.getDragonStation(startName);
