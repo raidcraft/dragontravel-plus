@@ -21,10 +21,13 @@ public class FlyToStationAction extends AbstractAction {
     public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
 
         String startName = args.getString("start", null);
-        String targetName = args.getString("target");
+        String targetName = args.getString("target", null);
         targetName = ParseString.INST.parse(conversation, targetName);
         startName = ParseString.INST.parse(conversation, startName);
         int delay = args.getInt("delay", 0);
+
+        RaidCraft.LOGGER.info("DEBUG: start: " + startName + " | target: " + targetName);
+
         DragonStation target = StationManager.INST.getDragonStation(targetName);
         if(target == null) {
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Station '" + targetName + "' does not exists!");
