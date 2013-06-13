@@ -21,7 +21,7 @@ public class FlyToStationAction extends AbstractAction {
 
         String startName = args.getString("start", null);
         String targetName = args.getString("target");
-        int delay = args.getInt("delay");
+        int delay = args.getInt("delay", 0);
         DragonStation target = StationManager.INST.getDragonStation(targetName);
         if(target == null) {
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Station '" + targetName + "' does not exists!");
