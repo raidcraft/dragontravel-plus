@@ -34,9 +34,9 @@ public class DragonStation {
     /*
      * Constructor for dummy stations
      */
-    public DragonStation(Location location) {
+    public DragonStation(String name, Location location) {
 
-        this("Dummy", location, 0, false, false, "Dummy", DateUtil.getCurrentDateString());
+        this(name, location, 0, false, false, "Dummy", DateUtil.getCurrentDateString());
     }
 
     public String getName() {
