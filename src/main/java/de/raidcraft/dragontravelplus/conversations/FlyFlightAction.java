@@ -10,6 +10,7 @@ import de.raidcraft.rcconversations.api.action.ActionArgumentList;
 import de.raidcraft.rcconversations.api.action.ActionInformation;
 import de.raidcraft.rcconversations.api.action.WrongArgumentValueException;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
+import de.raidcraft.rcconversations.util.ParseString;
 
 /**
  * @author Philip
@@ -21,6 +22,7 @@ public class FlyFlightAction extends AbstractAction {
     public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
 
         String flightName = args.getString("flight");
+        flightName = ParseString.INST.parse(conversation, flightName);
         int delay = args.getInt("delay", 0);
 
         Flight flight = Flight.loadFlight(flightName);
