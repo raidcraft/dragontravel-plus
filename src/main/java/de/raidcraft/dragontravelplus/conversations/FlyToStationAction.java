@@ -7,6 +7,7 @@ import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.rcconversations.api.action.*;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
+import de.raidcraft.rcconversations.util.ParseString;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -21,6 +22,8 @@ public class FlyToStationAction extends AbstractAction {
 
         String startName = args.getString("start", null);
         String targetName = args.getString("target");
+        targetName = ParseString.INST.parse(conversation, targetName);
+        startName = ParseString.INST.parse(conversation, startName);
         int delay = args.getInt("delay", 0);
         DragonStation target = StationManager.INST.getDragonStation(targetName);
         if(target == null) {
