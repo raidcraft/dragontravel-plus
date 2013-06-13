@@ -26,8 +26,6 @@ public class FlyToStationAction extends AbstractAction {
         startName = ParseString.INST.parse(conversation, startName);
         int delay = args.getInt("delay", 0);
 
-        RaidCraft.LOGGER.info("DEBUG: start: " + startName + " | target: " + targetName);
-
         DragonStation target = StationManager.INST.getDragonStation(targetName);
         if(target == null) {
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Station '" + targetName + "' does not exists!");
