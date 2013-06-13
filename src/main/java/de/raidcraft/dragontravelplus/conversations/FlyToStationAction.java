@@ -13,12 +13,13 @@ import org.bukkit.entity.Player;
 /**
  * @author Philip
  */
-@ActionInformation(name = "FLY_TO_DRAGONSTATION")
+@ActionInformation(name = "DTP_STATION")
 public class FlyToStationAction extends AbstractAction {
 
     @Override
     public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
 
+        String startName = args.getString("start", null);
         String targetName = args.getString("target");
         int delay = args.getInt("delay");
         DragonStation target = StationManager.INST.getDragonStation(targetName);
@@ -26,7 +27,17 @@ public class FlyToStationAction extends AbstractAction {
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Station '" + targetName + "' does not exists!");
         }
 
-        DragonStation start = new DragonStation(conversation.getPlayer().getLocation());
+        DragonStation start;
+        if(startName == null) {
+            start = new DragonStation(conversation.getPlayer().getLocation());
+        }
+        else {
+            start = StationManager.INST.getDragonStation(startName);
+        }
+        if(start == null) {
+            throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Station '" + targetName + "' does not exists!");
+        }
+
         Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new TakoffDelayedTask(start, target, conversation.getPlayer()), delay);
     }
 
