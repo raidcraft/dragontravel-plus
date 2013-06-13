@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus.station;
 
+import de.raidcraft.util.DateUtil;
 import org.bukkit.Location;
 
 /**
@@ -28,6 +29,14 @@ public class DragonStation {
         this.emergencyTarget = emergencyTarget;
         this.creator = creator;
         this.created = created;
+    }
+
+    /*
+     * Constructor for dummy stations
+     */
+    public DragonStation(Location location) {
+
+        this("Dummy", location, 0, false, false, "Dummy", DateUtil.getCurrentDateString());
     }
 
     public String getName() {
