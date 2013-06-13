@@ -32,6 +32,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -118,7 +119,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         config.reload();
         // remove all dragons in the world
-        for (Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
+        Map<Player, FlyingPlayer> flyingPlayersCopy = new HashMap<>(DragonManager.INST.flyingPlayers);
+        for (Map.Entry<Player, FlyingPlayer> entry : flyingPlayersCopy.entrySet()) {
             if (entry.getValue().isInAir()) {
                 DragonManager.INST.abortFlight(entry.getKey());
                 ChatMessages.warn(entry.getKey(), "Der Flug musste aus technischen Gruenden abgebrochen werden!");
