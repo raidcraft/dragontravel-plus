@@ -20,7 +20,7 @@ import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
 import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
-import de.raidcraft.dragontravelplus.tables.PlayerStations;
+import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import de.raidcraft.rcconversations.actions.ActionManager;
@@ -70,7 +70,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         registerCommands(FlightCommands.class);
 
         registerTable(StationTable.class, new StationTable());
-        registerTable(PlayerStations.class, new PlayerStations());
+        registerTable(PlayerStationsTable.class, new PlayerStationsTable());
         registerTable(FlightWayPointsTable.class, new FlightWayPointsTable());
 
         StationManager.INST.loadExistingStations();

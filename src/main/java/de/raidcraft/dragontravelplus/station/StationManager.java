@@ -3,7 +3,7 @@ package de.raidcraft.dragontravelplus.station;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
-import de.raidcraft.dragontravelplus.tables.PlayerStations;
+import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -106,7 +106,7 @@ public class StationManager {
             return stations;
         }
 
-        List<String> stationNames = RaidCraft.getTable(PlayerStations.class).getAllPlayerStations(player.getName());
+        List<String> stationNames = RaidCraft.getTable(PlayerStationsTable.class).getAllPlayerStations(player.getName());
         stationNames.addAll(RaidCraft.getTable(StationTable.class).getEmergencyStations());
         for (String name : stationNames) {
             DragonStation station = existingStations.get(name);
@@ -129,9 +129,14 @@ public class StationManager {
         return null;
     }
 
+    public boolean stationIsFamiliar(Player player, DragonStation station) {
+
+        return RaidCraft.getTable(PlayerStationsTable.class).playerIsFamiliar(player, station);
+    }
+
     public void assignStationWithPlayer(String player, DragonStation station) {
 
-        RaidCraft.getTable(PlayerStations.class).addStation(player, station);
+        RaidCraft.getTable(PlayerStationsTable.class).addStation(player, station);
     }
 
     public void deleteStation(DragonStation station) {

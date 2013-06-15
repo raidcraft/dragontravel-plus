@@ -30,9 +30,9 @@ public class FindDragonstationAction extends AbstractAction {
             }
         }
         else {
+            conversation.set("dtp_station_name", station.getName());
+            conversation.set("dtp_station_friendlyname", station.getFriendlyName());
             if(success != null) {
-                conversation.set("dtp_station_name", station.getName());
-                conversation.set("dtp_station_friendlyname", station.getFriendlyName());
                 conversation.setCurrentStage(success);
                 conversation.triggerCurrentStage();
             }

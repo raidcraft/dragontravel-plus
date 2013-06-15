@@ -1,9 +1,9 @@
 package de.raidcraft.dragontravelplus.tables;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.util.DateUtil;
+import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,9 +15,9 @@ import java.util.List;
  * Date: 28.11.12 - 20:41
  * Description:
  */
-public class PlayerStations extends Table {
+public class PlayerStationsTable extends Table {
 
-    public PlayerStations() {
+    public PlayerStationsTable() {
 
         super("players", "dragontp_");
     }
@@ -35,7 +35,7 @@ public class PlayerStations extends Table {
                             "PRIMARY KEY ( `id` )" +
                             ")");
         } catch (SQLException e) {
-            RaidCraft.LOGGER.warning(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -51,9 +51,25 @@ public class PlayerStations extends Table {
             }
             resultSet.close();
         } catch (SQLException e) {
-            RaidCraft.LOGGER.warning(e.getMessage());
+            e.printStackTrace();
         }
         return stations;
+    }
+
+    public boolean playerIsFamiliar(Player player, DragonStation station) {
+
+        try {
+            ResultSet resultSet = executeQuery(
+                    "SELECT * FROM " + getTableName() + " WHERE player = '" + player + "' AND station_name = '" + station.getName() + "'");
+
+            while (resultSet.next()) {
+                return true;
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void addStation(String player, DragonStation station) {
@@ -68,7 +84,6 @@ public class PlayerStations extends Table {
 
             executeUpdate(query);
         } catch (SQLException e) {
-            RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
         }
     }
