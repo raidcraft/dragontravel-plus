@@ -1,5 +1,7 @@
 package de.raidcraft.dragontravelplus.npc;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
@@ -23,7 +25,7 @@ public class NPCListener implements Listener {
 
         NPC npc = event.getNPC();
         if (npc.getBukkitEntity().getType() == EntityType.PLAYER && !npc.hasTrait(DragonGuardTrait.class)) {
-            DragonStation station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation());
+            DragonStation station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation(), RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.npcStationSearchRadius);
 
             if (station != null) {
                 npc.addTrait(DragonGuardTrait.class);

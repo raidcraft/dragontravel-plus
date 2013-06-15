@@ -39,7 +39,7 @@ public class DragonGuardTrait extends Trait {
     @Override
     public void onDespawn() {
 
-        station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation());
+        station = StationManager.INST.getNearbyStation(npc.getBukkitEntity().getLocation(), RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.npcStationSearchRadius);
         if (station != null) {
             dragonGuards.remove(station.getName());
         }
@@ -63,7 +63,7 @@ public class DragonGuardTrait extends Trait {
 
     public void reloadDragonStation() {
 
-        station = StationManager.INST.getNearbyStation(getNPC().getBukkitEntity().getLocation());
+        station = StationManager.INST.getNearbyStation(getNPC().getBukkitEntity().getLocation(), RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.npcStationSearchRadius);
     }
 
     public void setDragonStation(DragonStation station) {
