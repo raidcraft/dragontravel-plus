@@ -8,12 +8,11 @@ import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
-import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
+import de.raidcraft.dragontravelplus.npc.NPCManager;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
-import de.raidcraft.rcconversations.npc.ConversationsTrait;
 import de.raidcraft.util.DateUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -59,7 +58,7 @@ public class DTPCommands {
         public void reload(CommandContext context, CommandSender sender) throws CommandException {
 
             RaidCraft.getComponent(DragonTravelPlusPlugin.class).reload();
-            if (sender instanceof Player) ChatMessages.successfulReloaded((Player) sender);
+            if (sender instanceof Player) ChatMessages.successfulReloaded( sender);
             if (sender instanceof ConsoleCommandSender) sender.sendMessage("[DTP] DragonTravelPlus config successfully reloaded!");
         }
 
@@ -74,7 +73,7 @@ public class DTPCommands {
         public void create(CommandContext context, CommandSender sender) throws CommandException {
 
             if (context.argsLength() < 1) {
-                ChatMessages.tooFewArguments((Player) sender);
+                ChatMessages.tooFewArguments( sender);
             }
 
             int costLevel = 1;
@@ -104,16 +103,16 @@ public class DTPCommands {
             try {
                 StationManager.INST.addNewStation(station);
             } catch (AlreadyExistsException e) {
-                ChatMessages.warn(((Player) sender), e.getMessage());
+                ChatMessages.warn(( sender), e.getMessage());
                 return;
             }
 
-            DragonGuardTrait.createDragonGuard(((Player) sender).getLocation(), station);
+            NPCManager.createDragonGuard(station);
 
             // dynmap
             DynmapManager.INST.addStationMarker(station);
 
-            ChatMessages.success(((Player) sender), "Du hast erfolgreich die Drachenstation '" + context.getString(0) + "' erstellt!");
+            ChatMessages.success((sender), "Du hast erfolgreich die Drachenstation '" + station.getFriendlyName() + "' erstellt!");
         }
 
         @Command(
@@ -128,21 +127,18 @@ public class DTPCommands {
             DragonStation station = StationManager.INST.getDragonStation(context.getString(0));
 
             if (station == null) {
-                ChatMessages.warn((Player) sender, "Es gibt keine Station mit diesem Namen!");
+                ChatMessages.warn(sender, "Es gibt keine Station mit diesem Namen!");
                 return;
             }
 
-            DragonGuardTrait trait = DragonGuardTrait.getDragonGuard(context.getString(0));
-            if (trait != null) {
-                trait.getNPC().destroy();
-            }
+            NPCManager.removeDragonGuard(station);
 
             StationManager.INST.deleteStation(station);
             DynmapManager.INST.removeMarker(station);
             RaidCraft.getComponent(DragonTravelPlusPlugin.class).reload();
 
 
-            ChatMessages.success((Player) sender, "Die Drachenstation '" + context.getString(0) + "' wurde gelöscht!");
+            ChatMessages.success(sender, "Die Drachenstation '" + context.getString(0) + "' wurde gelöscht!");
         }
 
         @Command(
@@ -172,7 +168,7 @@ public class DTPCommands {
         )
         public void list(CommandContext context, CommandSender sender) throws CommandException {
 
-            ChatMessages.success((Player) sender, "Alle verfügbaren Drachenstationen in dieser Welt:");
+            ChatMessages.success( sender, "Alle verfügbaren Drachenstationen in dieser Welt:");
             String list = "";
 
             for (Map.Entry<String, DragonStation> entry : StationManager.INST.existingStations.entrySet()) {
@@ -185,7 +181,7 @@ public class DTPCommands {
                     if (!String.valueOf(entry.getValue().getCostLevel()).equalsIgnoreCase(context.getFlag('c'))) continue;
                 }
 
-                if(!entry.getValue().getLocation().getWorld().getName().equalsIgnoreCase(((Player)sender).getLocation().getWorld().getName())) {
+                if(!entry.getValue().getLocation().getWorld().getName().equalsIgnoreCase(((Player) sender).getLocation().getWorld().getName())) {
                     continue;
                 }
 
@@ -247,20 +243,6 @@ public class DTPCommands {
                 i++;
             }
             ChatMessages.success(sender, "Es wurden " + i + " Marker neu erstellt!");
-        }
-
-        @Command(
-                aliases = {"npcs"},
-                desc = "Recreate drachenmeister npcs"
-        )
-        @CommandPermissions("dragontravelplus.npcs")
-        public void npcs(CommandContext context, CommandSender sender) throws CommandException {
-
-            for(DragonStation station : StationManager.INST.getStations()) {
-                ConversationsTrait.create(station.getLocation(), "drachenmeister", "Drachenmeister", false);
-            }
-            ChatMessages.success(sender, "Es wurden " + StationManager.INST.getStations().size() + " Drachenmeister erstellt!");
-            plugin.getCitizens().storeNPCs(new net.citizensnpcs.api.command.CommandContext(new String[]{}));
         }
     }
 }

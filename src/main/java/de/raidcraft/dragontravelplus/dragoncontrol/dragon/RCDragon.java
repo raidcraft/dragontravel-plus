@@ -116,7 +116,7 @@ public class RCDragon extends EntityEnderDragon {
         this.startY = start.getY();
         this.startZ = start.getZ();
 
-        maxY = RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight;
+        maxY = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightHeight;
 
         setMoveTravel();
         yaw = getCorrectYaw(target.getX(), target.getZ());
@@ -224,7 +224,7 @@ public class RCDragon extends EntityEnderDragon {
         this.distanceY = this.startY - target.getY();
         this.distanceZ = this.startZ - target.getZ();
 
-        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
+        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightSpeed;
         XTick = Math.abs(distanceX) / tick;
         ZTick = Math.abs(distanceZ) / tick;
     }
@@ -235,7 +235,7 @@ public class RCDragon extends EntityEnderDragon {
         this.distanceY = this.startY - target.getY();
         this.distanceZ = this.startZ - target.getZ();
 
-        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.controlledFlightSpeed;
+        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().controlledFlightSpeed;
         YTick = Math.abs(distanceY) / tick;
         XTick = Math.abs(distanceX) / tick;
         ZTick = Math.abs(distanceZ) / tick;
@@ -353,11 +353,11 @@ public class RCDragon extends EntityEnderDragon {
 
             // Flying down on end
             if ((int) locY > (int) target.getY())
-                myY -= RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
+                myY -= RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightSpeed;
 
                 // Flying up on end
             else if ((int) locY < (int) target.getY())
-                myY += RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
+                myY += RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightSpeed;
 
                 // Removing entity
             else {
@@ -375,7 +375,7 @@ public class RCDragon extends EntityEnderDragon {
 
         // Getting the correct height
         if ((int) locY < maxY) {
-            myY += RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed;
+            myY += RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightSpeed;
         }
 
         if (myX < target.getX()) {
@@ -458,7 +458,7 @@ public class RCDragon extends EntityEnderDragon {
             }
             Player player = (Player) entity.getPassenger();
 
-            Location targetLoc = player.getTargetBlock(null, RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.controlledTargetDistance).getLocation();
+            Location targetLoc = player.getTargetBlock(null, RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().controlledTargetDistance).getLocation();
 
             target.setX(targetLoc.getX());
             target.setY(targetLoc.getY());

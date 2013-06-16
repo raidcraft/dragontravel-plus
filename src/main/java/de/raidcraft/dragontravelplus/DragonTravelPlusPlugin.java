@@ -11,10 +11,10 @@ import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import de.raidcraft.dragontravelplus.flight.FlightEditorListener;
+import de.raidcraft.dragontravelplus.listener.ChunkListener;
 import de.raidcraft.dragontravelplus.listener.DragonListener;
 import de.raidcraft.dragontravelplus.listener.PlayerListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
-import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
 import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
@@ -39,8 +39,8 @@ import java.util.Map;
  */
 public class DragonTravelPlusPlugin extends BasePlugin {
 
-    public Citizens citizens;
-    public LocalDTPConfiguration config;
+    private Citizens citizens;
+    private LocalDTPConfiguration config;
 
     @Override
     public void enable() {
@@ -60,6 +60,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         loadConfig();
 
         registerEvents(new PlayerListener());
+        registerEvents(new ChunkListener());
         registerEvents(new DragonListener());
         registerEvents(new FlightEditorListener());
 
@@ -127,26 +128,18 @@ public class DragonTravelPlusPlugin extends BasePlugin {
             }
         }
 
-        // end all conversations
-        Conversation.conversations.clear();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Conversation.conversations.put(player.getName(), new Conversation(player));
-        }
-
         DragonManager.INST.flyingPlayers.clear();
         StationManager.INST.loadExistingStations();
-        // reload assigned stations
-        for (Map.Entry<String, DragonGuardTrait> entry : DragonGuardTrait.dragonGuards.entrySet()) {
-            // check if npc still exists
-            if (entry.getValue().getNPC() != null && entry.getValue().getNPC().getBukkitEntity() != null) {
-                entry.getValue().reloadDragonStation();
-            }
-        }
     }
 
     public Citizens getCitizens() {
 
         return citizens;
+    }
+
+    public LocalDTPConfiguration getConfig() {
+
+        return config;
     }
 
     public class LocalDTPConfiguration extends ConfigurationBase<DragonTravelPlusPlugin> {
@@ -203,121 +196,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
                 "stop"
         };
 
-        
-        /*  NPC CONVERSATION */
-
-        @Setting("conv-wrong-answer-warning")
-        public String[] convWrongAnswerWarning = new String[]{
-                "Ich habe deine Antwort nicht verstanden!"
-        };
-
-        @Setting("conv-stage-disabled-speak")
-        public String[] convDisabledSpeak = new String[]{
-                "Ich habe meinen Drachen schon seit Tagen nichtmehr gesehen.",
-                "Schaue spaeter nochmal vorbei vielleicht kann ich dir dann weiterhelfen!"
-        };
-
-        @Setting("conv-no-stations-discovered")
-        public String[] convNoStationsDiscovered = new String[]{
-                "Du musst erst einmal andere Drachenmeister kennen lernen!",
-                "Geh in die Welt und suche nach ihnen."
-        };
-
-        @Setting("conv-stage-first-meet-speak")
-        public String[] convFirstMeetSpeak = new String[]{
-                "Hallo in '%sn' %pn!",
-                "Ich sehe dich hier zum ersten Mal.",
-                "Gerne kannst du in Zukunft mit meinem Drachen reisen!"
-        };
-
-        @Setting("conv-stage-no-permission-speak")
-        public String[] convNoPermissionSpeak = new String[]{
-                "Ich rede nicht mit leuten die ich nicht kenne!",
-                "Geh und stelle dich zuerst in der Stadt vor!"
-        };
-
-        @Setting("conv-stage-select-dial-mode-speak")
-        public String[] convSelectDialModeSpeak = new String[]{
-                "Hallo in '%sn' %pn!",
-                "Du moechtest bestimmt mit meinem Drachen reisen!",
-                "Kann ich dir bei der Zielwahl helfen?"
-        };
-
-        @Setting("conv-stage-select-dial-mode-answers")
-        public String[] convSelectDialModeAnswers = new String[]{
-                "Ja gerne!",
-                "Nein ich kenne den Name meines Ziels!"
-
-        };
-
-        @Setting("conv-stage-flight-by-name-speak")
-        public String[] convFlightByNameSpeak = new String[]{
-                "Ok dann nenne mir den Namen:"
-        };
-
-        @Setting("conv-stage-flight-by-name-unknown-station")
-        public String[] convFlightByNameUnknownStation = new String[]{
-                "Du kennst in dieser Welt eine solche Drachenstation nicht!"
-        };
-
-        @Setting("conv-stage-flight-by-name-same-station")
-        public String[] convFlightByNameSameStation = new String[]{
-                "Du bist bereits bei deiner gewaehlten Station!"
-        };
-
-        @Setting("conv-stage-target-assist-region-speak")
-        public String[] convTargetAssistRegionSpeak = new String[]{
-                "In welche Himmelrichtung willst du reisen?"
-        };
-
-        @Setting("conv-stage-target-assist-list-speak")
-        public String[] convTargetAssistListSpeak = new String[]{
-                "Folgende Ziele gibt es dort:"
-        };
-
-        @Setting("conv-stage-target-assist-list-tell-more")
-        public String convTargetAssistListTellMore =
-                "Nenn mir weitere!";
-
-        @Setting("conv-stage-target-assist-list-go-back")
-        public String convTargetAssistListGoBack =
-                "Ich moechte doch eine andere Himmelsrichtung waehlen!";
-
-        @Setting("conv-stage-process-economy-back")
-        public String convProcessEconomyGoBack =
-                "Ich moechte ein anderes Ziel waehlen.";
-
-        @Setting("conv-stage-process-economy-exit")
-        public String convProcessEconomyExit =
-                "Schade, dann nicht.";
-
-        @Setting("conv-stage-process-economy-confirm")
-        public String convProcessEconomyConfirm =
-                "Ja, ist in Ordnung!";
-
-        @Setting("conv-stage-process-economy-broke")
-        public String[] convProcessEconomyBroke = new String[]{
-                "Du hast leider nicht genug Geld fuer diesen Flug!"
-        };
-
-        @Setting("conv-stage-process-economy-confirm-question")
-        public String[] convProcessEconomyConfirmQuestion = new String[]{
-                "Die Reise nach %sn kostet dich %fp"
-        };
-
-        @Setting("conv-stage-process-economy-goodbye")
-        public String convProcessEconomyGoodbye =
-                "Tschuess, bis zum naechsten mal!";
-
-        @Setting("conv-stage-process-economy-takeoff")
-        public String[] convProcessEconomyTakeoff = new String[]{
-                "Mein Drache wird in Kuerze mit dir nach %sn fliegen!"
-        };
-
-        @Setting("conv-stage-already-in-air")
-        public String[] convAlreadyInAir = new String[]{
-                "Du kannst dich mit mir nicht während des Fluges unterhalten!"
-        };
+        @Setting("conversation-name")
+        public String conversationName = "drachenmeister";
 
         public LocalDTPConfiguration(DragonTravelPlusPlugin plugin) {
 

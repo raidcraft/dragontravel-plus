@@ -6,6 +6,7 @@ import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
 import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -92,6 +93,17 @@ public class StationManager {
             return null;
         }
         return existingStations.get(stations.get(0).getName());
+    }
+
+    public List<DragonStation> getStationsByChunk(Chunk chunk) {
+
+        List<DragonStation> chunkStations = new ArrayList<>();
+        for(DragonStation station : getStations()) {
+            if(station.getLocation().getChunk().equals(chunk)) {
+                chunkStations.add(station);
+            }
+        }
+        return chunkStations;
     }
 
     public List<DragonStation> getPlayerStations(Player player) {

@@ -64,7 +64,7 @@ public class FlyingPlayer {
         return inAir
                 && !player.isInsideVehicle()
                 || inAir
-                && (System.currentTimeMillis() - startTime) > RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightTimeout * 1000 * 60;
+                && (System.currentTimeMillis() - startTime) > RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightTimeout * 1000 * 60;
 
     }
 

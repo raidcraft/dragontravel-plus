@@ -191,7 +191,7 @@ public class FlightCommands {
                 return;
             }
 
-            FlightTravel.flyFlight(flight, player, RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed);
+            FlightTravel.flyFlight(flight, player, RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightSpeed);
         }
 
         public void leaveEditor(CommandSender player) {

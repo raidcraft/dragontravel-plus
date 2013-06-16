@@ -31,6 +31,6 @@ public class FlyFlightAction extends AbstractAction {
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Flight '" + flightName + "' does not exists!");
         }
 
-        FlightTravel.flyFlight(flight, conversation.getPlayer(), RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightSpeed, delay);
+        FlightTravel.flyFlight(flight, conversation.getPlayer(), RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightSpeed, delay);
     }
 }

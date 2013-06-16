@@ -147,13 +147,13 @@ public class Navigator {
         int zDif = sectionDestination.getBlockZ() - sectionStart.getBlockZ();
         Vector unitVector = new Vector(xDif, 0, zDif).normalize();
 
-        int wayPointCount = (int) sectionStart.distance(sectionDestination) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.wayPointDistance;
+        int wayPointCount = (int) sectionStart.distance(sectionDestination) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().wayPointDistance;
         for (int i = 1; i < wayPointCount; i++) {
             Location wpLocation = sectionStart.clone();
             Vector unitVectorCopy = unitVector.clone();
-            wpLocation.add(unitVectorCopy.multiply(i * RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.wayPointDistance));
+            wpLocation.add(unitVectorCopy.multiply(i * RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().wayPointDistance));
             wpLocation = world.getHighestBlockAt(wpLocation).getLocation();
-            wpLocation.setY(wpLocation.getY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.flightHeight);
+            wpLocation.setY(wpLocation.getY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightHeight);
 
             section.getFlight().addWaypoint(wpLocation);
         }
@@ -228,9 +228,9 @@ public class Navigator {
 
         task.cancel(); // if takeoff is called cancel calculation task
         if(flight == null) return;
-        FlightTravel.flyFlight(flight, player, RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.dynamicFlightSpeed);
+        FlightTravel.flyFlight(flight, player, RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().dynamicFlightSpeed);
         RaidCraft.getEconomy().modify(player.getName(), -price, BalanceSource.DRAGON_TRAVEL, start.getFriendlyName() + " --> " + destination.getFriendlyName());
-        player.sendMessage(ChatColor.GRAY + "Schreibe '" + RaidCraft.getComponent(DragonTravelPlusPlugin.class).config.exitWords[0] + "' in den Chat um den Flug abzubrechen!");
+        player.sendMessage(ChatColor.GRAY + "Schreibe '" + RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().exitWords[0] + "' in den Chat um den Flug abzubrechen!");
     }
 
 }
