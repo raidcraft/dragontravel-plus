@@ -15,6 +15,7 @@ import de.raidcraft.rcconversations.api.conversation.Conversation;
 import de.raidcraft.rcconversations.api.stage.SimpleStage;
 import de.raidcraft.rcconversations.api.stage.Stage;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -82,7 +83,7 @@ public class ListStationsAction extends AbstractAction {
 
             for (a = 0; a < pageSize; a++) {
                 if (stations.size() <= a + (i * pageSize)) break;
-                answers.add(createStationAnswer(a, currentStation, stations.get(a), confirmStage));
+                answers.add(createStationAnswer(conversation.getPlayer(), a, currentStation, stations.get(a), confirmStage));
             }
             a++;
 
@@ -113,7 +114,7 @@ public class ListStationsAction extends AbstractAction {
         conversation.triggerCurrentStage();
     }
 
-    private Answer createStationAnswer(int number, DragonStation start, DragonStation target, String confirmStage) {
+    private Answer createStationAnswer(Player player, int number, DragonStation start, DragonStation target, String confirmStage) {
 
         List<ActionArgumentList> actions = new ArrayList<>();
         int i = 0;
@@ -127,6 +128,9 @@ public class ListStationsAction extends AbstractAction {
         String stationText = target.getFriendlyName();
 
         double price = FlightCosts.getPrice(start, target);
+        if(!RaidCraft.getEconomy().hasEnough(player.getName(), price)) {
+            stationText += ChatColor.STRIKETHROUGH;
+        }
         stationText += " " + RaidCraft.getEconomy().getFormattedAmount(price);
 
         int distance = (int)start.getLocation().distance(target.getLocation());
