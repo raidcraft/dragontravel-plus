@@ -1,9 +1,11 @@
 package de.raidcraft.dragontravelplus.conversations;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.comparator.AlphabeticComparator;
 import de.raidcraft.dragontravelplus.comparator.DistanceComparator;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
+import de.raidcraft.dragontravelplus.util.FlightCosts;
 import de.raidcraft.rcconversations.actions.common.StageAction;
 import de.raidcraft.rcconversations.actions.variables.SetVariableAction;
 import de.raidcraft.rcconversations.api.action.*;
@@ -12,6 +14,7 @@ import de.raidcraft.rcconversations.api.answer.SimpleAnswer;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
 import de.raidcraft.rcconversations.api.stage.SimpleStage;
 import de.raidcraft.rcconversations.api.stage.Stage;
+import org.bukkit.ChatColor;
 
 import java.util.*;
 
@@ -79,7 +82,7 @@ public class ListStationsAction extends AbstractAction {
 
             for (a = 0; a < pageSize; a++) {
                 if (stations.size() <= a + (i * pageSize)) break;
-                answers.add(createStationAnswer(a, stations.get(a), confirmStage));
+                answers.add(createStationAnswer(a, currentStation, stations.get(a), confirmStage));
             }
             a++;
 
@@ -98,7 +101,7 @@ public class ListStationsAction extends AbstractAction {
                 thisStage = entranceStage + "_" + i;
             }
 
-            if(pages > 1) {
+            if(pages > 0) {
                 answers.add(new SimpleAnswer(String.valueOf(a), "&cWeitere...", new ActionArgumentList(String.valueOf(a), StageAction.class, "stage", nextStage)));
             }
             stage = new SimpleStage(thisStage, text, answers);
@@ -110,17 +113,31 @@ public class ListStationsAction extends AbstractAction {
         conversation.triggerCurrentStage();
     }
 
-    private Answer createStationAnswer(int number, DragonStation station, String confirmStage) {
+    private Answer createStationAnswer(int number, DragonStation start, DragonStation target, String confirmStage) {
 
         List<ActionArgumentList> actions = new ArrayList<>();
         int i = 0;
         Map<String, Object> data = new HashMap<>();
         data.put("variable", "dtp_target_name");
         data.put("local", true);
-        data.put("value", station.getName());
+        data.put("value", target.getName());
         actions.add(new ActionArgumentList(String.valueOf(i++), SetVariableAction.class, data));
         actions.add(new ActionArgumentList(String.valueOf(i++), StageAction.class, "stage", confirmStage));
-        return new SimpleAnswer(String.valueOf(number + 1), station.getFriendlyName(), actions);
+
+        String stationText = target.getFriendlyName();
+
+        double price = FlightCosts.getPrice(start, target);
+        stationText += " " + RaidCraft.getEconomy().getFormattedAmount(price);
+
+        int distance = (int)start.getLocation().distance(target.getLocation());
+        if(distance < 1000) {
+            stationText += ChatColor.GRAY + " (" + distance + "m)";
+        }
+        else {
+            stationText += ChatColor.GRAY + " (" + (((double)distance)/1000.) + "km)";
+        }
+
+        return new SimpleAnswer(String.valueOf(number + 1), stationText, actions);
     }
 
     public enum ListType {
