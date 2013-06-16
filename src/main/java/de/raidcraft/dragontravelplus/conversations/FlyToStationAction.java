@@ -5,8 +5,10 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
+import de.raidcraft.rcconversations.RCConversationsPlugin;
 import de.raidcraft.rcconversations.api.action.*;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
+import de.raidcraft.rcconversations.conversations.EndReason;
 import de.raidcraft.rcconversations.util.ParseString;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -61,7 +63,9 @@ public class FlyToStationAction extends AbstractAction {
         @Override
         public void run() {
 
+            RaidCraft.getComponent(RCConversationsPlugin.class).getConversationManager().endConversation(player.getName(), EndReason.SILENT);
             DragonManager.INST.takeoff(player, start, target, 0);
+
         }
     }
 }
