@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static de.raidcraft.dragontravelplus.util.ChunkUtil.equalsChunk;
+
 /**
  * Author: Philip
  * Date: 25.11.12 - 13:57
@@ -99,7 +101,7 @@ public class StationManager {
 
         List<DragonStation> chunkStations = new ArrayList<>();
         for(DragonStation station : getStations()) {
-            if(station.getLocation().getChunk().equals(chunk)) {
+            if(equalsChunk(station.getLocation().getChunk(), chunk)) {
                 chunkStations.add(station);
             }
         }
@@ -155,5 +157,4 @@ public class StationManager {
 
         RaidCraft.getTable(StationTable.class).deleteStation(station);
     }
-
 }
