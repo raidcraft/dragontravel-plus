@@ -61,6 +61,12 @@ public class ListStationsAction extends AbstractAction {
             stations = freeStations;
         }
 
+        if(stations.size() == 0) {
+            List<Answer> answers = new ArrayList<>();
+            answers.add(new SimpleAnswer("1", "Ok zurück", new ActionArgumentList("A", StageAction.class, "stage", returnStage)));
+            conversation.addStage(new SimpleStage(entranceStage, "Du kennst keine passende Stationen!", answers));
+        }
+
         int pages = (int) ((double) stations.size() / (double) pageSize + 0.5);
         for (int i = 0; i < pages; i++) {
 

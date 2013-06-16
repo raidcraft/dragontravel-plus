@@ -62,7 +62,7 @@ public class ChunkListener implements Listener {
                 if(found) continue;
 
                 // delete all npcs without station
-                RaidCraft.LOGGER.info("Delete DragonGuard NPC without station! (x:" + npc.getBukkitEntity().getLocation().getX() + "|z:" + npc.getBukkitEntity().getLocation().getZ() + ")");
+                RaidCraft.LOGGER.info("Delete DragonGuard NPC without own station! (x:" + npc.getBukkitEntity().getLocation().getX() + "|z:" + npc.getBukkitEntity().getLocation().getZ() + ")");
                 NPCRegistry.INST.unregisterNPC(npc);
                 npc.destroy();
             }
