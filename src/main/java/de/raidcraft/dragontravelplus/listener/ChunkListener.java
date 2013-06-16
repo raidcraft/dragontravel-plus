@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,9 +41,9 @@ public class ChunkListener implements Listener {
         public void run() {
 
             String conversationName = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().conversationName;
-            List< DragonStation > stations = StationManager.INST.getStationsByChunk(chunk);
-
-            for(NPC npc : NPCRegistry.INST.getSpawnedNPCs(chunk)) {
+            List<DragonStation> stations = StationManager.INST.getStationsByChunk(chunk);
+            List<NPC> spawnedNPCs = new ArrayList<>(NPCRegistry.INST.getSpawnedNPCs(chunk));
+            for(NPC npc : spawnedNPCs) {
                 ConversationsTrait trait = npc.getTrait(ConversationsTrait.class);
                 if(!trait.getConversationName().equalsIgnoreCase(conversationName)) {
                     continue;
