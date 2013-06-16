@@ -50,17 +50,21 @@ public class ChunkListener implements Listener {
                 if(!trait.getConversationName().equalsIgnoreCase(conversationName)) {
                     continue;
                 }
+
+                boolean found = false;
                 for(DragonStation station : stations) {
                     if(npc.getBukkitEntity().getLocation().distance(station.getLocation()) <= 5) {
                         stations.remove(station);
+                        found = true;
                         break;
                     }
                 }
+                if(found) continue;
 
                 // delete all npcs without station
+                RaidCraft.LOGGER.info("Delete DragonGuard NPC without station! (x:" + npc.getBukkitEntity().getLocation().getX() + "|z:" + npc.getBukkitEntity().getLocation().getZ() + ")");
                 NPCRegistry.INST.unregisterNPC(npc);
                 npc.destroy();
-                RaidCraft.LOGGER.info("Delete DragonGuard NPC without station!");
             }
 
             // if there are stations without npcs -> create new
