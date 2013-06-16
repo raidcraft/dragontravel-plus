@@ -6,7 +6,7 @@ import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
-import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
+import de.raidcraft.dragontravelplus.conversations.*;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
@@ -16,8 +16,6 @@ import de.raidcraft.dragontravelplus.listener.PlayerListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.npc.NPCListener;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
-import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
-import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
 import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
@@ -92,6 +90,9 @@ public class DragonTravelPlusPlugin extends BasePlugin {
                     ActionManager.registerAction(new FlyFlightAction());
                     ActionManager.registerAction(new FlyControlledAction());
                     ActionManager.registerAction(new FlyToStationAction());
+                    ActionManager.registerAction(new ListStationsAction());
+                    ActionManager.registerAction(new FindDragonstationAction());
+                    ActionManager.registerAction(new CheckPlayerAction());
                 } catch (Exception e) {
                     RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
                 }
