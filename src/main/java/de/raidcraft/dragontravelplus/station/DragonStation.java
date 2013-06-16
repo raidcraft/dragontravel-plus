@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.station;
 
 import de.raidcraft.util.DateUtil;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Location;
 
 /**
@@ -124,7 +125,7 @@ public class DragonStation {
     @Override
     public int hashCode() {
 
-        return name.hashCode();
+        return new HashCodeBuilder().append(name).append(isMainStation()).append(costLevel).append(isEmergencyTarget()).toHashCode();
     }
 
     @Override

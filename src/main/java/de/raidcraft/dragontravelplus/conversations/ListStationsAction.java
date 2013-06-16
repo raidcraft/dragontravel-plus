@@ -79,6 +79,7 @@ public class ListStationsAction extends AbstractAction {
         }
 
         int pages = (int) (((double) stations.size() / (double) pageSize) + 0.5);
+        if(pages == 0) pages = 1;
         for (int i = 0; i < pages; i++) {
 
             Stage stage;
