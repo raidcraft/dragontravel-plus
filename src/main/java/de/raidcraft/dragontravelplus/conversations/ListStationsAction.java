@@ -38,7 +38,7 @@ public class ListStationsAction extends AbstractAction {
 
         String confirmStage = args.getString("confirmstage");
         String returnStage = args.getString("returnstage");
-        int pageSize = args.getInt("pagesize", 5);
+        int pageSize = args.getInt("pagesize", 4);
 
         if(confirmStage == null || returnStage == null) {
             throw new MissingArgumentException("Missing argument in action '" + getName() + "': Confirmstage or Returnstage is missing!");
@@ -71,7 +71,7 @@ public class ListStationsAction extends AbstractAction {
             conversation.addStage(new SimpleStage(entranceStage, "Du kennst keine passende Stationen!", answers));
         }
 
-        int pages = (int) ((double) stations.size() / (double) pageSize + 0.5);
+        int pages = (int) (((double) stations.size() / (double) pageSize) + 0.5);
         for (int i = 0; i < pages; i++) {
 
             Stage stage;
@@ -125,23 +125,24 @@ public class ListStationsAction extends AbstractAction {
         actions.add(new ActionArgumentList(String.valueOf(i++), SetVariableAction.class, data));
         actions.add(new ActionArgumentList(String.valueOf(i++), StageAction.class, "stage", confirmStage));
 
-        String stationText = target.getFriendlyName();
-
+        StringBuilder builder = new StringBuilder();
         double price = FlightCosts.getPrice(start, target);
         if(!RaidCraft.getEconomy().hasEnough(player.getName(), price)) {
-            stationText += ChatColor.STRIKETHROUGH;
+            builder.append(ChatColor.DARK_GRAY);
         }
-        stationText += "   " + RaidCraft.getEconomy().getFormattedAmount(price);
+
+        builder.append(target.getFriendlyName());
+        builder.append(" ").append(RaidCraft.getEconomy().getFormattedAmount(price));
 
         int distance = (int)start.getLocation().distance(target.getLocation());
         if(distance < 1000) {
-            stationText += ChatColor.GRAY + " (" + distance + "m)";
+            builder.append(ChatColor.GRAY).append(" (").append(distance).append("m)");
         }
         else {
-            stationText += ChatColor.GRAY + " (" + (((double)distance)/1000.) + "km)";
+            builder.append(ChatColor.GRAY).append(" (").append(((double)distance)/1000.).append("km)");
         }
 
-        return new SimpleAnswer(String.valueOf(number + 1), stationText, actions);
+        return new SimpleAnswer(String.valueOf(number + 1), builder.toString(), actions);
     }
 
     public enum ListType {
