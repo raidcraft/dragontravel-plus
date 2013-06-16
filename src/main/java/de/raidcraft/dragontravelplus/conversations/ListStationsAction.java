@@ -83,7 +83,7 @@ public class ListStationsAction extends AbstractAction {
 
             for (a = 0; a < pageSize; a++) {
                 if (stations.size() <= a + (i * pageSize)) break;
-                answers.add(createStationAnswer(conversation.getPlayer(), a, currentStation, stations.get(a), confirmStage));
+                answers.add(createStationAnswer(conversation.getPlayer(), a, currentStation, stations.get(i*pageSize + a), confirmStage));
             }
             a++;
 
