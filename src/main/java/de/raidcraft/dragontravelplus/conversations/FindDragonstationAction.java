@@ -7,6 +7,7 @@ import de.raidcraft.rcconversations.api.action.ActionArgumentException;
 import de.raidcraft.rcconversations.api.action.ActionArgumentList;
 import de.raidcraft.rcconversations.api.action.ActionInformation;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
+import org.bukkit.ChatColor;
 
 /**
  * @author Philip
@@ -30,6 +31,11 @@ public class FindDragonstationAction extends AbstractAction {
             }
         }
         else {
+            if(!StationManager.INST.stationIsFamiliar(conversation.getPlayer(), station)) {
+                StationManager.INST.assignStationWithPlayer(conversation.getPlayer().getName(), station);
+                conversation.getPlayer().sendMessage(ChatColor.GREEN + "Du besucht diese Drachenstation zum ersten mal!");
+            }
+
             conversation.set("dtp_station_name", station.getName());
             conversation.set("dtp_station_friendlyname", station.getFriendlyName());
             if(success != null) {
