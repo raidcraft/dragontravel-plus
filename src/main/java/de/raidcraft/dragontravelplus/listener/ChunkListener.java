@@ -44,6 +44,8 @@ public class ChunkListener implements Listener {
             List<DragonStation> stations = StationManager.INST.getStationsByChunk(chunk);
             List<NPC> spawnedNPCs = new ArrayList<>(NPCRegistry.INST.getSpawnedNPCs(chunk));
             for(NPC npc : spawnedNPCs) {
+                if(!npc.getBukkitEntity().getLocation().getChunk().equals(chunk)) continue;
+
                 ConversationsTrait trait = npc.getTrait(ConversationsTrait.class);
                 if(!trait.getConversationName().equalsIgnoreCase(conversationName)) {
                     continue;
