@@ -25,7 +25,7 @@ public class ChunkListener implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
 
-        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DragonMasterChecker(event.getChunk()), 1);
+        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DragonMasterChecker(event.getChunk()), 10);
     }
 
     public class DragonMasterChecker implements Runnable {
