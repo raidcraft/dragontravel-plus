@@ -120,4 +120,21 @@ public class DragonStation {
             return NORTH_EAST;
         }
     }
+
+    @Override
+    public int hashCode() {
+
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof DragonStation) {
+
+            if(((DragonStation)obj).getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

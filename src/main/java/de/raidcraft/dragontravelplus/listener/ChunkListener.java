@@ -55,6 +55,7 @@ public class ChunkListener implements Listener {
                 for(DragonStation station : stations) {
                     if(npc.getBukkitEntity().getLocation().distance(station.getLocation()) <= 5) {
                         stations.remove(station);
+                        RaidCraft.LOGGER.info("Found DragonGuard NPC for station: '" + station.getName() + "'!");
                         found = true;
                         break;
                     }
@@ -69,7 +70,7 @@ public class ChunkListener implements Listener {
 
             // if there are stations without npcs -> create new
             for(DragonStation station : stations) {
-                RaidCraft.LOGGER.info("Create DragonGuard NPC for station: '" + station.getFriendlyName() + "'!");
+                RaidCraft.LOGGER.info("Create DragonGuard NPC for station: '" + station.getName() + "'!");
                 NPCManager.createDragonGuard(station);
             }
         }
