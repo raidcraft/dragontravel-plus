@@ -20,8 +20,6 @@ public class DragonGuardTrait extends Trait {
     @Override
     public void onSpawn() {
 
-        super.onSpawn();
-
         // delete all old npcs
         Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
             @Override
@@ -29,5 +27,6 @@ public class DragonGuardTrait extends Trait {
                 npc.destroy();
             }
         }, 20);
+        RaidCraft.LOGGER.info("Delete old DragonGuard NPC!");
     }
 }

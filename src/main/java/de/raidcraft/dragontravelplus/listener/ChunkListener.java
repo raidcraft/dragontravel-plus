@@ -25,7 +25,7 @@ public class ChunkListener implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
 
-        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DragonMasterChecker(event.getChunk()), 10);
+        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DragonMasterChecker(event.getChunk()), 3*20);
     }
 
     public class DragonMasterChecker implements Runnable {
@@ -58,10 +58,12 @@ public class ChunkListener implements Listener {
                 // delete all npcs without station
                 NPCRegistry.INST.unregisterNPC(npc);
                 npc.destroy();
+                RaidCraft.LOGGER.info("Delete DragonGuard NPC without station!");
             }
 
             // if there are stations without npcs -> create new
             for(DragonStation station : stations) {
+                RaidCraft.LOGGER.info("Create DragonGuard NPC for station: '" + station.getFriendlyName() + "'!");
                 NPCManager.createDragonGuard(station);
             }
         }
