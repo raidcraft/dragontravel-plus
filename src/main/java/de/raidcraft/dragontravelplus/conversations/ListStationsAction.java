@@ -68,7 +68,7 @@ public class ListStationsAction extends AbstractAction {
             List<Answer> answers = new ArrayList<>();
             String text;
 
-            text = "Du kennst folgende Drachenstationen (" + (i+1) + "/" + pages + "):|&7" + type.getInfoText();
+            text = "Du kennst folgende Drachenstationen (" + (i+1) + "/" + pages + "):|&7(" + type.getInfoText() + ")";
             int a;
 
             for (a = 0; a < pageSize; a++) {

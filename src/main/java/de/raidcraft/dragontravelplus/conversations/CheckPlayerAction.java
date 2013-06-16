@@ -44,6 +44,7 @@ public class CheckPlayerAction extends AbstractAction {
 
         Economy economy = RaidCraft.getEconomy();
         double price = FlightCosts.getPrice(start, target);
+        conversation.set("dtp_target_price", price);
         if(checkPrice && !economy.hasEnough(conversation.getPlayer().getName(), price)) {
             setErrorMsg(conversation, "Du brauchst " + economy.getFormattedAmount(price) + " um dorthin zu fliegen!");
             changeStage(conversation, failure);
