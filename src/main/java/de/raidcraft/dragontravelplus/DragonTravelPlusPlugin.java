@@ -145,6 +145,11 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         }
     }
 
+    public Citizens getCitizens() {
+
+        return citizens;
+    }
+
     public class LocalDTPConfiguration extends ConfigurationBase<DragonTravelPlusPlugin> {
 
         @Setting("disabled")

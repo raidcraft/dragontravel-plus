@@ -1,10 +1,6 @@
 package de.raidcraft.dragontravelplus.commands;
 
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.minecraft.util.commands.NestedCommand;
+import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
@@ -17,6 +13,7 @@ import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
+import de.raidcraft.rcconversations.npc.ConversationsTrait;
 import de.raidcraft.util.DateUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -47,11 +44,11 @@ public class DTPCommands {
 
     public static class NestedDragonGuardCommands {
 
-        private final DragonTravelPlusPlugin module;
+        private final DragonTravelPlusPlugin plugin;
 
         public NestedDragonGuardCommands(DragonTravelPlusPlugin module) {
 
-            this.module = module;
+            this.plugin = module;
         }
 
         @Command(
@@ -250,6 +247,20 @@ public class DTPCommands {
                 i++;
             }
             ChatMessages.success(sender, "Es wurden " + i + " Marker neu erstellt!");
+        }
+
+        @Command(
+                aliases = {"npcs"},
+                desc = "Recreate drachenmeister npcs"
+        )
+        @CommandPermissions("dragontravelplus.npcs")
+        public void npcs(CommandContext context, CommandSender sender) throws CommandException {
+
+            for(DragonStation station : StationManager.INST.getStations()) {
+                ConversationsTrait.create(station.getLocation(), "drachenmeister", "Drachenmeister", false);
+            }
+            ChatMessages.success(sender, "Es wurden " + StationManager.INST.getStations().size() + " Drachenmeister erstellt!");
+            plugin.getCitizens().storeNPCs(new net.citizensnpcs.api.command.CommandContext(new String[]{}));
         }
     }
 }
