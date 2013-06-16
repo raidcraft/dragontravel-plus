@@ -42,6 +42,12 @@ public class CheckPlayerAction extends AbstractAction {
             return;
         }
 
+        if(start.equals(target)) {
+            setErrorMsg(conversation, "Du befindest dich bereits an dieser Station!");
+            changeStage(conversation, failure);
+            return;
+        }
+
         Economy economy = RaidCraft.getEconomy();
         double price = FlightCosts.getPrice(start, target);
         conversation.set("dtp_target_price", price);

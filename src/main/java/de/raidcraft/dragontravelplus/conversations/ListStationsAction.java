@@ -65,6 +65,13 @@ public class ListStationsAction extends AbstractAction {
             stations = freeStations;
         }
 
+        for(DragonStation station : stations) {
+            if(station.equals(currentStation)) {
+                stations.remove(station);
+                break;
+            }
+        }
+
         if(stations.size() == 0) {
             List<Answer> answers = new ArrayList<>();
             answers.add(new SimpleAnswer("1", "Ok zurück", new ActionArgumentList("A", StageAction.class, "stage", returnStage)));
