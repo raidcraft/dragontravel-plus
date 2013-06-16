@@ -62,7 +62,6 @@ public class ListStationsAction extends AbstractAction {
         }
 
         int pages = (int) ((double) stations.size() / (double) pageSize + 0.5);
-        int j = 0;
         for (int i = 0; i < pages; i++) {
 
             Stage stage;
@@ -81,14 +80,22 @@ public class ListStationsAction extends AbstractAction {
             String nextStage;
             if (pages - 1 == i) {
                 nextStage = entranceStage;
-            } else {
+            }
+            else {
                 nextStage = entranceStage + "_" + (i + 1);
+            }
+            String thisStage;
+            if(i == 0) {
+                thisStage = entranceStage;
+            }
+            else {
+                thisStage = entranceStage + "_" + i;
             }
 
             if(pages > 1) {
                 answers.add(new SimpleAnswer(String.valueOf(a), "&cWeitere...", new ActionArgumentList(String.valueOf(a), StageAction.class, "stage", nextStage)));
             }
-            stage = new SimpleStage(entranceStage + "_" + i, text, answers);
+            stage = new SimpleStage(thisStage, text, answers);
 
             conversation.addStage(stage);
         }
