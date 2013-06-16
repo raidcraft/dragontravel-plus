@@ -14,7 +14,6 @@ import de.raidcraft.dragontravelplus.flight.FlightEditorListener;
 import de.raidcraft.dragontravelplus.listener.DragonListener;
 import de.raidcraft.dragontravelplus.listener.PlayerListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
-import de.raidcraft.dragontravelplus.npc.NPCListener;
 import de.raidcraft.dragontravelplus.npc.conversation.Conversation;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
@@ -74,7 +73,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         StationManager.INST.loadExistingStations();
 
         try {
-            registerEvents(new NPCListener());
+//            registerEvents(new NPCListener());
             CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
             citizens = (Citizens)Bukkit.getPluginManager().getPlugin("Citizens");
         } catch (Exception e) {

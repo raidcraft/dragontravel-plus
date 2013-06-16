@@ -12,6 +12,7 @@ import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.api.trait.trait.Owner;
 import net.citizensnpcs.api.trait.trait.Spawned;
 import net.citizensnpcs.trait.LookClose;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -52,7 +53,15 @@ public class DragonGuardTrait extends Trait {
 
         super.onSpawn();
 
-        updateDragonGuardNPC();
+//        updateDragonGuardNPC();
+
+        // delete all old npcs
+        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
+            @Override
+            public void run() {
+                npc.destroy();
+            }
+        }, 20);
     }
 
     @Override
