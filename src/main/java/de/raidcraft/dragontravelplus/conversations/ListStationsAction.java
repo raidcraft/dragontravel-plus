@@ -103,7 +103,7 @@ public class ListStationsAction extends AbstractAction {
             }
 
             if(pages > 0) {
-                answers.add(new SimpleAnswer(String.valueOf(a), "&cWeitere...", new ActionArgumentList(String.valueOf(a), StageAction.class, "stage", nextStage)));
+                answers.add(new SimpleAnswer(String.valueOf(a), "&7Nächste Seite", new ActionArgumentList(String.valueOf(a), StageAction.class, "stage", nextStage)));
             }
             stage = new SimpleStage(thisStage, text, answers);
 
