@@ -10,6 +10,7 @@ import de.raidcraft.rcconversations.api.action.ActionArgumentException;
 import de.raidcraft.rcconversations.api.action.ActionArgumentList;
 import de.raidcraft.rcconversations.api.action.ActionInformation;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
+import de.raidcraft.rcconversations.util.ParseString;
 
 /**
  * @author Philip
@@ -21,7 +22,9 @@ public class CheckPlayerAction extends AbstractAction {
     public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
 
         String startName = args.getString("start", null);
+        startName = ParseString.INST.parse(conversation, startName);
         String targetName = args.getString("target", null);
+        targetName = ParseString.INST.parse(conversation, targetName);
         String success = args.getString("onsuccess", null);
         String failure = args.getString("onfailure", null);
         boolean checkPrice = args.getBoolean("price", false);
