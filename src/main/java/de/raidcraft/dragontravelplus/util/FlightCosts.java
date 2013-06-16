@@ -22,7 +22,7 @@ public class FlightCosts {
         } else {
             costLevel = destination.getCostLevel();
         }
-        return Math.round(costLevel * start.getLocation().distance(destination.getLocation()) * RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().pricePerBlock * 100.) / 100.;
+        return Math.abs(Math.round(costLevel * start.getLocation().distance(destination.getLocation()) * RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().pricePerBlock * 100.) / 100.);
     }
 
 }

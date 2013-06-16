@@ -131,7 +131,7 @@ public class ListStationsAction extends AbstractAction {
         if(!RaidCraft.getEconomy().hasEnough(player.getName(), price)) {
             stationText += ChatColor.STRIKETHROUGH;
         }
-        stationText += " " + RaidCraft.getEconomy().getFormattedAmount(price);
+        stationText += "   " + RaidCraft.getEconomy().getFormattedAmount(price);
 
         int distance = (int)start.getLocation().distance(target.getLocation());
         if(distance < 1000) {
