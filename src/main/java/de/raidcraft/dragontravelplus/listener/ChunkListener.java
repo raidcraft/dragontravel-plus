@@ -14,7 +14,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.raidcraft.dragontravelplus.util.ChunkUtil.equalsChunk;
@@ -44,7 +43,7 @@ public class ChunkListener implements Listener {
 
             String conversationName = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().conversationName;
             List<DragonStation> stations = StationManager.INST.getStationsByChunk(chunk);
-            List<NPC> spawnedNPCs = new ArrayList<>(NPCRegistry.INST.getSpawnedNPCs(chunk));
+            List<NPC> spawnedNPCs = NPCRegistry.INST.getSpawnedNPCs(chunk);
             for(NPC npc : spawnedNPCs) {
                 if(!equalsChunk(npc.getBukkitEntity().getLocation().getChunk(), chunk)) continue;
 
@@ -57,7 +56,7 @@ public class ChunkListener implements Listener {
                 for(DragonStation station : stations) {
                     if(npc.getBukkitEntity().getLocation().distance(station.getLocation()) <= 5) {
                         stations.remove(station);
-                        RaidCraft.LOGGER.info("Found DragonGuard NPC for station: '" + station.getName() + "'!");
+//                        RaidCraft.LOGGER.info("Found DragonGuard NPC for station: '" + station.getName() + "'!");
                         found = true;
                         break;
                     }
