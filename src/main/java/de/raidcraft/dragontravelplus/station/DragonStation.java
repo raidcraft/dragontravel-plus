@@ -128,6 +128,8 @@ public class DragonStation {
         return new HashCodeBuilder().append(name).append(isMainStation()).append(costLevel).append(isEmergencyTarget()).toHashCode();
     }
 
+
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof DragonStation) {
