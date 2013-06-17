@@ -71,20 +71,20 @@ public class FlightEditorListener implements Listener {
 
         Flight flight = editors.get(player.getName());
 
-        //remove wp
-        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            if(flight.size() != 0) {
-                WayPoint wp = flight.removeLastWayPoint();
-                if(wp != null && wp.getLocation().getBlock().getType() == MARKER_MATERIAL) {
-                    wp.getLocation().getBlock().setType(Material.AIR);
-                }
-                ChatMessages.info(player, "Wegpunkt entfernt! (" + flight.size() + " übrig)");
-                return;
-            }
-            else {
-                ChatMessages.warn(player, "Der Flug hat noch keine Wegpunkte!");
-            }
-        }
+//        //remove wp
+//        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+//            if(flight.size() != 0) {
+//                WayPoint wp = flight.removeLastWayPoint();
+//                if(wp != null && wp.getLocation().getBlock().getType() == MARKER_MATERIAL) {
+//                    wp.getLocation().getBlock().setType(Material.AIR);
+//                }
+//                ChatMessages.info(player, "Wegpunkt entfernt! (" + flight.size() + " übrig)");
+//                return;
+//            }
+//            else {
+//                ChatMessages.warn(player, "Der Flug hat noch keine Wegpunkte!");
+//            }
+//        }
 
         // add wp
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
@@ -109,7 +109,6 @@ public class FlightEditorListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
 
         Player player = event.getPlayer();
-        Location location = player.getLocation();
 
         if (!editors.containsKey(player.getName())) return;
 

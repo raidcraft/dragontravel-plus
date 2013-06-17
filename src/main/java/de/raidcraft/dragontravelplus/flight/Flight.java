@@ -79,7 +79,7 @@ public class Flight {
 
         for(Map.Entry<Integer, WayPoint> entry : waypoints.entrySet()) {
 
-            if(entry.getValue().equals(new WayPoint(location))) {
+            if(entry.getValue().sameBlockLocation(location)) {
                 waypoints.remove(entry.getKey());
                 return true;
             }
