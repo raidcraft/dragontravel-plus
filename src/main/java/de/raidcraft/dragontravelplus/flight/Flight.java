@@ -96,6 +96,7 @@ public class Flight {
                 WayPoint wp = waypoints.remove(entry.getKey());
                 waypoints.put(entry.getKey()-1, wp);
             }
+            wpcreatenum--;
             return true;
         }
         return false;
