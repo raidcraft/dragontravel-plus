@@ -23,15 +23,15 @@ public class FlyControlledAction extends AbstractAction {
         String stringDuration = args.getString("duration");
         stringDuration = ParseString.INST.parse(conversation, stringDuration);
 
-        int duration;
+        double duration;
         try {
-            duration = Integer.parseInt(stringDuration);
+            duration = Double.parseDouble(stringDuration);
         }
         catch(NumberFormatException e) {
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Duration must be a number!");
         }
 
-        StartControlledFlightTask task = new StartControlledFlightTask(conversation.getPlayer(), duration);
+        StartControlledFlightTask task = new StartControlledFlightTask(conversation.getPlayer(), (int)duration);
         Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), task, delay);
     }
 
