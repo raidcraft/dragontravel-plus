@@ -77,12 +77,26 @@ public class Flight {
 
     public boolean removeWayPoint(Location location) {
 
+        boolean found = false;
+        int key = 0;
         for(Map.Entry<Integer, WayPoint> entry : waypoints.entrySet()) {
 
             if(entry.getValue().sameBlockLocation(location)) {
+                found = true;
+                key = entry.getKey();
                 waypoints.remove(entry.getKey());
-                return true;
+                break;
             }
+        }
+        if(found) {
+            Map<Integer, WayPoint> wayPointsCopy = new HashMap<>(waypoints);
+            for(Map.Entry<Integer, WayPoint> entry : wayPointsCopy.entrySet()) {
+                if(entry.getKey() < key) continue;
+
+                WayPoint wp = waypoints.remove(entry.getKey());
+                waypoints.put(entry.getKey()-1, wp);
+            }
+            return true;
         }
         return false;
     }
