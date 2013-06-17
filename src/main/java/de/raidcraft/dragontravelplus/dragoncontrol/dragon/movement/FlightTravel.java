@@ -26,7 +26,7 @@ public class FlightTravel {
         }
 
         flyingPlayer = new FlyingPlayer(player, player.getLocation());
-        DragonManager.INST.flyingPlayers.put(player, flyingPlayer);
+        DragonManager.INST.getFlyingPlayers().put(player, flyingPlayer);
 
         // port player to start
         Location departure = flight.getWayPoint(0).getLocation();
@@ -51,7 +51,7 @@ public class FlightTravel {
 
         flyingPlayer = new FlyingPlayer(player, player.getLocation());
         flyingPlayer.setInAir(true);
-        DragonManager.INST.flyingPlayers.put(player, flyingPlayer);
+        DragonManager.INST.getFlyingPlayers().put(player, flyingPlayer);
 
         // Mounting the player
         if (!Travels.mountDragon(player))

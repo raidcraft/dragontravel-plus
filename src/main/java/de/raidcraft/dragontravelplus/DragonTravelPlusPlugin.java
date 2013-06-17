@@ -103,7 +103,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     @Override
     public void disable() {
         // remove all dragons in the world
-        for (Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
+        for (Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.getFlyingPlayers().entrySet()) {
             if (entry.getValue().isInAir()) {
                 DragonManager.INST.abortFlight(entry.getKey());
             }
@@ -120,7 +120,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         config.reload();
         // remove all dragons in the world
-        Map<Player, FlyingPlayer> flyingPlayersCopy = new HashMap<>(DragonManager.INST.flyingPlayers);
+        Map<Player, FlyingPlayer> flyingPlayersCopy = new HashMap<>(DragonManager.INST.getFlyingPlayers());
         for (Map.Entry<Player, FlyingPlayer> entry : flyingPlayersCopy.entrySet()) {
             if (entry.getValue().isInAir()) {
                 DragonManager.INST.abortFlight(entry.getKey());
@@ -128,7 +128,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
             }
         }
 
-        DragonManager.INST.flyingPlayers.clear();
+        DragonManager.INST.getFlyingPlayers().clear();
         StationManager.INST.loadExistingStations();
     }
 

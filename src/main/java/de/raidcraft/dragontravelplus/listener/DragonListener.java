@@ -49,7 +49,7 @@ public class DragonListener implements Listener {
         @Override
         public void run() {
 
-            DragonManager.INST.flyingPlayers.remove(player);
+            DragonManager.INST.getFlyingPlayers().remove(player);
         }
     }
 }

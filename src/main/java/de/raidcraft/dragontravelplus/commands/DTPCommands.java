@@ -244,5 +244,23 @@ public class DTPCommands {
             }
             ChatMessages.success(sender, "Es wurden " + i + " Marker neu erstellt!");
         }
+
+        @Command(
+                aliases = {"inair"},
+                desc = "Shows all players currently in air"
+        )
+        @CommandPermissions("dragontravelplus.markers")
+        public void inAir(CommandContext context, CommandSender sender) throws CommandException {
+
+            sender.sendMessage(ChatColor.YELLOW + "Folgende Spieler fliegen gerade mit einem Drache:");
+            String msg = "";
+            for(FlyingPlayer flyingPlayer : DragonManager.INST.getFlyingPlayers().values()) {
+
+                if(!flyingPlayer.isInAir()) continue;
+
+                msg += flyingPlayer.getPlayer().getName() + ", ";
+            }
+            sender.sendMessage(ChatColor.YELLOW + msg);
+        }
     }
 }

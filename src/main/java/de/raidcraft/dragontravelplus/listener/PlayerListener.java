@@ -16,6 +16,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Arrays;
 
@@ -25,6 +26,12 @@ import java.util.Arrays;
  * Description:
  */
 public class PlayerListener implements Listener {
+
+    @EventHandler
+    public void onPlayerQuiet(PlayerQuitEvent event) {
+
+        DragonManager.INST.abortFlight(event.getPlayer());
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageEvent event) {
@@ -72,25 +79,13 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void cancelInteract(PlayerInteractEvent event) {
-
-        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(event.getPlayer().getName());
-
-        if (flyingPlayer == null || !flyingPlayer.isInAir()) {
-            return;
-        }
-        // cancel all interact events during a flight
-        event.setCancelled(true);
-    }
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent event) {
 
         Player player = event.getPlayer();
         String message = event.getMessage();
 
-        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
+        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayers().get(player);
 
         if (Arrays.asList(RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().exitWords).contains(message)) {
             if (flyingPlayer != null && flyingPlayer.isInAir()) {

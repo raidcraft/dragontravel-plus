@@ -22,12 +22,12 @@ public class Travels {
      */
     public static boolean mountDragon(Player player) {
 
-        if (!DragonManager.INST.flyingPlayers.containsKey(player)) {
+        if (!DragonManager.INST.getFlyingPlayers().containsKey(player)) {
             return false;
         }
 
         RCDragon dragon;
-        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
+        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
         // Removing dragon if already mounted
         if (flyingPlayer.getDragon() != null) {
             dragon = flyingPlayer.getDragon();
@@ -167,8 +167,8 @@ public class Travels {
 
         mountDragon(player);
 
-        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
-        RCDragon dragon = DragonManager.INST.flyingPlayers.get(player).getDragon();
+        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayers().get(player);
+        RCDragon dragon = flyingPlayer.getDragon();
         if (dragon == null)
             return;
 

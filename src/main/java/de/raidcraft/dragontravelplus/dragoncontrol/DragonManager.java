@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class DragonManager {
 
-    public Map<Player, FlyingPlayer> flyingPlayers = new HashMap<>();
+    private Map<Player, FlyingPlayer> flyingPlayers = new HashMap<>();
 
     public final static DragonManager INST = new DragonManager();
 
@@ -52,5 +52,10 @@ public class DragonManager {
             }
         }
         return null;
+    }
+
+    public Map<Player, FlyingPlayer> getFlyingPlayers() {
+
+        return flyingPlayers;
     }
 }
