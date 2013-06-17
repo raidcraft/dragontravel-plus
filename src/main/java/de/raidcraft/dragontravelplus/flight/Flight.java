@@ -67,7 +67,7 @@ public class Flight {
     /**
      * Removes the last waypoint
      */
-    public WayPoint removeWaypoint() {
+    public WayPoint removeLastWayPoint() {
 
         if (wpcreatenum == 0)
             return null;
@@ -75,12 +75,24 @@ public class Flight {
         return waypoints.remove(wpcreatenum);
     }
 
+    public boolean removeWayPoint(Location location) {
+
+        for(Map.Entry<Integer, WayPoint> entry : waypoints.entrySet()) {
+
+            if(entry.getValue().equals(new WayPoint(location))) {
+                waypoints.remove(entry.getKey());
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Gets the firstwaypoint
      *
      * @return
      */
-    public WayPoint getFirstWaypoint() {
+    public WayPoint getFirstWayPoint() {
 
         WayPoint wp = waypoints.get(currentwp);
         currentwp++;
@@ -90,7 +102,7 @@ public class Flight {
     /**
      * Gets the next waypoint for this flight
      */
-    public WayPoint getNextWaypoint() {
+    public WayPoint getNextWayPoint() {
 
         WayPoint wp = waypoints.get(currentwp);
         currentwp++;

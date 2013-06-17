@@ -81,4 +81,35 @@ public class WayPoint {
     public WayPoint clone() {
         return new WayPoint(world, x, y, z);
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WayPoint wayPoint = (WayPoint) o;
+
+        if (Double.compare(wayPoint.x, x) != 0) return false;
+        if (Double.compare(wayPoint.y, y) != 0) return false;
+        if (Double.compare(wayPoint.z, z) != 0) return false;
+        if (!world.equals(wayPoint.world)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(x);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(z);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + world.hashCode();
+        return result;
+    }
 }

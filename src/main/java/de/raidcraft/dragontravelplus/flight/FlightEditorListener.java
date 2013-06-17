@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.HashMap;
@@ -64,18 +65,16 @@ public class FlightEditorListener implements Listener {
         Player player = event.getPlayer();
         Location location = player.getLocation();
 
-        if (!editors.containsKey(player.getName()))
-            return;
+        if (!editors.containsKey(player.getName())) return;
 
-        if (player.getItemInHand().getTypeId() != RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightEditorItem)
-            return;
+        if (player.getItemInHand().getTypeId() != RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightEditorItem) return;
 
         Flight flight = editors.get(player.getName());
 
         //remove wp
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
             if(flight.size() != 0) {
-                WayPoint wp = editors.get(player.getName()).removeWaypoint();
+                WayPoint wp = flight.removeLastWayPoint();
                 if(wp != null && wp.getLocation().getBlock().getType() == MARKER_MATERIAL) {
                     wp.getLocation().getBlock().setType(Material.AIR);
                 }
@@ -103,6 +102,22 @@ public class FlightEditorListener implements Listener {
             WayPoint wp = new WayPoint(location);
             flight.addWaypoint(wp);
             ChatMessages.success(player, flight.size() + ". Wegpunkt hinzugefügt!");
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+
+        Player player = event.getPlayer();
+        Location location = player.getLocation();
+
+        if (!editors.containsKey(player.getName())) return;
+
+        if(event.getBlock().getType() != MARKER_MATERIAL) return;
+
+        Flight flight = editors.get(player.getName());
+        if(flight.removeWayPoint(event.getBlock().getLocation())) {
+            ChatMessages.success(event.getPlayer(), "Wegpunkt entfernt!");
         }
     }
 

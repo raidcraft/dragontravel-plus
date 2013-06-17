@@ -132,7 +132,7 @@ public class RCDragon extends EntityEnderDragon {
 
         this.flight = flight;
 
-        firstwp = flight.getFirstWaypoint();
+        firstwp = flight.getFirstWayPoint();
         fwpX = firstwp.getX();
         fwpY = firstwp.getY();
         fwpZ = firstwp.getZ();
@@ -304,7 +304,7 @@ public class RCDragon extends EntityEnderDragon {
         if (((int) myZ >= (int) target.getZ() - 1 && (int) myZ <= (int) target.getZ() + 1)
                 && ((int) myY >= (int) target.getY() - 1 && (int) myY <= (int) target.getY() + 1)
                 && ((int) myX >= (int) target.getX() - 1 && (int) myX <= (int) target.getX() + 1)) {
-            WayPoint wp = flight.getNextWaypoint();
+            WayPoint wp = flight.getNextWayPoint();
 
             // Removing the entity and dismouting the player
             if (wp == null) {

@@ -121,7 +121,7 @@ public class FlightWayPointsTable extends Table {
             getConnection().setAutoCommit(false);
 
             for(int i = 0; i < flight.size(); i++) {
-                WayPoint wayPoint = flight.getNextWaypoint();
+                WayPoint wayPoint = flight.getNextWayPoint();
 
                 statement.setString(1, flight.getName().toLowerCase());
                 statement.setString(2, flight.getFlightWorld());
