@@ -6,6 +6,7 @@ import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.npc.ConversationsTrait;
 import de.raidcraft.rcconversations.npc.NPCRegistry;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.Location;
 
 /**
  * @author Philip Urban
@@ -14,6 +15,8 @@ public class NPCManager {
 
     public static void createDragonGuard(DragonStation station) {
 
+        Location improvedLocation = station.getLocation().clone();
+        improvedLocation.setY(improvedLocation.getY()+1);
         ConversationsTrait.create(station.getLocation(), RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().conversationName, "Drachenmeister", false);
     }
 
