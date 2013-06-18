@@ -73,6 +73,8 @@ public class StationManager {
 
     public DragonStation getDragonStation(String name) {
 
+        name = convertFriendlyName(name);
+
         for (Map.Entry<String, DragonStation> entry : existingStations.entrySet()) {
             if (entry.getKey().equalsIgnoreCase(name)) {
                 return entry.getValue();
@@ -156,5 +158,12 @@ public class StationManager {
     public void deleteStation(DragonStation station) {
 
         RaidCraft.getTable(StationTable.class).deleteStation(station);
+    }
+
+    public String convertFriendlyName(String friendlyName) {
+
+        friendlyName = friendlyName.toLowerCase();
+        friendlyName = friendlyName.replace(' ', '_');
+        return friendlyName;
     }
 }
