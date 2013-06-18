@@ -19,6 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -252,9 +253,15 @@ public class DTPCommands {
         @CommandPermissions("dragontravelplus.markers")
         public void inAir(CommandContext context, CommandSender sender) throws CommandException {
 
+            Collection<FlyingPlayer> flyingPlayers = DragonManager.INST.getFlyingPlayers().values();
+
+            if(flyingPlayers.size() == 0) {
+                throw new CommandException("Es befinden sich derzeit alle Spieler am Boden!");
+            }
+
             sender.sendMessage(ChatColor.YELLOW + "Folgende Spieler fliegen gerade mit einem Drache:");
             String msg = "";
-            for(FlyingPlayer flyingPlayer : DragonManager.INST.getFlyingPlayers().values()) {
+            for(FlyingPlayer flyingPlayer : flyingPlayers) {
 
                 if(!flyingPlayer.isInAir()) continue;
 
