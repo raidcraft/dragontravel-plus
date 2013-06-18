@@ -17,7 +17,7 @@ public class NPCManager {
 
         Location improvedLocation = station.getLocation().clone();
         improvedLocation.setY(improvedLocation.getY()+1);
-        ConversationsTrait.create(station.getLocation(), RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().conversationName, "Drachenmeister", false);
+        ConversationsTrait.create(improvedLocation, RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().conversationName, "Drachenmeister", false);
     }
 
     public static void removeDragonGuard(DragonStation station) {
