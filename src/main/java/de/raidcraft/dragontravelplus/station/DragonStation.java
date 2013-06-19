@@ -85,9 +85,9 @@ public class DragonStation {
         return created;
     }
 
-    public double getDistance(DragonStation station) {
+    public int getDistance(DragonStation station) {
 
-        return getLocation().distance(station.getLocation());
+        return (int)getLocation().distance(station.getLocation());
     }
 
     public enum MapLocation {
