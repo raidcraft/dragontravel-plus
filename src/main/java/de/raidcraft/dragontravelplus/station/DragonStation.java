@@ -85,6 +85,11 @@ public class DragonStation {
         return created;
     }
 
+    public double getDistance(DragonStation station) {
+
+        return getLocation().distance(station.getLocation());
+    }
+
     public enum MapLocation {
         NORTH("Norden"),
         EAST("Osten"),
