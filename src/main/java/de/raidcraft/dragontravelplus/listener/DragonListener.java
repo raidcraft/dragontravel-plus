@@ -6,9 +6,13 @@ import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import de.raidcraft.dragontravelplus.events.DragonLandEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 
@@ -35,6 +39,17 @@ public class DragonListener implements Listener {
                     new PassengerRemover(DragonManager.INST.getFlyingPlayer(((Player) event.getPassenger()).getName()).getPlayer());
             Bukkit.getScheduler().scheduleSyncDelayedTask(RaidCraft.getComponent(DragonTravelPlusPlugin.class), passengerRemover, 3 * 20);
         }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onDragonDamage(EntityDamageEvent event) {
+
+        if(event.getEntityType() != EntityType.ENDER_DRAGON) return;
+
+        EnderDragon dragon = (EnderDragon)event.getEntity();
+        if(dragon.getPassenger() == null) return;
+
+        event.setCancelled(true);
     }
 
     public class PassengerRemover implements Runnable {
