@@ -24,10 +24,14 @@
     <version>1.1.5-SNAPSHOT</version>
     <name>DragonTravelPlus</name>
 
+    <scm>
+        <developerConnection>scm:git:ssh://git@git.raid-craft.de:22109/dragontravelplus.git</developerConnection>
+    </scm>
+
     <parent>
         <groupId>de.raidcraft</groupId>
         <artifactId>masterpom</artifactId>
-        <version>LATEST</version>
+        <version>RELEASE</version>
     </parent>
 
     <repositories>
@@ -41,17 +45,17 @@
         <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>raidcraft-api</artifactId>
-            <version>LATEST</version>
+            <version>${rc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.dynmap</groupId>
             <artifactId>dynmap</artifactId>
-            <version>LATEST</version>
+            <version>${rc.version}</version>
         </dependency>
         <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>rcconversations</artifactId>
-            <version>LATEST</version>
+            <version>${rc.version}</version>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
