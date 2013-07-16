@@ -34,12 +34,6 @@
         <repository>
             <id>raidcraft</id>
             <url>http://nexus.raid-craft.de/content/groups/public/</url>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-            <releases>
-                <updatePolicy>always</updatePolicy>
-            </releases>
         </repository>
     </repositories>
 
