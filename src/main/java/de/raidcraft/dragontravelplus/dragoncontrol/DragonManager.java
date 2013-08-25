@@ -35,7 +35,6 @@ public class DragonManager {
 
 
         if (flyingPlayer.isInAir()) {
-            flyingPlayer.cancelCheckerTask();
             Travels.removePlayerAndDragon(flyingPlayer);
         } else {
             flyingPlayer.cancelWaitingTask();

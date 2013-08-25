@@ -62,6 +62,8 @@ public class Travels {
             return;
         }
 
+        flyingPlayer.cancelCheckerTask();
+
         Entity entity = flyingPlayer.getDragon().getBukkitEntity();
 
         // Getting player
