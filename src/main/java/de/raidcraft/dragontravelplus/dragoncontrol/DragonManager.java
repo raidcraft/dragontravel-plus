@@ -3,7 +3,6 @@ package de.raidcraft.dragontravelplus.dragoncontrol;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.navigator.Navigator;
 import de.raidcraft.dragontravelplus.station.DragonStation;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -36,9 +35,10 @@ public class DragonManager {
 
 
         if (flyingPlayer.isInAir()) {
+            flyingPlayer.cancelCheckerTask();
             Travels.removePlayerAndDragon(flyingPlayer);
         } else {
-            Bukkit.getScheduler().cancelTask(flyingPlayer.getWaitingTaskID());
+            flyingPlayer.cancelWaitingTask();
         }
         player.teleport(flyingPlayer.getStart());   // teleport to start
         DragonManager.INST.flyingPlayers.remove(player);

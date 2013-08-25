@@ -4,12 +4,14 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
+import de.raidcraft.dragontravelplus.dragoncontrol.PlayerChecker;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.flight.Flight;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 public class FlightTravel {
 
@@ -93,6 +95,8 @@ public class FlightTravel {
 
             // start flight
             flyingPlayer.setInAir(true);
+            BukkitTask task = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new PlayerChecker(flyingPlayer), 0, 10);
+            flyingPlayer.setCheckerTask(task);
             dragon.setCustomNameVisible(false);
             dragon.startFlight(flyingPlayer, flight, speed);
         }

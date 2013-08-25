@@ -5,6 +5,7 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  * Author: Philip
@@ -20,9 +21,10 @@ public class FlyingPlayer {
     private RCDragon dragon = null;
     private Location destination;
     private boolean inAir = false;
-    private int waitingTaskID = 0;
     private long startTime = 0;
     private double price = 0;
+    private BukkitTask waitingTask;
+    private BukkitTask checkerTask;
 
     public FlyingPlayer(Player player, Location start, Location destination, double price) {
 
@@ -103,14 +105,21 @@ public class FlyingPlayer {
         this.inAir = inAir;
     }
 
-    public void setWaitingTaskID(int waitingTaskID) {
+    public void setWaitingTaskID(BukkitTask waitingTask) {
 
-        this.waitingTaskID = waitingTaskID;
+        this.waitingTask = waitingTask;
     }
 
-    public int getWaitingTaskID() {
+    public BukkitTask getWaitingTaskID() {
 
-        return waitingTaskID;
+        return waitingTask;
+    }
+
+    public void cancelWaitingTask() {
+
+        if(this.waitingTask != null) {
+            this.waitingTask.cancel();
+        }
     }
 
     public void setStartTime(long startTime) {
@@ -126,5 +135,23 @@ public class FlyingPlayer {
     public double getPrice() {
 
         return price;
+    }
+
+    public BukkitTask getCheckerTask() {
+
+        return checkerTask;
+    }
+
+    public void setCheckerTask(BukkitTask checkerTask) {
+
+        cancelCheckerTask();
+        this.checkerTask = checkerTask;
+    }
+
+    public void cancelCheckerTask() {
+
+        if(this.checkerTask != null) {
+            this.checkerTask.cancel();
+        }
     }
 }
