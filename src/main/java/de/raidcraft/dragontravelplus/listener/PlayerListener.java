@@ -17,6 +17,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 
 import java.util.Arrays;
 
@@ -26,6 +27,27 @@ import java.util.Arrays;
  * Description:
  */
 public class PlayerListener implements Listener {
+
+    @EventHandler
+    public void onVehicleExit(VehicleExitEvent event) {
+
+        if (!(event.getExited() instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player) event.getExited();
+
+
+        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
+
+        if (flyingPlayer == null) {
+            return;
+        }
+
+        if (flyingPlayer.isInAir()) {
+            event.setCancelled(true);
+        }
+    }
 
     @EventHandler
     public void onPlayerQuiet(PlayerQuitEvent event) {
