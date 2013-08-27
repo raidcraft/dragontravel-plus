@@ -181,12 +181,14 @@ public class Navigator {
 
         // limit route diff to 20 blocks high
         if(Math.abs(preDiff) > 20) {
+            RaidCraft.LOGGER.info("DEBUG 0: " + preDiff);
             if(preDiff < 0) {
                 newY = preLocation.getY() - 20;
             }
             else {
                 newY = preLocation.getY() + 20;
             }
+            RaidCraft.LOGGER.info("DEBUG 1: " + newY);
         }
 
         currentLocation.setY(newY);
