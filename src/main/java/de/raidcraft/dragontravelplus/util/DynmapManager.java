@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus.util;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.Bukkit;
 import org.dynmap.DynmapAPI;
@@ -32,7 +33,8 @@ public class DynmapManager {
 
     public void addStationMarker(DragonStation station) {
 
-        if (markerAPI == null) {
+        if (markerAPI == null || dragonSet == null) {
+            RaidCraft.LOGGER.warning("Dynmap not installed or 'drachenmeister' marker set not available!");
             return;
         }
 
