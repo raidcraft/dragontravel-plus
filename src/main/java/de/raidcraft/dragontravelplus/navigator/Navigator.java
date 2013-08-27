@@ -57,11 +57,11 @@ public class Navigator {
         task = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
             @Override
             public void run() {
-
+                RaidCraft.LOGGER.info("A");
                 RouteSection section;
                 switch(processStage) {
                     case 0:
-
+                        RaidCraft.LOGGER.info("B");
                         if(processedSection >= stationRoute.size()) {
                             processStage++;
                             processedSection = 0;
