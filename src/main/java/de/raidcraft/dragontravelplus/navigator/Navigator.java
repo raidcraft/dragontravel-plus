@@ -57,11 +57,10 @@ public class Navigator {
         task = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new Runnable() {
             @Override
             public void run() {
-                RaidCraft.LOGGER.info("A");
+
                 RouteSection section;
                 switch(processStage) {
                     case 0:
-                        RaidCraft.LOGGER.info("B");
                         if(processedSection >= stationRoute.size()) {
                             processStage++;
                             processedSection = 0;
@@ -83,13 +82,11 @@ public class Navigator {
 
                     case 1:
 
-                        RaidCraft.LOGGER.info("0");
                         if(processedSection >= stationRoute.size()) {
                             processStage++;
                             processedSection = 0;
                             return;
                         }
-                        RaidCraft.LOGGER.info("1");
                         section = stationRoute.get(processedSection);
                         if(section.isLoaded() || processedRouteEntry >= section.getFlight().size()) {
                             processedSection++;
@@ -165,7 +162,6 @@ public class Navigator {
     }
 
     private void interpolateSection(RouteSection section, int currentIndex) {
-        RaidCraft.LOGGER.info("2");
         // don't optimize first or last way point
         if(currentIndex == 0 || currentIndex == section.getFlight().size() - 1) {
             return;
@@ -179,20 +175,14 @@ public class Navigator {
         double newY = currentLocation.getY();
         double preDiff = (int)(currentLocation.getY() - preLocation.getY());
         double nextDiff = (int)(currentLocation.getY() - nextLocation.getY());
-        RaidCraft.LOGGER.info("3: " + currentY);
-        RaidCraft.LOGGER.info("4: " + preDiff);
-        RaidCraft.LOGGER.info("5: " + nextDiff);
-        RaidCraft.LOGGER.info("6: " + currentIndex);
         // limit route diff to 20 blocks high
         if(Math.abs(preDiff) > 20) {
-            RaidCraft.LOGGER.info("7: " + preDiff);
             if(preDiff < 0) {
                 newY = preLocation.getY() - 20;
             }
             else {
                 newY = preLocation.getY() + 20;
             }
-            RaidCraft.LOGGER.info("8: " + newY);
         }
 
         currentLocation.setY(newY);
