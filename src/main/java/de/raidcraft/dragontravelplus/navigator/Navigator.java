@@ -170,7 +170,6 @@ public class Navigator {
             return;
         }
 
-
         Location currentLocation = section.getFlight().getWayPoint(currentIndex).getLocation();
         Location preLocation = section.getFlight().getWayPoint(currentIndex - 1).getLocation();
         Location nextLocation = section.getFlight().getWayPoint(currentIndex + 1).getLocation();
@@ -180,11 +179,14 @@ public class Navigator {
         double preDiff = (int)(currentLocation.getY() - preLocation.getY());
         double nextDiff = (int)(currentLocation.getY() - nextLocation.getY());
 
-        // check if block is sky isle
-        if(currentY > 200 && preDiff > 20
-                && currentLocation.getWorld().getBlockAt(currentLocation.getBlockX(), preLocation.getBlockY(), currentLocation.getBlockZ())
-                .getType() == Material.AIR) {
-            newY = preLocation.getY();
+        // limit route diff to 20 blocks high
+        if(Math.abs(preDiff) > 20) {
+            if(preDiff < 0) {
+                newY = preLocation.getY() - 20;
+            }
+            else {
+                newY = preLocation.getY() + 20;
+            }
         }
 
         currentLocation.setY(newY);
