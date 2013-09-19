@@ -55,7 +55,7 @@ public class PlayerListener implements Listener {
         DragonManager.INST.abortFlight(event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageEvent event) {
 
         if (!(event.getEntity() instanceof Player)) {
