@@ -43,8 +43,7 @@ public class ChunkListener implements Listener {
 
             String conversationName = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().conversationName;
             List<DragonStation> stations = StationManager.INST.getStationsByChunk(chunk);
-            List<NPC> spawnedNPCs = NPCRegistry.INST.getSpawnedNPCs(chunk);
-            for(NPC npc : spawnedNPCs) {
+            for(NPC npc : NPCRegistry.INST.getSpawnedNPCs(chunk)) {
                 if(npc.getBukkitEntity() == null) continue;
                 if(!equalsChunk(npc.getBukkitEntity().getLocation().getChunk(), chunk)) continue;
 
