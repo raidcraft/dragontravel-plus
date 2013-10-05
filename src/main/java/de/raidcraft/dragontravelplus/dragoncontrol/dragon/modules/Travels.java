@@ -78,8 +78,10 @@ public class Travels {
             int offset = 1;
 
             for (int i = 0; i < 3; i++) {
-
+                int c = 0;
                 while (clone.getBlock().isEmpty() && clone.getY() != 0) {
+                    if(c > 256) break;
+                    c++;
                     clone.setY(clone.getY() - offset);
                 }
 
