@@ -77,15 +77,13 @@ public class Travels {
             Location clone = player.getLocation().clone();
             int offset = 1;
 
-            for (;;) {
-                while (clone.getY() != 0 && clone.getBlock().isEmpty()) {
+            while(clone.getY() > 0) {
+                if(clone.getBlock().isEmpty()) {
                     clone.setY(clone.getY() - offset);
                 }
-
-                if (clone.getY() != 0)
+                else {
                     break;
-
-                clone.setY(256);
+                }
             }
 
             clone.setY(clone.getY() + 2);
