@@ -12,10 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Author: Philip
@@ -98,10 +95,10 @@ public class StationManager {
         return existingStations.get(stations.get(0).getName());
     }
 
-    public List<DragonStation> getStationsByChunk(Chunk chunk) {
+    public Set<DragonStation> getStationsByChunk(Chunk chunk) {
 
         ChunkLocation chunkLocation = new ChunkLocation(chunk);
-        List<DragonStation> chunkStations = new ArrayList<>();
+        Set<DragonStation> chunkStations = new HashSet<>();
         for(DragonStation station : getStations()) {
             ChunkLocation stationChunkLocation = new ChunkLocation(station.getLocation());
             if(chunkLocation.equals(stationChunkLocation)) {
