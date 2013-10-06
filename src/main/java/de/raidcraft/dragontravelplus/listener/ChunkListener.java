@@ -5,15 +5,20 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.npc.NPCManager;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
+import de.raidcraft.rcconversations.RCConversationsPlugin;
 import de.raidcraft.rcconversations.npc.ConversationsTrait;
 import de.raidcraft.rcconversations.npc.NPCRegistry;
+import de.raidcraft.rcconversations.util.ChunkLocation;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -67,7 +72,22 @@ public class ChunkListener implements Listener {
             }
 
             // if there are stations without npcs -> create new
-            for(DragonStation station : stations) {
+            for(DragonStation station : new HashSet<>(stations)) {
+
+                // check first a second time
+                for(ChunkLocation cl : NPCRegistry.INST.getAffectedChunkLocations(chunk)) {
+                    for(Entity entity : chunk.getWorld().getChunkAt(cl.getX(), cl.getZ()).getEntities()) {
+                        if(!(entity instanceof LivingEntity)) continue;
+                        if(entity.getLocation().distance(station.getLocation()) <= 5) {
+                            NPC npc = RaidCraft.getComponent(RCConversationsPlugin.class).getCitizens().getNPCRegistry().getNPC(entity);
+                            if(npc == null) continue;
+                            ConversationsTrait trait = npc.getTrait(ConversationsTrait.class);
+                            if(!trait.getConversationName().equalsIgnoreCase(conversationName)) continue;
+                            stations.remove(station);
+                        }
+                    }
+                }
+
                 RaidCraft.LOGGER.info("Create DragonGuard NPC for station: '" + station.getName() + "'!");
                 NPCManager.createDragonGuard(station);
             }
