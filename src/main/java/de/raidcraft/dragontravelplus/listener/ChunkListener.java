@@ -74,7 +74,7 @@ public class ChunkListener implements Listener {
             // if there are stations without npcs -> create new
             for(DragonStation station : new HashSet<>(stations)) {
 
-                // check first a second time
+                // check a second time
                 for(ChunkLocation cl : NPCRegistry.INST.getAffectedChunkLocations(chunk)) {
                     for(Entity entity : chunk.getWorld().getChunkAt(cl.getX(), cl.getZ()).getEntities()) {
                         if(!(entity instanceof LivingEntity)) continue;
