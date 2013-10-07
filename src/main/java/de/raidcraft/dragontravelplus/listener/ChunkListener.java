@@ -46,36 +46,15 @@ public class ChunkListener implements Listener {
 
             String conversationName = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().conversationName;
             Set<DragonStation> stations = StationManager.INST.getStationsByChunk(chunk);
-            for(NPC npc : NPCRegistry.INST.getSpawnedNPCs(chunk)) {
-                if(npc.getBukkitEntity() == null) continue;
-
-                ConversationsTrait trait = npc.getTrait(ConversationsTrait.class);
-                if(!trait.getConversationName().equalsIgnoreCase(conversationName)) {
-                    continue;
-                }
-
-                boolean found = false;
-                for(DragonStation station : stations) {
-                    if(npc.getBukkitEntity().getLocation().distance(station.getLocation()) <= 5) {
-                        stations.remove(station);
-//                        RaidCraft.LOGGER.info("Found DragonGuard NPC for station: '" + station.getName() + "'!");
-                        found = true;
-                        break;
-                    }
-                }
-                if(found) continue;
-
-                // delete all npcs without station
-//                RaidCraft.LOGGER.info("Delete DragonGuard NPC without own station! (x:" + npc.getBukkitEntity().getLocation().getX() + "|z:" + npc.getBukkitEntity().getLocation().getZ() + ")");
-//                NPCRegistry.INST.unregisterNPC(npc);
-//                npc.destroy();
-            }
 
             // if there are stations without npcs -> create new
+
             for(DragonStation station : new HashSet<>(stations)) {
 
                 // check a second time
-                for(ChunkLocation cl : NPCRegistry.INST.getAffectedChunkLocations(chunk)) {
+                Set<ChunkLocation> affectedChunks = NPCRegistry.INST.getAffectedChunkLocations(chunk);
+                boolean found = false;
+                for(ChunkLocation cl : affectedChunks) {
                     for(Entity entity : chunk.getWorld().getChunkAt(cl.getX(), cl.getZ()).getEntities()) {
                         if(!(entity instanceof LivingEntity)) continue;
                         if(entity.getLocation().distance(station.getLocation()) <= 5) {
@@ -84,10 +63,19 @@ public class ChunkListener implements Listener {
                             ConversationsTrait trait = npc.getTrait(ConversationsTrait.class);
                             if(!trait.getConversationName().equalsIgnoreCase(conversationName)) continue;
                             stations.remove(station);
+                            if(found) {
+                                NPCRegistry.INST.unregisterNPC(npc);
+                                npc.destroy();
+                            }
+                            else {
+                                found = true;
+                            }
                         }
                     }
                 }
+            }
 
+            for(DragonStation station : stations) {
                 RaidCraft.LOGGER.info("Create DragonGuard NPC for station: '" + station.getName() + "'!");
                 NPCManager.createDragonGuard(station);
             }
