@@ -304,6 +304,7 @@ public class DTPCommands {
             player.sendMessage("Living-Entities in affected chunks: " + entityCount);
             player.sendMessage("NPC-Entities according to getNPC(): " + npcMethodCount);
             player.sendMessage("NPC-Entities according to MetaData: " + npcMetaCount);
+            player.sendMessage("NPC-Entities according to Registry: " + NPCRegistry.INST.getSpawnedNPCs(chunk).size());
         }
     }
 }
