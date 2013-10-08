@@ -9,6 +9,7 @@ import de.raidcraft.rcconversations.RCConversationsPlugin;
 import de.raidcraft.rcconversations.api.action.*;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
 import de.raidcraft.rcconversations.conversations.EndReason;
+import de.raidcraft.rcconversations.util.MathHelper;
 import de.raidcraft.rcconversations.util.ParseString;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,6 +28,9 @@ public class FlyToStationAction extends AbstractAction {
         targetName = ParseString.INST.parse(conversation, targetName);
         startName = ParseString.INST.parse(conversation, startName);
         int delay = args.getInt("delay", 0);
+        String priceString = args.getString("price", "0");
+        priceString = ParseString.INST.parse(conversation, priceString);
+        double price = MathHelper.solveDoubleFormula(priceString);
 
         DragonStation target = StationManager.INST.getDragonStation(targetName);
         if(target == null) {
@@ -44,27 +48,29 @@ public class FlyToStationAction extends AbstractAction {
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Station '" + targetName + "' does not exists!");
         }
 
-        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new TakoffDelayedTask(start, target, conversation.getPlayer()), delay);
+        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new TakeoffDelayedTask(start, target, conversation.getPlayer(), price), delay);
     }
 
-    public class TakoffDelayedTask implements Runnable {
+    public class TakeoffDelayedTask implements Runnable {
 
         DragonStation start;
         DragonStation target;
         Player player;
+        double price;
 
-        public TakoffDelayedTask(DragonStation start, DragonStation target, Player player) {
+        public TakeoffDelayedTask(DragonStation start, DragonStation target, Player player, double price) {
 
             this.start = start;
             this.target = target;
             this.player = player;
+            this.price = price;
         }
 
         @Override
         public void run() {
 
             RaidCraft.getComponent(RCConversationsPlugin.class).getConversationManager().endConversation(player.getName(), EndReason.SILENT);
-            DragonManager.INST.takeoff(player, start, target, 0);
+            DragonManager.INST.takeoff(player, start, target, price);
 
         }
     }

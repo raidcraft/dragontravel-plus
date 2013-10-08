@@ -227,7 +227,7 @@ public class Navigator {
         task.cancel(); // if takeoff is called cancel calculation task
         if(flight == null) return;
         FlightTravel.flyFlight(flight, player, RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().dynamicFlightSpeed);
-        RaidCraft.getEconomy().modify(player.getName(), -price, BalanceSource.DRAGON_TRAVEL, start.getFriendlyName() + " --> " + destination.getFriendlyName());
+        RaidCraft.getEconomy().substract(player.getName(), price, BalanceSource.DRAGON_TRAVEL, start.getFriendlyName() + " --> " + destination.getFriendlyName());
         player.sendMessage(ChatColor.GRAY + "Schreibe '" + RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().exitWords[0] + "' in den Chat um den Flug abzubrechen!");
     }
 
