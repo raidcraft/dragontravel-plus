@@ -26,11 +26,8 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.minecraft.server.v1_6_R3.EntityTypes;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Author: Philip
@@ -103,9 +100,9 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     @Override
     public void disable() {
         // remove all dragons in the world
-        for (Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.getFlyingPlayers().entrySet()) {
-            if (entry.getValue().isInAir()) {
-                DragonManager.INST.abortFlight(entry.getKey());
+        for (FlyingPlayer flyingPlayer : DragonManager.INST.getFlyingPlayers()) {
+            if (flyingPlayer.isInAir()) {
+                DragonManager.INST.abortFlight(flyingPlayer.getPlayer());
             }
         }
     }
@@ -120,15 +117,14 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         config.reload();
         // remove all dragons in the world
-        Map<Player, FlyingPlayer> flyingPlayersCopy = new HashMap<>(DragonManager.INST.getFlyingPlayers());
-        for (Map.Entry<Player, FlyingPlayer> entry : flyingPlayersCopy.entrySet()) {
-            if (entry.getValue().isInAir()) {
-                DragonManager.INST.abortFlight(entry.getKey());
-                ChatMessages.warn(entry.getKey(), "Der Flug musste aus technischen Gruenden abgebrochen werden!");
+        for (FlyingPlayer flyingPlayer : DragonManager.INST.getFlyingPlayers()) {
+            if (flyingPlayer.isInAir()) {
+                DragonManager.INST.abortFlight(flyingPlayer.getPlayer());
+                ChatMessages.warn(flyingPlayer.getPlayer(), "Der Flug musste aus technischen Gruenden abgebrochen werden!");
             }
         }
 
-        DragonManager.INST.getFlyingPlayers().clear();
+        DragonManager.INST.clearFlyingPlayers();
         StationManager.INST.loadExistingStations();
     }
 

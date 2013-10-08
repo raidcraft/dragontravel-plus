@@ -15,20 +15,26 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class FlightTravel {
 
-    public static void flyFlight(Flight flight, Player player, double speed) {
-        flyFlight(flight, player, speed, 0);
+    public static void flyFlight(Flight flight, FlyingPlayer flyingPlayer, double speed) {
+
+        flyFlight(flight, flyingPlayer, speed, 0);
     }
 
-    public static void flyFlight(Flight flight, Player player, double speed, int delay) {
+    public static void flyFlight(Flight flight, Player player, double speed) {
 
         FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
+        flyFlight(flight, flyingPlayer, speed, 0);
+    }
 
-        if(flyingPlayer != null && flyingPlayer.isInAir()) {
+    public static void flyFlight(Flight flight, FlyingPlayer flyingPlayer, double speed, int delay) {
+
+        Player player = flyingPlayer.getPlayer();
+
+        if(flyingPlayer == null || flyingPlayer.isInAir()) {
             return;
         }
 
-        flyingPlayer = new FlyingPlayer(player, player.getLocation());
-        DragonManager.INST.getFlyingPlayers().put(player, flyingPlayer);
+        DragonManager.INST.setFlyingPlayer(flyingPlayer);
 
         // port player to start
         Location departure = flight.getWayPoint(0).getLocation();
@@ -53,7 +59,7 @@ public class FlightTravel {
 
         flyingPlayer = new FlyingPlayer(player, player.getLocation());
         flyingPlayer.setInAir(true);
-        DragonManager.INST.getFlyingPlayers().put(player, flyingPlayer);
+        DragonManager.INST.setFlyingPlayer(flyingPlayer);
 
         // Mounting the player
         if (!Travels.mountDragon(player))

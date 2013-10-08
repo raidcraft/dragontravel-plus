@@ -3,6 +3,7 @@ package de.raidcraft.dragontravelplus.dragoncontrol;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
+import de.raidcraft.dragontravelplus.station.DragonStation;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -25,6 +26,8 @@ public class FlyingPlayer {
     private double price = 0;
     private BukkitTask waitingTask;
     private BukkitTask checkerTask;
+    private DragonStation startStation;
+    private DragonStation destinationStation;
 
     public FlyingPlayer(Player player, Location start, Location destination, double price) {
 
@@ -37,28 +40,17 @@ public class FlyingPlayer {
 
         this.player = player;
         this.start = start;
-/*        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
-                RaidCraft.getComponent(DragonTravelPlusPlugin.class),
-                ConnectionSide.SERVER_SIDE,
-                Packets.Server.ENTITY_METADATA
-        ) {
-            @Override
-            public void onPacketSending(PacketEvent event) {
+    }
 
-                Packet28EntityMetadata packet = new Packet28EntityMetadata(event.getPacket());
-                Entity entity = packet.getEntity(event);
+    public FlyingPlayer(Player player, DragonStation startStation, DragonStation destinationStation, double price) {
 
-                if (getDragon() != null && getDragon().getBukkitEntity().equals(entity)) {
+        this.player = player;
+        this.startStation = startStation;
+        this.destinationStation = destinationStation;
+        this.price = price;
 
-                    // Clone and update it
-                    packet = new Packet28EntityMetadata(packet.getHandle().deepClone());
-                    WrappedDataWatcher watcher = new WrappedDataWatcher(packet.getEntityMetadata());
-                    watcher.setObject(6, (byte) ENTITY_NAME_INVISIBLE);
-
-                    event.setPacket(packet.getHandle());
-                }
-            }
-        });*/
+        this.start = startStation.getLocation();
+        this.destination = destinationStation.getLocation();
     }
 
     public boolean hasIncorrectState() {
@@ -135,6 +127,31 @@ public class FlyingPlayer {
     public double getPrice() {
 
         return price;
+    }
+
+    public void setPrice(double price) {
+
+        this.price = price;
+    }
+
+    public DragonStation getStartStation() {
+
+        return startStation;
+    }
+
+    public void setStartStation(DragonStation startStation) {
+
+        this.startStation = startStation;
+    }
+
+    public DragonStation getDestinationStation() {
+
+        return destinationStation;
+    }
+
+    public void setDestinationStation(DragonStation destinationStation) {
+
+        this.destinationStation = destinationStation;
     }
 
     public BukkitTask getCheckerTask() {

@@ -3,10 +3,12 @@ package de.raidcraft.dragontravelplus.dragoncontrol;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.navigator.Navigator;
 import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.util.CaseInsensitiveMap;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Author: Philip
@@ -15,7 +17,7 @@ import java.util.Map;
  */
 public class DragonManager {
 
-    private Map<Player, FlyingPlayer> flyingPlayers = new HashMap<>();
+    private Map<String, FlyingPlayer> flyingPlayers = new CaseInsensitiveMap<>();
 
     public final static DragonManager INST = new DragonManager();
 
@@ -27,11 +29,11 @@ public class DragonManager {
 
     public void abortFlight(Player player) {
 
-        if (!DragonManager.INST.flyingPlayers.containsKey(player)) {
+        if (!flyingPlayers.containsKey(player.getName())) {
             return;
         }
 
-        FlyingPlayer flyingPlayer = DragonManager.INST.flyingPlayers.get(player);
+        FlyingPlayer flyingPlayer = flyingPlayers.get(player.getName());
 
 
         if (flyingPlayer.isInAir()) {
@@ -40,21 +42,31 @@ public class DragonManager {
             flyingPlayer.cancelWaitingTask();
         }
         player.teleport(flyingPlayer.getStart());   // teleport to start
-        DragonManager.INST.flyingPlayers.remove(player);
+        DragonManager.INST.flyingPlayers.remove(player.getName());
     }
 
     public FlyingPlayer getFlyingPlayer(String name) {
 
-        for (Map.Entry<Player, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
-            if (entry.getKey().getName().equalsIgnoreCase(name)) {
+        for (Map.Entry<String, FlyingPlayer> entry : DragonManager.INST.flyingPlayers.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(name)) {
                 return entry.getValue();
             }
         }
         return null;
     }
 
-    public Map<Player, FlyingPlayer> getFlyingPlayers() {
+    public Set<FlyingPlayer> getFlyingPlayers() {
 
-        return flyingPlayers;
+        return new HashSet<>(flyingPlayers.values());
+    }
+
+    public void setFlyingPlayer(FlyingPlayer flyingPlayer) {
+
+        flyingPlayers.put(flyingPlayer.getPlayer().getName(), flyingPlayer);
+    }
+
+    public void clearFlyingPlayers() {
+
+        flyingPlayers.clear();
     }
 }

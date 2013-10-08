@@ -1,8 +1,9 @@
 package de.raidcraft.dragontravelplus.navigator;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.economy.BalanceSource;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
+import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
 import de.raidcraft.dragontravelplus.flight.Flight;
 import de.raidcraft.dragontravelplus.flight.WayPoint;
@@ -226,8 +227,13 @@ public class Navigator {
 
         task.cancel(); // if takeoff is called cancel calculation task
         if(flight == null) return;
+        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
+        if(flyingPlayer == null) {
+            flyingPlayer = new FlyingPlayer(player, start, destination, price);
+        }
+        DragonManager.INST.setFlyingPlayer(flyingPlayer);
+
         FlightTravel.flyFlight(flight, player, RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().dynamicFlightSpeed);
-        RaidCraft.getEconomy().substract(player.getName(), price, BalanceSource.DRAGON_TRAVEL, start.getFriendlyName() + " --> " + destination.getFriendlyName());
         player.sendMessage(ChatColor.GRAY + "Schreibe '" + RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().exitWords[0] + "' in den Chat um den Flug abzubrechen!");
     }
 

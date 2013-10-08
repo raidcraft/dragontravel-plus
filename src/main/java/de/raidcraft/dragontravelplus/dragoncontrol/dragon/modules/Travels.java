@@ -1,6 +1,7 @@
 package de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.economy.BalanceSource;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
@@ -22,7 +23,7 @@ public class Travels {
      */
     public static boolean mountDragon(Player player) {
 
-        if (!DragonManager.INST.getFlyingPlayers().containsKey(player)) {
+        if (DragonManager.INST.getFlyingPlayer(player.getName()) == null) {
             return false;
         }
 
@@ -60,6 +61,12 @@ public class Travels {
 
         if(flyingPlayer.getDragon() == null) {
             return;
+        }
+
+        // charge bank
+        if(flyingPlayer.getDragon().getFlightType() == RCDragon.FLIGHT_TYPE.FLIGHT) {
+            RaidCraft.getEconomy().substract(flyingPlayer.getPlayer().getName(), flyingPlayer.getPrice(), BalanceSource.DRAGON_TRAVEL,
+                    flyingPlayer.getStartStation().getFriendlyName() + " --> " + flyingPlayer.getDestinationStation().getFriendlyName());
         }
 
         flyingPlayer.cancelCheckerTask();
@@ -166,7 +173,7 @@ public class Travels {
 
         mountDragon(player);
 
-        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayers().get(player);
+        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
         RCDragon dragon = flyingPlayer.getDragon();
         if (dragon == null)
             return;
