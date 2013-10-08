@@ -107,7 +107,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         String message = event.getMessage();
 
-        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayers().get(player);
+        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
 
         if (Arrays.asList(RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().exitWords).contains(message)) {
             if (flyingPlayer != null && flyingPlayer.isInAir()) {

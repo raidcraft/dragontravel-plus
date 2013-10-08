@@ -26,6 +26,12 @@ public class FlightTravel {
         flyFlight(flight, flyingPlayer, speed, 0);
     }
 
+    public static void flyFlight(Flight flight, Player player, double speed, int delay) {
+
+        FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
+        flyFlight(flight, flyingPlayer, speed, delay);
+    }
+
     public static void flyFlight(Flight flight, FlyingPlayer flyingPlayer, double speed, int delay) {
 
         Player player = flyingPlayer.getPlayer();

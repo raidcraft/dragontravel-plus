@@ -260,7 +260,7 @@ public class DTPCommands {
         @CommandPermissions("dragontravelplus.markers")
         public void inAir(CommandContext context, CommandSender sender) throws CommandException {
 
-            Collection<FlyingPlayer> flyingPlayers = DragonManager.INST.getFlyingPlayers().values();
+            Collection<FlyingPlayer> flyingPlayers = DragonManager.INST.getFlyingPlayers();
 
             if(flyingPlayers.size() == 0) {
                 throw new CommandException("Es befinden sich derzeit alle Spieler am Boden!");
