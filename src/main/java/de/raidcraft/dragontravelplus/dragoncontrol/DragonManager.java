@@ -29,11 +29,12 @@ public class DragonManager {
 
     public void abortFlight(Player player) {
 
-        if (!flyingPlayers.containsKey(player.getName())) {
+        FlyingPlayer flyingPlayer = flyingPlayers.get(player.getName());
+
+        if (flyingPlayer == null || !flyingPlayer.isInAir()) {
             return;
         }
 
-        FlyingPlayer flyingPlayer = flyingPlayers.get(player.getName());
 
         flyingPlayer.setPrice(0);
 
