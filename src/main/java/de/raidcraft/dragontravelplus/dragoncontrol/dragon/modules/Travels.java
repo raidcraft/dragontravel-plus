@@ -64,7 +64,7 @@ public class Travels {
         }
 
         // charge bank
-        if(flyingPlayer.getDragon().getFlightType() == RCDragon.FLIGHT_TYPE.FLIGHT) {
+        if(flyingPlayer.getDragon().getFlightType() == RCDragon.FLIGHT_TYPE.FLIGHT && flyingPlayer.getPrice() > 0) {
             RaidCraft.getEconomy().substract(flyingPlayer.getPlayer().getName(), flyingPlayer.getPrice(), BalanceSource.DRAGON_TRAVEL,
                     flyingPlayer.getStartStation().getFriendlyName() + " --> " + flyingPlayer.getDestinationStation().getFriendlyName());
         }
@@ -105,6 +105,9 @@ public class Travels {
         entity.remove();
         flyingPlayer.getDragon().cancelTasks();
         flyingPlayer.setDragon(null);
+        flyingPlayer.setInAir(false);
+        flyingPlayer.setStart(null);
+        flyingPlayer.setStartStation(null);
 //        flyingPlayer.setInAir(false);
     }
 

@@ -17,8 +17,8 @@ public class FlyingPlayer {
 
     private static final int ENTITY_NAME_INVISIBLE = 0x0;
 
-    private final Player player;
-    private final Location start;
+    private Player player;
+    private Location start;
     private RCDragon dragon = null;
     private Location destination;
     private boolean inAir = false;
@@ -170,5 +170,15 @@ public class FlyingPlayer {
         if(this.checkerTask != null) {
             this.checkerTask.cancel();
         }
+    }
+
+    public void setStart(Location start) {
+
+        this.start = start;
+    }
+
+    public void setDestination(Location destination) {
+
+        this.destination = destination;
     }
 }
