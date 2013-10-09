@@ -35,8 +35,6 @@ public class DragonManager {
 
         FlyingPlayer flyingPlayer = flyingPlayers.get(player.getName());
 
-        flyingPlayer.setPrice(0);
-
         if (flyingPlayer.isInAir()) {
             Travels.removePlayerAndDragon(flyingPlayer);
         } else {

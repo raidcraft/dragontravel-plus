@@ -106,8 +106,7 @@ public class Travels {
         flyingPlayer.getDragon().cancelTasks();
         flyingPlayer.setDragon(null);
         flyingPlayer.setInAir(false);
-        flyingPlayer.setStart(null);
-        flyingPlayer.setStartStation(null);
+        flyingPlayer.setPrice(0);
 //        flyingPlayer.setInAir(false);
     }
 
