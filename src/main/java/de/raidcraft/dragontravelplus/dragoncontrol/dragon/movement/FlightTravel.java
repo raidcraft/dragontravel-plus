@@ -29,6 +29,9 @@ public class FlightTravel {
     public static void flyFlight(Flight flight, Player player, double speed, int delay) {
 
         FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
+        if(flyingPlayer == null) {
+            flyingPlayer = new FlyingPlayer(player, player.getLocation());
+        }
         flyFlight(flight, flyingPlayer, speed, delay);
     }
 
