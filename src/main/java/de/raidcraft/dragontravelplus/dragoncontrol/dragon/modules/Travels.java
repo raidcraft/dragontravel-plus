@@ -2,10 +2,12 @@ package de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.economy.BalanceSource;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import net.minecraft.server.v1_6_R3.World;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.entity.EnderDragon;
@@ -105,9 +107,9 @@ public class Travels {
         entity.remove();
         flyingPlayer.getDragon().cancelTasks();
         flyingPlayer.setDragon(null);
-        flyingPlayer.setInAir(false);
         flyingPlayer.setPrice(0);
-//        flyingPlayer.setInAir(false);
+
+        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new SaveLandPlayerTask(flyingPlayer), 3 * 20);
     }
 
     /**
