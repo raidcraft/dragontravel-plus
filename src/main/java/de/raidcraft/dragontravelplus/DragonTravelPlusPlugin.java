@@ -14,16 +14,12 @@ import de.raidcraft.dragontravelplus.flight.FlightEditorListener;
 import de.raidcraft.dragontravelplus.listener.ChunkListener;
 import de.raidcraft.dragontravelplus.listener.DragonListener;
 import de.raidcraft.dragontravelplus.listener.PlayerListener;
-import de.raidcraft.dragontravelplus.npc.DragonGuardTrait;
 import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
 import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import de.raidcraft.rcconversations.actions.ActionManager;
-import net.citizensnpcs.Citizens;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.trait.TraitInfo;
 import net.minecraft.server.v1_6_R3.EntityTypes;
 import org.bukkit.Bukkit;
 
@@ -36,7 +32,6 @@ import java.lang.reflect.Method;
  */
 public class DragonTravelPlusPlugin extends BasePlugin {
 
-    private Citizens citizens;
     private LocalDTPConfiguration config;
 
     @Override
@@ -69,14 +64,6 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         registerTable(FlightWayPointsTable.class, new FlightWayPointsTable());
 
         StationManager.INST.loadExistingStations();
-
-        try {
-//            registerEvents(new NPCListener());
-            CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(DragonGuardTrait.class).withName("dragonguard"));
-            citizens = (Citizens)Bukkit.getPluginManager().getPlugin("Citizens");
-        } catch (Exception e) {
-            RaidCraft.LOGGER.warning("[DTP] Can't load NPC stuff! Citizens not found!");
-        }
 
         // lets trigger a delayed load to make sure all plugins are loaded
         Bukkit.getScheduler().runTaskLater(this, new Runnable() {
@@ -126,11 +113,6 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         DragonManager.INST.clearFlyingPlayers();
         StationManager.INST.loadExistingStations();
-    }
-
-    public Citizens getCitizens() {
-
-        return citizens;
     }
 
     public LocalDTPConfiguration getConfig() {
