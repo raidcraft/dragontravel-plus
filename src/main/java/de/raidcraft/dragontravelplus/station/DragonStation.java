@@ -13,7 +13,6 @@ public class DragonStation {
 
     private String name;
     private Location location;
-    private MapLocation mapLocation;
     private int costLevel = 0;
     private boolean mainStation = false;
     private boolean emergencyTarget = false;
@@ -24,7 +23,6 @@ public class DragonStation {
 
         this.name = name;
         this.location = location;
-        this.mapLocation = MapLocation.getMapLocation(location);
         this.costLevel = costLevel;
         this.mainStation = mainStation;
         this.emergencyTarget = emergencyTarget;
@@ -55,11 +53,6 @@ public class DragonStation {
         return location;
     }
 
-    public MapLocation getMapLocation() {
-
-        return mapLocation;
-    }
-
     public int getCostLevel() {
 
         return costLevel;
@@ -88,43 +81,6 @@ public class DragonStation {
     public int getDistance(DragonStation station) {
 
         return (int)getLocation().distance(station.getLocation());
-    }
-
-    public enum MapLocation {
-        NORTH("Norden"),
-        EAST("Osten"),
-        SOUTH("Süden"),
-        WEST("Westen"),
-        NORTH_EAST("Nordosten"),
-        NORTH_WEST("Nordwesten"),
-        SOUTH_EAST("Südosten"),
-        SOUTH_WEST("Südwesten");
-
-        private String name;
-
-        private MapLocation(String name) {
-
-            this.name = name;
-        }
-
-        public String getName() {
-
-            return name;
-        }
-
-        public static MapLocation getMapLocation(Location location) {
-
-            if (location.getBlockX() >= 0 && location.getZ() >= 0) {
-                return SOUTH_EAST;
-            }
-            if (location.getBlockX() <= 0 && location.getZ() >= 0) {
-                return SOUTH_WEST;
-            }
-            if (location.getBlockX() <= 0 && location.getZ() <= 0) {
-                return NORTH_WEST;
-            }
-            return NORTH_EAST;
-        }
     }
 
     @Override
