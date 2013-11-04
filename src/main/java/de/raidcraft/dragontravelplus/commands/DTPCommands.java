@@ -26,7 +26,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -261,18 +263,18 @@ public class DTPCommands {
         public void inAir(CommandContext context, CommandSender sender) throws CommandException {
 
             Collection<FlyingPlayer> flyingPlayers = DragonManager.INST.getFlyingPlayers();
-
-            if(flyingPlayers.size() == 0) {
+            List<String> inAirPlayers = new ArrayList<>();
+            for(FlyingPlayer flyingPlayer : flyingPlayers) {
+                if(flyingPlayer.isInAir()) inAirPlayers.add(flyingPlayer.getPlayer().getName());
+            }
+            if(inAirPlayers.size() == 0) {
                 throw new CommandException("Es befinden sich derzeit alle Spieler am Boden!");
             }
 
             sender.sendMessage(ChatColor.YELLOW + "Folgende Spieler fliegen gerade mit einem Drache:");
             String msg = "";
-            for(FlyingPlayer flyingPlayer : flyingPlayers) {
-
-                if(!flyingPlayer.isInAir()) continue;
-
-                msg += flyingPlayer.getPlayer().getName() + ", ";
+            for(String playerName : inAirPlayers) {
+                msg += playerName + ", ";
             }
             sender.sendMessage(ChatColor.YELLOW + msg);
         }
