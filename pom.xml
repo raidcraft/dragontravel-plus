@@ -52,5 +52,10 @@
             <artifactId>rcconversations</artifactId>
             <version>${rc.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.raidcraft</groupId>
+            <artifactId>rctravel</artifactId>
+            <version>${rc.version}</version>
+        </dependency>
     </dependencies>
 </project>

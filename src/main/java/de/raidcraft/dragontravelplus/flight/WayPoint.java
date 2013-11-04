@@ -78,6 +78,7 @@ public class WayPoint {
         this.world = world;
     }
 
+    @Override
     public WayPoint clone() {
         return new WayPoint(world, x, y, z);
     }
@@ -85,10 +86,8 @@ public class WayPoint {
     public boolean sameBlockLocation(Location location) {
 
         Location thisLocation = getLocation();
-        if(location.getBlockX() == thisLocation.getBlockX()
+        return location.getBlockX() == thisLocation.getBlockX()
                 && location.getBlockY() == thisLocation.getBlockY()
-                && location.getBlockZ() == thisLocation.getBlockZ())
-            return true;
-        return false;
+                && location.getBlockZ() == thisLocation.getBlockZ();
     }
 }

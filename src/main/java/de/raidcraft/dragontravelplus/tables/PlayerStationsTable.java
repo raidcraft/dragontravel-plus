@@ -3,7 +3,6 @@ package de.raidcraft.dragontravelplus.tables;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.util.DateUtil;
-import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,7 +55,7 @@ public class PlayerStationsTable extends Table {
         return stations;
     }
 
-    public boolean playerIsFamiliar(Player player, DragonStation station) {
+    public boolean playerIsFamiliar(String player, DragonStation station) {
 
         try {
             ResultSet resultSet = executeQuery(

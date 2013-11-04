@@ -58,7 +58,7 @@ public class ListStationsAction extends AbstractAction {
         if(type == ListType.FREE) {
             List<DragonStation> freeStations = new ArrayList<>();
             for(DragonStation s : stations) {
-                if(s.getCostLevel() == 0) {
+                if(s.getPrice() == 0) {
                     freeStations.add(s);
                 }
             }

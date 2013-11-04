@@ -63,9 +63,7 @@ public class StationTable extends Table {
                         , new Location(world, resultSet.getDouble("x"), resultSet.getDouble("y"), resultSet.getDouble("z"))
                         , resultSet.getInt("cost_level")
                         , resultSet.getBoolean("main")
-                        , resultSet.getBoolean("emergency")
-                        , resultSet.getString("creator")
-                        , resultSet.getString("created"));
+                        , resultSet.getBoolean("emergency"));
 
                 stations.add(station);
             }
@@ -98,9 +96,7 @@ public class StationTable extends Table {
                         , new Location(world, resultSet.getDouble("x"), resultSet.getDouble("y"), resultSet.getDouble("z"))
                         , resultSet.getInt("cost_level")
                         , resultSet.getBoolean("main")
-                        , resultSet.getBoolean("emergency")
-                        , resultSet.getString("creator")
-                        , resultSet.getString("created"));
+                        , resultSet.getBoolean("emergency"));
 
                 stations.add(station);
             }
@@ -139,11 +135,9 @@ public class StationTable extends Table {
                     "'" + station.getLocation().getBlockX() + "'" + "," +
                     "'" + station.getLocation().getBlockY() + "'" + "," +
                     "'" + station.getLocation().getBlockZ() + "'" + "," +
-                    "'" + station.getCostLevel() + "'" + "," +
+                    "'" + (int)station.getPrice() + "'" + "," +
                     "'" + ((station.isMainStation()) ? 1 : 0) + "'" + "," +
-                    "'" + ((station.isEmergencyTarget()) ? 1 : 0) + "'" + "," +
-                    "'" + station.getCreator() + "'" + "," +
-                    "'" + station.getCreated() + "'" +
+                    "'" + ((station.isEmergencyTarget()) ? 1 : 0) + "'" +
                     ");";
 
             executeUpdate(query);

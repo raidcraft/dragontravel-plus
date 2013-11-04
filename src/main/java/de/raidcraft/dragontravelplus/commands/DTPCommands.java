@@ -16,7 +16,6 @@ import de.raidcraft.dragontravelplus.util.DynmapManager;
 import de.raidcraft.rcconversations.RCConversationsPlugin;
 import de.raidcraft.rcconversations.npc.NPCRegistry;
 import de.raidcraft.rcconversations.util.ChunkLocation;
-import de.raidcraft.util.DateUtil;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -106,10 +105,7 @@ public class DTPCommands {
                     , ((Player) sender).getLocation()
                     , costLevel
                     , mainStation
-                    , emergencyTarget
-                    , sender.getName()
-                    , DateUtil.getCurrentDateString());
-            ;
+                    , emergencyTarget);
             try {
                 StationManager.INST.addNewStation(station);
             } catch (AlreadyExistsException e) {
@@ -188,7 +184,7 @@ public class DTPCommands {
                 }
 
                 if (context.hasFlag('c')) {
-                    if (!String.valueOf(entry.getValue().getCostLevel()).equalsIgnoreCase(context.getFlag('c'))) continue;
+                    if (!String.valueOf((int)entry.getValue().getPrice()).equalsIgnoreCase(context.getFlag('c'))) continue;
                 }
 
                 if(!entry.getValue().getLocation().getWorld().getName().equalsIgnoreCase(((Player) sender).getLocation().getWorld().getName())) {
@@ -196,7 +192,7 @@ public class DTPCommands {
                 }
 
                 ChatColor color = ChatColor.AQUA;
-                if (entry.getValue().getCostLevel() > 0) color = ChatColor.GOLD;
+                if (entry.getValue().getPrice() > 0) color = ChatColor.GOLD;
                 if (entry.getValue().isEmergencyTarget()) color = ChatColor.DARK_RED;
                 list += color + entry.getKey() + ChatColor.WHITE + ", ";
             }

@@ -1,33 +1,27 @@
 package de.raidcraft.dragontravelplus.station;
 
-import de.raidcraft.util.DateUtil;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
+import de.raidcraft.rctravel.api.station.AbstractChargeableStation;
+import de.raidcraft.rctravel.api.station.Discoverable;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 /**
  * Author: Philip
  * Date: 24.11.12 - 13:34
  * Description:
  */
-public class DragonStation {
+public class DragonStation extends AbstractChargeableStation implements Discoverable {
 
-    private String name;
-    private Location location;
-    private int costLevel = 0;
     private boolean mainStation = false;
     private boolean emergencyTarget = false;
-    private String creator;
-    private String created;
 
-    public DragonStation(String name, Location location, int costLevel, boolean mainStation, boolean emergencyTarget, String creator, String created) {
+    public DragonStation(String name, Location location, int costLevel, boolean mainStation, boolean emergencyTarget) {
 
-        this.name = name;
-        this.location = location;
-        this.costLevel = costLevel;
+        super(name, location, costLevel);
         this.mainStation = mainStation;
         this.emergencyTarget = emergencyTarget;
-        this.creator = creator;
-        this.created = created;
     }
 
     /*
@@ -35,27 +29,12 @@ public class DragonStation {
      */
     public DragonStation(String name, Location location) {
 
-        this(name, location, 0, false, false, "Dummy", DateUtil.getCurrentDateString());
-    }
-
-    public String getName() {
-
-        return name;
+        this(name, location, 0, false, false);
     }
 
     public String getFriendlyName() {
 
-        return name.replace("_", " ");
-    }
-
-    public Location getLocation() {
-
-        return location;
-    }
-
-    public int getCostLevel() {
-
-        return costLevel;
+        return getName().replace("_", " ");
     }
 
     public boolean isMainStation() {
@@ -68,37 +47,33 @@ public class DragonStation {
         return emergencyTarget;
     }
 
-    public String getCreator() {
-
-        return creator;
-    }
-
-    public String getCreated() {
-
-        return created;
-    }
-
     public int getDistance(DragonStation station) {
 
         return (int)getLocation().distance(station.getLocation());
     }
 
     @Override
-    public int hashCode() {
+    public boolean hasDiscovered(String player) {
 
-        return new HashCodeBuilder().append(name).append(isMainStation()).append(costLevel).append(isEmergencyTarget()).toHashCode();
+        if(emergencyTarget || mainStation) return true;
+        return RaidCraft.getTable(PlayerStationsTable.class).playerIsFamiliar(player, this);
     }
 
+    @Override
+    public void setDiscovered(String player, boolean discovered) {
 
+        if(discovered) {
+            RaidCraft.getTable(PlayerStationsTable.class).addStation(player, this);
+        }
+        else {
+            // do nothing
+        }
+    }
 
     @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof DragonStation) {
+    @Deprecated
+    public void travel(Player player) {
 
-            if(((DragonStation)obj).getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+        // dragontravelplus doesn't support this form off takeoff
     }
 }

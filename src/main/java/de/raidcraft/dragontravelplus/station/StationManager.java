@@ -145,7 +145,7 @@ public class StationManager {
 
     public boolean stationIsFamiliar(Player player, DragonStation station) {
 
-        return (getPlayerStations(player).contains(station));
+        return getPlayerStations(player).contains(station);
     }
 
     public void assignStationWithPlayer(String player, DragonStation station) {

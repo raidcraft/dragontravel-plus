@@ -13,14 +13,14 @@ public class FlightCosts {
 
     public static double getPrice(DragonStation start, DragonStation destination) {
 
-        if (destination.isEmergencyTarget() || (start.getCostLevel() == 0 && destination.getCostLevel() == 0)) {
+        if (destination.isEmergencyTarget() || (start.getPrice() == 0 && destination.getPrice() == 0)) {
             return 0;
         }
         int costLevel;
-        if (destination.getCostLevel() == 0) {
-            costLevel = start.getCostLevel();
+        if (destination.getPrice() == 0) {
+            costLevel = (int)start.getPrice();
         } else {
-            costLevel = destination.getCostLevel();
+            costLevel = (int)destination.getPrice();
         }
         return Math.abs(Math.round(costLevel * start.getLocation().distance(destination.getLocation()) * RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().pricePerBlock * 100.) / 100.);
     }

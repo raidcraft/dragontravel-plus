@@ -39,7 +39,7 @@ public class FlightTravel {
 
         Player player = flyingPlayer.getPlayer();
 
-        if(flyingPlayer == null || flyingPlayer.isInAir()) {
+        if(flyingPlayer.isInAir()) {
             return;
         }
 

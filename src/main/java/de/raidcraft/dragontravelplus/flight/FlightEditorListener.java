@@ -40,10 +40,7 @@ public class FlightEditorListener implements Listener {
      */
     public static boolean hasEditorMode(String player) {
 
-        if (editors.containsKey(player))
-            return true;
-        else
-            return false;
+        return editors.containsKey(player);
     }
 
     /**
