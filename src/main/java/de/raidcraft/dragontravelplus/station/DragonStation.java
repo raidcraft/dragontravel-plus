@@ -72,7 +72,7 @@ public class DragonStation extends AbstractChargeableStation implements Discover
 
     @Override
     @Deprecated
-    public void travel(Player player) {
+    public void travel(Player player, Location target) {
 
         // dragontravelplus doesn't support this form off takeoff
     }
