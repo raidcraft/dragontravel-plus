@@ -84,7 +84,7 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     @Override
     public double getPrice() {
 
-        return 1;
+        return costLevel;
     }
 
     @Override
