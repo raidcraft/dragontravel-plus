@@ -1,9 +1,8 @@
 package de.raidcraft.dragontravelplus.station;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.dragontravelplus.commands.FlightCommands;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
-import de.raidcraft.dragontravelplus.util.FlightCosts;
 import de.raidcraft.rctravel.api.station.AbstractStation;
 import de.raidcraft.rctravel.api.station.Chargeable;
 import de.raidcraft.rctravel.api.station.Discoverable;
@@ -91,6 +90,6 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     @Override
     public double getPrice(int distance) {
 
-        //TODO
+        return Math.abs(distance * RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().pricePerBlock * 100D) / 100D;
     }
 }
