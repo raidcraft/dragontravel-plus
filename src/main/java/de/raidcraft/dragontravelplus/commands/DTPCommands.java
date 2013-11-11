@@ -156,7 +156,7 @@ public class DTPCommands {
         @CommandPermissions("dragontravelplus.warp")
         public void warp(CommandContext context, CommandSender sender) throws CommandException {
 
-            DragonStation station = StationManager.INST.getDragonStation(context.getString(0));
+            DragonStation station = StationManager.INST.getDragonStation(context.getJoinedStrings(0));
 
             if (station == null) {
                 ChatMessages.warn(sender, "Es gibt keine Station mit diesem Namen!");
