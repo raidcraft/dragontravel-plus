@@ -18,7 +18,7 @@ public class RouteSection {
         this.start = start;
         this.destination = destination;
 
-        String flightName = "dtp_" + start.getName().toLowerCase() + "@" + destination.getName().toLowerCase();
+        String flightName = "dtp_" + start.getPlainName().toLowerCase() + "@" + destination.getPlainName().toLowerCase();
         flight = Flight.loadFlight(flightName);
         if(flight == null) {
             flight = new Flight(flightName);

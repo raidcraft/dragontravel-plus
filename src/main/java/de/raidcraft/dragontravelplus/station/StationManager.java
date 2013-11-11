@@ -123,7 +123,7 @@ public class StationManager {
         List<String> stationNames = RaidCraft.getTable(PlayerStationsTable.class).getAllPlayerStations(player.getName());
         stationNames.addAll(RaidCraft.getTable(StationTable.class).getEmergencyStations());
         for (String name : stationNames) {
-            DragonStation station = existingStations.get(name);
+            DragonStation station = existingStations.get(name.replace("_", " "));
             if (station == null) continue;
             if (stations.contains(station)) continue;
             if (station.getLocation().getWorld() != player.getWorld()) continue; // only stations on same world
@@ -137,6 +137,11 @@ public class StationManager {
 
         for (DragonStation station : getPlayerStations(player)) {
             if (station.getName().equalsIgnoreCase(stationName)) {
+                return station;
+            }
+        }
+        for (DragonStation station : getPlayerStations(player)) {
+            if (station.getName().startsWith(stationName)) {
                 return station;
             }
         }
