@@ -39,8 +39,6 @@ public class StationTable extends Table {
                             "`cost_level` INT( 11 ) NOT NULL ,\n" +
                             "`main` TINYINT( 1 ) NOT NULL, " +
                             "`emergency` TINYINT( 1 ) NOT NULL, " +
-                            "`creator` VARCHAR ( 32 ) NOT NULL, " +
-                            "`created` VARCHAR ( 32 ) NOT NULL, " +
                             "PRIMARY KEY ( `id` )" +
                             ")");
         } catch (SQLException e) {
@@ -128,7 +126,7 @@ public class StationTable extends Table {
     public void addStation(DragonStation station) {
 
         try {
-            String query = "INSERT INTO " + getTableName() + " (name, world, x, y, z, cost_level, main, emergency, creator, created) " +
+            String query = "INSERT INTO " + getTableName() + " (name, world, x, y, z, cost_level, main, emergency) " +
                     "VALUES (" +
                     "'" + station.getName() + "'" + "," +
                     "'" + station.getLocation().getWorld().getName() + "'" + "," +
