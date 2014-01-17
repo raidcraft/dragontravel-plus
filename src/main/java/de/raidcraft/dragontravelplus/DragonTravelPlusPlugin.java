@@ -20,7 +20,7 @@ import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import de.raidcraft.dragontravelplus.util.ChatMessages;
 import de.raidcraft.rcconversations.actions.ActionManager;
-import net.minecraft.server.v1_6_R3.EntityTypes;
+import net.minecraft.server.v1_7_R1.EntityTypes;
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.Method;
