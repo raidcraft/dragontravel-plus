@@ -6,15 +6,10 @@ import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
-import de.raidcraft.dragontravelplus.conversations.CheckPlayerAction;
-import de.raidcraft.dragontravelplus.conversations.FindDragonstationAction;
-import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
-import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
-import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
-import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
+import de.raidcraft.dragontravelplus.conversations.*;
 import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
 import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
+import de.raidcraft.dragontravelplus.dragoncontrol.dragon.CustomEntityType;
 import de.raidcraft.dragontravelplus.flight.FlightEditorListener;
 import de.raidcraft.dragontravelplus.listener.ChunkListener;
 import de.raidcraft.dragontravelplus.listener.DragonListener;
@@ -45,11 +40,12 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     @Override
     public void enable() {
 
-        if (!registerEntity("RCDragon", 63, RCDragon.class)) {
-            getLogger().severe("Failed to register RCDragon entity! DISABLING PLUGIN");
-            disable();
-            return;
-        }
+//        if (!registerEntity("RCDragon", 63, RCDragon.class)) {
+//            getLogger().severe("Failed to register RCDragon entity! DISABLING PLUGIN");
+//            disable();
+//            return;
+//        }
+        CustomEntityType.registerEntities();
 
         loadConfig();
 
