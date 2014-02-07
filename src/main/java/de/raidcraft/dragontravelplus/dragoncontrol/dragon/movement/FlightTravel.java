@@ -9,6 +9,7 @@ import de.raidcraft.dragontravelplus.dragoncontrol.dragon.RCDragon;
 import de.raidcraft.dragontravelplus.dragoncontrol.dragon.modules.Travels;
 import de.raidcraft.dragontravelplus.flight.Flight;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -98,22 +99,29 @@ public class FlightTravel {
 
         public void run() {
 
-            // Mounting the player
-            if (!Travels.mountDragon(flyingPlayer.getPlayer()))
-                return;
+            try {
+                // Mounting the player
+                if (!Travels.mountDragon(flyingPlayer.getPlayer()))
+                    return;
 
-            // Getting the dragon
-            RCDragon dragon = flyingPlayer.getDragon();
+                // Getting the dragon
+                RCDragon dragon = flyingPlayer.getDragon();
 
-            if (dragon == null)
-                return;
+                if (dragon == null)
+                    return;
 
-            // start flight
-            flyingPlayer.setInAir(true);
-            BukkitTask task = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new PlayerChecker(flyingPlayer), 0, 10);
-            flyingPlayer.setCheckerTask(task);
-            dragon.setCustomNameVisible(false);
-            dragon.startFlight(flyingPlayer, flight, speed);
+                // start flight
+                flyingPlayer.setInAir(true);
+                BukkitTask task = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new PlayerChecker(flyingPlayer), 0, 10);
+                flyingPlayer.setCheckerTask(task);
+                dragon.setCustomNameVisible(false);
+                dragon.startFlight(flyingPlayer, flight, speed);
+            } catch (Exception e) {
+                RaidCraft.LOGGER.warning("DragonTravel NOT working: " + e.getMessage());
+                e.printStackTrace();
+                flyingPlayer.getPlayer().teleport(flyingPlayer.getDestination());
+                flyingPlayer.getPlayer().sendMessage(ChatColor.RED + "DragonTravelPlus is not working :(\nYou have been teleported to your destination!");
+            }
         }
     }
 }
