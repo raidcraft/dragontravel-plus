@@ -58,7 +58,7 @@ public class ListStationsAction extends AbstractAction {
         if(type == ListType.FREE) {
             List<DragonStation> freeStations = new ArrayList<>();
             for(DragonStation s : stations) {
-                if(s.getPrice() == 0) {
+                if(FlightCosts.getPrice(currentStation, s) <= 0) {
                     freeStations.add(s);
                 }
             }
@@ -135,7 +135,7 @@ public class ListStationsAction extends AbstractAction {
 
         StringBuilder builder = new StringBuilder();
         double price = FlightCosts.getPrice(start, target);
-        if(!RaidCraft.getEconomy().hasEnough(player.getName(), price)) {
+        if(price > 0 && !RaidCraft.getEconomy().hasEnough(player.getName(), price)) {
             builder.append(ChatColor.DARK_GRAY);
         }
 
