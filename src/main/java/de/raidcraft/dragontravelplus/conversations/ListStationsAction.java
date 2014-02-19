@@ -157,7 +157,7 @@ public class ListStationsAction extends AbstractAction {
 
         ALPHABETIC("Alphabetisch sortiert"),
         DISTANCE("Nach Entfernung sortiert"),
-        FREE("Es werden nu kostenlose angezeigt");
+        FREE("Es werden nur kostenlose angezeigt");
 
         private String infoText;
 
