@@ -121,6 +121,7 @@ public class FlightTravel {
                 e.printStackTrace();
                 flyingPlayer.getPlayer().teleport(flyingPlayer.getDestination());
                 flyingPlayer.getPlayer().sendMessage(ChatColor.RED + "DragonTravelPlus is not working :(\nYou have been teleported to your destination!");
+                Travels.removePlayerAndDragon(flyingPlayer);
             }
         }
     }
