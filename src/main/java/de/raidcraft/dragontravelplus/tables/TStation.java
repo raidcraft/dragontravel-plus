@@ -30,8 +30,6 @@ public class TStation {
     private double costMultiplier = 1.0;
     private boolean mainStation = false;
     private boolean emergencyStation = false;
-    @OneToMany(mappedBy = "start_station_id")
-    private List<TPath> paths = new ArrayList<>();
     @OneToMany
     private List<TPlayerStation> playerStations = new ArrayList<>();
 
@@ -138,16 +136,6 @@ public class TStation {
     public void setEmergencyStation(boolean emergencyStation) {
 
         this.emergencyStation = emergencyStation;
-    }
-
-    public List<TPath> getPaths() {
-
-        return paths;
-    }
-
-    public void setPaths(List<TPath> paths) {
-
-        this.paths = paths;
     }
 
     public List<TPlayerStation> getPlayerStations() {
