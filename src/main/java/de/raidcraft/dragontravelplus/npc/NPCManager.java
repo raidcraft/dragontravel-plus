@@ -5,6 +5,7 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.npc.ConversationsTrait;
 import de.raidcraft.rcconversations.npc.NPCRegistry;
+import de.raidcraft.rctravel.api.station.Station;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
 
@@ -13,7 +14,7 @@ import org.bukkit.Location;
  */
 public class NPCManager {
 
-    public static void createDragonGuard(DragonStation station) {
+    public static void createDragonGuard(Station station) {
 
         Location improvedLocation = station.getLocation().clone();
         improvedLocation.setY(improvedLocation.getY()+1);

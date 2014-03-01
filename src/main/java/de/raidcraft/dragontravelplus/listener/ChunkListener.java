@@ -2,12 +2,13 @@ package de.raidcraft.dragontravelplus.listener;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.npc.NPCManager;
-import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.RCConversationsPlugin;
 import de.raidcraft.rcconversations.npc.ConversationsTrait;
 import de.raidcraft.rcconversations.npc.NPCRegistry;
 import de.raidcraft.rcconversations.util.ChunkLocation;
+import de.raidcraft.rctravel.api.station.Station;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -19,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,11 +47,11 @@ public class ChunkListener implements Listener {
         public void run() {
 
             String conversationName = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().conversationName;
-            Set<DragonStation> stations = StationManager.INST.getStationsByChunk(chunk);
+            List<Station> stations = RaidCraft.getComponent(StationManager.class).getAllStations();
 
             // if there are stations without npcs -> create new
 
-            for(DragonStation station : new HashSet<>(stations)) {
+            for(Station station : new HashSet<>(stations)) {
 
                 // check a second time
                 Set<ChunkLocation> affectedChunks = NPCRegistry.INST.getAffectedChunkLocations(chunk);
@@ -75,7 +77,7 @@ public class ChunkListener implements Listener {
                 }
             }
 
-            for(DragonStation station : stations) {
+            for(Station station : stations) {
                 RaidCraft.LOGGER.info("Create DragonGuard NPC for station: '" + station.getName() + "'!");
                 NPCManager.createDragonGuard(station);
             }
