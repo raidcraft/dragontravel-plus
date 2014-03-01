@@ -45,6 +45,21 @@ public class Waypoint {
         return location.getZ();
     }
 
+    public void setX(double x) {
+
+        location.setX(x);
+    }
+
+    public void setY(double y) {
+
+        location.setY(y);
+    }
+
+    public void setZ(double z) {
+
+        location.setZ(z);
+    }
+
     @Override
     protected Object clone() throws CloneNotSupportedException {
 

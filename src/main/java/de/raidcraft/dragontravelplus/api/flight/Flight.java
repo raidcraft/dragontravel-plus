@@ -68,4 +68,22 @@ public interface Flight {
      * @throws de.raidcraft.dragontravelplus.api.flight.FlightException if flight has not started
      */
     public void endFlight() throws FlightException;
+
+    /**
+     * Checks if the flight path still has a next waypoint
+     * @return false if the path is at the end
+     */
+    public boolean hasNextWaypoint();
+
+    /**
+     * Gets the next waypoint of the flight path.
+     * @return next waypoint
+     */
+    public Waypoint nextWaypoint();
+
+    /**
+     * Gets the current last waypoint of the flight path.
+     * @return current waypoint of the path
+     */
+    public Waypoint getCurrentWaypoint();
 }

@@ -60,8 +60,7 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     @Override
     public boolean hasDiscovered(String player) {
 
-        if(emergencyTarget || mainStation) return true;
-        return RaidCraft.getTable(PlayerStationsTable.class).playerIsFamiliar(player, this);
+        return emergencyTarget || mainStation || RaidCraft.getTable(PlayerStationsTable.class).playerIsFamiliar(player, this);
     }
 
     @Override
@@ -69,9 +68,6 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
 
         if(discovered) {
             RaidCraft.getTable(PlayerStationsTable.class).addStation(player, this);
-        }
-        else {
-            // do nothing
         }
     }
 

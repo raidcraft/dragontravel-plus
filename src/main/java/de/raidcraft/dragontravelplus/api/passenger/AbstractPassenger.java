@@ -51,4 +51,26 @@ public class AbstractPassenger<T extends LivingEntity> implements Passenger<T> {
 
         return getFlight() != null && getFlight().isActive();
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof AbstractPassenger)) return false;
+
+        AbstractPassenger that = (AbstractPassenger) o;
+
+        if (!entity.equals(that.entity)) return false;
+        if (!flight.equals(that.flight)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = entity.hashCode();
+        result = 31 * result + flight.hashCode();
+        return result;
+    }
 }

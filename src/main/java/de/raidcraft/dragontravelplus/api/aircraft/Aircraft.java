@@ -4,8 +4,7 @@ import de.raidcraft.dragontravelplus.api.flight.Flight;
 import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.api.passenger.Passenger;
 import org.bukkit.Location;
-
-import java.util.Set;
+import org.bukkit.entity.LivingEntity;
 
 /**
  * @author Silthus
@@ -74,35 +73,38 @@ public interface Aircraft<T> {
     public void land();
 
     /**
-     * Returns a copy of all passengers attached to the aircraft.
-     * @return unique set of passengers on the aircraft
+     * Checks if the passenger list contains a passenger that matches the given entity.
+     * @param entity to match passenger list against
+     * @return true if passenger list contains this entity
      */
-    public Set<Passenger<?>> getPassengers();
+    public boolean containsPassenger(LivingEntity entity);
 
     /**
-     * Adds a passenger to the aircraft if it is not already on it.
-     * Passengers can only be on one aircraft at a time so if will {@link #removePassenger(de.raidcraft.dragontravelplus.api.passenger.Passenger)}
-     * the passenger from his old aircraft if he is on one.
-     * @param passenger to add to the aircraft
-     * @return false if passenger could not be removed from his old aircraft or if he is already on the aircraft
+     * Returns the current passenger of this aircraft
+     * @return passenger of the aircraft
      */
-    public boolean addPassenger(Passenger<?> passenger);
+    public Passenger getPassenger();
+
+    /**
+     * Sets the passenger of the aircraft.
+     * @param passenger to add to the aircraft
+     */
+    public void setPassenger(Passenger<?> passenger);
 
     /**
      * Removes the given passenger from the aircraft. If a flight is in progress it will {@link de.raidcraft.dragontravelplus.api.flight.Flight#abortFlight()} the flight.
-     * @param passenger to remove from the aircraft
      * @return removed passenger or null if passenger could not be removed or wasnt on the aircraft
      */
-    public Passenger<?> removePassenger(Passenger<?> passenger);
+    public Passenger<?> removePassenger();
 
     /**
      * Mounts all attached passengers onto the aircraft.
      * @throws de.raidcraft.dragontravelplus.api.flight.FlightException if {@link #spawn()} was not called
      */
-    public void mountPassengers() throws FlightException;
+    public void mountPassenger() throws FlightException;
 
     /**
      * Unmounts all passengers from the aircraft.
      */
-    public void unmountPassengers();
+    public void unmountPassenger();
 }

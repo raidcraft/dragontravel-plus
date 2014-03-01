@@ -3,9 +3,7 @@ package de.raidcraft.dragontravelplus.api.aircraft;
 import de.raidcraft.dragontravelplus.api.flight.Flight;
 import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.api.passenger.Passenger;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.bukkit.entity.LivingEntity;
 
 /**
  * @author Silthus
@@ -13,7 +11,7 @@ import java.util.Set;
 public abstract class AbstractAircraft<T> implements Aircraft<T> {
 
     private final Flight flight;
-    private final Set<Passenger<?>> passengers = new HashSet<>();
+    private Passenger<?> passenger;
     private boolean flying = false;
 
     protected AbstractAircraft(Flight flight) {
@@ -40,7 +38,7 @@ public abstract class AbstractAircraft<T> implements Aircraft<T> {
             try {
                 this.flying = true;
                 if (!isSpawned()) spawn();
-                mountPassengers();
+                mountPassenger();
                 getFlight().setStartLocation(getCurrentLocation());
             } catch (FlightException ignored) {
             }
@@ -52,7 +50,7 @@ public abstract class AbstractAircraft<T> implements Aircraft<T> {
 
         if (flying) {
             this.flying = false;
-            unmountPassengers();
+            unmountPassenger();
             if (isSpawned()) despawn();
         }
     }
@@ -62,30 +60,57 @@ public abstract class AbstractAircraft<T> implements Aircraft<T> {
 
         if (flying) {
             this.flying = false;
-            unmountPassengers();
+            unmountPassenger();
             getFlight().setEndLocation(getCurrentLocation());
             if (isSpawned()) despawn();
         }
     }
 
     @Override
-    public Set<Passenger<?>> getPassengers() {
+    public boolean containsPassenger(LivingEntity entity) {
 
-        return new HashSet<>(passengers);
+        return getPassenger() != null && getPassenger().getEntity().equals(entity);
     }
 
     @Override
-    public boolean addPassenger(Passenger<?> passenger) {
+    public Passenger<?> getPassenger() {
 
-        return passengers.add(passenger);
+        return passenger;
     }
 
     @Override
-    public Passenger removePassenger(Passenger passenger) {
+    public Passenger<?> removePassenger() {
 
-        if (passengers.remove(passenger)) {
-            return passenger;
-        }
-        return null;
+        Passenger<?> passenger = this.passenger;
+        this.passenger = null;
+        return passenger;
+    }
+
+    @Override
+    public void setPassenger(Passenger<?> passenger) {
+
+        this.passenger = passenger;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof AbstractAircraft)) return false;
+
+        AbstractAircraft that = (AbstractAircraft) o;
+
+        if (!flight.equals(that.flight)) return false;
+        if (passenger != null ? !passenger.equals(that.passenger) : that.passenger != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = flight.hashCode();
+        result = 31 * result + (passenger != null ? passenger.hashCode() : 0);
+        return result;
     }
 }

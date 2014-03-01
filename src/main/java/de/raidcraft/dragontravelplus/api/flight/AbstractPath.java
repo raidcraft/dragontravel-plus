@@ -1,5 +1,7 @@
 package de.raidcraft.dragontravelplus.api.flight;
 
+import org.bukkit.Location;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,7 +11,24 @@ import java.util.List;
 public abstract class AbstractPath implements Path {
 
     private final List<Waypoint> waypoints = new LinkedList<>();
-    private int currentIndex = 0;
+    private final Location start;
+    private final Location end;
+
+    public AbstractPath(Location start, Location end) {
+
+        this.start = start;
+        this.end = end;
+    }
+
+    public Location getStart() {
+
+        return start;
+    }
+
+    public Location getEnd() {
+
+        return end;
+    }
 
     @Override
     public Waypoint getFirstWaypoint() {
@@ -27,6 +46,17 @@ public abstract class AbstractPath implements Path {
             return waypoints.get(waypoints.size() - 1);
         }
         return null;
+    }
+
+    protected void clearWaypoints() {
+
+        waypoints.clear();
+    }
+
+    @Override
+    public int getWaypointAmount() {
+
+        return waypoints.size();
     }
 
     @Override
@@ -80,24 +110,30 @@ public abstract class AbstractPath implements Path {
     @Override
     public List<Waypoint> getWaypoints() {
 
-        return new LinkedList<>(waypoints);
+        return waypoints;
     }
 
     @Override
-    public boolean hasNext() {
+    public boolean equals(Object o) {
 
-        return currentIndex + 1 < waypoints.size();
+        if (this == o) return true;
+        if (!(o instanceof AbstractPath)) return false;
+
+        AbstractPath that = (AbstractPath) o;
+
+        if (!end.equals(that.end)) return false;
+        if (!start.equals(that.start)) return false;
+        if (!waypoints.equals(that.waypoints)) return false;
+
+        return true;
     }
 
     @Override
-    public Waypoint next() {
+    public int hashCode() {
 
-        return getWaypoint(++currentIndex);
-    }
-
-    @Override
-    public void remove() {
-
-        removeWaypoint(currentIndex);
+        int result = waypoints.hashCode();
+        result = 31 * result + start.hashCode();
+        result = 31 * result + end.hashCode();
+        return result;
     }
 }

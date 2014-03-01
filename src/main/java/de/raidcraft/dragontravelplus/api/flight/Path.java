@@ -1,12 +1,11 @@
 package de.raidcraft.dragontravelplus.api.flight;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author Silthus
  */
-public interface Path extends Iterator<Waypoint> {
+public interface Path {
 
     /**
      * Gets the starting waypoint in this path.
@@ -21,10 +20,10 @@ public interface Path extends Iterator<Waypoint> {
     public Waypoint getLastWaypoint();
 
     /**
-     * Gets the waypoint at the current iteration index.
-     * @return current waypoint of the iteration
+     * Gets the amount of waypoints in this path.
+     * @return waypoint amount
      */
-    public Waypoint getCurrentWaypoint();
+    public int getWaypointAmount();
 
     /**
      * Gets the waypoint at the specified index.
@@ -73,8 +72,14 @@ public interface Path extends Iterator<Waypoint> {
     public Waypoint setWaypoint(int index, Waypoint waypoint);
 
     /**
-     * Gets a copy of all the waypoints in the path.
+     * Gets a list of all the waypoints in the path.
      * @return list of all waypoints
      */
     public List<Waypoint> getWaypoints();
+
+    /**
+     * Calculates the waypoints for this path.
+     * This is implemented by the different path types and may do nothing if the path is static.
+     */
+    public void calculate();
 }
