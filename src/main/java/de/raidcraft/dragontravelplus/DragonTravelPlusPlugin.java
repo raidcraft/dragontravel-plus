@@ -14,6 +14,8 @@ import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
 import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
 import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
+import de.raidcraft.dragontravelplus.listener.ChunkListener;
+import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
 import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import de.raidcraft.dragontravelplus.tables.TPath;
@@ -51,6 +53,9 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         aircraftManager = new AircraftManager(this);
         routeManager = new RouteManager(this);
         flightManager = new FlightManager(this);
+
+        registerEvents(new ChunkListener());
+        registerEvents(new FlightEditorListener());
 
         registerCommands(DTPCommands.class);
         registerCommands(FlightCommands.class);
