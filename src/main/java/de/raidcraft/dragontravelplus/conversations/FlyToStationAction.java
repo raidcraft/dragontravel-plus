@@ -2,16 +2,24 @@ package de.raidcraft.dragontravelplus.conversations;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
+import de.raidcraft.dragontravelplus.StationManager;
+import de.raidcraft.dragontravelplus.api.flight.Flight;
+import de.raidcraft.dragontravelplus.api.flight.FlightException;
+import de.raidcraft.dragontravelplus.api.passenger.Passenger;
+import de.raidcraft.dragontravelplus.paths.DragonStationRoute;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.RCConversationsPlugin;
-import de.raidcraft.rcconversations.api.action.*;
+import de.raidcraft.rcconversations.api.action.AbstractAction;
+import de.raidcraft.rcconversations.api.action.ActionArgumentException;
+import de.raidcraft.rcconversations.api.action.ActionArgumentList;
+import de.raidcraft.rcconversations.api.action.ActionInformation;
+import de.raidcraft.rcconversations.api.action.WrongArgumentValueException;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
 import de.raidcraft.rcconversations.conversations.EndReason;
 import de.raidcraft.rcconversations.util.MathHelper;
 import de.raidcraft.rcconversations.util.ParseString;
+import de.raidcraft.rctravel.api.station.UnknownStationException;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 /**
  * @author Philip
@@ -20,7 +28,7 @@ import org.bukkit.entity.Player;
 public class FlyToStationAction extends AbstractAction {
 
     @Override
-    public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
+    public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException, UnknownStationException {
 
         String startName = args.getString("start", null);
         String targetName = args.getString("target", null);
@@ -31,7 +39,10 @@ public class FlyToStationAction extends AbstractAction {
         priceString = ParseString.INST.parse(conversation, priceString);
         double price = MathHelper.solveDoubleFormula(priceString);
 
-        DragonStation target = StationManager.INST.getDragonStation(targetName);
+        DragonTravelPlusPlugin plugin = RaidCraft.getComponent(DragonTravelPlusPlugin.class);
+        StationManager stationManager = plugin.getStationManager();
+
+        DragonStation target = (DragonStation) stationManager.getStation(targetName);
         if(target == null) {
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Station '" + targetName + "' does not exists!");
         }
@@ -41,36 +52,39 @@ public class FlyToStationAction extends AbstractAction {
             start = new DragonStation(conversation.getName(), conversation.getPlayer().getLocation().clone());
         }
         else {
-            start = StationManager.INST.getDragonStation(startName);
+            start = (DragonStation) stationManager.getStation(startName);
         }
         if(start == null) {
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Station '" + targetName + "' does not exists!");
         }
 
-        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new TakeoffDelayedTask(start, target, conversation.getPlayer(), price), delay);
+        DragonStationRoute route = plugin.getRouteManager().getRoute(start, target);
+        Passenger passenger = plugin.getFlightManager().getPassenger(conversation.getPlayer());
+        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new TakeoffDelayedTask(route, passenger), delay);
     }
 
     public class TakeoffDelayedTask implements Runnable {
 
-        DragonStation start;
-        DragonStation target;
-        Player player;
-        double price;
+        private DragonStationRoute route;
+        private Passenger passenger;
 
-        public TakeoffDelayedTask(DragonStation start, DragonStation target, Player player, double price) {
+        public TakeoffDelayedTask(DragonStationRoute route, Passenger passenger) {
 
-            this.start = start;
-            this.target = target;
-            this.player = player;
-            this.price = price;
+            this.route = route;
+            this.passenger = passenger;
         }
 
         @Override
         public void run() {
 
-            RaidCraft.getComponent(RCConversationsPlugin.class).getConversationManager().endConversation(player.getName(), EndReason.SILENT);
-            DragonManager.INST.takeoff(player, start, target, price);
-
+            try {
+                RaidCraft.getComponent(RCConversationsPlugin.class).getConversationManager().endConversation(passenger.getName(), EndReason.SILENT);
+                Flight flight = route.createFlight(passenger);
+                flight.startFlight();
+            } catch (FlightException e) {
+                RaidCraft.LOGGER.warning(e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -1,21 +1,33 @@
 package de.raidcraft.dragontravelplus.conversations;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.dragontravelplus.comparator.AlphabeticComparator;
-import de.raidcraft.dragontravelplus.comparator.DistanceComparator;
+import de.raidcraft.dragontravelplus.StationManager;
+import de.raidcraft.dragontravelplus.comparators.AlphabeticComparator;
+import de.raidcraft.dragontravelplus.comparators.DistanceComparator;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.actions.common.StageAction;
 import de.raidcraft.rcconversations.actions.variables.SetVariableAction;
-import de.raidcraft.rcconversations.api.action.*;
+import de.raidcraft.rcconversations.api.action.AbstractAction;
+import de.raidcraft.rcconversations.api.action.ActionArgumentException;
+import de.raidcraft.rcconversations.api.action.ActionArgumentList;
+import de.raidcraft.rcconversations.api.action.ActionInformation;
+import de.raidcraft.rcconversations.api.action.MissingArgumentException;
+import de.raidcraft.rcconversations.api.action.WrongArgumentValueException;
 import de.raidcraft.rcconversations.api.answer.Answer;
 import de.raidcraft.rcconversations.api.answer.SimpleAnswer;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
 import de.raidcraft.rcconversations.api.stage.SimpleStage;
 import de.raidcraft.rcconversations.api.stage.Stage;
+import de.raidcraft.rctravel.api.station.Station;
+import de.raidcraft.rctravel.api.station.UnknownStationException;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Philip
@@ -26,98 +38,106 @@ public class ListStationsAction extends AbstractAction {
     @Override
     public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
 
-        String typeName = args.getString("type");
-        ListType type = ListType.valueOf(typeName);
-        if(type == null) {
-            throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Type '" + typeName + "' does not exists!");
-        }
+        try {
+            String typeName = args.getString("type");
+            ListType type = ListType.valueOf(typeName);
+            if(type == null) {
+                throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Type '" + typeName + "' does not exists!");
+            }
 
-        DragonStation currentStation = StationManager.INST.getDragonStation(conversation.getString("dtp_station_name"));
+            StationManager stationManager = RaidCraft.getComponent(StationManager.class);
+            DragonStation currentStation = (DragonStation) stationManager.getStation(conversation.getString("dtp_station_name"));
 
-        String confirmStage = args.getString("confirmstage");
-        String returnStage = args.getString("returnstage");
-        int pageSize = args.getInt("pagesize", 4);
+            String confirmStage = args.getString("confirmstage");
+            String returnStage = args.getString("returnstage");
+            int pageSize = args.getInt("pagesize", 4);
 
-        if(confirmStage == null || returnStage == null) {
-            throw new MissingArgumentException("Missing argument in action '" + getName() + "': Confirmstage or Returnstage is missing!");
-        }
+            if(confirmStage == null || returnStage == null) {
+                throw new MissingArgumentException("Missing argument in action '" + getName() + "': Confirmstage or Returnstage is missing!");
+            }
 
-        String entranceStage = "dtp_stationslist";
+            String entranceStage = "dtp_stationslist";
 
-        List<DragonStation> stations = StationManager.INST.getPlayerStations(conversation.getPlayer());
+            List<Station> stations = stationManager.getUnlockedStations(conversation.getPlayer());
 
-        if(type == ListType.ALPHABETIC) {
-            Collections.sort(stations, new AlphabeticComparator());
-        }
-        if(type == ListType.DISTANCE) {
-            Collections.sort(stations, new DistanceComparator(currentStation));
-        }
+            if(type == ListType.ALPHABETIC) {
+                Collections.sort(stations, new AlphabeticComparator());
+            }
+            if(type == ListType.DISTANCE) {
+                Collections.sort(stations, new DistanceComparator(currentStation));
+            }
 
-        if(type == ListType.FREE) {
-            List<DragonStation> freeStations = new ArrayList<>();
-            for(DragonStation s : stations) {
-                if(FlightCosts.getPrice(currentStation, s) <= 0) {
-                    freeStations.add(s);
+            if(type == ListType.FREE) {
+                List<Station> freeStations = new ArrayList<>();
+                for(Station station : stations) {
+                    if (station instanceof DragonStation) {
+                        if (currentStation.getPrice((DragonStation) station) <= 0) {
+                            freeStations.add(station);
+                        }
+                    }
+                }
+                stations = freeStations;
+            }
+
+            for(Station station : stations) {
+                if(station.equals(currentStation)) {
+                    stations.remove(station);
+                    break;
                 }
             }
-            stations = freeStations;
+
+            if(stations.size() == 0) {
+                List<Answer> answers = new ArrayList<>();
+                answers.add(new SimpleAnswer("1", "Ok zurück", new ActionArgumentList("A", StageAction.class, "stage", returnStage)));
+                conversation.addStage(new SimpleStage(entranceStage, "Du kennst keine passende Stationen!", answers));
+            }
+
+            int pages = (int) (((double) stations.size() / (double) pageSize) + 0.5);
+            if(pages == 0) pages = 1;
+            for (int i = 0; i < pages; i++) {
+
+                Stage stage;
+                List<Answer> answers = new ArrayList<>();
+                String text;
+
+                text = "Du kennst folgende Drachenstationen (" + (i+1) + "/" + pages + "):|&7(" + type.getInfoText() + ")";
+                int a;
+
+                for (a = 0; a < pageSize; a++) {
+                    if (stations.size() <= a + (i * pageSize)) break;
+                    answers.add(createStationAnswer(conversation.getPlayer(), a, currentStation, (DragonStation) stations.get(i*pageSize + a), confirmStage));
+                }
+                a++;
+
+                String nextStage;
+                if (pages - 1 == i) {
+                    nextStage = entranceStage;
+                }
+                else {
+                    nextStage = entranceStage + "_" + (i + 1);
+                }
+                String thisStage;
+                if(i == 0) {
+                    thisStage = entranceStage;
+                }
+                else {
+                    thisStage = entranceStage + "_" + i;
+                }
+
+                if(pages > 1) {
+                    answers.add(new SimpleAnswer(String.valueOf(a), "&7Nächste Seite", new ActionArgumentList(String.valueOf(a), StageAction.class, "stage", nextStage)));
+                }
+                stage = new SimpleStage(thisStage, text, answers);
+
+                conversation.addStage(stage);
+            }
+
+            conversation.setCurrentStage(entranceStage);
+            conversation.triggerCurrentStage();
+        } catch (UnknownStationException e) {
+            RaidCraft.LOGGER.warning(e.getMessage());
+            e.printStackTrace();
         }
-
-        for(DragonStation station : stations) {
-            if(station.equals(currentStation)) {
-                stations.remove(station);
-                break;
-            }
-        }
-
-        if(stations.size() == 0) {
-            List<Answer> answers = new ArrayList<>();
-            answers.add(new SimpleAnswer("1", "Ok zurück", new ActionArgumentList("A", StageAction.class, "stage", returnStage)));
-            conversation.addStage(new SimpleStage(entranceStage, "Du kennst keine passende Stationen!", answers));
-        }
-
-        int pages = (int) (((double) stations.size() / (double) pageSize) + 0.5);
-        if(pages == 0) pages = 1;
-        for (int i = 0; i < pages; i++) {
-
-            Stage stage;
-            List<Answer> answers = new ArrayList<>();
-            String text;
-
-            text = "Du kennst folgende Drachenstationen (" + (i+1) + "/" + pages + "):|&7(" + type.getInfoText() + ")";
-            int a;
-
-            for (a = 0; a < pageSize; a++) {
-                if (stations.size() <= a + (i * pageSize)) break;
-                answers.add(createStationAnswer(conversation.getPlayer(), a, currentStation, stations.get(i*pageSize + a), confirmStage));
-            }
-            a++;
-
-            String nextStage;
-            if (pages - 1 == i) {
-                nextStage = entranceStage;
-            }
-            else {
-                nextStage = entranceStage + "_" + (i + 1);
-            }
-            String thisStage;
-            if(i == 0) {
-                thisStage = entranceStage;
-            }
-            else {
-                thisStage = entranceStage + "_" + i;
-            }
-
-            if(pages > 1) {
-                answers.add(new SimpleAnswer(String.valueOf(a), "&7Nächste Seite", new ActionArgumentList(String.valueOf(a), StageAction.class, "stage", nextStage)));
-            }
-            stage = new SimpleStage(thisStage, text, answers);
-
-            conversation.addStage(stage);
-        }
-
-        conversation.setCurrentStage(entranceStage);
-        conversation.triggerCurrentStage();
     }
 
     private Answer createStationAnswer(Player player, int number, DragonStation start, DragonStation target, String confirmStage) {
@@ -132,7 +152,7 @@ public class ListStationsAction extends AbstractAction {
         actions.add(new ActionArgumentList(String.valueOf(i++), StageAction.class, "stage", confirmStage));
 
         StringBuilder builder = new StringBuilder();
-        double price = FlightCosts.getPrice(start, target);
+        double price = start.getPrice(target);
         if(price > 0 && !RaidCraft.getEconomy().hasEnough(player.getName(), price)) {
             builder.append(ChatColor.DARK_GRAY);
         }

@@ -4,7 +4,11 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.dragontravelplus.api.flight.Flight;
 import de.raidcraft.dragontravelplus.api.flight.FlightException;
+import de.raidcraft.dragontravelplus.api.flight.Path;
 import de.raidcraft.dragontravelplus.api.passenger.Passenger;
+import de.raidcraft.dragontravelplus.flights.FreePathFlight;
+import de.raidcraft.dragontravelplus.passengers.BukkitPlayerPassenger;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +27,11 @@ public final class FlightManager implements Component {
 
         this.plugin = plugin;
         RaidCraft.registerComponent(FlightManager.class, this);
+    }
+
+    public Passenger getPassenger(Player player) {
+
+        return new BukkitPlayerPassenger(player);
     }
 
     public List<Flight> getActiveFlights() {
@@ -51,5 +60,12 @@ public final class FlightManager implements Component {
             throw new FlightException("The passenger " + passenger.getName() + " has no active flight!");
         }
         return passenger.getFlight();
+    }
+
+    public Flight createFlight(Passenger passenger, Path path) {
+
+        FreePathFlight flight = new FreePathFlight(plugin.getAircraftManager().getAircraft(), path, passenger.getEntity().getLocation());
+        flight.setPassenger(passenger);
+        return flight;
     }
 }

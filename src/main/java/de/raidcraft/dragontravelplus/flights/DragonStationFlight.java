@@ -7,7 +7,6 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.api.aircraft.Aircraft;
 import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.api.flight.Path;
-import de.raidcraft.dragontravelplus.api.passenger.Passenger;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rctravel.api.station.Chargeable;
 import de.raidcraft.rctravel.api.station.Station;
@@ -56,8 +55,8 @@ public class DragonStationFlight extends RestrictedFlight {
     public void startFlight() throws FlightException {
 
         Economy economy = RaidCraft.getEconomy();
-        if (!economy.hasEnough(getAircraft().getPassenger().getName(), getPrice())) {
-            throw new FlightException(Translator.tr(DragonTravelPlusPlugin.class, (Player) getAircraft().getPassenger().getEntity(),
+        if (!economy.hasEnough(getPassenger().getName(), getPrice())) {
+            throw new FlightException(Translator.tr(DragonTravelPlusPlugin.class, (Player) getPassenger().getEntity(),
                     "flight.no-money", "You dont have enough money to complete this flight!"));
         }
         super.startFlight();
@@ -69,15 +68,14 @@ public class DragonStationFlight extends RestrictedFlight {
         // lets substract the flight cost
         Economy economy = RaidCraft.getEconomy();
         double price = getPrice();
-        Passenger passenger = getAircraft().getPassenger();
-        if (passenger.getEntity() instanceof Player) {
-            if (!economy.hasEnough(passenger.getName(), price)) {
+        if (getPassenger().getEntity() instanceof Player) {
+            if (!economy.hasEnough(getPassenger().getName(), price)) {
                 // abort the flight
                 abortFlight();
-                throw new FlightException(Translator.tr(DragonTravelPlusPlugin.class, (Player) passenger.getEntity(),
+                throw new FlightException(Translator.tr(DragonTravelPlusPlugin.class, (Player) getPassenger().getEntity(),
                         "flight.no-money", "You dont have enough money to complete this flight!"));
             }
-            economy.substract(passenger.getName(), price);
+            economy.substract(getPassenger().getName(), price);
         }
         super.endFlight();
     }
