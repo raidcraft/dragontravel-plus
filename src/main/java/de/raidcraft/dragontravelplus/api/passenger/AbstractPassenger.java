@@ -2,6 +2,7 @@ package de.raidcraft.dragontravelplus.api.passenger;
 
 import de.raidcraft.dragontravelplus.api.flight.Flight;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 /**
  * @author Silthus
@@ -19,6 +20,9 @@ public abstract class AbstractPassenger<T extends LivingEntity> implements Passe
     @Override
     public String getName() {
 
+        if (getEntity() instanceof Player) {
+            return ((Player) getEntity()).getName();
+        }
         return getEntity().getCustomName();
     }
 

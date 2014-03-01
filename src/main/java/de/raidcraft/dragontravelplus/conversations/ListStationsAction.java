@@ -86,7 +86,7 @@ public class ListStationsAction extends AbstractAction {
                 }
             }
 
-            if (stations.size() == 0) {
+            if (stations.isEmpty()) {
                 List<Answer> answers = new ArrayList<>();
                 answers.add(new SimpleAnswer("1", "Ok zurück", new ActionArgumentList("A", StageAction.class, "stage", returnStage)));
                 conversation.addStage(new SimpleStage(entranceStage, "Du kennst keine passende Stationen!", answers));
