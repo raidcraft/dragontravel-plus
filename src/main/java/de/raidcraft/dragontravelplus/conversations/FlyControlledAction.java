@@ -2,9 +2,11 @@ package de.raidcraft.dragontravelplus.conversations;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
-import de.raidcraft.rcconversations.api.action.*;
+import de.raidcraft.rcconversations.api.action.AbstractAction;
+import de.raidcraft.rcconversations.api.action.ActionArgumentException;
+import de.raidcraft.rcconversations.api.action.ActionArgumentList;
+import de.raidcraft.rcconversations.api.action.ActionInformation;
+import de.raidcraft.rcconversations.api.action.WrongArgumentValueException;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
 import de.raidcraft.rcconversations.util.ParseString;
 import org.bukkit.Bukkit;
@@ -26,12 +28,11 @@ public class FlyControlledAction extends AbstractAction {
         double duration;
         try {
             duration = Double.parseDouble(stringDuration);
-        }
-        catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Duration must be a number!");
         }
 
-        StartControlledFlightTask task = new StartControlledFlightTask(conversation.getPlayer(), (int)duration);
+        StartControlledFlightTask task = new StartControlledFlightTask(conversation.getPlayer(), (int) duration);
         Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), task, delay);
     }
 
@@ -48,7 +49,7 @@ public class FlyControlledAction extends AbstractAction {
 
         public void run() {
 
-            FlightTravel.flyControlled(new ControlledFlight(duration), player);
+            // TODO: reimplement
         }
     }
 }

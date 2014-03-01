@@ -1,13 +1,13 @@
 package de.raidcraft.dragontravelplus.tables;
 
+import com.avaje.ebean.EbeanServer;
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.database.Table;
-import de.raidcraft.dragontravelplus.station.DragonStation;
-import de.raidcraft.util.DateUtil;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
 
 /**
  * Author: Philip
@@ -38,51 +38,24 @@ public class PlayerStationsTable extends Table {
         }
     }
 
-    public List<String> getAllPlayerStations(String player) {
+    public void migrate() {
 
-        List<String> stations = new ArrayList<>();
         try {
-            ResultSet resultSet = executeQuery(
-                    "SELECT * FROM " + getTableName() + " WHERE player = '" + player + "'");
+            EbeanServer database = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getDatabase();
+            ResultSet resultSet = executeQuery("SELECT * FROM `" + getTableName() + "` WHERE 1");
 
+            int cnt = 0;
             while (resultSet.next()) {
-                stations.add(resultSet.getString("station_name"));
+                TPlayerStation station = new TPlayerStation();
+                station.setPlayer(resultSet.getString("player"));
+                station.setStation(database.find(TStation.class).where().eq("name", resultSet.getString("station_name")).findUnique());
+                station.setDiscovered(Timestamp.valueOf(resultSet.getString("discovered")));
+                database.save(station);
+                cnt++;
             }
-            resultSet.close();
+            RaidCraft.LOGGER.info("Migrated " + cnt + " DTP player stations!");
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return stations;
-    }
-
-    public boolean playerIsFamiliar(String player, DragonStation station) {
-
-        try {
-            ResultSet resultSet = executeQuery(
-                    "SELECT * FROM " + getTableName() + " WHERE player = '" + player + "' AND station_name = '" + station.getName() + "'");
-
-            while (resultSet.next()) {
-                return true;
-            }
-            resultSet.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public void addStation(String player, DragonStation station) {
-
-        try {
-            String query = "INSERT INTO " + getTableName() + " (player, station_name, discovered) " +
-                    "VALUES (" +
-                    "'" + player + "'" + "," +
-                    "'" + station.getName() + "'" + "," +
-                    "'" + DateUtil.getCurrentDateString() + "'" +
-                    ");";
-
-            executeUpdate(query);
-        } catch (SQLException e) {
+            RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
         }
     }

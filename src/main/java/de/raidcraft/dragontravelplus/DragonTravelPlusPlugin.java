@@ -4,29 +4,27 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
+import de.raidcraft.dragontravelplus.api.flight.Flight;
+import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
-import de.raidcraft.dragontravelplus.conversations.*;
-import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
-import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.CustomEntityType;
-import de.raidcraft.dragontravelplus.flight.FlightEditorListener;
-import de.raidcraft.dragontravelplus.listener.ChunkListener;
-import de.raidcraft.dragontravelplus.listener.DragonListener;
-import de.raidcraft.dragontravelplus.listener.PlayerListener;
-import de.raidcraft.dragontravelplus.station.StationManager;
-import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
+import de.raidcraft.dragontravelplus.conversations.CheckPlayerAction;
+import de.raidcraft.dragontravelplus.conversations.FindDragonstationAction;
+import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
+import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
+import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
+import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
 import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
 import de.raidcraft.dragontravelplus.tables.StationTable;
-import de.raidcraft.dragontravelplus.util.ChatMessages;
+import de.raidcraft.dragontravelplus.tables.TPath;
+import de.raidcraft.dragontravelplus.tables.TPlayerStation;
+import de.raidcraft.dragontravelplus.tables.TStation;
+import de.raidcraft.dragontravelplus.tables.TWaypoint;
 import de.raidcraft.rcconversations.actions.ActionManager;
-import net.minecraft.server.v1_7_R1.EntityTypes;
 import org.bukkit.Bukkit;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Philip
@@ -36,32 +34,26 @@ import java.util.HashMap;
 public class DragonTravelPlusPlugin extends BasePlugin {
 
     private LocalDTPConfiguration config;
+    private AircraftManager aircraftManager;
+    private FlightManager flightManager;
+    private RouteManager routeManager;
+    private StationManager stationManager;
 
     @Override
     public void enable() {
 
-//        if (!registerEntity("RCDragon", 63, RCDragon.class)) {
-//            getLogger().severe("Failed to register RCDragon entity! DISABLING PLUGIN");
-//            disable();
-//            return;
-//        }
-        CustomEntityType.registerEntities();
-
-        loadConfig();
-
-        registerEvents(new PlayerListener());
-        registerEvents(new ChunkListener());
-        registerEvents(new DragonListener());
-        registerEvents(new FlightEditorListener());
-
-        registerCommands(DTPCommands.class);
-        registerCommands(FlightCommands.class);
+        config = configure(new LocalDTPConfiguration(this));
 
         registerTable(StationTable.class, new StationTable());
         registerTable(PlayerStationsTable.class, new PlayerStationsTable());
-        registerTable(FlightWayPointsTable.class, new FlightWayPointsTable());
 
-        StationManager.INST.loadExistingStations();
+        stationManager = new StationManager(this);
+        aircraftManager = new AircraftManager(this);
+        routeManager = new RouteManager(this);
+        flightManager = new FlightManager(this);
+
+        registerCommands(DTPCommands.class);
+        registerCommands(FlightCommands.class);
 
         // lets trigger a delayed load to make sure all plugins are loaded
         Bukkit.getScheduler().runTaskLater(this, new Runnable() {
@@ -78,110 +70,68 @@ public class DragonTravelPlusPlugin extends BasePlugin {
                 } catch (Exception e) {
                     RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
                 }
+
+                // TODO: delete migration code
+                if (getConfig().migrate) {
+                    RaidCraft.getTable(StationTable.class).migrate();
+                    RaidCraft.getTable(PlayerStationsTable.class).migrate();
+                    getConfig().migrate = false;
+                    getConfig().save();
+                }
             }
         }, 1L);
     }
 
     @Override
     public void disable() {
-        // remove all dragons in the world
-        for (FlyingPlayer flyingPlayer : DragonManager.INST.getFlyingPlayers()) {
-            if (flyingPlayer.isInAir()) {
-                DragonManager.INST.abortFlight(flyingPlayer.getPlayer());
+
+        for (Flight flight : getFlightManager().getActiveFlights()) {
+            try {
+                flight.abortFlight();
+            } catch (FlightException e) {
+                RaidCraft.LOGGER.warning(e.getMessage());
+                e.printStackTrace();
             }
         }
-    }
-
-    public void loadConfig() {
-
-        config = configure(new LocalDTPConfiguration(this));
     }
 
     @Override
     public void reload() {
 
-        config.reload();
-        // remove all dragons in the world
-        for (FlyingPlayer flyingPlayer : DragonManager.INST.getFlyingPlayers()) {
-            if (flyingPlayer.isInAir()) {
-                DragonManager.INST.abortFlight(flyingPlayer.getPlayer());
-                ChatMessages.warn(flyingPlayer.getPlayer(), "Der Flug musste aus technischen Gruenden abgebrochen werden!");
-            }
-        }
-
-        DragonManager.INST.clearFlyingPlayers();
-        StationManager.INST.loadExistingStations();
+        getStationManager().reload();
+        getRouteManager().reload();
     }
 
-    @SuppressWarnings("unchecked")
-    private boolean registerEntity(String name, int id, Class<?> dragonClass) {
+    public AircraftManager getAircraftManager() {
 
-        try {
-            Class entityTypeClass = EntityTypes.class;
-
-            Field c = entityTypeClass.getDeclaredField("c");
-            c.setAccessible(true);
-            HashMap c_map = (HashMap)c.get(null);
-            c_map.put(name, dragonClass);
-
-            Field d = entityTypeClass.getDeclaredField("d");
-            d.setAccessible(true);
-            HashMap d_map = (HashMap)d.get(null);
-            d_map.put(dragonClass, name);
-
-            Field e = entityTypeClass.getDeclaredField("e");
-            e.setAccessible(true);
-            HashMap e_map = (HashMap)e.get(null);
-            e_map.put(id, dragonClass);
-
-            Field f = entityTypeClass.getDeclaredField("f");
-            f.setAccessible(true);
-            HashMap f_map = (HashMap)f.get(null);
-            f_map.put(dragonClass, id);
-
-            Field g = entityTypeClass.getDeclaredField("g");
-            g.setAccessible(true);
-            HashMap g_map = (HashMap)g.get(null);
-            g_map.put(name, id);
-
-            return true;
-        }
-        catch (Exception e) {
-
-            Class<?>[] paramTypes = new Class[] { Class.class, String.class, int.class };
-
-            // MCPC+ compatibility
-            // Forge Dev environment; names are not translated into func_foo
-            try {
-                Method method = EntityTypes.class.getDeclaredMethod("addMapping", paramTypes);
-                method.setAccessible(true);
-                method.invoke(null, dragonClass, name, id);
-                return true;
-            }
-            catch (Exception ex) {
-                e.addSuppressed(ex);
-            }
-            // Production environment: search for the method
-            // This is required because the seargenames could change
-            // LAST CHECKED FOR VERSION 1.6.4
-            try {
-                for (Method method : EntityTypes.class.getDeclaredMethods()) {
-                    if (Arrays.equals(paramTypes, method.getParameterTypes())) {
-                        method.invoke(null, dragonClass, name, id);
-                        return true;
-                    }
-                }
-            }
-            catch (Exception ex) {
-                e.addSuppressed(ex);
-            }
-
-            getLogger().severe("Could not register the " + name + "[" + dragonClass + "] dragon entity!");
-            e.printStackTrace();
-        }
-        return false;
+        return aircraftManager;
     }
 
+    public FlightManager getFlightManager() {
+
+        return flightManager;
+    }
+
+    public RouteManager getRouteManager() {
+
+        return routeManager;
+    }
+
+    public StationManager getStationManager() {
+
+        return stationManager;
+    }
+
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+
+        List<Class<?>> tables = new ArrayList<>();
+        tables.add(TPath.class);
+        tables.add(TPlayerStation.class);
+        tables.add(TStation.class);
+        tables.add(TWaypoint.class);
+        return tables;
+    }
 
     public LocalDTPConfiguration getConfig() {
 
@@ -190,8 +140,12 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
     public class LocalDTPConfiguration extends ConfigurationBase<DragonTravelPlusPlugin> {
 
+        @Setting("migrate")
+        public boolean migrate = true;
         @Setting("disabled")
         public boolean disabled = false;
+        @Setting("aircraft.type")
+        public String aircraftType = "REMOTE_ENTITY";
         @Setting("error-prevention-flight-timeout")
         public int flightTimeout = 30;
         @Setting("flight-cost-per-block")
@@ -210,6 +164,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         public int controlledTargetDistance = 30;
         @Setting("dynamic-flight-route")
         public boolean useDynamicRouting = true;
+        @Setting("flight.waypoint-radius")
+        public int wayPointRadius = 4;
         @Setting("flight-waypoint-distance")
         public int wayPointDistance = 10;
         @Setting("flight-editor-item")
