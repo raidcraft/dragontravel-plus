@@ -49,7 +49,12 @@ public class PlayerStationsTable extends Table {
                 TPlayerStation station = new TPlayerStation();
                 station.setPlayer(resultSet.getString("player"));
                 station.setStation(database.find(TStation.class).where().eq("name", resultSet.getString("station_name")).findUnique());
-                station.setDiscovered(Timestamp.valueOf(resultSet.getString("discovered")));
+                String discovered = resultSet.getString("discovered");
+                if (discovered != null && !discovered.equals("")) {
+                    String[] split = discovered.split(" ")[0].split("-");
+                    discovered = split[2] + split[1] + split[0];
+                    station.setDiscovered(Timestamp.valueOf(discovered));
+                }
                 database.save(station);
                 cnt++;
             }
