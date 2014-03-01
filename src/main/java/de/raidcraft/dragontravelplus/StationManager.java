@@ -62,7 +62,7 @@ public final class StationManager implements Component {
 
         List<TPlayerStation> stationsList = plugin.getDatabase().find(TPlayerStation.class).where()
                 .eq("player", player.getName())
-                .isNotNull("unlocked").findList();
+                .isNotNull("discovered").findList();
         List<Station> stations = new ArrayList<>();
         for (TPlayerStation playerStation : stationsList) {
             try {
