@@ -71,6 +71,14 @@ public final class StationManager implements Component {
                 plugin.getLogger().warning(e.getMessage());
             }
         }
+        // also add all emergency stations
+        for (Station station : getAllStations()) {
+            if (station instanceof DragonStation) {
+                if (((DragonStation) station).isMainStation() || ((DragonStation) station).isEmergencyTarget()) {
+                    stations.add(station);
+                }
+            }
+        }
         return stations;
     }
 
