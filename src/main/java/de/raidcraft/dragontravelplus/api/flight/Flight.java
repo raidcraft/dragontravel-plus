@@ -1,7 +1,9 @@
 package de.raidcraft.dragontravelplus.api.flight;
 
 import de.raidcraft.dragontravelplus.api.aircraft.Aircraft;
+import de.raidcraft.dragontravelplus.api.passenger.Passenger;
 import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 
 /**
  * @author Silthus
@@ -44,6 +46,31 @@ public interface Flight {
      * @return end location of the flight
      */
     public Location getEndLocation();
+
+    /**
+     * Checks if the passenger list contains a passenger that matches the given entity.
+     * @param entity to match passenger list against
+     * @return true if passenger list contains this entity
+     */
+    public boolean hasPassenger(LivingEntity entity);
+
+    /**
+     * Returns the current passenger of this aircraft
+     * @return passenger of the aircraft
+     */
+    public Passenger getPassenger();
+
+    /**
+     * Sets the passenger of the aircraft.
+     * @param passenger to add to the aircraft
+     */
+    public void setPassenger(Passenger<?> passenger);
+
+    /**
+     * Removes the given passenger from the aircraft. If a flight is in progress it will {@link de.raidcraft.dragontravelplus.api.flight.Flight#abortFlight()} the flight.
+     * @return removed passenger or null if passenger could not be removed or wasnt on the aircraft
+     */
+    public Passenger<?> removePassenger();
 
     /**
      * Starts the flight, mounting the passenger and flying to the first waypoint.

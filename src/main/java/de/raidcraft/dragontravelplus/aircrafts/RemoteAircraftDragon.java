@@ -8,6 +8,7 @@ import de.kumpelblase2.remoteentities.entities.RemoteEnderDragon;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.api.aircraft.AbstractAircraft;
+import de.raidcraft.dragontravelplus.api.flight.Flight;
 import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.api.flight.Waypoint;
 import de.raidcraft.util.LocationUtil;
@@ -88,14 +89,14 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
     }
 
     @Override
-    public void mountPassenger() throws FlightException {
+    public void mountPassenger(Flight flight) throws FlightException {
 
         if (!isSpawned()) return;
-        getEntity().getBukkitEntity().setPassenger(getPassenger().getEntity());
+        getEntity().getBukkitEntity().setPassenger(flight.getPassenger().getEntity());
     }
 
     @Override
-    public void unmountPassenger() {
+    public void unmountPassenger(Flight flight) {
 
         if (!isSpawned()) return;
         getEntity().getBukkitEntity().setPassenger(null);

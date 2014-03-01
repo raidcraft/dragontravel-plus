@@ -14,7 +14,7 @@ public interface Aircraft<T> {
 
     /**
      * Gets entity that is the aircraft if it was spawned.
-     * @return null if {@link #spawn()} was not called
+     * @return null if {@link #spawn(de.raidcraft.dragontravelplus.api.flight.Flight)} was not called
      */
     public T getEntity();
 
@@ -60,7 +60,8 @@ public interface Aircraft<T> {
     public void despawn();
 
     /**
-     * Checks if the aircraft is flying and {@link #takeoff(de.raidcraft.dragontravelplus.api.flight.Flight)} was called and no {@link #land()} was done.
+     * Checks if the aircraft is flying and {@link #takeoff(de.raidcraft.dragontravelplus.api.flight.Flight)}
+     * was called and no {@link #land(de.raidcraft.dragontravelplus.api.flight.Flight)} was done.
      * @return true if aircraft is flying
      */
     public boolean isFlying();
@@ -89,38 +90,13 @@ public interface Aircraft<T> {
     public void land(Flight flight);
 
     /**
-     * Checks if the passenger list contains a passenger that matches the given entity.
-     * @param entity to match passenger list against
-     * @return true if passenger list contains this entity
-     */
-    public boolean containsPassenger(LivingEntity entity);
-
-    /**
-     * Returns the current passenger of this aircraft
-     * @return passenger of the aircraft
-     */
-    public Passenger getPassenger();
-
-    /**
-     * Sets the passenger of the aircraft.
-     * @param passenger to add to the aircraft
-     */
-    public void setPassenger(Passenger<?> passenger);
-
-    /**
-     * Removes the given passenger from the aircraft. If a flight is in progress it will {@link de.raidcraft.dragontravelplus.api.flight.Flight#abortFlight()} the flight.
-     * @return removed passenger or null if passenger could not be removed or wasnt on the aircraft
-     */
-    public Passenger<?> removePassenger();
-
-    /**
      * Mounts all attached passengers onto the aircraft.
-     * @throws de.raidcraft.dragontravelplus.api.flight.FlightException if {@link #spawn()} was not called
+     * @throws de.raidcraft.dragontravelplus.api.flight.FlightException if entity was not spawned
      */
-    public void mountPassenger() throws FlightException;
+    public void mountPassenger(Flight flight) throws FlightException;
 
     /**
      * Unmounts all passengers from the aircraft.
      */
-    public void unmountPassenger();
+    public void unmountPassenger(Flight flight);
 }

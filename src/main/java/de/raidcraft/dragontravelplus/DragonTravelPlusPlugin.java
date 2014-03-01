@@ -4,6 +4,8 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
+import de.raidcraft.dragontravelplus.api.flight.Flight;
+import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
 import de.raidcraft.dragontravelplus.conversations.CheckPlayerAction;
@@ -12,12 +14,18 @@ import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
 import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
 import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
-import de.raidcraft.dragontravelplus.station.StationManager;
 import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
 import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
 import de.raidcraft.dragontravelplus.tables.StationTable;
+import de.raidcraft.dragontravelplus.tables.TPath;
+import de.raidcraft.dragontravelplus.tables.TPlayerStations;
+import de.raidcraft.dragontravelplus.tables.TStation;
+import de.raidcraft.dragontravelplus.tables.TWaypoint;
 import de.raidcraft.rcconversations.actions.ActionManager;
 import org.bukkit.Bukkit;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Philip
@@ -27,20 +35,27 @@ import org.bukkit.Bukkit;
 public class DragonTravelPlusPlugin extends BasePlugin {
 
     private LocalDTPConfiguration config;
+    private AircraftManager aircraftManager;
+    private FlightManager flightManager;
+    private RouteManager routeManager;
+    private StationManager stationManager;
 
     @Override
     public void enable() {
 
         config = configure(new LocalDTPConfiguration(this));
 
-        registerCommands(DTPCommands.class);
-        registerCommands(FlightCommands.class);
-
         registerTable(StationTable.class, new StationTable());
         registerTable(PlayerStationsTable.class, new PlayerStationsTable());
         registerTable(FlightWayPointsTable.class, new FlightWayPointsTable());
 
-        StationManager.INST.loadExistingStations();
+        stationManager = new StationManager(this);
+        aircraftManager = new AircraftManager(this);
+        routeManager = new RouteManager(this);
+        flightManager = new FlightManager(this);
+
+        registerCommands(DTPCommands.class);
+        registerCommands(FlightCommands.class);
 
         // lets trigger a delayed load to make sure all plugins are loaded
         Bukkit.getScheduler().runTaskLater(this, new Runnable() {
@@ -64,13 +79,52 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     @Override
     public void disable() {
 
-
+        for (Flight flight : getFlightManager().getActiveFlights()) {
+            try {
+                flight.abortFlight();
+            } catch (FlightException e) {
+                RaidCraft.LOGGER.warning(e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void reload() {
 
+        getStationManager().reload();
+        getRouteManager().reload();
+    }
 
+    public AircraftManager getAircraftManager() {
+
+        return aircraftManager;
+    }
+
+    public FlightManager getFlightManager() {
+
+        return flightManager;
+    }
+
+    public RouteManager getRouteManager() {
+
+        return routeManager;
+    }
+
+    public StationManager getStationManager() {
+
+        return stationManager;
+    }
+
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+
+        List<Class<?>> tables = new ArrayList<>();
+        tables.add(TPath.class);
+        tables.add(TPlayerStations.class);
+        tables.add(TStation.class);
+        tables.add(TWaypoint.class);
+        return tables;
     }
 
     public LocalDTPConfiguration getConfig() {

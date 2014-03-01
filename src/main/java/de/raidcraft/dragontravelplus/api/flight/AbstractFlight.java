@@ -1,7 +1,9 @@
 package de.raidcraft.dragontravelplus.api.flight;
 
 import de.raidcraft.dragontravelplus.api.aircraft.Aircraft;
+import de.raidcraft.dragontravelplus.api.passenger.Passenger;
 import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 
 /**
  * @author Silthus
@@ -10,8 +12,9 @@ public abstract class AbstractFlight implements Flight {
 
     private final Aircraft<?> aircraft;
     private final Path path;
-    private int currentIndex = 0;
     private final Location startLocation;
+    private Passenger<?> passenger;
+    private int currentIndex = 0;
     private Location endLocation;
 
     public AbstractFlight(Aircraft<?> aircraft, Path path, Location startLocation) {
@@ -52,6 +55,32 @@ public abstract class AbstractFlight implements Flight {
     }
 
     @Override
+    public boolean hasPassenger(LivingEntity entity) {
+
+        return getPassenger() != null && getPassenger().getEntity().equals(entity);
+    }
+
+    @Override
+    public Passenger<?> getPassenger() {
+
+        return passenger;
+    }
+
+    @Override
+    public Passenger<?> removePassenger() {
+
+        Passenger<?> passenger = this.passenger;
+        this.passenger = null;
+        return passenger;
+    }
+
+    @Override
+    public void setPassenger(Passenger<?> passenger) {
+
+        this.passenger = passenger;
+    }
+
+    @Override
     public boolean isActive() {
 
         return getAircraft().isFlying();
@@ -80,7 +109,7 @@ public abstract class AbstractFlight implements Flight {
 
         if (isActive()) throw new FlightException("Flight was already started. Cannot start again!");
         getAircraft().takeoff(this);
-        getAircraft().getPassenger().setFlight(this);
+        getPassenger().setFlight(this);
     }
 
     @Override
@@ -88,8 +117,7 @@ public abstract class AbstractFlight implements Flight {
 
         if (!isActive()) throw new FlightException("Flight was not started. Cannot abort flight!");
         getAircraft().abortFlight(this);
-        getAircraft().getPassenger().getEntity().teleport(getStartLocation());
-        getAircraft().getPassenger().setFlight(null);
+        getPassenger().getEntity().teleport(getStartLocation());
     }
 
     @Override
@@ -97,7 +125,6 @@ public abstract class AbstractFlight implements Flight {
 
         if (!isActive()) throw new FlightException("Flight was not started. Cannot end flight!");
         getAircraft().land(this);
-        getAircraft().getPassenger().setFlight(null);
     }
 
     @Override

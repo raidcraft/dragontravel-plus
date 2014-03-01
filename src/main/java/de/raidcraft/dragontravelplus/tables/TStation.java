@@ -1,5 +1,8 @@
 package de.raidcraft.dragontravelplus.tables;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -58,6 +61,11 @@ public class TStation {
     public void setDisplayName(String displayName) {
 
         this.displayName = displayName;
+    }
+
+    public Location getLocation() {
+
+        return new Location(Bukkit.getWorld(getWorld()), getX(), getY(), getZ());
     }
 
     public String getWorld() {

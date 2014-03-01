@@ -3,6 +3,7 @@ package de.raidcraft.dragontravelplus.flights;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.language.Translator;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.FlightManager;
 import de.raidcraft.dragontravelplus.api.aircraft.Aircraft;
 import de.raidcraft.dragontravelplus.api.flight.AbstractFlight;
 import de.raidcraft.dragontravelplus.api.flight.FlightException;
@@ -37,7 +38,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onChat(AsyncPlayerChatEvent event) {
 
-        if (!getAircraft().containsPassenger(event.getPlayer())) {
+        if (!hasPassenger(event.getPlayer())) {
             return;
         }
         if (Arrays.asList(RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().exitWords).contains(event.getMessage())) {
@@ -54,7 +55,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onInteract(PlayerInteractEvent event) {
 
-        if (getAircraft().containsPassenger(event.getPlayer())) {
+        if (hasPassenger(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
@@ -65,7 +66,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
-        if (getAircraft().containsPassenger((LivingEntity) event.getEntity())) {
+        if (hasPassenger((LivingEntity) event.getEntity())) {
             event.setCancelled(true);
         }
     }
@@ -73,7 +74,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onCommand(PlayerCommandPreprocessEvent event) {
 
-        if (!getAircraft().containsPassenger(event.getPlayer())) {
+        if (!hasPassenger(event.getPlayer())) {
             return;
         }
         for (String cmd : RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().forbiddenCommands) {
@@ -89,7 +90,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onVehicleExit(VehicleExitEvent event) {
 
-        if (getAircraft().containsPassenger(event.getExited())) {
+        if (hasPassenger(event.getExited())) {
             event.setCancelled(true);
         }
     }
@@ -97,7 +98,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent event) {
 
-        if (getAircraft().containsPassenger(event.getPlayer())) {
+        if (hasPassenger(event.getPlayer())) {
             try {
                 abortFlight();
             } catch (FlightException e) {
@@ -110,7 +111,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDeath(EntityDeathEvent event) {
 
-        if (getAircraft().containsPassenger(event.getEntity())) {
+        if (hasPassenger(event.getEntity())) {
             try {
                 abortFlight();
             } catch (FlightException e) {
@@ -124,6 +125,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     public void startFlight() throws FlightException {
 
         super.startFlight();
+        RaidCraft.getComponent(FlightManager.class).registerFlight(this);
         Bukkit.getPluginManager().registerEvents(this, RaidCraft.getComponent(DragonTravelPlusPlugin.class));
     }
 
@@ -131,6 +133,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     public void abortFlight() throws FlightException {
 
         super.abortFlight();
+        RaidCraft.getComponent(FlightManager.class).unregisterFlight(this);
         unregisterListener();
     }
 
@@ -138,6 +141,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     public void endFlight() throws FlightException {
 
         super.abortFlight();
+        RaidCraft.getComponent(FlightManager.class).unregisterFlight(this);
         unregisterListener();
     }
 

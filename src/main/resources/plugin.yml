@@ -5,3 +5,4 @@ author: Strasse36
 website: www.raid-craft.de
 depend: [RaidCraft-API, Citizens]
 softdepend: [Dynmap, RCConversations]
+database: true

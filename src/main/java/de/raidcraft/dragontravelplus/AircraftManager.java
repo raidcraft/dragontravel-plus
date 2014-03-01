@@ -28,7 +28,7 @@ public final class AircraftManager implements Component {
     private final AircraftType type;
     private EntityManager entityManager;
 
-    public AircraftManager(DragonTravelPlusPlugin plugin) {
+    protected AircraftManager(DragonTravelPlusPlugin plugin) {
 
         this.plugin = plugin;
         this.type = AircraftType.fromString(plugin.getConfig().aircraftType);

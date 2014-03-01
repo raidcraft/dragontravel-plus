@@ -19,14 +19,14 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
 
     private boolean mainStation = false;
     private boolean emergencyTarget = false;
-    private int costLevel;
+    private double costMultiplier;
 
-    public DragonStation(String name, Location location, int costLevel, boolean mainStation, boolean emergencyTarget) {
+    public DragonStation(String name, Location location, double costMultiplier, boolean mainStation, boolean emergencyTarget) {
 
         super(name, location);
         this.mainStation = mainStation;
         this.emergencyTarget = emergencyTarget;
-        this.costLevel = costLevel;
+        this.costMultiplier = costMultiplier;
     }
 
     /*
@@ -80,7 +80,7 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     @Override
     public double getPrice() {
 
-        return costLevel;
+        return costMultiplier;
     }
 
     @Override
