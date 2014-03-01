@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus.tables;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,10 +22,10 @@ public class TPath {
     private int id;
     @Column(unique = true)
     private String name;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @Column(name = "start_station_id")
     private TStation startStation;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @Column(name = "end_station_id")
     private TStation endStation;
     @OneToMany(mappedBy = "path_id")

@@ -83,4 +83,27 @@ public final class StationManager implements Component {
         }
         throw new UnknownStationException("No station found within the radius of " + radius + " near " + location.toString());
     }
+
+    public DragonStation createNewStation(String name, Location location, int costLevel, boolean mainStation, boolean emergencyTarget) throws UnknownStationException {
+
+        if (loadedStations.containsKey(name)) {
+            throw new UnknownStationException("Duplicate station with the name " + name + " detected!");
+        }
+        DragonStation dragonStation = new DragonStation(name, location, costLevel, mainStation, emergencyTarget);
+        dragonStation.save();
+        loadedStations.put(dragonStation.getName(), dragonStation);
+        return dragonStation;
+    }
+
+    public void deleteStation(DragonStation station) {
+
+        loadedStations.remove(station.getName());
+        TStation entry = plugin.getDatabase().find(TStation.class).where().eq("name", station.getName()).findUnique();
+        plugin.getDatabase().delete(entry);
+    }
+
+    public List<Station> getAllStations() {
+
+        return new ArrayList<>(loadedStations.values());
+    }
 }

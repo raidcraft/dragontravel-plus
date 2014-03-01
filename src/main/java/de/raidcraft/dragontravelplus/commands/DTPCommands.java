@@ -1,32 +1,29 @@
 package de.raidcraft.dragontravelplus.commands;
 
-import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.minecraft.util.commands.Command;
+import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.sk89q.minecraft.util.commands.NestedCommand;
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
-import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.ControlledFlight;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
-import de.raidcraft.dragontravelplus.exceptions.AlreadyExistsException;
+import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.npc.NPCManager;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
 import de.raidcraft.rcconversations.RCConversationsPlugin;
 import de.raidcraft.rcconversations.npc.NPCRegistry;
 import de.raidcraft.rcconversations.util.ChunkLocation;
+import de.raidcraft.rctravel.api.station.Station;
+import de.raidcraft.rctravel.api.station.UnknownStationException;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Author: Philip
@@ -51,10 +48,14 @@ public class DTPCommands {
     public static class NestedDragonGuardCommands {
 
         private final DragonTravelPlusPlugin plugin;
+        private final TranslationProvider tr;
+        private final StationManager stationManager;
 
         public NestedDragonGuardCommands(DragonTravelPlusPlugin module) {
 
             this.plugin = module;
+            this.tr = plugin.getTranslationProvider();
+            this.stationManager = plugin.getStationManager();
         }
 
         @Command(
@@ -64,9 +65,8 @@ public class DTPCommands {
         @CommandPermissions("dragontravelplus.reload")
         public void reload(CommandContext context, CommandSender sender) throws CommandException {
 
-            RaidCraft.getComponent(DragonTravelPlusPlugin.class).reload();
-            if (sender instanceof Player) ChatMessages.successfulReloaded( sender);
-            if (sender instanceof ConsoleCommandSender) sender.sendMessage("[DTP] DragonTravelPlus config successfully reloaded!");
+            plugin.reload();
+            tr.msg(sender, "cmd.reload", "Plugin was sucessfully reloaded!");
         }
 
         @Command(
@@ -78,10 +78,6 @@ public class DTPCommands {
         )
         @CommandPermissions("dragontravelplus.create")
         public void create(CommandContext context, CommandSender sender) throws CommandException {
-
-            if (context.argsLength() < 1) {
-                ChatMessages.tooFewArguments( sender);
-            }
 
             int costLevel = 1;
             boolean mainStation = false;
@@ -99,16 +95,15 @@ public class DTPCommands {
                 emergencyTarget = true;
             }
 
-            DragonStation station = new DragonStation(context.getString(0)
-                    , ((Player) sender).getLocation()
-                    , costLevel
-                    , mainStation
-                    , emergencyTarget);
+            DragonStation station;
             try {
-                StationManager.INST.addNewStation(station);
-            } catch (AlreadyExistsException e) {
-                ChatMessages.warn(( sender), e.getMessage());
-                return;
+                station = stationManager.createNewStation(context.getString(0)
+                        , ((Player) sender).getLocation()
+                        , costLevel
+                        , mainStation
+                        , emergencyTarget);
+            } catch (UnknownStationException e) {
+                throw new CommandException(e.getMessage());
             }
 
             NPCManager.createDragonGuard(station);
@@ -116,7 +111,7 @@ public class DTPCommands {
             // dynmap
             DynmapManager.INST.addStationMarker(station);
 
-            ChatMessages.success((sender), "Du hast erfolgreich die Drachenstation '" + station.getFriendlyName() + "' erstellt!");
+            tr.msg(sender, "cmd.station.create", "You have created a dragon station with the name: {0}", station.getFriendlyName());
         }
 
         @Command(
@@ -128,21 +123,20 @@ public class DTPCommands {
         @CommandPermissions("dragontravelplus.remove")
         public void remove(CommandContext context, CommandSender sender) throws CommandException {
 
-            DragonStation station = StationManager.INST.getDragonStation(context.getString(0));
-
-            if (station == null) {
-                ChatMessages.warn(sender, "Es gibt keine Station mit diesem Namen!");
-                return;
+            DragonStation station;
+            try {
+                station = (DragonStation) stationManager.getStation(context.getString(0));
+            } catch (UnknownStationException e) {
+                throw new CommandException(e.getMessage());
             }
 
             NPCManager.removeDragonGuard(station);
 
-            StationManager.INST.deleteStation(station);
+            stationManager.deleteStation(station);
             DynmapManager.INST.removeMarker(station);
             RaidCraft.getComponent(DragonTravelPlusPlugin.class).reload();
 
-
-            ChatMessages.success(sender, "Die Drachenstation '" + context.getString(0) + "' wurde gelöscht!");
+            tr.msg(sender, "cmd.station.delete", "You deleted the dragon station: {0}", station.getFriendlyName());
         }
 
         @Command(
@@ -154,15 +148,15 @@ public class DTPCommands {
         @CommandPermissions("dragontravelplus.warp")
         public void warp(CommandContext context, CommandSender sender) throws CommandException {
 
-            DragonStation station = StationManager.INST.getDragonStation(context.getJoinedStrings(0));
-
-            if (station == null) {
-                ChatMessages.warn(sender, "Es gibt keine Station mit diesem Namen!");
-                return;
+            DragonStation station;
+            try {
+                station = (DragonStation) stationManager.getStation(context.getJoinedStrings(0));
+            } catch (UnknownStationException e) {
+                throw new CommandException(e.getMessage());
             }
 
             ((Player) sender).teleport(station.getLocation());
-            ChatMessages.success(sender, "Du wurdest zur Station '" + station.getFriendlyName() + "' geportet!");
+            tr.msg(sender, "cmd.station.warp", "You have been teleported to the dragon station: {0}", station.getFriendlyName());
         }
 
         @Command(
@@ -172,64 +166,30 @@ public class DTPCommands {
         )
         public void list(CommandContext context, CommandSender sender) throws CommandException {
 
-            ChatMessages.success( sender, "Alle verfügbaren Drachenstationen in dieser Welt:");
             String list = "";
 
-            for (Map.Entry<String, DragonStation> entry : StationManager.INST.existingStations.entrySet()) {
+            for (Station station : stationManager.getAllStations()) {
 
-                if (context.hasFlag('e')) {
-                    if (!entry.getValue().isEmergencyTarget()) continue;
+                if (station instanceof DragonStation) {
+                    if (context.hasFlag('e')) {
+                        if (!((DragonStation) station).isEmergencyTarget()) continue;
+                    }
+                    if (context.hasFlag('c')) {
+                        if (!String.valueOf((int) ((DragonStation) station).getPrice()).equalsIgnoreCase(context.getFlag('c'))) continue;
+                    }
                 }
 
-                if (context.hasFlag('c')) {
-                    if (!String.valueOf((int)entry.getValue().getPrice()).equalsIgnoreCase(context.getFlag('c'))) continue;
-                }
-
-                if(!entry.getValue().getLocation().getWorld().getName().equalsIgnoreCase(((Player) sender).getLocation().getWorld().getName())) {
+                if (!station.getLocation().getWorld().getName().equalsIgnoreCase(((Player) sender).getLocation().getWorld().getName())) {
                     continue;
                 }
 
                 ChatColor color = ChatColor.AQUA;
-                if (entry.getValue().getPrice() > 0) color = ChatColor.GOLD;
-                if (entry.getValue().isEmergencyTarget()) color = ChatColor.DARK_RED;
-                list += color + entry.getKey() + ChatColor.WHITE + ", ";
+                if (station instanceof DragonStation && ((DragonStation) station).getPrice() > 0) color = ChatColor.GOLD;
+                if (station instanceof DragonStation && ((DragonStation) station).isEmergencyTarget()) color = ChatColor.DARK_RED;
+                list += color + station.getName() + ChatColor.WHITE + ", ";
             }
 
             sender.sendMessage(list);
-        }
-
-        @Command(
-                aliases = {"fly"},
-                desc = "Start controlledflyght"
-        )
-        @CommandPermissions("dragontravelplus.fly.controlled")
-        public void controlledFlight(CommandContext context, CommandSender sender) throws CommandException {
-
-            if(sender instanceof ConsoleCommandSender) {
-                sender.sendMessage("Player context required!");
-                return;
-            }
-            Player player = (Player)sender;
-
-            int duration = 0;
-
-            if(context.argsLength() > 0) {
-                duration = context.getInteger(0);
-            }
-
-            FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
-
-            if(flyingPlayer != null && flyingPlayer.isInAir()) {
-                ChatMessages.warn(player, "Du befindest dich bereits im Flug!");
-                return;
-            }
-
-            ControlledFlight controlledFlight = new ControlledFlight(duration);
-            FlightTravel.flyControlled(controlledFlight, player);
-            ChatMessages.success(player, "Freier Flug gestartet!");
-            if(duration > 0) {
-                ChatMessages.info(player, "Flugzeit: " + duration + "s");
-            }
         }
 
         @Command(
@@ -239,38 +199,13 @@ public class DTPCommands {
         @CommandPermissions("dragontravelplus.markers")
         public void markers(CommandContext context, CommandSender sender) throws CommandException {
 
-            ChatMessages.info(sender, "Dynmap Stationsmarker werden neu erstellt...");
             int i = 0;
-            for(DragonStation station : StationManager.INST.getStations()) {
+            for(Station station : stationManager.getAllStations()) {
 
                 DynmapManager.INST.addStationMarker(station);
                 i++;
             }
-            ChatMessages.success(sender, "Es wurden " + i + " Marker neu erstellt!");
-        }
-
-        @Command(
-                aliases = {"inair"},
-                desc = "Shows all players currently in air"
-        )
-        @CommandPermissions("dragontravelplus.markers")
-        public void inAir(CommandContext context, CommandSender sender) throws CommandException {
-
-            Collection<FlyingPlayer> flyingPlayers = DragonManager.INST.getFlyingPlayers();
-            List<String> inAirPlayers = new ArrayList<>();
-            for(FlyingPlayer flyingPlayer : flyingPlayers) {
-                if(flyingPlayer.isInAir()) inAirPlayers.add(flyingPlayer.getPlayer().getName());
-            }
-            if(inAirPlayers.size() == 0) {
-                throw new CommandException("Es befinden sich derzeit alle Spieler am Boden!");
-            }
-
-            sender.sendMessage(ChatColor.YELLOW + "Folgende Spieler fliegen gerade mit einem Drache:");
-            String msg = "";
-            for(String playerName : inAirPlayers) {
-                msg += playerName + ", ";
-            }
-            sender.sendMessage(ChatColor.YELLOW + msg);
+            tr.msg(sender, "cmd.dynmap", "Created {0} dynmap markers.", i);
         }
 
         @Command(

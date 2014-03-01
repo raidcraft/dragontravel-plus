@@ -7,13 +7,15 @@ import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.commands.QueuedCommand;
-import de.raidcraft.api.database.Database;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.dragoncontrol.DragonManager;
-import de.raidcraft.dragontravelplus.dragoncontrol.FlyingPlayer;
-import de.raidcraft.dragontravelplus.dragoncontrol.dragon.movement.FlightTravel;
-import de.raidcraft.dragontravelplus.flight.Flight;
-import de.raidcraft.dragontravelplus.flight.FlightEditorListener;
+import de.raidcraft.dragontravelplus.FlightManager;
+import de.raidcraft.dragontravelplus.RouteManager;
+import de.raidcraft.dragontravelplus.api.flight.Flight;
+import de.raidcraft.dragontravelplus.api.flight.FlightException;
+import de.raidcraft.dragontravelplus.api.flight.Path;
+import de.raidcraft.dragontravelplus.api.flight.UnknownPathException;
+import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
+import de.raidcraft.dragontravelplus.tables.TPath;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -56,19 +58,21 @@ public class FlightCommands {
         @CommandPermissions("dragontravelplus.editor.new")
         public void editor(CommandContext context, CommandSender sender) throws CommandException {
 
-            String playerName = sender.getName();
+            Player player = (Player) sender;
             String flightName = context.getString(0);
 
-            if(FlightEditorListener.hasEditorMode(playerName)) {
+            if(FlightEditorListener.hasEditorMode(player)) {
                 throw new CommandException("Du bist bereits im Flugeditor Modus");
             }
 
-            if(Database.getTable(FlightWayPointsTable.class).exists(flightName)) {
+            try {
+                RaidCraft.getComponent(RouteManager.class).getPath(flightName);
+            } catch (UnknownPathException e) {
                 throw new CommandException("Einen Flug mit diesem Namen existiert bereits!");
             }
 
-            FlightEditorListener.addPlayer(playerName, flightName);
-            ChatMessages.success(sender, "Flugeditor betreten!");
+            FlightEditorListener.addPlayer(player);
+            sender.sendMessage(ChatColor.GREEN +  "Flugeditor betreten!");
         }
 
         @Command(
@@ -78,23 +82,22 @@ public class FlightCommands {
         @CommandPermissions("dragontravelplus.editor.close")
         public void exit(CommandContext context, CommandSender sender) throws CommandException {
 
-            String playerName = sender.getName();
+            Player player = (Player) sender;
 
-            if(!FlightEditorListener.hasEditorMode(playerName)) {
+            if(!FlightEditorListener.hasEditorMode(player)) {
                 throw new CommandException("Du bist nicht im Flugeditor!");
             }
 
-            if(FlightEditorListener.editors.get(playerName).size() > 0) {
-                ChatMessages.warn(sender, "Du hast dein Flug noch nicht gespeichert!");
-                ChatMessages.warn(sender, "Nutze '/dtp editor save'.");
+            if(FlightEditorListener.editors.get(player).getWaypointAmount() > 0) {
+                sender.sendMessage(ChatColor.RED + "Du hast dein Flug noch nicht gespeichert!");
+                sender.sendMessage(ChatColor.RED + "Nutze '/dtp editor save'.");
                 try {
                     new QueuedCommand(sender, this, "leaveEditor", sender);
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 }
-            }
-            else {
-                leaveEditor(sender);
+            } else {
+                leaveEditor(player);
             }
         }
 
@@ -105,18 +108,24 @@ public class FlightCommands {
         @CommandPermissions("dragontravelplus.editor.save")
         public void save(CommandContext context, CommandSender sender) throws CommandException {
 
-            String playerName = sender.getName();
+            Player player = (Player) sender;
+            String flightName = context.getString(0);
 
-            if(!FlightEditorListener.hasEditorMode(playerName)) {
+            if(!FlightEditorListener.hasEditorMode(player)) {
                 throw new CommandException("Du bist nicht im Flugeditor Modus!");
             }
 
-            Flight fly = FlightEditorListener.editors.get(playerName);
-            fly.save(playerName);
-            String flightName = fly.getName();
-            FlightEditorListener.removePlayer(playerName);
-            ChatMessages.success(sender, "Dein Flug namens '" + flightName + "' wurde gespeichert!");
-            leaveEditor(sender);
+            try {
+                RaidCraft.getComponent(RouteManager.class).getPath(flightName);
+            } catch (UnknownPathException e) {
+                throw new CommandException("Einen Flug mit diesem Namen existiert bereits!");
+            }
+
+            Path path = FlightEditorListener.editors.get(player);
+            RaidCraft.getComponent(RouteManager.class).savePath(path, flightName);
+            FlightEditorListener.removePlayer(player);
+            sender.sendMessage(ChatColor.GREEN + "Dein Flug namens '" + flightName + "' wurde gespeichert!");
+            leaveEditor(player);
         }
 
         @Command(
@@ -145,21 +154,20 @@ public class FlightCommands {
         @CommandPermissions("dragontravelplus.flights.list")
         public void list(CommandContext context, CommandSender sender) throws CommandException {
 
-            ChatMessages.success(sender, "Alle gespeicherten Rundflüge:");
-            List<String> flightNames = Database.getTable(FlightWayPointsTable.class).getExistingFlightNames();
+            List<TPath> paths = RaidCraft.getDatabase(DragonTravelPlusPlugin.class)
+                    .find(TPath.class).where().isNull("start_station_id").findList();
 
             String out = "";
             boolean colorToggle = false;
-            for(String name : flightNames) {
-                if(colorToggle) {
+            for (TPath path : paths) {
+                if (colorToggle) {
                     colorToggle = false;
                     out += ChatColor.YELLOW;
-                }
-                else {
+                } else {
                     colorToggle = true;
                     out += ChatColor.WHITE;
                 }
-                out += name + ", ";
+                out += path.getName() + ", ";
             }
             sender.sendMessage(out);
         }
@@ -174,32 +182,28 @@ public class FlightCommands {
         @CommandPermissions("dragontravelplus.fly.flight")
         public void fly(CommandContext context, CommandSender sender) throws CommandException {
 
-            String flightName = context.getString(0);
-            Flight flight = Flight.loadFlight(flightName);
-            Player player = (Player)sender;
+            try {
+                String flightName = context.getString(0);
+                Path path = RaidCraft.getComponent(RouteManager.class).getPath(flightName);
 
-            if(flight == null) {
-                throw new CommandException("Es existiert kein Flug mit diesem Namen!");
+                Flight flight = RaidCraft.getComponent(FlightManager.class).createFlight((Player) sender, path);
+
+                flight.startFlight();
+            } catch (UnknownPathException | FlightException e) {
+                throw new CommandException(e.getMessage());
             }
-
-            FlyingPlayer flyingPlayer = DragonManager.INST.getFlyingPlayer(player.getName());
-
-            if(flyingPlayer != null && flyingPlayer.isInAir()) {
-                ChatMessages.warn(player, "Du befindest dich bereits im Flug!");
-                return;
-            }
-
-            FlightTravel.flyFlight(flight, player, RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightSpeed);
         }
 
-        public void leaveEditor(CommandSender player) {
-            FlightEditorListener.removePlayer(player.getName());
-            ChatMessages.info(player, "Flugeditor verlassen!");
+        public void leaveEditor(Player player) {
+
+            FlightEditorListener.removePlayer(player);
+            player.sendMessage(ChatColor.GREEN + "Flugeditor verlassen!");
         }
 
         public void deleteFlight(CommandSender sender, String flightName) {
-            Flight.removeFlight(flightName);
-            ChatMessages.info(sender, "Der Flug namens '" + flightName + "' wurde gelöscht!");
+
+            RaidCraft.getComponent(RouteManager.class).deletePath(flightName);
+            sender.sendMessage(ChatColor.GREEN + "Der Flug namens '" + flightName + "' wurde gelöscht!");
         }
     }
 }

@@ -82,20 +82,9 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     public void setDiscovered(String player, boolean discovered) {
 
         if(discovered) {
+
             EbeanServer database = RaidCraft.getDatabase(DragonTravelPlusPlugin.class);
-            TStation station = database.find(TStation.class).where().eq("name", getName()).findUnique();
-            if (station == null) {
-                station = new TStation();
-                station.setName(getName());
-                station.setDisplayName(getFriendlyName());
-                station.setWorld(getLocation().getWorld().getName());
-                station.setX(getLocation().getBlockX());
-                station.setY(getLocation().getBlockY());
-                station.setZ(getLocation().getBlockZ());
-                station.setMainStation(isMainStation());
-                station.setEmergencyStation(isEmergencyTarget());
-                database.save(station);
-            }
+            TStation station = save();
             TPlayerStation playerStation = database.find(TPlayerStation.class)
                     .where().eq("station_id", station.getId()).eq("player", player).findUnique();
             if (playerStation == null) {
@@ -143,5 +132,24 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
 
         return Math.abs(Math.round(costLevel * getLocation().distance(destination.getLocation())
                 * RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().pricePerBlock * 100.) / 100.);
+    }
+
+    public TStation save() {
+
+        EbeanServer database = RaidCraft.getDatabase(DragonTravelPlusPlugin.class);
+        TStation station = database.find(TStation.class).where().eq("name", getName()).findUnique();
+        if (station == null) {
+            station = new TStation();
+        }
+        station.setName(getName());
+        station.setDisplayName(getFriendlyName());
+        station.setWorld(getLocation().getWorld().getName());
+        station.setX(getLocation().getBlockX());
+        station.setY(getLocation().getBlockY());
+        station.setZ(getLocation().getBlockZ());
+        station.setMainStation(isMainStation());
+        station.setEmergencyStation(isEmergencyTarget());
+        database.save(station);
+        return station;
     }
 }

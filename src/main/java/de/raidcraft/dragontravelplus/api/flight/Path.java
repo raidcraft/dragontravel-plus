@@ -1,11 +1,43 @@
 package de.raidcraft.dragontravelplus.api.flight;
 
+import org.bukkit.Location;
+
 import java.util.List;
 
 /**
  * @author Silthus
  */
 public interface Path {
+
+    /**
+     * Shows all waypoints in the path as blocks placing the defined material.
+     */
+    public void showWaypoints();
+
+    /**
+     * Hides all waypoints in this path, placing air the waypoint location.
+     */
+    public void hideWaypoints();
+
+    /**
+     * Checks if the path is showing its waypoints.
+     * @return true if waypoints are shown
+     */
+    public boolean isShowingWaypoints();
+
+    /**
+     * Checks if the path contains the given waypoint.
+     * @param waypoint to check for
+     * @return true if path contains waypoint
+     */
+    public boolean containsWaypoint(Waypoint waypoint);
+
+    /**
+     * Checks if the path contains the given location as a waypoint.
+     * @param location to check for
+     * @return true if path has a waypoint with the location
+     */
+    public boolean containsWaypoint(Location location);
 
     /**
      * Gets the starting waypoint in this path.

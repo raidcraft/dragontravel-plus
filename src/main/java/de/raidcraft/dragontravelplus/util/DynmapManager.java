@@ -1,7 +1,7 @@
 package de.raidcraft.dragontravelplus.util;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.rctravel.api.station.Station;
 import org.bukkit.Bukkit;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.Marker;
@@ -31,7 +31,7 @@ public class DynmapManager {
         dragonSet = markerAPI.getMarkerSet("drachenmeister");
     }
 
-    public void addStationMarker(DragonStation station) {
+    public void addStationMarker(Station station) {
 
         if (markerAPI == null || dragonSet == null) {
             RaidCraft.LOGGER.warning("Dynmap not installed or 'drachenmeister' marker set not available!");
@@ -41,7 +41,7 @@ public class DynmapManager {
         removeMarker(station);
 
         dragonSet.createMarker(station.getName().toLowerCase().replace(" ", "_")
-                , station.getFriendlyName()
+                , station.getName()
                 , station.getLocation().getWorld().getName()
                 , station.getLocation().getBlockX()
                 , station.getLocation().getBlockY()
@@ -50,13 +50,13 @@ public class DynmapManager {
                 , true);
     }
 
-    public void removeMarker(DragonStation station) {
+    public void removeMarker(Station station) {
 
         if (dragonSet == null) {
             return;
         }
         for (Marker marker : dragonSet.getMarkers()) {
-            if (marker.getLabel().equalsIgnoreCase(station.getName()) || marker.getLabel().equalsIgnoreCase(station.getFriendlyName())) {
+            if (marker.getLabel().equalsIgnoreCase(station.getName()) || marker.getLabel().equalsIgnoreCase(station.getName())) {
                 marker.deleteMarker();
             }
         }

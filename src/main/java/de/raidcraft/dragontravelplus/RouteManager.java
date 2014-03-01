@@ -4,11 +4,13 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.dragontravelplus.api.flight.Path;
 import de.raidcraft.dragontravelplus.api.flight.UnknownPathException;
+import de.raidcraft.dragontravelplus.api.flight.Waypoint;
 import de.raidcraft.dragontravelplus.paths.DragonStationRoute;
 import de.raidcraft.dragontravelplus.paths.DynamicFlightPath;
 import de.raidcraft.dragontravelplus.paths.SavedFlightPath;
 import de.raidcraft.dragontravelplus.paths.SavedWaypoint;
 import de.raidcraft.dragontravelplus.tables.TPath;
+import de.raidcraft.dragontravelplus.tables.TWaypoint;
 import de.raidcraft.rctravel.StationManager;
 import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.util.CaseInsensitiveMap;
@@ -98,5 +100,34 @@ public final class RouteManager implements Component {
             return loadedPaths.get(name);
         }
         throw new UnknownPathException("There is not loaded path with the name " + name + "!");
+    }
+
+    public void savePath(Path path, String name) {
+
+        if (loadedPaths.containsKey(name)) {
+            return;
+        }
+        TPath tPath = new TPath();
+        tPath.setName(name);
+        plugin.getDatabase().save(tPath);
+        for (int i = 0; i < path.getWaypointAmount(); i++) {
+            TWaypoint tWaypoint = new TWaypoint();
+            tWaypoint.setPath(tPath);
+            Waypoint waypoint = path.getWaypoint(i);
+            tWaypoint.setIndex(i);
+            tWaypoint.setWorld(waypoint.getWorld().getName());
+            tWaypoint.setX(waypoint.getX());
+            tWaypoint.setY(waypoint.getY());
+            tWaypoint.setZ(waypoint.getZ());
+            plugin.getDatabase().save(tWaypoint);
+        }
+    }
+
+    public void deletePath(String name) {
+
+        TPath tPath = plugin.getDatabase().find(TPath.class).where().eq("name", name).findUnique();
+        if (tPath != null) {
+            plugin.getDatabase().delete(tPath);
+        }
     }
 }

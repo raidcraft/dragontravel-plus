@@ -32,6 +32,8 @@ public class TStation {
     private boolean emergencyStation = false;
     @OneToMany(mappedBy = "start_station_id")
     private List<TPath> paths = new ArrayList<>();
+    @OneToMany(mappedBy = "station_id")
+    private List<TPlayerStation> playerStations = new ArrayList<>();
 
     public int getId() {
 
@@ -146,5 +148,15 @@ public class TStation {
     public void setPaths(List<TPath> paths) {
 
         this.paths = paths;
+    }
+
+    public List<TPlayerStation> getPlayerStations() {
+
+        return playerStations;
+    }
+
+    public void setPlayerStations(List<TPlayerStation> playerStations) {
+
+        this.playerStations = playerStations;
     }
 }

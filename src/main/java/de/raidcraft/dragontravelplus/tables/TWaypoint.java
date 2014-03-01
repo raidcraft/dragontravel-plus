@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus.tables;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -14,7 +15,7 @@ public class TWaypoint implements Comparable<TWaypoint> {
 
     @Id
     private int id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private TPath path;
     private int index;
     private String world;

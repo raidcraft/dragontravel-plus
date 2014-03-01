@@ -68,4 +68,12 @@ public final class FlightManager implements Component {
         flight.setPassenger(passenger);
         return flight;
     }
+
+    public Flight createFlight(Player player, Path path) {
+
+        Passenger passenger = getPassenger(player);
+        FreePathFlight flight = new FreePathFlight(plugin.getAircraftManager().getAircraft(), path, player.getLocation());
+        flight.setPassenger(passenger);
+        return flight;
+    }
 }

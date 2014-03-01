@@ -24,19 +24,19 @@ public class DynamicFlightPath extends AbstractPath {
 
         clearWaypoints();
 
-        World world = getStart().getWorld();
+        World world = getStartLocation().getWorld();
         boolean unloadChunk;
 
         // create unit vector to get the way point direction
-        int xDif = getEnd().getBlockX() - getStart().getBlockX();
-        int zDif = getEnd().getBlockZ() - getStart().getBlockZ();
+        int xDif = getEndLocation().getBlockX() - getStartLocation().getBlockX();
+        int zDif = getEndLocation().getBlockZ() - getStartLocation().getBlockZ();
         Vector unitVector = new Vector(xDif, 0, zDif).normalize();
 
         // here we simply calculate what points are between the start and the end location
         // we always add the defined flight height to the next waypoint
-        int wayPointCount = LocationUtil.getBlockDistance(getStart(), getEnd()) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().wayPointDistance;
+        int wayPointCount = LocationUtil.getBlockDistance(getStartLocation(), getEndLocation()) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().wayPointDistance;
         for (int i = 1; i < wayPointCount; i++) {
-            Location wpLocation = getStart().clone();
+            Location wpLocation = getStartLocation().clone();
             Vector unitVectorCopy = unitVector.clone();
             wpLocation.add(unitVectorCopy.multiply(i * RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().wayPointDistance));
 
