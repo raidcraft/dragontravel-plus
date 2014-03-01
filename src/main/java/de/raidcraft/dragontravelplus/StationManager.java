@@ -8,6 +8,8 @@ import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.rctravel.api.station.UnknownStationException;
 import de.raidcraft.util.CaseInsensitiveMap;
+import de.raidcraft.util.LocationUtil;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -70,5 +72,15 @@ public final class StationManager implements Component {
             }
         }
         return stations;
+    }
+
+    public Station getNearbyStation(Location location, int radius) throws UnknownStationException {
+
+        for (Station station : loadedStations.values()) {
+            if (LocationUtil.isWithinRadius(station.getLocation(), location, radius)) {
+                return station;
+            }
+        }
+        throw new UnknownStationException("No station found within the radius of " + radius + " near " + location.toString());
     }
 }

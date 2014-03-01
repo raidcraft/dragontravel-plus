@@ -2,6 +2,7 @@ package de.raidcraft.dragontravelplus.conversations;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.economy.Economy;
+import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.api.action.AbstractAction;
 import de.raidcraft.rcconversations.api.action.ActionArgumentException;
@@ -9,6 +10,9 @@ import de.raidcraft.rcconversations.api.action.ActionArgumentList;
 import de.raidcraft.rcconversations.api.action.ActionInformation;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
 import de.raidcraft.rcconversations.util.ParseString;
+import de.raidcraft.rctravel.api.station.Station;
+import de.raidcraft.rctravel.api.station.UnknownStationException;
+import de.raidcraft.util.LocationUtil;
 
 /**
  * @author Philip
@@ -17,7 +21,7 @@ import de.raidcraft.rcconversations.util.ParseString;
 public class CheckPlayerAction extends AbstractAction {
 
     @Override
-    public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
+    public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException, UnknownStationException {
 
         String startName = args.getString("start", null);
         startName = ParseString.INST.parse(conversation, startName);
@@ -28,8 +32,9 @@ public class CheckPlayerAction extends AbstractAction {
         boolean checkPrice = args.getBoolean("price", false);
         boolean checkFamiliarity = args.getBoolean("familiarity", false);
 
-        DragonStation start = StationManager.INST.getDragonStation(startName);
-        DragonStation target = StationManager.INST.getDragonStation(targetName);
+        StationManager stationManager = RaidCraft.getComponent(StationManager.class);
+        Station start = stationManager.getStation(startName);
+        Station target = stationManager.getStation(targetName);
 
         if(start == null) {
             setErrorMsg(conversation, "Es ist ein Fehler aufgetreten! Bitte informiere das Raid-Craft Team!");
@@ -51,19 +56,23 @@ public class CheckPlayerAction extends AbstractAction {
 
         conversation.set("dtp_target_name", target.getPlainName());
         conversation.set("dtp_target_friendlyname", target.getName());
-        conversation.set("dtp_target_distance", target.getDistance(start));
+        conversation.set("dtp_target_distance", LocationUtil.getDistance(target.getLocation(), start.getLocation()));
 
         Economy economy = RaidCraft.getEconomy();
-        double price = FlightCosts.getPrice(start, target);
+        double price = 0.0;
+        if (start instanceof DragonStation && target instanceof DragonStation) {
+            price = ((DragonStation) start).getPrice((DragonStation) target);
+        }
         conversation.set("dtp_target_price", price);
         conversation.set("dtp_target_price_formatted", economy.getFormattedAmount(price));
-        if(checkPrice && !economy.hasEnough(conversation.getPlayer().getName(), price)) {
+        String player = conversation.getPlayer().getName();
+        if(checkPrice && !economy.hasEnough(player, price)) {
             setErrorMsg(conversation, "Du brauchst " + economy.getFormattedAmount(price) + " um dorthin zu fliegen!");
             changeStage(conversation, failure);
             return;
         }
 
-        if(checkFamiliarity && !StationManager.INST.stationIsFamiliar(conversation.getPlayer(), target)) {
+        if(checkFamiliarity && (target instanceof DragonStation && ((DragonStation) target).hasDiscovered(player))) {
             setErrorMsg(conversation, "Du musst den Drachenmeister dieser Station erst noch kennen lernen!");
             changeStage(conversation, failure);
             return;
