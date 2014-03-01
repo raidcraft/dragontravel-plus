@@ -26,7 +26,7 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
 
         prepareEntity = entityManager.prepareEntity(RemoteEntityType.EnderDragon);
         prepareEntity.asPushable(false);
-        prepareEntity.asStationary(true);
+        prepareEntity.asStationary(false);
         prepareEntity.withSpeed(RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightSpeed);
     }
 
@@ -78,6 +78,8 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
         if (isSpawned()) return getEntity();
         prepareEntity.atLocation(location);
         spawnedEntity = (RemoteEnderDragon) prepareEntity.create();
+        spawnedEntity.shouldDestroyBlocks(false);
+        spawnedEntity.shouldNormallyFly(true);
         return getEntity();
     }
 
