@@ -1,14 +1,19 @@
 package de.raidcraft.dragontravelplus.station;
 
+import com.avaje.ebean.EbeanServer;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
+import de.raidcraft.dragontravelplus.tables.TPlayerStation;
+import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.rctravel.api.station.AbstractStation;
 import de.raidcraft.rctravel.api.station.Chargeable;
 import de.raidcraft.rctravel.api.station.Discoverable;
 import de.raidcraft.rctravel.api.station.Station;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Author: Philip
@@ -60,14 +65,48 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     @Override
     public boolean hasDiscovered(String player) {
 
-        return emergencyTarget || mainStation || RaidCraft.getTable(PlayerStationsTable.class).playerIsFamiliar(player, this);
+        if (emergencyTarget || mainStation) {
+            return true;
+        }
+        List<TPlayerStation> stations = RaidCraft.getDatabase(DragonTravelPlusPlugin.class)
+                .find(TPlayerStation.class).where().eq("player", player).isNotNull("discovered").findList();
+        for (TPlayerStation station : stations) {
+            if (station.getStation().getName().equals(getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public void setDiscovered(String player, boolean discovered) {
 
         if(discovered) {
-            RaidCraft.getTable(PlayerStationsTable.class).addStation(player, this);
+            EbeanServer database = RaidCraft.getDatabase(DragonTravelPlusPlugin.class);
+            TStation station = database.find(TStation.class).where().eq("name", getName()).findUnique();
+            if (station == null) {
+                station = new TStation();
+                station.setName(getName());
+                station.setDisplayName(getFriendlyName());
+                station.setWorld(getLocation().getWorld().getName());
+                station.setX(getLocation().getBlockX());
+                station.setY(getLocation().getBlockY());
+                station.setZ(getLocation().getBlockZ());
+                station.setMainStation(isMainStation());
+                station.setEmergencyStation(isEmergencyTarget());
+                database.save(station);
+            }
+            TPlayerStation playerStation = database.find(TPlayerStation.class)
+                    .where().eq("station_id", station.getId()).eq("player", player).findUnique();
+            if (playerStation == null) {
+                playerStation = new TPlayerStation();
+                playerStation.setPlayer(player);
+                playerStation.setStation(station);
+            }
+            if (playerStation.getDiscovered() == null) {
+                playerStation.setDiscovered(new Timestamp(System.currentTimeMillis()));
+            }
+            database.save(playerStation);
         }
     }
 

@@ -1,16 +1,12 @@
 package de.raidcraft.dragontravelplus.tables;
 
+import com.avaje.ebean.EbeanServer;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.database.Table;
-import de.raidcraft.dragontravelplus.station.DragonStation;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Author: Philip
@@ -46,110 +42,27 @@ public class StationTable extends Table {
         }
     }
 
-    public List<DragonStation> getAllStations(String worldName) {
+    public void migrate() {
 
-        List<DragonStation> stations = new ArrayList<>();
         try {
-            ResultSet resultSet = executeQuery(
-                    "SELECT * FROM " + getTableName() + " WHERE world = '" + worldName + "';");
+            EbeanServer database = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getDatabase();
+            ResultSet resultSet = executeQuery("SELECT * FROM `" + getTableName() + "` WHERE 1");
 
+            int cnt = 0;
             while (resultSet.next()) {
-                World world = Bukkit.getWorld(resultSet.getString("world"));
-                if (world == null) continue;
-
-                DragonStation station = new DragonStation(resultSet.getString("name")
-                        , new Location(world, resultSet.getDouble("x"), resultSet.getDouble("y"), resultSet.getDouble("z"))
-                        , resultSet.getInt("cost_level")
-                        , resultSet.getBoolean("main")
-                        , resultSet.getBoolean("emergency"));
-
-                stations.add(station);
+                TStation station = new TStation();
+                station.setName(resultSet.getString("name"));
+                station.setWorld(resultSet.getString("world"));
+                station.setX(resultSet.getInt("x"));
+                station.setY(resultSet.getInt("y"));
+                station.setZ(resultSet.getInt("z"));
+                station.setCostMultiplier(resultSet.getInt("cost_level"));
+                station.setMainStation(resultSet.getBoolean("main"));
+                station.setEmergencyStation(resultSet.getBoolean("emergency"));
+                database.save(station);
+                cnt++;
             }
-            resultSet.close();
-        } catch (SQLException e) {
-            RaidCraft.LOGGER.warning(e.getMessage());
-        }
-        return stations;
-    }
-
-    public List<DragonStation> getNearbyStations(Location location, int radius) {
-
-        List<DragonStation> stations = new ArrayList<>();
-        try {
-            ResultSet resultSet = executeQuery(
-                    "SELECT * FROM " + getTableName() + " WHERE " +
-                            "x >= " + (location.getBlockX() - radius) + " AND " +
-                            "x <= " + (location.getBlockX() + radius) + " AND " +
-                            "y >= " + (location.getBlockY() - radius) + " AND " +
-                            "y <= " + (location.getBlockY() + radius) + " AND " +
-                            "z >= " + (location.getBlockZ() - radius) + " AND " +
-                            "z <= " + (location.getBlockZ() + radius)
-            );
-
-            while (resultSet.next()) {
-                World world = Bukkit.getWorld(resultSet.getString("world"));
-                if (world == null) continue;
-
-                DragonStation station = new DragonStation(resultSet.getString("name")
-                        , new Location(world, resultSet.getDouble("x"), resultSet.getDouble("y"), resultSet.getDouble("z"))
-                        , resultSet.getInt("cost_level")
-                        , resultSet.getBoolean("main")
-                        , resultSet.getBoolean("emergency"));
-
-                stations.add(station);
-            }
-            resultSet.close();
-        } catch (SQLException e) {
-            RaidCraft.LOGGER.warning(e.getMessage());
-        }
-        return stations;
-    }
-
-    public List<String> getEmergencyStations() {
-
-        List<String> stations = new ArrayList<>();
-        try {
-            ResultSet resultSet = executeQuery(
-                    "SELECT * FROM " + getTableName() + " WHERE emergency = '1'"
-            );
-
-            while (resultSet.next()) {
-                stations.add(resultSet.getString("name"));
-            }
-            resultSet.close();
-        } catch (SQLException e) {
-            RaidCraft.LOGGER.warning(e.getMessage());
-        }
-        return stations;
-    }
-
-    public void addStation(DragonStation station) {
-
-        try {
-            String query = "INSERT INTO " + getTableName() + " (name, world, x, y, z, cost_level, main, emergency) " +
-                    "VALUES (" +
-                    "'" + station.getName() + "'" + "," +
-                    "'" + station.getLocation().getWorld().getName() + "'" + "," +
-                    "'" + station.getLocation().getBlockX() + "'" + "," +
-                    "'" + station.getLocation().getBlockY() + "'" + "," +
-                    "'" + station.getLocation().getBlockZ() + "'" + "," +
-                    "'" + (int)station.getPrice() + "'" + "," +
-                    "'" + ((station.isMainStation()) ? 1 : 0) + "'" + "," +
-                    "'" + ((station.isEmergencyTarget()) ? 1 : 0) + "'" +
-                    ");";
-
-            executeUpdate(query);
-        } catch (SQLException e) {
-            RaidCraft.LOGGER.warning(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void deleteStation(DragonStation station) {
-
-        try {
-            executeUpdate(
-                    "DELETE FROM " + getTableName() + " WHERE name = '" + station.getName() + "'");
+            RaidCraft.LOGGER.info("Migrated " + cnt + " DTP stations!");
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();

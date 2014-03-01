@@ -3,11 +3,14 @@ package de.raidcraft.dragontravelplus;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.rctravel.api.station.UnknownStationException;
 import de.raidcraft.util.CaseInsensitiveMap;
+import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,5 +54,21 @@ public final class StationManager implements Component {
             throw new UnknownStationException("No station with the name " + name + " found!");
         }
         return loadedStations.get(name);
+    }
+
+    public List<Station> getUnlockedStations(Player player) {
+
+        List<TPlayerStation> stationsList = plugin.getDatabase().find(TPlayerStation.class).where()
+                .eq("player", player.getName())
+                .isNotNull("unlocked").findList();
+        List<Station> stations = new ArrayList<>();
+        for (TPlayerStation playerStation : stationsList) {
+            try {
+                stations.add(getStation(playerStation.getStation().getName()));
+            } catch (UnknownStationException e) {
+                plugin.getLogger().warning(e.getMessage());
+            }
+        }
+        return stations;
     }
 }

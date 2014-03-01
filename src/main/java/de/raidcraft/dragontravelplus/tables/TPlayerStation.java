@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "flight_player_stations")
-public class TPlayerStations {
+public class TPlayerStation {
 
     @Id
     private int id;

@@ -14,11 +14,10 @@ import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
 import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
 import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
-import de.raidcraft.dragontravelplus.tables.FlightWayPointsTable;
 import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
 import de.raidcraft.dragontravelplus.tables.StationTable;
 import de.raidcraft.dragontravelplus.tables.TPath;
-import de.raidcraft.dragontravelplus.tables.TPlayerStations;
+import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
 import de.raidcraft.rcconversations.actions.ActionManager;
@@ -47,7 +46,6 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         registerTable(StationTable.class, new StationTable());
         registerTable(PlayerStationsTable.class, new PlayerStationsTable());
-        registerTable(FlightWayPointsTable.class, new FlightWayPointsTable());
 
         stationManager = new StationManager(this);
         aircraftManager = new AircraftManager(this);
@@ -71,6 +69,14 @@ public class DragonTravelPlusPlugin extends BasePlugin {
                     ActionManager.registerAction(new CheckPlayerAction());
                 } catch (Exception e) {
                     RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
+                }
+
+                // TODO: delete migration code
+                if (getConfig().migrate) {
+                    RaidCraft.getTable(StationTable.class).migrate();
+                    RaidCraft.getTable(PlayerStationsTable.class).migrate();
+                    getConfig().migrate = false;
+                    getConfig().save();
                 }
             }
         }, 1L);
@@ -121,7 +127,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         List<Class<?>> tables = new ArrayList<>();
         tables.add(TPath.class);
-        tables.add(TPlayerStations.class);
+        tables.add(TPlayerStation.class);
         tables.add(TStation.class);
         tables.add(TWaypoint.class);
         return tables;
@@ -134,6 +140,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
     public class LocalDTPConfiguration extends ConfigurationBase<DragonTravelPlusPlugin> {
 
+        @Setting("migrate")
+        public boolean migrate = true;
         @Setting("disabled")
         public boolean disabled = false;
         @Setting("aircraft.type")
