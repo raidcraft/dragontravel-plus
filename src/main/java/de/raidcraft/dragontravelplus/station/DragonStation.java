@@ -88,4 +88,21 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
 
         return Math.abs(distance * RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().pricePerBlock * 100D) / 100D;
     }
+
+    public double getPrice(DragonStation destination) {
+
+        if (destination.isEmergencyTarget() || (getPrice() == 0 && destination.getPrice() == 0)) {
+            return 0;
+        }
+
+        int costLevel;
+        if (destination.getPrice() == 0) {
+            costLevel = (int) getPrice();
+        } else {
+            costLevel = (int) destination.getPrice();
+        }
+
+        return Math.abs(Math.round(costLevel * getLocation().distance(destination.getLocation())
+                * RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().pricePerBlock * 100.) / 100.);
+    }
 }

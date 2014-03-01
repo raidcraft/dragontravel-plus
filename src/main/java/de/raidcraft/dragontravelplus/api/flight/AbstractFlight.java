@@ -11,13 +11,14 @@ public abstract class AbstractFlight implements Flight {
     private final Aircraft<?> aircraft;
     private final Path path;
     private int currentIndex = 0;
-    private Location startLocation;
+    private final Location startLocation;
     private Location endLocation;
 
-    public AbstractFlight(Aircraft<?> aircraft, Path path) {
+    public AbstractFlight(Aircraft<?> aircraft, Path path, Location startLocation) {
 
         this.aircraft = aircraft;
         this.path = path;
+        this.startLocation = startLocation;
     }
 
     @Override
@@ -36,12 +37,6 @@ public abstract class AbstractFlight implements Flight {
     public Location getStartLocation() {
 
         return startLocation;
-    }
-
-    @Override
-    public void setStartLocation(Location startLocation) {
-
-        this.startLocation = startLocation;
     }
 
     @Override
@@ -71,7 +66,7 @@ public abstract class AbstractFlight implements Flight {
     @Override
     public Waypoint nextWaypoint() {
 
-        return getPath().getWaypoints().get(currentIndex++);
+        return getPath().getWaypoints().get(++currentIndex);
     }
 
     @Override
@@ -84,7 +79,7 @@ public abstract class AbstractFlight implements Flight {
     public void startFlight() throws FlightException {
 
         if (isActive()) throw new FlightException("Flight was already started. Cannot start again!");
-        getAircraft().takeoff();
+        getAircraft().takeoff(this);
         getAircraft().getPassenger().setFlight(this);
     }
 
@@ -92,7 +87,7 @@ public abstract class AbstractFlight implements Flight {
     public void abortFlight() throws FlightException {
 
         if (!isActive()) throw new FlightException("Flight was not started. Cannot abort flight!");
-        getAircraft().abortFlight();
+        getAircraft().abortFlight(this);
         getAircraft().getPassenger().getEntity().teleport(getStartLocation());
         getAircraft().getPassenger().setFlight(null);
     }
@@ -101,7 +96,7 @@ public abstract class AbstractFlight implements Flight {
     public void endFlight() throws FlightException {
 
         if (!isActive()) throw new FlightException("Flight was not started. Cannot end flight!");
-        getAircraft().land();
+        getAircraft().land(this);
         getAircraft().getPassenger().setFlight(null);
     }
 

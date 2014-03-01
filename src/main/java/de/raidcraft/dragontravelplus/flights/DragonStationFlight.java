@@ -9,6 +9,9 @@ import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.api.flight.Path;
 import de.raidcraft.dragontravelplus.api.passenger.Passenger;
 import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.rctravel.api.station.Chargeable;
+import de.raidcraft.rctravel.api.station.Station;
+import de.raidcraft.util.LocationUtil;
 import org.bukkit.entity.Player;
 
 /**
@@ -16,34 +19,44 @@ import org.bukkit.entity.Player;
  */
 public class DragonStationFlight extends RestrictedFlight {
 
-    private final DragonStation startStation;
-    private final DragonStation endStation;
+    private final Station startStation;
+    private final Station endStation;
 
-    public DragonStationFlight(DragonStation startStation, DragonStation endStation, Aircraft<?> aircraft, Path path) {
+    public DragonStationFlight(Station startStation, Station endStation, Aircraft<?> aircraft, Path path) {
 
-        super(aircraft, path);
+        super(aircraft, path, startStation.getLocation());
         this.startStation = startStation;
-        setStartLocation(startStation.getLocation());
         this.endStation = endStation;
         setEndLocation(endStation.getLocation());
     }
 
-    public DragonStation getStartStation() {
+    public Station getStartStation() {
 
         return startStation;
     }
 
-    public DragonStation getEndStation() {
+    public Station getEndStation() {
 
         return endStation;
+    }
+
+    private double getPrice() {
+
+        double price = 0.0;
+        if (getStartStation() instanceof DragonStation && getEndStation() instanceof DragonStation) {
+            price = ((DragonStation) startStation).getPrice((DragonStation) endStation);
+        } else if (getStartStation() instanceof Chargeable) {
+            price = ((Chargeable) getStartStation()).getPrice(
+                    LocationUtil.getBlockDistance(getStartStation().getLocation(), getEndStation().getLocation()));
+        }
+        return price;
     }
 
     @Override
     public void startFlight() throws FlightException {
 
         Economy economy = RaidCraft.getEconomy();
-        double price = startStation.getPrice(startStation.getDistance(endStation));
-        if (!economy.hasEnough(getAircraft().getPassenger().getName(), price)) {
+        if (!economy.hasEnough(getAircraft().getPassenger().getName(), getPrice())) {
             throw new FlightException(Translator.tr(DragonTravelPlusPlugin.class, (Player) getAircraft().getPassenger().getEntity(),
                     "flight.no-money", "You dont have enough money to complete this flight!"));
         }
@@ -55,7 +68,7 @@ public class DragonStationFlight extends RestrictedFlight {
 
         // lets substract the flight cost
         Economy economy = RaidCraft.getEconomy();
-        double price = startStation.getPrice(startStation.getDistance(endStation));
+        double price = getPrice();
         Passenger passenger = getAircraft().getPassenger();
         if (passenger.getEntity() instanceof Player) {
             if (!economy.hasEnough(passenger.getName(), price)) {

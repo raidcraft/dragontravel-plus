@@ -5,7 +5,6 @@ import de.raidcraft.dragontravelplus.comparator.AlphabeticComparator;
 import de.raidcraft.dragontravelplus.comparator.DistanceComparator;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.station.StationManager;
-import de.raidcraft.dragontravelplus.util.FlightCosts;
 import de.raidcraft.rcconversations.actions.common.StageAction;
 import de.raidcraft.rcconversations.actions.variables.SetVariableAction;
 import de.raidcraft.rcconversations.api.action.*;

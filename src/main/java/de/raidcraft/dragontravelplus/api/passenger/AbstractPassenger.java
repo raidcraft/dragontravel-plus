@@ -6,7 +6,7 @@ import org.bukkit.entity.LivingEntity;
 /**
  * @author Silthus
  */
-public class AbstractPassenger<T extends LivingEntity> implements Passenger<T> {
+public abstract class AbstractPassenger<T extends LivingEntity> implements Passenger<T> {
 
     private final T entity;
     private Flight flight;

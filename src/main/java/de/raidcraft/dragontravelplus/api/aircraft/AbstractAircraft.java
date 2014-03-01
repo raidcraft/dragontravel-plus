@@ -1,29 +1,22 @@
 package de.raidcraft.dragontravelplus.api.aircraft;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.api.flight.Flight;
 import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.api.passenger.Passenger;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  * @author Silthus
  */
 public abstract class AbstractAircraft<T> implements Aircraft<T> {
 
-    private final Flight flight;
     private Passenger<?> passenger;
     private boolean flying = false;
-
-    protected AbstractAircraft(Flight flight) {
-
-        this.flight = flight;
-    }
-
-    @Override
-    public Flight getFlight() {
-
-        return flight;
-    }
+    private BukkitTask task;
 
     @Override
     public boolean isFlying() {
@@ -32,36 +25,43 @@ public abstract class AbstractAircraft<T> implements Aircraft<T> {
     }
 
     @Override
-    public void takeoff() {
+    public void takeoff(Flight flight) {
 
         if (!flying) {
             try {
                 this.flying = true;
-                if (!isSpawned()) spawn();
+                if (!isSpawned()) spawn(flight.getStartLocation());
                 mountPassenger();
-                getFlight().setStartLocation(getCurrentLocation());
+                move(flight.getPath().getFirstWaypoint());
+                // lets start the task that moves the aircraft around from waypoint to waypoint
+                task = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class),
+                        new AircraftMoverTask(this, flight), 20L, 20L);
             } catch (FlightException ignored) {
             }
         }
     }
 
     @Override
-    public void abortFlight() {
+    public void abortFlight(Flight flight) {
 
         if (flying) {
             this.flying = false;
+            stopMoving();
             unmountPassenger();
+            task.cancel();
             if (isSpawned()) despawn();
         }
     }
 
     @Override
-    public void land() {
+    public void land(Flight flight) {
 
         if (flying) {
             this.flying = false;
+            stopMoving();
             unmountPassenger();
-            getFlight().setEndLocation(getCurrentLocation());
+            task.cancel();
+            if (flight.getEndLocation() == null) flight.setEndLocation(getCurrentLocation());
             if (isSpawned()) despawn();
         }
     }
@@ -100,8 +100,8 @@ public abstract class AbstractAircraft<T> implements Aircraft<T> {
 
         AbstractAircraft that = (AbstractAircraft) o;
 
-        if (!flight.equals(that.flight)) return false;
-        if (passenger != null ? !passenger.equals(that.passenger) : that.passenger != null) return false;
+        if (!passenger.equals(that.passenger)) return false;
+        if (!getEntity().equals(that.getEntity())) return false;
 
         return true;
     }
@@ -109,8 +109,8 @@ public abstract class AbstractAircraft<T> implements Aircraft<T> {
     @Override
     public int hashCode() {
 
-        int result = flight.hashCode();
-        result = 31 * result + (passenger != null ? passenger.hashCode() : 0);
+        int result = getEntity().hashCode();
+        result = 31 * result + passenger.hashCode();
         return result;
     }
 }

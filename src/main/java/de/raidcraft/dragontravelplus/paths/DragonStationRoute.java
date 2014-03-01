@@ -1,34 +1,35 @@
 package de.raidcraft.dragontravelplus.paths;
 
-import de.raidcraft.dragontravelplus.api.aircraft.Aircraft;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.AircraftManager;
 import de.raidcraft.dragontravelplus.api.flight.Flight;
 import de.raidcraft.dragontravelplus.api.flight.Path;
 import de.raidcraft.dragontravelplus.api.passenger.Passenger;
 import de.raidcraft.dragontravelplus.flights.DragonStationFlight;
-import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.rctravel.api.station.Station;
 
 /**
  * @author Silthus
  */
 public class DragonStationRoute {
 
-    private final DragonStation startStation;
-    private final DragonStation endStation;
+    private final Station startStation;
+    private final Station endStation;
     private final Path path;
 
-    public DragonStationRoute(DragonStation startStation, DragonStation endStation, Path path) {
+    public DragonStationRoute(Station startStation, Station endStation, Path path) {
 
         this.startStation = startStation;
         this.endStation = endStation;
         this.path = path;
     }
 
-    public DragonStation getStartStation() {
+    public Station getStartStation() {
 
         return startStation;
     }
 
-    public DragonStation getEndStation() {
+    public Station getEndStation() {
 
         return endStation;
     }
@@ -38,9 +39,10 @@ public class DragonStationRoute {
         return path;
     }
 
-    public Flight createFlight(Aircraft<?> aircraft, Passenger<?> passenger) {
+    public Flight createFlight(Passenger<?> passenger) {
 
-        DragonStationFlight flight = new DragonStationFlight(getStartStation(), getEndStation(), aircraft, getPath());
+        DragonStationFlight flight = new DragonStationFlight(getStartStation(), getEndStation(),
+                RaidCraft.getComponent(AircraftManager.class).getAircraft(), getPath());
         flight.getAircraft().setPassenger(passenger);
         return flight;
     }

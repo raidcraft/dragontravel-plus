@@ -28,12 +28,6 @@ public interface Flight {
     public boolean isActive();
 
     /**
-     * Sets the start location of the flight. This is usually done when the aircraft takes off or before hand.
-     * @param startLocation of the flight
-     */
-    public void setStartLocation(Location startLocation);
-
-    /**
      * Gets the first waypoint of the path and therefor the flight.
      * @return starting location of the flight
      */

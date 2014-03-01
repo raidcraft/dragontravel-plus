@@ -8,6 +8,7 @@ import de.raidcraft.dragontravelplus.api.flight.AbstractFlight;
 import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.api.flight.Path;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,9 +29,9 @@ import java.util.Arrays;
  */
 public abstract class RestrictedFlight extends AbstractFlight implements Listener {
 
-    public RestrictedFlight(Aircraft<?> aircraft, Path path) {
+    public RestrictedFlight(Aircraft<?> aircraft, Path path, Location startLocation) {
 
-        super(aircraft, path);
+        super(aircraft, path, startLocation);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
@@ -77,7 +78,8 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
         for (String cmd : RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().forbiddenCommands) {
             if (event.getMessage().toLowerCase().startsWith("/" + cmd.toLowerCase())) {
-                Translator.msg(DragonTravelPlusPlugin.class, event.getPlayer(),                        "flight.blocked-cmd", "You are now allowed to use this command while flying.");
+                Translator.msg(DragonTravelPlusPlugin.class, event.getPlayer(),
+                        "flight.blocked-cmd", "You are now allowed to use this command while flying.");
                 event.setCancelled(true);
                 return;
             }
@@ -129,13 +131,26 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     public void abortFlight() throws FlightException {
 
         super.abortFlight();
-        HandlerList.unregisterAll(this);
+        unregisterListener();
     }
 
     @Override
     public void endFlight() throws FlightException {
 
         super.abortFlight();
-        HandlerList.unregisterAll(this);
+        unregisterListener();
+    }
+
+    private void unregisterListener() {
+
+        // unregister a little bit later to catch fall damage and such
+        DragonTravelPlusPlugin plugin = RaidCraft.getComponent(DragonTravelPlusPlugin.class);
+        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+            @Override
+            public void run() {
+
+                HandlerList.unregisterAll(RestrictedFlight.this);
+            }
+        }, plugin.getConfig().flightTimeout);
     }
 }
