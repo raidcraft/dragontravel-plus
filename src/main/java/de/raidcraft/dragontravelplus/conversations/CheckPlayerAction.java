@@ -72,7 +72,7 @@ public class CheckPlayerAction extends AbstractAction {
             return;
         }
 
-        if (checkFamiliarity && (target instanceof DragonStation && ((DragonStation) target).hasDiscovered(player))) {
+        if (checkFamiliarity && (target instanceof DragonStation && !((DragonStation) target).hasDiscovered(player))) {
             setErrorMsg(conversation, "Du musst den Drachenmeister dieser Station erst noch kennen lernen!");
             changeStage(conversation, failure);
             return;
