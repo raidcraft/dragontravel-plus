@@ -67,8 +67,8 @@ public class FlightCommands {
 
             try {
                 RaidCraft.getComponent(RouteManager.class).getPath(flightName);
-            } catch (UnknownPathException e) {
                 throw new CommandException("Einen Flug mit diesem Namen existiert bereits!");
+            } catch (UnknownPathException ignored) {
             }
 
             FlightEditorListener.addPlayer(player);
@@ -117,8 +117,8 @@ public class FlightCommands {
 
             try {
                 RaidCraft.getComponent(RouteManager.class).getPath(flightName);
-            } catch (UnknownPathException e) {
                 throw new CommandException("Einen Flug mit diesem Namen existiert bereits!");
+            } catch (UnknownPathException ignored) {
             }
 
             Path path = FlightEditorListener.editors.get(player);
