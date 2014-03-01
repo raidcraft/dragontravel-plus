@@ -17,7 +17,7 @@ public class TWaypoint implements Comparable<TWaypoint> {
     private int id;
     @ManyToOne(cascade = CascadeType.REMOVE)
     private TPath path;
-    private int index;
+    private int waypointIndex;
     private String world;
     private double x;
     private double y;
@@ -43,14 +43,14 @@ public class TWaypoint implements Comparable<TWaypoint> {
         this.path = path;
     }
 
-    public int getIndex() {
+    public int getWaypointIndex() {
 
-        return index;
+        return waypointIndex;
     }
 
-    public void setIndex(int index) {
+    public void setWaypointIndex(int waypointIndex) {
 
-        this.index = index;
+        this.waypointIndex = waypointIndex;
     }
 
     public String getWorld() {
@@ -96,8 +96,8 @@ public class TWaypoint implements Comparable<TWaypoint> {
     @Override
     public int compareTo(TWaypoint o) {
 
-        if (getIndex() < o.getIndex()) return -1;
-        if (getIndex() > o.getIndex()) return 1;
+        if (getWaypointIndex() < o.getWaypointIndex()) return -1;
+        if (getWaypointIndex() > o.getWaypointIndex()) return 1;
         return 0;
     }
 }

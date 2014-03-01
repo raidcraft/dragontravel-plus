@@ -114,7 +114,7 @@ public final class RouteManager implements Component {
             TWaypoint tWaypoint = new TWaypoint();
             tWaypoint.setPath(tPath);
             Waypoint waypoint = path.getWaypoint(i);
-            tWaypoint.setIndex(i);
+            tWaypoint.setWaypointIndex(i);
             tWaypoint.setWorld(waypoint.getWorld().getName());
             tWaypoint.setX(waypoint.getX());
             tWaypoint.setY(waypoint.getY());

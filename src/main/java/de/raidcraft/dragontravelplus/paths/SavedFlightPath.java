@@ -13,7 +13,7 @@ public class SavedFlightPath extends StaticFlightPath {
 
         super(start, end);
         for (TWaypoint waypoint : path.getWaypoints()) {
-            addWaypoint(waypoint.getIndex(), new SavedWaypoint(waypoint));
+            addWaypoint(waypoint.getWaypointIndex(), new SavedWaypoint(waypoint));
         }
     }
 
