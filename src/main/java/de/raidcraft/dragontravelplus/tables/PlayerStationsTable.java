@@ -51,8 +51,9 @@ public class PlayerStationsTable extends Table {
                 station.setStation(database.find(TStation.class).where().eq("name", resultSet.getString("station_name")).findUnique());
                 String discovered = resultSet.getString("discovered");
                 if (discovered != null && !discovered.equals("")) {
-                    String[] split = discovered.split(" ")[0].split("-");
-                    discovered = split[2] + split[1] + split[0];
+                    String[] date = discovered.split(" ");
+                    String[] split = date[0].split("-");
+                    discovered = split[2] + "-" + split[1] + "-" + split[0] + " " + date[1];
                     station.setDiscovered(Timestamp.valueOf(discovered));
                 }
                 database.save(station);
