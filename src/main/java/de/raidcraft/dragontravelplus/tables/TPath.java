@@ -4,6 +4,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -28,7 +29,8 @@ public class TPath {
     @ManyToOne(cascade = CascadeType.REMOVE)
     @Column(name = "end_station_id")
     private TStation endStation;
-    @OneToMany(mappedBy = "path_id")
+    @OneToMany
+    @JoinColumn(name = "path_id")
     private List<TWaypoint> waypoints = new ArrayList<>();
 
     public int getId() {

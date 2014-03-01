@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -30,9 +31,11 @@ public class TStation {
     private double costMultiplier = 1.0;
     private boolean mainStation = false;
     private boolean emergencyStation = false;
-    @OneToMany(mappedBy = "start_station_id")
+    @OneToMany
+    @JoinColumn(name = "start_station_id")
     private List<TPath> paths = new ArrayList<>();
-    @OneToMany(mappedBy = "station_id")
+    @OneToMany
+    @JoinColumn(name = "station_id")
     private List<TPlayerStation> playerStations = new ArrayList<>();
 
     public int getId() {
