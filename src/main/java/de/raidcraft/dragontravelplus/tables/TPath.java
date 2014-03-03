@@ -22,13 +22,13 @@ public class TPath {
     private int id;
     @Column(unique = true)
     private String name;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @Column(name = "start_station_id")
     private TStation startStation;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @Column(name = "end_station_id")
     private TStation endStation;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "path_id")
     private List<TWaypoint> waypoints = new ArrayList<>();
 
