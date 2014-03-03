@@ -3,6 +3,7 @@ package de.raidcraft.dragontravelplus.tables;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -30,7 +31,7 @@ public class TStation {
     private double costMultiplier = 1.0;
     private boolean mainStation = false;
     private boolean emergencyStation = false;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     private List<TPlayerStation> playerStations = new ArrayList<>();
 
     public int getId() {
