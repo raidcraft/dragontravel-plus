@@ -9,7 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -75,9 +74,7 @@ public class TPath {
 
     public List<TWaypoint> getWaypoints() {
 
-        List<TWaypoint> list = new ArrayList<>(waypoints);
-        Collections.sort(list);
-        return list;
+        return waypoints;
     }
 
     public void setWaypoints(List<TWaypoint> waypoints) {
