@@ -95,7 +95,7 @@ public abstract class AbstractFlight implements Flight {
     @Override
     public Waypoint nextWaypoint() {
 
-        return getPath().getWaypoints().get(++currentIndex);
+        return getPath().getWaypoints().get(currentIndex++);
     }
 
     @Override
