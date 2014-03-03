@@ -21,20 +21,22 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
 
     private final CreateEntityContext prepareEntity;
     private RemoteEnderDragon spawnedEntity;
+    private double flightSpeed;
 
     public RemoteAircraftDragon(EntityManager entityManager) {
 
         prepareEntity = entityManager.prepareEntity(RemoteEntityType.EnderDragon);
         prepareEntity.asPushable(false);
         prepareEntity.asStationary(false);
-        prepareEntity.withSpeed(RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightSpeed);
+        flightSpeed = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightSpeed;
+        prepareEntity.withSpeed(flightSpeed);
     }
 
     @Override
     public void move(Waypoint waypoint) {
 
         if (!isSpawned()) return;
-        getEntity().move(waypoint.getLocation());
+        getEntity().move(waypoint.getLocation(), flightSpeed);
     }
 
     @Override
