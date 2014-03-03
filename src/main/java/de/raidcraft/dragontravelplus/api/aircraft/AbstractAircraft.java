@@ -31,8 +31,11 @@ public abstract class AbstractAircraft<T> implements Aircraft<T> {
                 mountPassenger(flight);
                 move(flight.getPath().getFirstWaypoint());
                 // lets start the task that moves the aircraft around from waypoint to waypoint
-                task = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class),
-                        new AircraftMoverTask(this, flight), 20L, 20L);
+                DragonTravelPlusPlugin plugin = RaidCraft.getComponent(DragonTravelPlusPlugin.class);
+                task = Bukkit.getScheduler().runTaskTimer(plugin,
+                        new AircraftMoverTask(this, flight),
+                        plugin.getConfig().flightTaskInterval,
+                        plugin.getConfig().flightTaskInterval);
             } catch (FlightException ignored) {
             }
         }

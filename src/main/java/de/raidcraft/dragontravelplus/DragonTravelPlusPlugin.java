@@ -168,7 +168,9 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         @Setting("dynamic-flight-route")
         public boolean useDynamicRouting = true;
         @Setting("flight.waypoint-radius")
-        public int wayPointRadius = 4;
+        public int waypointRadius = 15;
+        @Setting("flight.flight-task-interval")
+        public int flightTaskInterval = 5;
         @Setting("flight-waypoint-distance")
         public int wayPointDistance = 10;
         @Setting("flight-editor-item")

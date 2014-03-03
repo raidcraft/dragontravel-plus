@@ -54,7 +54,7 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
     public boolean hasReachedWaypoint(Waypoint waypoint) {
 
         return LocationUtil.isWithinRadius(getCurrentLocation(), waypoint.getLocation(),
-                RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().wayPointRadius);
+                RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().waypointRadius);
     }
 
     @Override

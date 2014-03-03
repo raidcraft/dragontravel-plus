@@ -89,13 +89,13 @@ public abstract class AbstractFlight implements Flight {
     @Override
     public boolean hasNextWaypoint() {
 
-        return currentIndex < getPath().getWaypoints().size();
+        return currentIndex + 1 < getPath().getWaypoints().size();
     }
 
     @Override
     public Waypoint nextWaypoint() {
 
-        return getPath().getWaypoints().get(currentIndex++);
+        return getPath().getWaypoints().get(++currentIndex);
     }
 
     @Override
