@@ -140,7 +140,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     @Override
     public void endFlight() throws FlightException {
 
-        super.abortFlight();
+        super.endFlight();
         RaidCraft.getComponent(FlightManager.class).unregisterFlight(this);
         unregisterListener();
     }
