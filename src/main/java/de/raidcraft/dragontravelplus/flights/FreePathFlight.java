@@ -9,8 +9,8 @@ import org.bukkit.Location;
  */
 public class FreePathFlight extends RestrictedFlight {
 
-    public FreePathFlight(Aircraft<?> aircraft, Path path, Location startLocation) {
+    public FreePathFlight(Aircraft<?> aircraft, Path path, Location startLocation, Location endLocation) {
 
-        super(aircraft, path, startLocation);
+        super(aircraft, path, startLocation, endLocation);
     }
 }
