@@ -5,11 +5,9 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.api.flight.Path;
 import de.raidcraft.dragontravelplus.api.flight.Waypoint;
 import de.raidcraft.dragontravelplus.paths.StaticFlightPath;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,7 +32,9 @@ public class FlightEditorListener implements Listener {
 
     public static void addPlayer(Player player) {
 
-        editors.put(player, new StaticFlightPath());
+        StaticFlightPath path = new StaticFlightPath();
+        path.showWaypoints();
+        editors.put(player, path);
     }
 
     /**
@@ -84,10 +84,6 @@ public class FlightEditorListener implements Listener {
                 return;
             }
 
-            if (location.getBlock().getType() == Material.AIR) {
-                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class),
-                        new MarkerTask(location.getBlock()), 30);
-            }
             Waypoint waypoint = new Waypoint(location);
             path.addWaypoint(waypoint);
             player.sendMessage(ChatColor.GREEN + "" + path.getWaypointAmount() + ". Wegpunkt hinzugefügt!");
@@ -107,21 +103,6 @@ public class FlightEditorListener implements Listener {
         Waypoint removeWaypoint = path.removeWaypoint(new Waypoint(event.getBlock().getLocation()));
         if (removeWaypoint != null) {
             event.getPlayer().sendMessage(ChatColor.GREEN + "Wegpunkt entfernt!");
-        }
-    }
-
-    public class MarkerTask implements Runnable {
-
-        Block block;
-
-        public MarkerTask(Block block) {
-
-            this.block = block;
-        }
-
-        public void run() {
-
-            block.setType(MARKER_MATERIAL);
         }
     }
 }
