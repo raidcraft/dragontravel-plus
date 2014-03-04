@@ -76,7 +76,7 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
     @Override
     public boolean isSpawned() {
 
-        return getEntity() != null;
+        return getEntity() != null && getEntity().getBukkitEntity() != null;
     }
 
     @Override

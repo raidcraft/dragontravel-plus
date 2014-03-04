@@ -100,25 +100,25 @@ public abstract class AbstractFlight implements Flight {
     }
 
     @Override
-    public void startFlight() throws FlightException {
+    public void startFlight() {
 
-        if (isActive()) throw new FlightException("Flight was already started. Cannot start again!");
+        if (isActive()) return;
         getAircraft().takeoff(this);
         getPassenger().setFlight(this);
     }
 
     @Override
-    public void abortFlight() throws FlightException {
+    public void abortFlight() {
 
-        if (!isActive()) throw new FlightException("Flight was not started. Cannot abort flight!");
+        if (!isActive()) return;
         getAircraft().abortFlight(this);
         getPassenger().getEntity().teleport(getFirstWaypoint());
     }
 
     @Override
-    public void endFlight() throws FlightException {
+    public void endFlight() {
 
-        if (!isActive()) throw new FlightException("Flight was not started. Cannot end flight!");
+        if (!isActive()) return;
         getAircraft().land(this);
     }
 

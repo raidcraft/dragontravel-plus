@@ -78,24 +78,18 @@ public interface Flight {
 
     /**
      * Starts the flight, mounting the passenger and flying to the first waypoint.
-     *
-     * @throws de.raidcraft.dragontravelplus.api.flight.FlightException if flight is already started
      */
-    public void startFlight() throws FlightException;
+    public void startFlight();
 
     /**
      * Aborts the flight, unmounts the passenger and returns him to the start location of the flight.
-     *
-     * @throws de.raidcraft.dragontravelplus.api.flight.FlightException if flight has not started
      */
-    public void abortFlight() throws FlightException;
+    public void abortFlight();
 
     /**
      * Ends the flight gracefully, unmounting the passenger without returning him to the start.
-     *
-     * @throws de.raidcraft.dragontravelplus.api.flight.FlightException if flight has not started
      */
-    public void endFlight() throws FlightException;
+    public void endFlight();
 
     /**
      * Checks if the flight path still has a next waypoint
