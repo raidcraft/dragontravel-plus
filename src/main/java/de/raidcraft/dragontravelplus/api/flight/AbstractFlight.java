@@ -13,15 +13,16 @@ public abstract class AbstractFlight implements Flight {
     private final Aircraft<?> aircraft;
     private final Path path;
     private final Location startLocation;
+    private final Location endLocation;
     private Passenger<?> passenger;
     private int currentIndex = 0;
-    private Location endLocation;
 
-    public AbstractFlight(Aircraft<?> aircraft, Path path, Location startLocation) {
+    public AbstractFlight(Aircraft<?> aircraft, Path path, Location startLocation, Location endLocation) {
 
         this.aircraft = aircraft;
         this.path = path;
         this.startLocation = startLocation;
+        this.endLocation = endLocation;
     }
 
     @Override
@@ -37,21 +38,15 @@ public abstract class AbstractFlight implements Flight {
     }
 
     @Override
-    public Location getStartLocation() {
+    public Location getFirstWaypoint() {
 
         return startLocation;
     }
 
     @Override
-    public Location getEndLocation() {
+    public Location getLastWaypoint() {
 
         return endLocation;
-    }
-
-    @Override
-    public void setEndLocation(Location endLocation) {
-
-        this.endLocation = endLocation;
     }
 
     @Override
@@ -117,7 +112,7 @@ public abstract class AbstractFlight implements Flight {
 
         if (!isActive()) throw new FlightException("Flight was not started. Cannot abort flight!");
         getAircraft().abortFlight(this);
-        getPassenger().getEntity().teleport(getStartLocation());
+        getPassenger().getEntity().teleport(getFirstWaypoint());
     }
 
     @Override

@@ -27,6 +27,16 @@ public interface Aircraft<T> {
     public boolean hasReachedWaypoint(Waypoint waypoint);
 
     /**
+     * Checks if the aircraft reached the given waypoint.
+     *
+     * @param waypoint to reach
+     * @param radius to check around the waypoint
+     *
+     * @return true if aircraft is near the waypoint
+     */
+    public boolean hasReachedWaypoint(Waypoint waypoint, int radius);
+
+    /**
      * Gets the current location of the aircraft.
      *
      * @return null if aircraft was not spawned
@@ -84,7 +94,7 @@ public interface Aircraft<T> {
 
     /**
      * Will abort the flight if {@link #isFlying()}
-     * and teleport all passengers to the {@link de.raidcraft.dragontravelplus.api.flight.Flight#getStartLocation()}
+     * and teleport all passengers to the {@link de.raidcraft.dragontravelplus.api.flight.Flight#getFirstWaypoint()}
      *
      * @param flight that triggered the abort
      */

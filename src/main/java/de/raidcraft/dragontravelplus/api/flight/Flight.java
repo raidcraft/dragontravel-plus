@@ -37,21 +37,14 @@ public interface Flight {
      *
      * @return starting location of the flight
      */
-    public Location getStartLocation();
-
-    /**
-     * Sets the end location of the flight. Usually done when the aircraft lands or before hand.
-     *
-     * @param endLocation of the flight after landing
-     */
-    public void setEndLocation(Location endLocation);
+    public Location getFirstWaypoint();
 
     /**
      * Gets the last waypoint of the path and therefor the flight.
      *
      * @return end location of the flight
      */
-    public Location getEndLocation();
+    public Location getLastWaypoint();
 
     /**
      * Checks if the passenger list contains a passenger that matches the given entity.

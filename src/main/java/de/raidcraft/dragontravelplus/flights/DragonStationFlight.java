@@ -23,10 +23,9 @@ public class DragonStationFlight extends RestrictedFlight {
 
     public DragonStationFlight(Station startStation, Station endStation, Aircraft<?> aircraft, Path path) {
 
-        super(aircraft, path, startStation.getLocation());
+        super(aircraft, path, startStation.getLocation(), endStation.getLocation());
         this.startStation = startStation;
         this.endStation = endStation;
-        setEndLocation(endStation.getLocation());
     }
 
     public Station getStartStation() {

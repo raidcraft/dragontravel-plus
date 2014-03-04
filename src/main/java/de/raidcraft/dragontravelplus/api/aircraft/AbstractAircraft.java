@@ -27,7 +27,7 @@ public abstract class AbstractAircraft<T> implements Aircraft<T> {
         if (!flying) {
             try {
                 this.flying = true;
-                if (!isSpawned()) spawn(flight.getStartLocation());
+                if (!isSpawned()) spawn(flight.getFirstWaypoint());
                 mountPassenger(flight);
                 move(flight.getPath().getFirstWaypoint());
                 // lets start the task that moves the aircraft around from waypoint to waypoint
@@ -61,7 +61,6 @@ public abstract class AbstractAircraft<T> implements Aircraft<T> {
             stopMoving();
             unmountPassenger(flight);
             task.cancel();
-            if (flight.getEndLocation() == null) flight.setEndLocation(getCurrentLocation());
             if (isSpawned()) despawn();
         }
     }

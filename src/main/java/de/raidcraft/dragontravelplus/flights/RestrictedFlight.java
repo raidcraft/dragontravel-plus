@@ -30,9 +30,9 @@ import java.util.Arrays;
  */
 public abstract class RestrictedFlight extends AbstractFlight implements Listener {
 
-    public RestrictedFlight(Aircraft<?> aircraft, Path path, Location startLocation) {
+    public RestrictedFlight(Aircraft<?> aircraft, Path path, Location startLocation, Location endLocation) {
 
-        super(aircraft, path, startLocation);
+        super(aircraft, path, startLocation, endLocation);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
