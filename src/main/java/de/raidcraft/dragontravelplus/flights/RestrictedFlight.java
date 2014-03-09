@@ -6,6 +6,7 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.FlightManager;
 import de.raidcraft.dragontravelplus.api.aircraft.Aircraft;
 import de.raidcraft.dragontravelplus.api.flight.AbstractFlight;
+import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.api.flight.Path;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -106,7 +107,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     }
 
     @Override
-    public void startFlight() {
+    public void startFlight() throws FlightException {
 
         super.startFlight();
         RaidCraft.getComponent(FlightManager.class).registerFlight(this);
@@ -122,7 +123,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     }
 
     @Override
-    public void endFlight() {
+    public void endFlight() throws FlightException {
 
         super.endFlight();
         RaidCraft.getComponent(FlightManager.class).unregisterFlight(this);

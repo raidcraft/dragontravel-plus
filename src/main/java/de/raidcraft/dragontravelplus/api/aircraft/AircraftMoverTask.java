@@ -1,6 +1,8 @@
 package de.raidcraft.dragontravelplus.api.aircraft;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.api.flight.Flight;
+import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.api.flight.Waypoint;
 
 /**
@@ -35,7 +37,13 @@ public class AircraftMoverTask implements Runnable {
                 landing = true;
                 aircraft.move(lastWaypoint);
             } else if (aircraft.hasReachedWaypoint(lastWaypoint, 3)) {
-                flight.endFlight();
+                try{
+                    flight.endFlight();
+                }
+                catch (FlightException e) {
+                    RaidCraft.LOGGER.warning(e.getMessage());
+                    e.printStackTrace();
+                }
             }
         } else {
             aircraft.move(flight.nextWaypoint());

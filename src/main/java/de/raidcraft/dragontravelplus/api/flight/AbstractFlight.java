@@ -100,7 +100,7 @@ public abstract class AbstractFlight implements Flight {
     }
 
     @Override
-    public void startFlight() {
+    public void startFlight() throws FlightException {
 
         if (isActive()) return;
         getAircraft().takeoff(this);
@@ -116,7 +116,7 @@ public abstract class AbstractFlight implements Flight {
     }
 
     @Override
-    public void endFlight() {
+    public void endFlight() throws FlightException {
 
         if (!isActive()) return;
         getAircraft().land(this);

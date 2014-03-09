@@ -79,7 +79,7 @@ public interface Flight {
     /**
      * Starts the flight, mounting the passenger and flying to the first waypoint.
      */
-    public void startFlight();
+    public void startFlight() throws FlightException;
 
     /**
      * Aborts the flight, unmounts the passenger and returns him to the start location of the flight.
@@ -89,7 +89,7 @@ public interface Flight {
     /**
      * Ends the flight gracefully, unmounting the passenger without returning him to the start.
      */
-    public void endFlight();
+    public void endFlight() throws FlightException;
 
     /**
      * Checks if the flight path still has a next waypoint

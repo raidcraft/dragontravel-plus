@@ -5,22 +5,11 @@ import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
 import de.raidcraft.dragontravelplus.api.flight.Flight;
-import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
-import de.raidcraft.dragontravelplus.conversations.CheckPlayerAction;
-import de.raidcraft.dragontravelplus.conversations.FindDragonstationAction;
-import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
-import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
-import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
-import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
+import de.raidcraft.dragontravelplus.conversations.*;
 import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
-import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
-import de.raidcraft.dragontravelplus.tables.StationTable;
-import de.raidcraft.dragontravelplus.tables.TPath;
-import de.raidcraft.dragontravelplus.tables.TPlayerStation;
-import de.raidcraft.dragontravelplus.tables.TStation;
-import de.raidcraft.dragontravelplus.tables.TWaypoint;
+import de.raidcraft.dragontravelplus.tables.*;
 import de.raidcraft.rcconversations.actions.ActionManager;
 import org.bukkit.Bukkit;
 
@@ -89,12 +78,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     public void disable() {
 
         for (Flight flight : getFlightManager().getActiveFlights()) {
-            try {
-                flight.abortFlight();
-            } catch (FlightException e) {
-                RaidCraft.LOGGER.warning(e.getMessage());
-                e.printStackTrace();
-            }
+            flight.abortFlight();
         }
     }
 
