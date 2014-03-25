@@ -35,7 +35,7 @@ public class AircraftMoverTask implements Runnable {
         if (landing || !flight.hasNextWaypoint()) {
             if (!landing) {
                 landing = true;
-                aircraft.move(lastWaypoint);
+                aircraft.move(flight, lastWaypoint);
             } else if (aircraft.hasReachedWaypoint(lastWaypoint, 3)) {
                 try{
                     flight.endFlight();
@@ -46,7 +46,7 @@ public class AircraftMoverTask implements Runnable {
                 }
             }
         } else {
-            aircraft.move(flight.nextWaypoint());
+            aircraft.move(flight, flight.nextWaypoint());
         }
     }
 }

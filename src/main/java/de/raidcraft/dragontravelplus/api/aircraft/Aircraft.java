@@ -53,9 +53,10 @@ public interface Aircraft<T> {
     /**
      * Moves the aircraft to the given waypoint
      *
+     * @param flight that is moving the aircraft
      * @param waypoint to move to
      */
-    public void move(Waypoint waypoint);
+    public void move(Flight flight, Waypoint waypoint);
 
     /**
      * Stops the movement of the aircraft.

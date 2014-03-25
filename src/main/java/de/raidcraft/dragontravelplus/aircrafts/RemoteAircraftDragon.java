@@ -33,9 +33,13 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
     }
 
     @Override
-    public void move(Waypoint waypoint) {
+    public void move(Flight flight, Waypoint waypoint) {
 
         if (!isSpawned()) return;
+        if (getEntity().getBukkitEntity().getPassenger() == null) {
+            abortFlight(flight);
+            return;
+        }
         getEntity().move(waypoint.getLocation(), flightSpeed);
     }
 
