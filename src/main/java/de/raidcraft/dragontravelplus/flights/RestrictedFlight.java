@@ -86,6 +86,8 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     public void onVehicleExit(VehicleExitEvent event) {
 
         if (hasPassenger(event.getExited())) {
+            // abort the flight
+            abortFlight();
             event.setCancelled(true);
         }
     }
