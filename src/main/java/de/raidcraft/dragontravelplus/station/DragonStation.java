@@ -42,11 +42,6 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
         this(name, location, 0, false, false);
     }
 
-    public String getFriendlyName() {
-
-        return getDisplayName().replace("_", " ");
-    }
-
     public boolean isMainStation() {
 
         return mainStation;
@@ -137,12 +132,12 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     public TStation save() {
 
         EbeanServer database = RaidCraft.getDatabase(DragonTravelPlusPlugin.class);
-        TStation station = database.find(TStation.class).where().eq("name", getDisplayName()).findUnique();
+        TStation station = database.find(TStation.class).where().eq("name", getName()).findUnique();
         if (station == null) {
             station = new TStation();
         }
-        station.setName(getDisplayName());
-        station.setDisplayName(getFriendlyName());
+        station.setName(getName());
+        station.setDisplayName(getDisplayName());
         station.setWorld(getLocation().getWorld().getName());
         station.setX(getLocation().getBlockX());
         station.setY(getLocation().getBlockY());

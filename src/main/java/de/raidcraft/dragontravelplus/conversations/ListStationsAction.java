@@ -155,7 +155,7 @@ public class ListStationsAction extends AbstractAction {
             builder.append(ChatColor.DARK_GRAY);
         }
 
-        builder.append(target.getFriendlyName());
+        builder.append(target.getDisplayName());
         builder.append(" ").append(RaidCraft.getEconomy().getFormattedAmount(price));
 
         int distance = (int) start.getLocation().distance(target.getLocation());
