@@ -186,7 +186,7 @@ public class DTPCommands {
                 ChatColor color = ChatColor.AQUA;
                 if (station instanceof DragonStation && ((DragonStation) station).getPrice() > 0) color = ChatColor.GOLD;
                 if (station instanceof DragonStation && ((DragonStation) station).isEmergencyTarget()) color = ChatColor.DARK_RED;
-                list += color + station.getName() + ChatColor.WHITE + ", ";
+                list += color + station.getDisplayName() + ChatColor.WHITE + ", ";
             }
 
             sender.sendMessage(list);

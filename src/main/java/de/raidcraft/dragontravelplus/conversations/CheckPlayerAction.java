@@ -54,8 +54,8 @@ public class CheckPlayerAction extends AbstractAction {
             return;
         }
 
-        conversation.set("dtp_target_name", target.getPlainName());
-        conversation.set("dtp_target_friendlyname", target.getName());
+        conversation.set("dtp_target_name", target.getName());
+        conversation.set("dtp_target_friendlyname", target.getDisplayName());
         conversation.set("dtp_target_distance", LocationUtil.getDistance(target.getLocation(), start.getLocation()));
 
         Economy economy = RaidCraft.getEconomy();

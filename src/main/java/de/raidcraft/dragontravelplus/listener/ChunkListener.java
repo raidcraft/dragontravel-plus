@@ -31,7 +31,7 @@ public class ChunkListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onChunkLoad(ChunkLoadEvent event) {
 
-        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DragonMasterChecker(event.getChunk()), 3*20);
+        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new DragonMasterChecker(event.getChunk()), 3 * 20);
     }
 
     public class DragonMasterChecker implements Runnable {
@@ -56,20 +56,19 @@ public class ChunkListener implements Listener {
                 // check a second time
                 Set<ChunkLocation> affectedChunks = NPCRegistry.INST.getAffectedChunkLocations(chunk);
                 boolean found = false;
-                for(ChunkLocation cl : affectedChunks) {
-                    for(Entity entity : chunk.getWorld().getChunkAt(cl.getX(), cl.getZ()).getEntities()) {
-                        if(!(entity instanceof LivingEntity)) continue;
-                        if(entity.getLocation().distance(station.getLocation()) <= 5) {
+                for (ChunkLocation cl : affectedChunks) {
+                    for (Entity entity : chunk.getWorld().getChunkAt(cl.getX(), cl.getZ()).getEntities()) {
+                        if (!(entity instanceof LivingEntity)) continue;
+                        if (entity.getLocation().distance(station.getLocation()) <= 5) {
                             NPC npc = RaidCraft.getComponent(RCConversationsPlugin.class).getCitizens().getNPCRegistry().getNPC(entity);
-                            if(npc == null) continue;
+                            if (npc == null) continue;
                             ConversationsTrait trait = npc.getTrait(ConversationsTrait.class);
-                            if(!trait.getConversationName().equalsIgnoreCase(conversationName)) continue;
+                            if (!trait.getConversationName().equalsIgnoreCase(conversationName)) continue;
                             stations.remove(station);
-                            if(found) {
+                            if (found) {
                                 NPCRegistry.INST.unregisterNPC(npc);
                                 npc.destroy();
-                            }
-                            else {
+                            } else {
                                 found = true;
                             }
                         }
@@ -78,7 +77,7 @@ public class ChunkListener implements Listener {
             }
 
             for (Station station : stations) {
-                RaidCraft.LOGGER.info("Create DragonGuard NPC for station: '" + station.getName() + "'!");
+                RaidCraft.LOGGER.info("Create DragonGuard NPC for station: '" + station.getDisplayName() + "'!");
                 NPCManager.createDragonGuard(station);
             }
         }

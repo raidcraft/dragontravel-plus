@@ -145,7 +145,7 @@ public class ListStationsAction extends AbstractAction {
         Map<String, Object> data = new HashMap<>();
         data.put("variable", "dtp_target_name");
         data.put("local", true);
-        data.put("value", target.getPlainName());
+        data.put("value", target.getName());
         actions.add(new ActionArgumentList(String.valueOf(i++), SetVariableAction.class, data));
         actions.add(new ActionArgumentList(String.valueOf(i++), StageAction.class, "stage", confirmStage));
 

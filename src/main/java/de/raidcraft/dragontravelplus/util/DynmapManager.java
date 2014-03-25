@@ -40,8 +40,8 @@ public class DynmapManager {
 
         removeMarker(station);
 
-        dragonSet.createMarker(station.getName().toLowerCase().replace(" ", "_")
-                , station.getName()
+        dragonSet.createMarker(station.getDisplayName().toLowerCase().replace(" ", "_")
+                , station.getDisplayName()
                 , station.getLocation().getWorld().getName()
                 , station.getLocation().getBlockX()
                 , station.getLocation().getBlockY()
@@ -56,7 +56,7 @@ public class DynmapManager {
             return;
         }
         for (Marker marker : dragonSet.getMarkers()) {
-            if (marker.getLabel().equalsIgnoreCase(station.getName()) || marker.getLabel().equalsIgnoreCase(station.getName())) {
+            if (marker.getLabel().equalsIgnoreCase(station.getDisplayName()) || marker.getLabel().equalsIgnoreCase(station.getDisplayName())) {
                 marker.deleteMarker();
             }
         }

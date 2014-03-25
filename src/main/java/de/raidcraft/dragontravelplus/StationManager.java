@@ -44,7 +44,7 @@ public final class StationManager implements Component {
         for (TStation station : stations) {
             DragonStation dragonStation = new DragonStation(station.getName(), station.getLocation(),
                     station.getCostMultiplier(), station.isMainStation(), station.isEmergencyStation());
-            loadedStations.put(dragonStation.getName(), dragonStation);
+            loadedStations.put(dragonStation.getDisplayName(), dragonStation);
             cnt++;
         }
         plugin.getLogger().info("Loaded " + cnt + "/" + stations.size() + " DTP stations...");
@@ -99,14 +99,14 @@ public final class StationManager implements Component {
         }
         DragonStation dragonStation = new DragonStation(name, location, costLevel, mainStation, emergencyTarget);
         dragonStation.save();
-        loadedStations.put(dragonStation.getName(), dragonStation);
+        loadedStations.put(dragonStation.getDisplayName(), dragonStation);
         return dragonStation;
     }
 
     public void deleteStation(DragonStation station) {
 
-        loadedStations.remove(station.getName());
-        TStation entry = plugin.getDatabase().find(TStation.class).where().eq("name", station.getName()).findUnique();
+        loadedStations.remove(station.getDisplayName());
+        TStation entry = plugin.getDatabase().find(TStation.class).where().eq("name", station.getDisplayName()).findUnique();
         plugin.getDatabase().delete(entry);
     }
 

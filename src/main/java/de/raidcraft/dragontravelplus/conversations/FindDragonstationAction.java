@@ -41,8 +41,8 @@ public class FindDragonstationAction extends AbstractAction {
                 conversation.getPlayer().sendMessage(ChatColor.GREEN + "Du besucht diese Drachenstation zum ersten mal!");
             }
 
-            conversation.set("dtp_station_name", station.getPlainName());
-            conversation.set("dtp_station_friendlyname", station.getName());
+            conversation.set("dtp_station_name", station.getName());
+            conversation.set("dtp_station_friendlyname", station.getDisplayName());
             if (success != null) {
                 conversation.setCurrentStage(success);
                 conversation.triggerCurrentStage();
