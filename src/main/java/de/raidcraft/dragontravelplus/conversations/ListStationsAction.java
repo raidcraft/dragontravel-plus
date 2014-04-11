@@ -46,7 +46,7 @@ public class ListStationsAction extends AbstractAction {
             }
 
             StationManager stationManager = RaidCraft.getComponent(StationManager.class);
-            DragonStation currentStation = (DragonStation) stationManager.getStation(conversation.getString("dtp_station_name"));
+            DragonStation currentStation = (DragonStation) stationManager.getStation(conversation.getString("dtp_station_friendlyname"));
 
             String confirmStage = args.getString("confirmstage");
             String returnStage = args.getString("returnstage");
@@ -143,9 +143,9 @@ public class ListStationsAction extends AbstractAction {
         List<ActionArgumentList> actions = new ArrayList<>();
         int i = 0;
         Map<String, Object> data = new HashMap<>();
-        data.put("variable", "dtp_target_name");
+        data.put("variable", "dtp_target_friendlyname");
         data.put("local", true);
-        data.put("value", target.getName());
+        data.put("value", target.getDisplayName());
         actions.add(new ActionArgumentList(String.valueOf(i++), SetVariableAction.class, data));
         actions.add(new ActionArgumentList(String.valueOf(i++), StageAction.class, "stage", confirmStage));
 
