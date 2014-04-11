@@ -43,6 +43,7 @@ public class FindDragonstationAction extends AbstractAction {
 
             conversation.set("dtp_station_name", station.getName());
             conversation.set("dtp_station_friendlyname", station.getDisplayName());
+
             if (success != null) {
                 conversation.setCurrentStage(success);
                 conversation.triggerCurrentStage();
