@@ -52,10 +52,10 @@ public final class StationManager implements Component {
 
     public Station getStation(String name) throws UnknownStationException {
 
-        if (!loadedStations.containsKey(name)) {
+        if (!loadedStations.containsKey(name.toLowerCase())) {
             throw new UnknownStationException("No station with the name " + name + " found!");
         }
-        return loadedStations.get(name);
+        return loadedStations.get(name.toLowerCase());
     }
 
     public List<Station> getUnlockedStations(Player player) {
@@ -66,7 +66,7 @@ public final class StationManager implements Component {
         List<Station> stations = new ArrayList<>();
         for (TPlayerStation playerStation : stationsList) {
             try {
-                stations.add(getStation(playerStation.getStation().getName()));
+                stations.add(getStation(playerStation.getStation().getDisplayName().toLowerCase()));
             } catch (UnknownStationException e) {
                 plugin.getLogger().warning(e.getMessage());
             }
