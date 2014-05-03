@@ -7,9 +7,19 @@ import de.raidcraft.api.config.Setting;
 import de.raidcraft.dragontravelplus.api.flight.Flight;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
-import de.raidcraft.dragontravelplus.conversations.*;
+import de.raidcraft.dragontravelplus.conversations.CheckPlayerAction;
+import de.raidcraft.dragontravelplus.conversations.FindDragonstationAction;
+import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
+import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
+import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
+import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
 import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
-import de.raidcraft.dragontravelplus.tables.*;
+import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
+import de.raidcraft.dragontravelplus.tables.StationTable;
+import de.raidcraft.dragontravelplus.tables.TPath;
+import de.raidcraft.dragontravelplus.tables.TPlayerStation;
+import de.raidcraft.dragontravelplus.tables.TStation;
+import de.raidcraft.dragontravelplus.tables.TWaypoint;
 import de.raidcraft.rcconversations.actions.ActionManager;
 import org.bukkit.Bukkit;
 
@@ -61,14 +71,6 @@ public class DragonTravelPlusPlugin extends BasePlugin {
                     ActionManager.registerAction(new CheckPlayerAction());
                 } catch (Exception e) {
                     RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
-                }
-
-                // TODO: delete migration code
-                if (getConfig().migrate) {
-                    RaidCraft.getTable(StationTable.class).migrate();
-                    RaidCraft.getTable(PlayerStationsTable.class).migrate();
-                    getConfig().migrate = false;
-                    getConfig().save();
                 }
             }
         }, 1L);

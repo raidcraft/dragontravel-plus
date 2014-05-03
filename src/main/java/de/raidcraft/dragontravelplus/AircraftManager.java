@@ -4,9 +4,11 @@ import de.kumpelblase2.remoteentities.EntityManager;
 import de.kumpelblase2.remoteentities.RemoteEntities;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
+import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
 import de.raidcraft.dragontravelplus.aircrafts.RemoteAircraftDragon;
 import de.raidcraft.dragontravelplus.api.aircraft.Aircraft;
 import de.raidcraft.util.EnumUtils;
+import net.citizensnpcs.Citizens;
 import org.bukkit.Bukkit;
 
 /**
@@ -16,7 +18,8 @@ public final class AircraftManager implements Component {
 
     public enum AircraftType {
 
-        REMOTE_ENTITY;
+        REMOTE_ENTITY,
+        CITIZENS;
 
         public static AircraftType fromString(String name) {
 
@@ -27,6 +30,7 @@ public final class AircraftManager implements Component {
     private final DragonTravelPlusPlugin plugin;
     private final AircraftType type;
     private EntityManager entityManager;
+    private Citizens citizens;
 
     protected AircraftManager(DragonTravelPlusPlugin plugin) {
 
@@ -37,13 +41,22 @@ public final class AircraftManager implements Component {
             plugin.disable();
             return;
         }
-        if (type == AircraftType.REMOTE_ENTITY) {
-            if (Bukkit.getPluginManager().getPlugin("RemoteEntities") != null) {
-                this.entityManager = RemoteEntities.createManager(plugin, true);
-            } else {
-                plugin.getLogger().severe("RemoteEntites as aircraft type, but plugin was not found! Disabling...");
-                plugin.disable();
-            }
+        switch (type) {
+            case REMOTE_ENTITY:
+                if (Bukkit.getPluginManager().getPlugin("RemoteEntities") != null) {
+                    this.entityManager = RemoteEntities.createManager(plugin, true);
+                } else {
+                    plugin.getLogger().severe("RemoteEntites as aircraft type, but plugin was not found! Disabling...");
+                    plugin.disable();
+                }
+                break;
+            case CITIZENS:
+                if (Bukkit.getPluginManager().getPlugin("Citizens") != null) {
+                    this.citizens = Citizens.getPlugin(Citizens.class);
+                } else {
+                    plugin.getLogger().severe("Citizens as aircraft type, but plugin was not found! Disabling...");
+                    plugin.disable();
+                }
         }
         RaidCraft.registerComponent(AircraftManager.class, this);
     }
@@ -54,6 +67,8 @@ public final class AircraftManager implements Component {
 
             case REMOTE_ENTITY:
                 return new RemoteAircraftDragon(entityManager);
+            case CITIZENS:
+                return new CitizensAircraftDragon(citizens);
         }
         return null;
     }
