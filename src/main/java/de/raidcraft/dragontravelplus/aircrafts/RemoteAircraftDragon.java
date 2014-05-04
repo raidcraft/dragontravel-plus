@@ -1,3 +1,4 @@
+/*
 package de.raidcraft.dragontravelplus.aircrafts;
 
 import de.kumpelblase2.remoteentities.CreateEntityContext;
@@ -14,9 +15,11 @@ import de.raidcraft.dragontravelplus.api.flight.Waypoint;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Location;
 
+*/
 /**
  * @author Silthus
- */
+ *//*
+
 public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
 
     private final CreateEntityContext prepareEntity;
@@ -115,3 +118,4 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
         getEntity().getBukkitEntity().setPassenger(null);
     }
 }
+*/

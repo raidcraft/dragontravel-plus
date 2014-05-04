@@ -29,7 +29,7 @@ public final class AircraftManager implements Component {
 
     private final DragonTravelPlusPlugin plugin;
     private final AircraftType type;
-    private EntityManager entityManager;
+    // private EntityManager entityManager;
     private Citizens citizens;
 
     protected AircraftManager(DragonTravelPlusPlugin plugin) {
@@ -43,6 +43,7 @@ public final class AircraftManager implements Component {
         }
         switch (type) {
             case REMOTE_ENTITY:
+                /*
                 if (Bukkit.getPluginManager().getPlugin("RemoteEntities") != null) {
                     this.entityManager = RemoteEntities.createManager(plugin, true);
                 } else {
@@ -50,6 +51,7 @@ public final class AircraftManager implements Component {
                     plugin.disable();
                 }
                 break;
+                */
             case CITIZENS:
                 if (Bukkit.getPluginManager().getPlugin("Citizens") != null) {
                     this.citizens = Citizens.getPlugin(Citizens.class);
@@ -66,7 +68,7 @@ public final class AircraftManager implements Component {
         switch (type) {
 
             case REMOTE_ENTITY:
-                return new RemoteAircraftDragon(entityManager);
+                // return new RemoteAircraftDragon(entityManager);
             case CITIZENS:
                 return new CitizensAircraftDragon(citizens);
         }
