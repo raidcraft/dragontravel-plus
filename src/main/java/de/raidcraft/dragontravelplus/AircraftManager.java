@@ -3,7 +3,6 @@ package de.raidcraft.dragontravelplus;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
-import de.raidcraft.dragontravelplus.aircrafts.RemoteAircraftDragon;
 import de.raidcraft.dragontravelplus.api.aircraft.Aircraft;
 import de.raidcraft.util.EnumUtils;
 import net.citizensnpcs.Citizens;
