@@ -1,7 +1,5 @@
 package de.raidcraft.dragontravelplus;
 
-import de.kumpelblase2.remoteentities.EntityManager;
-import de.kumpelblase2.remoteentities.RemoteEntities;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
