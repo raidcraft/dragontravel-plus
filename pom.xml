@@ -31,23 +31,11 @@
     </parent>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@raid-craft.de:22109/${project.artifactId}.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@raid-craft.de:22109/raid-craft-de/${project.artifactId}.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
-    <repositories>
-        <repository>
-            <id>raidcraft</id>
-            <url>http://nexus.raid-craft.de/content/groups/public/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
-        <dependency>
-            <groupId>de.raidcraft</groupId>
-            <artifactId>raidcraft-api</artifactId>
-            <version>${rc.version}</version>
-        </dependency>
         <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>rcconversations</artifactId>
@@ -61,7 +49,7 @@
         <dependency>
             <groupId>de.kumpelblase2</groupId>
             <artifactId>remoteentities</artifactId>
-            <version>${rc.version}</version>
+            <version>1.7</version>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
