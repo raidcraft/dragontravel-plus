@@ -101,7 +101,7 @@ public interface Path {
 
     /**
      * Adds a waypoint at the given position of the path.
-     * Will add the waypoint at the end of the list of index > size.
+     * Will add the waypoint at the end of the list of index greater than size.
      * See {@link java.util.List#add(int, Object)}
      *
      * @param index    to insert waypoint at
@@ -111,7 +111,7 @@ public interface Path {
 
     /**
      * Sets the waypoint at the given position overriding the existing waypoint.
-     * Will add the waypoint at the end of the list of index > size.
+     * Will add the waypoint at the end of the list of index greather than size.
      * See {@link java.util.List#set(int, Object)}
      *
      * @param index    to set waypoint at
