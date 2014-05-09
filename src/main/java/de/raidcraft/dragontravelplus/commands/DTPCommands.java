@@ -7,6 +7,7 @@ import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.language.TranslationProvider;
+import de.raidcraft.dragontravelplus.api.flight.Flight;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.npc.NPCManager;
@@ -206,6 +207,19 @@ public class DTPCommands {
                 i++;
             }
             tr.msg(sender, "cmd.dynmap", "Created {0} dynmap markers.", i);
+        }
+        
+        @Command(
+                aliases = {"abortflights"},
+                desc = "Aborts all active flights"
+        )
+        @CommandPermissions("dragontravelplus.abortflights")
+        public void abortFlights(CommandContext context, CommandSender sender) throws CommandException {
+
+            for (Flight flight : plugin.getFlightManager().getActiveFlights()) {
+                flight.abortFlight();
+            }
+            tr.msg(sender, "cmd.abort-flights", "Aborted all active flights.");
         }
 
         @Command(
