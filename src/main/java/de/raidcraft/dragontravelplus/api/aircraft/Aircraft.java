@@ -4,11 +4,19 @@ import de.raidcraft.dragontravelplus.api.flight.Flight;
 import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.api.flight.Waypoint;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 
 /**
  * @author Silthus
  */
 public interface Aircraft<T> {
+    
+    /**
+     * Gets the Bukkit Entity associated with the aircraft.
+     * 
+     * @return bukkit entity or null if non bukkit entity
+     */
+    public Entity getBukkitEntity();
 
     /**
      * Gets entity that is the aircraft if it was spawned.
