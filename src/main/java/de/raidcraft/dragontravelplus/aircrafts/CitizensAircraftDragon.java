@@ -9,7 +9,9 @@ import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+
 
 /**
  * @author Silthus
@@ -23,6 +25,12 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
         this.npc = citizens.getNPCRegistry().createNPC(EntityType.ENDER_DRAGON, "Flying Dragon");
         npc.setFlyable(true);
         npc.setProtected(true);
+    }
+    
+    @Override
+    public Entity getBukkitEntity() {
+        
+        return getEntity().getEntity();
     }
 
     @Override
