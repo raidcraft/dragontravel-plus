@@ -112,7 +112,7 @@ public class DTPCommands {
             // dynmap
             DynmapManager.INST.addStationMarker(station);
 
-            tr.msg(sender, "cmd.station.create", "You have created a dragon station with the name: {0}", station.getDisplayName());
+            tr.msg(sender, "cmd.station.create", "You have created a dragon station with the name: %s", station.getDisplayName());
         }
 
         @Command(
@@ -137,7 +137,7 @@ public class DTPCommands {
             DynmapManager.INST.removeMarker(station);
             RaidCraft.getComponent(DragonTravelPlusPlugin.class).reload();
 
-            tr.msg(sender, "cmd.station.delete", "You deleted the dragon station: {0}", station.getDisplayName());
+            tr.msg(sender, "cmd.station.delete", "You deleted the dragon station: %s", station.getDisplayName());
         }
 
         @Command(
@@ -157,7 +157,7 @@ public class DTPCommands {
             }
 
             ((Player) sender).teleport(station.getLocation());
-            tr.msg(sender, "cmd.station.warp", "You have been teleported to the dragon station: {0}", station.getDisplayName());
+            tr.msg(sender, "cmd.station.warp", "You have been teleported to the dragon station: %s", station.getDisplayName());
         }
 
         @Command(
@@ -206,7 +206,7 @@ public class DTPCommands {
                 DynmapManager.INST.addStationMarker(station);
                 i++;
             }
-            tr.msg(sender, "cmd.dynmap", "Created {0} dynmap markers.", i);
+            tr.msg(sender, "cmd.dynmap", "Created %s dynmap markers.", i);
         }
         
         @Command(
