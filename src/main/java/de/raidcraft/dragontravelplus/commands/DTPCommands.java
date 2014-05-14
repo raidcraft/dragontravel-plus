@@ -180,7 +180,7 @@ public class DTPCommands {
                     }
                 }
 
-                if (!station.getLocation().getWorld().getName().equalsIgnoreCase(((Player) sender).getLocation().getWorld().getName())) {
+                if (!station.getLocation().getWorld().equals(((Player) sender).getLocation().getWorld())) {
                     continue;
                 }
 
