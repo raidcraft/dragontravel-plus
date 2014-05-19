@@ -89,16 +89,9 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar>
                             <filters>
                                 <filter>
                                     <artifact>de.raidcraft.dragontravelplus:*</artifact>
-                                    <includes>
-                                        <include>**</include>
-                                    </includes>
-                                </filter>
-                                <filter>
-                                    <artifact>de.raidcraft:dragontravelplus</artifact>
                                     <includes>
                                         <include>**</include>
                                     </includes>
