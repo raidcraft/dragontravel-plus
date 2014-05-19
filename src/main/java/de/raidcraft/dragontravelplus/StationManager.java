@@ -77,7 +77,7 @@ public final class StationManager implements Component {
         for (Station station : getAllStations()) {
             if (station instanceof DragonStation) {
                 if (((DragonStation) station).isMainStation() || ((DragonStation) station).isEmergencyTarget()) {
-                    if (station.getStation().getWorld().equalsIgnoreCase(player.getLocation().getWorld().getName())) {
+                    if (station.getWorld().equalsIgnoreCase(player.getLocation().getWorld().getName())) {
                         stations.add(station);
                     }
                 }
