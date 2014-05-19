@@ -66,7 +66,9 @@ public final class StationManager implements Component {
         List<Station> stations = new ArrayList<>();
         for (TPlayerStation playerStation : stationsList) {
             try {
-                stations.add(getStation(playerStation.getStation().getDisplayName().toLowerCase()));
+                if (playerStation.getStation().getWorld().equalsIgnoreCase(player.getLocation().getWorld().getName())) {
+                    stations.add(getStation(playerStation.getStation().getDisplayName().toLowerCase()));
+                }
             } catch (UnknownStationException e) {
                 plugin.getLogger().warning(e.getMessage());
             }
@@ -75,7 +77,9 @@ public final class StationManager implements Component {
         for (Station station : getAllStations()) {
             if (station instanceof DragonStation) {
                 if (((DragonStation) station).isMainStation() || ((DragonStation) station).isEmergencyTarget()) {
-                    stations.add(station);
+                    if (station.getStation().getWorld().equalsIgnoreCase(player.getLocation().getWorld().getName())) {
+                        stations.add(station);
+                    }
                 }
             }
         }
