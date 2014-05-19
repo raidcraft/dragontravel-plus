@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -74,15 +75,10 @@ public final class StationManager implements Component {
             }
         }
         // also add all emergency stations
-        for (Station station : getAllStations()) {
-            if (station instanceof DragonStation) {
-                if (((DragonStation) station).isMainStation() || ((DragonStation) station).isEmergencyTarget()) {
-                    if (station.getWorld().equalsIgnoreCase(player.getLocation().getWorld().getName())) {
-                        stations.add(station);
-                    }
-                }
-            }
-        }
+        stations.addAll(getAllStations().stream()
+                .filter(station -> station instanceof DragonStation)
+                .collect(Collectors.toList())
+        );
         return stations;
     }
 
