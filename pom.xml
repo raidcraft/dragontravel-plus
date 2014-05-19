@@ -1,38 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (C) 2011 RaidCraft <http://www.raid-craft.de>
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program. If not, see <http://www.gnu.org/licenses />.
-  -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>dragontravelplus</artifactId>
-    <packaging>jar</packaging>
-    <version>1.1.7-SNAPSHOT</version>
-    <name>DragonTravelPlus</name>
+    <artifactId>dragontravelplus-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>parent</version>
+    <name>DragonTravelPlus Parent</name>
 
     <parent>
         <groupId>de.raidcraft</groupId>
         <artifactId>masterpom</artifactId>
         <version>RELEASE</version>
     </parent>
-
-    <scm>
-        <developerConnection>scm:git:ssh://git@raid-craft.de:22109/raid-craft-de/${project.artifactId}.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
 
     <repositories>
         <repository>
@@ -41,26 +18,9 @@
         </repository>
     </repositories>
 
-    <dependencies>
-        <dependency>
-            <groupId>de.raidcraft</groupId>
-            <artifactId>rcconversations</artifactId>
-            <version>${rc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.raidcraft</groupId>
-            <artifactId>rctravel</artifactId>
-            <version>${rc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizens</artifactId>
-            <version>${rc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.7.9-R0.1-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>plugin</module>
+        <module>v1_7_R1</module>
+        <module>v1_7_R3</module>
+    </modules>
 </project>

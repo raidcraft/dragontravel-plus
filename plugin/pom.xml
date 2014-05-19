@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2011 RaidCraft <http://www.raid-craft.de>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program. If not, see <http://www.gnu.org/licenses />.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>dragontravelplus</artifactId>
+    <packaging>jar</packaging>
+    <version>1.1.7-SNAPSHOT</version>
+    <name>DragonTravelPlus</name>
+
+    <parent>
+        <groupId>de.raidcraft</groupId>
+        <artifactId>masterpom</artifactId>
+        <version>RELEASE</version>
+    </parent>
+
+    <scm>
+        <developerConnection>scm:git:ssh://git@raid-craft.de:22109/raid-craft-de/${project.artifactId}.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>raidcraft</id>
+            <url>http://nexus.raid-craft.de/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.raidcraft</groupId>
+            <artifactId>rcconversations</artifactId>
+            <version>${rc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.raidcraft</groupId>
+            <artifactId>rctravel</artifactId>
+            <version>${rc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizens</artifactId>
+            <version>${rc.version}</version>
+        </dependency>
+        <!-- we need to include all nms versions -->
+        <dependency>
+            <groupId>de.raidcraft</groupId>
+            <artifactId>dragontravelplus-v1_7_R1</artifactId>
+            <version>v1_7_R1</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>de.raidcraft</groupId>
+            <artifactId>dragontravelplus-v1_7_R3</artifactId>
+            <version>v1_7_R3</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <directory>../target</directory> <!-- Build it one level up, because it is the one we care about -->
+        <!-- Define filtering for the inclusion of plugin.yml, so we can utilize the pom.xml version in it -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
