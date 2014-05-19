@@ -57,9 +57,8 @@ public class DragonStationRoute {
 
         if (!endStation.equals(that.endStation)) return false;
         if (!path.equals(that.path)) return false;
-        if (!startStation.equals(that.startStation)) return false;
+        return startStation.equals(that.startStation);
 
-        return true;
     }
 
     @Override
