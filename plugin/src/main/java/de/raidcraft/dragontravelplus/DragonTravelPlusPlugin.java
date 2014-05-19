@@ -4,7 +4,6 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
-import de.raidcraft.rcconversations.actions.ActionManager;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
@@ -21,6 +20,7 @@ import de.raidcraft.dragontravelplus.tables.TPath;
 import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
+import de.raidcraft.rcconversations.actions.ActionManager;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -89,6 +89,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         getStationManager().reload();
         getRouteManager().reload();
+        getConfig().reload();
     }
 
     public de.raidcraft.dragontravelplus.AircraftManager getAircraftManager() {
