@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Philip
@@ -68,23 +69,15 @@ public class ListStationsAction extends AbstractAction {
             }
 
             if (type == ListType.FREE) {
-                List<Station> freeStations = new ArrayList<>();
-                for (Station station : stations) {
-                    if (station instanceof DragonStation) {
-                        if (currentStation.getPrice((DragonStation) station) <= 0) {
-                            freeStations.add(station);
-                        }
-                    }
-                }
-                stations = freeStations;
+                stations = stations.stream()
+                        .filter(station -> station instanceof DragonStation)
+                        .collect(Collectors.toList());
             }
 
-            for (Station station : stations) {
-                if (station.equals(currentStation)) {
-                    stations.remove(station);
-                    break;
-                }
-            }
+            stations = stations.stream()
+                    .filter(station -> station.getLocation().getWorld().equals(currentStation.getLocation().getWorld()))
+                    .collect(Collectors.toList());
+            stations.remove(currentStation);
 
             if (stations.isEmpty()) {
                 List<Answer> answers = new ArrayList<>();
