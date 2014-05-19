@@ -91,6 +91,12 @@
                         <configuration>
                             <filters>
                                 <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
                                     <artifact>de.raidcraft.dragontravelplus:*</artifact>
                                     <includes>
                                         <include>**</include>
