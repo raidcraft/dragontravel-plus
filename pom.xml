@@ -57,5 +57,10 @@
             <artifactId>citizens</artifactId>
             <version>${rc.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.7.9-R0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
