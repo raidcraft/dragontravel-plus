@@ -2,7 +2,6 @@ package de.raidcraft.dragontravelplus.aircrafts.nms.v1_7_R3;
 
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.flight.Flight;
-import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Waypoint;
 import de.raidcraft.util.LocationUtil;
 import lombok.Getter;
@@ -127,7 +126,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     }
 
     @Override
-    public void mountPassenger(Flight flight) throws FlightException {
+    public void mountPassenger(Flight flight) {
 
         if (flight.getPassenger().getEntity() instanceof CraftLivingEntity) {
             mount(((CraftLivingEntity) flight.getPassenger().getEntity()).getHandle());

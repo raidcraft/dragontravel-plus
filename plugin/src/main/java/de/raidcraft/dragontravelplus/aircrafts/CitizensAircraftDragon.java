@@ -2,7 +2,6 @@ package de.raidcraft.dragontravelplus.aircrafts;
 
 import de.raidcraft.api.flight.aircraft.AbstractAircraft;
 import de.raidcraft.api.flight.flight.Flight;
-import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Waypoint;
 import de.raidcraft.util.LocationUtil;
 import net.citizensnpcs.Citizens;
@@ -89,7 +88,7 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     }
 
     @Override
-    public void mountPassenger(Flight flight) throws FlightException {
+    public void mountPassenger(Flight flight) {
 
         getEntity().getEntity().setPassenger(flight.getPassenger().getEntity());
     }
