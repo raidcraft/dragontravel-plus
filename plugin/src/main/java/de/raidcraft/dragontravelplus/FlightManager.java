@@ -65,7 +65,7 @@ public final class FlightManager implements Component {
     public Flight createFlight(Passenger passenger, Path path) {
 
         FreePathFlight flight = new FreePathFlight(
-                plugin.getAircraftManager().getAircraft(),
+                plugin.getAircraftManager().getAircraft(passenger),
                 path,
                 passenger.getEntity().getLocation(),
                 path.getLastWaypoint().getLocation()
@@ -78,7 +78,7 @@ public final class FlightManager implements Component {
 
         Passenger passenger = getPassenger(player);
         FreePathFlight flight = new FreePathFlight(
-                plugin.getAircraftManager().getAircraft(),
+                plugin.getAircraftManager().getAircraft(passenger),
                 path,
                 player.getLocation(),
                 path.getLastWaypoint().getLocation()

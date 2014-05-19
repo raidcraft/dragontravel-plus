@@ -42,7 +42,7 @@ public class DragonStationRoute {
     public Flight createFlight(Passenger<?> passenger) {
 
         DragonStationFlight flight = new DragonStationFlight(getStartStation(), getEndStation(),
-                RaidCraft.getComponent(AircraftManager.class).getAircraft(), getPath());
+                RaidCraft.getComponent(AircraftManager.class).getAircraft(passenger), getPath());
         flight.setPassenger(passenger);
         return flight;
     }
