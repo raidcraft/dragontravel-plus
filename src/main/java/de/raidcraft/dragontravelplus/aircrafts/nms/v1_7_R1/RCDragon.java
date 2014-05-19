@@ -9,15 +9,41 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.v1_7_R1.EntityEnderDragon;
 import net.minecraft.server.v1_7_R1.World;
+import net.minecraft.server.v1_7_R1.EntityInsentient;
+import net.minecraft.server.v1_7_R1.EntityTypes;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Silthus
  */
 public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
+
+    static {
+        try {
+
+            List<Map<?, ?>> dataMaps = new ArrayList<>();
+            for (Field f : EntityTypes.class.getDeclaredFields()) {
+                if (f.getType().getSimpleName().equals(Map.class.getSimpleName())) {
+                    f.setAccessible(true);
+                    dataMaps.add((Map<?, ?>) f.get(null));
+                }
+            }
+
+            ((Map<Class<? extends EntityInsentient>, String>) dataMaps.get(1)).put(RCDragon.class, "EnderDragon");
+            ((Map<Class<? extends EntityInsentient>, Integer>) dataMaps.get(3)).put(RCDragon.class, 63);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Getter
     @Setter
