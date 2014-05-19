@@ -89,14 +89,11 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <filters>
-                                <filter>
-                                    <artifact>de.raidcraft.dragontravelplus:*</artifact>
-                                    <includes>
-                                        <include>**</include>
-                                    </includes>
-                                </filter>
-                            </filters>
+                            <artifactSet>
+                                <includes>
+                                    <include>de.raidcraft.dragontravelplus:nms-*</include>
+                                </includes>
+                            </artifactSet>
                         </configuration>
                     </execution>
                 </executions>
