@@ -1,10 +1,14 @@
 package de.raidcraft.dragontravelplus.api.aircraft;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.api.flight.Flight;
 import de.raidcraft.dragontravelplus.api.flight.FlightException;
 import de.raidcraft.dragontravelplus.api.flight.Waypoint;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  * @author Silthus
@@ -92,6 +96,16 @@ public interface Aircraft<T> {
     public boolean isFlying();
 
     /**
+     * Sets the aircraft as flying.
+     * @param flying mode
+     */
+    public void setFlying(boolean flying);
+
+    public BukkitTask getAircraftMoverTask();
+
+    public void setAircraftMoverTask(BukkitTask aircraftMoverTask);
+
+    /**
      * Will switch the aircraft into flying mode and strap on all the seatbelts for passengers on the aircraft.
      * Activates the flight mode which can abort user interaction with anything and so on.
      * If the aircraft {@link #isFlying()} it will not do anything
@@ -99,7 +113,24 @@ public interface Aircraft<T> {
      *
      * @param flight that triggered the takeoff
      */
-    public void takeoff(Flight flight);
+    public default void takeoff(Flight flight) {
+
+        if (!isFlying()) {
+            try {
+                setFlying(true);
+                if (!isSpawned()) spawn(flight.getFirstWaypoint());
+                mountPassenger(flight);
+                move(flight, flight.getPath().getFirstWaypoint());
+                // lets start the task that moves the aircraft around from waypoint to waypoint
+                DragonTravelPlusPlugin plugin = RaidCraft.getComponent(DragonTravelPlusPlugin.class);
+                setAircraftMoverTask(Bukkit.getScheduler().runTaskTimer(plugin,
+                        new AircraftMoverTask(this, flight),
+                        plugin.getConfig().flightTaskInterval,
+                        plugin.getConfig().flightTaskInterval));
+            } catch (FlightException ignored) {
+            }
+        }
+    }
 
     /**
      * Will abort the flight if {@link #isFlying()}
@@ -107,7 +138,16 @@ public interface Aircraft<T> {
      *
      * @param flight that triggered the abort
      */
-    public void abortFlight(Flight flight);
+    public default void abortFlight(Flight flight) {
+
+        if (isFlying()) {
+            setFlying(false);
+            stopMoving();
+            unmountPassenger(flight);
+            getAircraftMoverTask().cancel();
+            if (isSpawned()) despawn();
+        }
+    }
 
     /**
      * Lands the aircraft safely on the ground removing restrictions from the passengers.
@@ -115,7 +155,16 @@ public interface Aircraft<T> {
      *
      * @param flight that triggered the landing
      */
-    public void land(Flight flight);
+    public default void land(Flight flight) {
+
+        if (isFlying()) {
+            setFlying(false);
+            stopMoving();
+            unmountPassenger(flight);
+            getAircraftMoverTask().cancel();
+            if (isSpawned()) despawn();
+        }
+    }
 
     /**
      * Mounts all attached passengers onto the aircraft.

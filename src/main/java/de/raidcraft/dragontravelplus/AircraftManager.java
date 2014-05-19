@@ -4,9 +4,13 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
 import de.raidcraft.dragontravelplus.api.aircraft.Aircraft;
+import de.raidcraft.dragontravelplus.api.passenger.Passenger;
 import de.raidcraft.util.EnumUtils;
 import net.citizensnpcs.Citizens;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Silthus
@@ -15,6 +19,7 @@ public final class AircraftManager implements Component {
 
     public enum AircraftType {
 
+        VANILLA,
         REMOTE_ENTITY,
         CITIZENS;
 
@@ -56,11 +61,13 @@ public final class AircraftManager implements Component {
                     plugin.getLogger().severe("Citizens as aircraft type, but plugin was not found! Disabling...");
                     plugin.disable();
                 }
+                break;
+
         }
         RaidCraft.registerComponent(AircraftManager.class, this);
     }
 
-    public Aircraft<?> getAircraft() {
+    public Aircraft<?> getAircraft(Passenger<?> passenger) {
 
         switch (type) {
 
@@ -68,6 +75,15 @@ public final class AircraftManager implements Component {
                 // return new RemoteAircraftDragon(entityManager);
             case CITIZENS:
                 return new CitizensAircraftDragon(citizens);
+            case VANILLA:
+                try {
+                    String mcVersion = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+                    Class<?> clazz = Class.forName("de.raidcraft.dragontravelplus.aircrafts.nms." + mcVersion + ".RCDragon");
+                    return (Aircraft<?>) clazz.getConstructor(World.class).newInstance(passenger.getEntity().getWorld());
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    plugin.getLogger().warning(e.getMessage());
+                    e.printStackTrace();
+                }
         }
         return null;
     }
