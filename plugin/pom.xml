@@ -91,19 +91,12 @@
                         <configuration>
                             <filters>
                                 <filter>
-                                    <artifact>de.raidcraft.dragontravelplus:nms-*</artifact>
+                                    <artifact>de.raidcraft.dragontravelplus:*</artifact>
                                     <includes>
                                         <include>**</include>
                                     </includes>
                                 </filter>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>**</exclude>
-                                    </excludes>
-                                </filter>
                             </filters>
-                            <minimizeJar>true</minimizeJar>
                         </configuration>
                     </execution>
                 </executions>
