@@ -6,6 +6,8 @@ import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.passenger.Passenger;
 import de.raidcraft.util.EnumUtils;
+import de.raidcraft.util.EntityUtil;
+import de.raidcraft.util.ReflectionUtil;
 import net.citizensnpcs.Citizens;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -62,6 +64,10 @@ public final class AircraftManager implements Component {
                     plugin.disable();
                 }
                 break;
+            case VANILLA:
+                // we need to register the custom entity matching the correct version
+                EntityUtil.registerEntity("EnderDragon", 63, ReflectionUtil.getNmsClass("de.raidcraft.dragontravelplus.aircrafts.nms", "RCDragon"));
+                break;
 
         }
         RaidCraft.registerComponent(AircraftManager.class, this);
@@ -77,8 +83,7 @@ public final class AircraftManager implements Component {
                 return new CitizensAircraftDragon(citizens);
             case VANILLA:
                 try {
-                    String mcVersion = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-                    Class<?> clazz = Class.forName("de.raidcraft.dragontravelplus.aircrafts.nms." + mcVersion + ".RCDragon");
+                    Class<?> clazz = ReflectionUtil.getNmsClass("de.raidcraft.dragontravelplus.aircrafts.nms", "RCDragon");
                     return (Aircraft<?>) clazz.getConstructor(World.class).newInstance(passenger.getEntity().getWorld());
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                     plugin.getLogger().warning(e.getMessage());
