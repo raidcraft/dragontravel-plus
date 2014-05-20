@@ -25,25 +25,6 @@ import java.util.Map;
  */
 public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
 
-    static {
-        try {
-
-            List<Map<?, ?>> dataMaps = new ArrayList<>();
-            for (Field f : EntityTypes.class.getDeclaredFields()) {
-                if (f.getType().getSimpleName().equals(Map.class.getSimpleName())) {
-                    f.setAccessible(true);
-                    dataMaps.add((Map<?, ?>) f.get(null));
-                }
-            }
-
-            ((Map<Class<? extends EntityInsentient>, String>) dataMaps.get(1)).put(RCDragon.class, "EnderDragon");
-            ((Map<Class<? extends EntityInsentient>, Integer>) dataMaps.get(3)).put(RCDragon.class, 63);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Getter
     @Setter
     private boolean flying;
