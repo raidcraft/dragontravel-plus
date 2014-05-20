@@ -85,7 +85,7 @@ public final class AircraftManager implements Component {
                 try {
                     Class<?> clazz = ReflectionUtil.getNmsClass("de.raidcraft.dragontravelplus.aircrafts.nms", "RCDragon");
                     return (Aircraft<?>) clazz.getConstructor(World.class).newInstance(passenger.getEntity().getWorld());
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                } catch (Exception e) {
                     plugin.getLogger().warning(e.getMessage());
                     e.printStackTrace();
                 }
