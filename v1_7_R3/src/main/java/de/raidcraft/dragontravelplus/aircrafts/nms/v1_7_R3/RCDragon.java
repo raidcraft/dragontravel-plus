@@ -92,8 +92,10 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     public RCDragon spawn(Location location) {
 
         if (!isSpawned()) {
+            ((CraftWorld) location.getWorld()).getHandle().addEntity(this);
             spawnIn(((CraftWorld) location.getWorld()).getHandle());
             setLocation(location.getX(), location.getY(), location.getZ(), 0F, 0F);
+            RaidCraft.LOGGER.info("spawned RCDragon");
         }
         return this;
     }
