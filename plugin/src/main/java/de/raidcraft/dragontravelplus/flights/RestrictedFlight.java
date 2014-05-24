@@ -21,6 +21,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 
 import java.util.Arrays;
@@ -93,10 +94,20 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)
     public void onVehicleExit(VehicleExitEvent event) {
 
         if (hasPassenger(event.getExited())) {
+            // abort the flight
+            abortFlight();
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)
+    public void onPlayerCrouch(PlayerToggleSneakEvent event) {
+
+        if (hasPassenger(event.getPlayer())) {
             // abort the flight
             abortFlight();
             event.setCancelled(true);
