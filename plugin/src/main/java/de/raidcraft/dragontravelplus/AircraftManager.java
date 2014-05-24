@@ -2,17 +2,15 @@ package de.raidcraft.dragontravelplus;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
-import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.passenger.Passenger;
-import de.raidcraft.util.EnumUtils;
+import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
 import de.raidcraft.util.EntityUtil;
+import de.raidcraft.util.EnumUtils;
 import de.raidcraft.util.ReflectionUtil;
 import net.citizensnpcs.Citizens;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Silthus
@@ -41,7 +39,8 @@ public final class AircraftManager implements Component {
         this.plugin = plugin;
         this.type = AircraftType.fromString(plugin.getConfig().aircraftType);
         if (type == null) {
-            plugin.getLogger().severe("Invalid aircraft type specified! Shutting down plugin...");
+            plugin.getLogger().severe("Invalid aircraft type (" + plugin.getConfig().aircraftType + ") specified! " +
+                    "Shutting down plugin...");
             plugin.disable();
             return;
         }

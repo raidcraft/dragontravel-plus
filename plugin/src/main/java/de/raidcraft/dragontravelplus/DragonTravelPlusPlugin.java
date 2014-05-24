@@ -79,8 +79,11 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     @Override
     public void disable() {
 
-        for (Flight flight : getFlightManager().getActiveFlights()) {
-            flight.abortFlight();
+        FlightManager manager = getFlightManager();
+        if (manager != null) {
+            for (Flight flight : manager.getActiveFlights()) {
+                flight.abortFlight();
+            }
         }
     }
 
