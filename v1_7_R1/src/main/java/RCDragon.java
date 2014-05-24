@@ -10,6 +10,7 @@ import net.minecraft.server.v1_7_R1.World;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
@@ -84,8 +85,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     public RCDragon spawn(Location location) {
 
         if (!isSpawned()) {
-            ((CraftWorld) location.getWorld()).getHandle().addEntity(this);
-            spawnIn(((CraftWorld) location.getWorld()).getHandle());
+            ((CraftWorld) location.getWorld()).getHandle().addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
             setLocation(location.getX(), location.getY(), location.getZ(), 0F, 0F);
             RaidCraft.LOGGER.info("spawned RCDragon");
         }
