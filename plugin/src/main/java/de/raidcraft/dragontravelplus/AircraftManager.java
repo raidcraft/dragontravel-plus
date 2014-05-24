@@ -23,7 +23,7 @@ public final class AircraftManager implements Component {
     public enum AircraftType {
 
         VANILLA,
-        REMOTE_ENTITY,
+        REMOTE_ENTITIES,
         CITIZENS;
 
         public static AircraftType fromString(String name) {
@@ -49,7 +49,7 @@ public final class AircraftManager implements Component {
             return;
         }
         switch (type) {
-            case REMOTE_ENTITY:
+            case REMOTE_ENTITIES:
                 if (Bukkit.getPluginManager().getPlugin("RemoteEntities") != null) {
                     this.remoteEntityManager = RemoteEntities.createManager(plugin, true);
                 } else {
@@ -77,7 +77,7 @@ public final class AircraftManager implements Component {
 
         switch (type) {
 
-            case REMOTE_ENTITY:
+            case REMOTE_ENTITIES:
                 return new RemoteAircraftDragon(remoteEntityManager);
             case CITIZENS:
                 return new CitizensAircraftDragon(citizens);

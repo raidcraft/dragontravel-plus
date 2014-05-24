@@ -138,7 +138,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         @Setting("disabled")
         public boolean disabled = false;
         @Setting("aircraft.type")
-        public String aircraftType = "REMOTE_ENTITY";
+        public String aircraftType = "REMOTE_ENTITIES";
         @Setting("error-prevention-flight-timeout")
         public int flightTimeout = 30;
         @Setting("flight-cost-per-block")
