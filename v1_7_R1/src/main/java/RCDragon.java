@@ -1,3 +1,4 @@
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.Waypoint;
@@ -5,18 +6,11 @@ import de.raidcraft.util.LocationUtil;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.v1_7_R1.EntityEnderDragon;
-import net.minecraft.server.v1_7_R1.EntityInsentient;
-import net.minecraft.server.v1_7_R1.EntityTypes;
 import net.minecraft.server.v1_7_R1.World;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
 import org.bukkit.scheduler.BukkitTask;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Silthus
