@@ -1,4 +1,3 @@
-/*
 package de.raidcraft.dragontravelplus.aircrafts;
 
 import de.kumpelblase2.remoteentities.CreateEntityContext;
@@ -7,18 +6,13 @@ import de.kumpelblase2.remoteentities.api.DespawnReason;
 import de.kumpelblase2.remoteentities.api.RemoteEntityType;
 import de.kumpelblase2.remoteentities.entities.RemoteEnderDragon;
 import de.raidcraft.RaidCraft;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.api.flight.aircraft.AbstractAircraft;
 import de.raidcraft.api.flight.flight.Flight;
-import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Waypoint;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Location;
-
-*/
-/**
- * @author Silthus
- *//*
+import org.bukkit.entity.Entity;
 
 public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
 
@@ -51,6 +45,12 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
 
         if (!isSpawned()) return;
         getEntity().stopMoving();
+    }
+
+    @Override
+    public Entity getBukkitEntity() {
+
+        return getEntity().getBukkitEntity();
     }
 
     @Override
@@ -105,7 +105,7 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
     }
 
     @Override
-    public void mountPassenger(Flight flight) throws FlightException {
+    public void mountPassenger(Flight flight) {
 
         if (!isSpawned()) return;
         getEntity().getBukkitEntity().setPassenger(flight.getPassenger().getEntity());
@@ -118,4 +118,3 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
         getEntity().getBukkitEntity().setPassenger(null);
     }
 }
-*/

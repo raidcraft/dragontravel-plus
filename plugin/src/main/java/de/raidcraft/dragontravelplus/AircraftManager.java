@@ -1,10 +1,13 @@
 package de.raidcraft.dragontravelplus;
 
+import de.kumpelblase2.remoteentities.EntityManager;
+import de.kumpelblase2.remoteentities.RemoteEntities;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.passenger.Passenger;
 import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
+import de.raidcraft.dragontravelplus.aircrafts.RemoteAircraftDragon;
 import de.raidcraft.util.EntityUtil;
 import de.raidcraft.util.EnumUtils;
 import de.raidcraft.util.ReflectionUtil;
@@ -31,7 +34,8 @@ public final class AircraftManager implements Component {
 
     private final DragonTravelPlusPlugin plugin;
     private final AircraftType type;
-    // private EntityManager entityManager;
+
+    private EntityManager remoteEntityManager;
     private Citizens citizens;
 
     protected AircraftManager(DragonTravelPlusPlugin plugin) {
@@ -46,15 +50,13 @@ public final class AircraftManager implements Component {
         }
         switch (type) {
             case REMOTE_ENTITY:
-                /*
                 if (Bukkit.getPluginManager().getPlugin("RemoteEntities") != null) {
-                    this.entityManager = RemoteEntities.createManager(plugin, true);
+                    this.remoteEntityManager = RemoteEntities.createManager(plugin, true);
                 } else {
                     plugin.getLogger().severe("RemoteEntites as aircraft type, but plugin was not found! Disabling...");
                     plugin.disable();
                 }
                 break;
-                */
             case CITIZENS:
                 if (Bukkit.getPluginManager().getPlugin("Citizens") != null) {
                     this.citizens = Citizens.getPlugin(Citizens.class);
@@ -67,7 +69,6 @@ public final class AircraftManager implements Component {
                 // we need to register the custom entity matching the correct version
                 EntityUtil.registerEntity("EnderDragon", 63, ReflectionUtil.getNmsClass("de.raidcraft.dragontravelplus.aircrafts.nms", "RCDragon"));
                 break;
-
         }
         RaidCraft.registerComponent(AircraftManager.class, this);
     }
@@ -77,7 +78,7 @@ public final class AircraftManager implements Component {
         switch (type) {
 
             case REMOTE_ENTITY:
-                // return new RemoteAircraftDragon(entityManager);
+                return new RemoteAircraftDragon(remoteEntityManager);
             case CITIZENS:
                 return new CitizensAircraftDragon(citizens);
             case VANILLA:

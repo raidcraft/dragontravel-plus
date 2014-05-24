@@ -57,6 +57,11 @@
             <artifactId>citizens</artifactId>
             <version>${rc.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.kumpelblase2</groupId>
+            <artifactId>remoteentities</artifactId>
+            <version>${rc.version}</version>
+        </dependency>
         <!-- we need to include all nms versions -->
         <dependency>
             <groupId>de.raidcraft.dragontravelplus</groupId>
