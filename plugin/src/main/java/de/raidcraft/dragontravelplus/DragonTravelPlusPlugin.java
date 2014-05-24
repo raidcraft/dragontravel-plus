@@ -85,6 +85,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
                 flight.abortFlight();
             }
         }
+        getPluginLoader().disablePlugin(this);
     }
 
     @Override
