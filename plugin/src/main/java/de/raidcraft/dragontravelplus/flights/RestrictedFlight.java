@@ -1,13 +1,13 @@
 package de.raidcraft.dragontravelplus.flights;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.language.Translator;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.FlightManager;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.flight.AbstractFlight;
 import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Path;
+import de.raidcraft.api.language.Translator;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.FlightManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -131,25 +131,22 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     }
 
     @Override
-    public void startFlight() throws FlightException {
+    public void onStartFlight() throws FlightException {
 
-        super.startFlight();
         RaidCraft.getComponent(FlightManager.class).registerFlight(this);
         Bukkit.getPluginManager().registerEvents(this, RaidCraft.getComponent(DragonTravelPlusPlugin.class));
     }
 
     @Override
-    public void abortFlight() {
+    public void onAbortFlight() throws FlightException {
 
-        super.abortFlight();
         RaidCraft.getComponent(FlightManager.class).unregisterFlight(this);
         unregisterListener();
     }
 
     @Override
-    public void endFlight() throws FlightException {
+    public void onEndFlight() throws FlightException {
 
-        super.endFlight();
         RaidCraft.getComponent(FlightManager.class).unregisterFlight(this);
         unregisterListener();
     }

@@ -162,6 +162,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         public int waypointRadius = 15;
         @Setting("flight.flight-task-interval")
         public int flightTaskInterval = 5;
+        @Setting("flight.teleport-fallback")
+        public boolean flightTeleportFallback = false;
         @Setting("flight-waypoint-distance")
         public int wayPointDistance = 10;
         @Setting("flight-editor-item")
