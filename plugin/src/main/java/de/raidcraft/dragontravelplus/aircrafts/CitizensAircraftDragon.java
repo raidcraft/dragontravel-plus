@@ -78,6 +78,7 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     public NPC spawn(Location location) {
 
         getEntity().spawn(location);
+        getEntity().getNavigator().setPaused(false);
         return getEntity();
     }
 
