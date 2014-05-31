@@ -12,4 +12,10 @@ public class BukkitPlayerPassenger extends AbstractPassenger<Player> {
 
         super(entity);
     }
+
+    @Override
+    public void sendMessage(String message) {
+
+        getEntity().sendMessage(message);
+    }
 }
