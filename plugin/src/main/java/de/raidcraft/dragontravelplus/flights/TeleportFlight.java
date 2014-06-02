@@ -25,7 +25,7 @@ public class TeleportFlight extends DragonStationFlight {
     public void onStartFlight() throws FlightException {
 
         super.onStartFlight();
-        getPassenger().getEntity().teleport(getLastWaypoint());
+        getPassenger().getEntity().teleport(getEndStation().getLocation());
         endFlight();
     }
 }
