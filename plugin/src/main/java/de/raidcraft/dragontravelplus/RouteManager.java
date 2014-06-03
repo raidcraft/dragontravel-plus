@@ -89,8 +89,13 @@ public final class RouteManager implements Component {
         if (loadedRoutes.containsKey(start) && loadedRoutes.get(start).containsKey(destination)) {
             return loadedRoutes.get(start).get(destination);
         }
-        // generate a new dynamic route
-        DynamicFlightPath path = new DynamicFlightPath(start.getLocation(), destination.getLocation());
+        // generate a flight path
+        Path path;
+        if (plugin.getConfig().useDynamicRouting) {
+            path = new DynamicFlightPath(start.getLocation(), destination.getLocation());
+        } else {
+            path = new StaticFlightPath(start.getLocation(), destination.getLocation());
+        }
         // TODO: maybe we need to trigger a repeating task to calculate this if it laggs the server
         path.calculate();
         // and create a new dragon station route
