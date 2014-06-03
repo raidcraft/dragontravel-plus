@@ -9,6 +9,7 @@ import de.raidcraft.dragontravelplus.paths.DragonStationRoute;
 import de.raidcraft.dragontravelplus.paths.DynamicFlightPath;
 import de.raidcraft.dragontravelplus.paths.SavedFlightPath;
 import de.raidcraft.dragontravelplus.paths.SavedWaypoint;
+import de.raidcraft.dragontravelplus.paths.StaticFlightPath;
 import de.raidcraft.dragontravelplus.tables.TPath;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
 import de.raidcraft.rctravel.api.station.Station;
