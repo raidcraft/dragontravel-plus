@@ -43,9 +43,9 @@ public final class StationManager implements Component {
         int cnt = 0;
         List<TStation> stations = plugin.getDatabase().find(TStation.class).findList();
         for (TStation station : stations) {
-            DragonStation dragonStation = new DragonStation(station.getName(), station.getLocation(),
+            DragonStation dragonStation = new DragonStation(station.getName(), station.getDisplayName(), station.getLocation(),
                     station.getCostMultiplier(), station.isMainStation(), station.isEmergencyStation());
-            loadedStations.put(dragonStation.getDisplayName(), dragonStation);
+            loadedStations.put(dragonStation.getName(), dragonStation);
             cnt++;
         }
         plugin.getLogger().info("Loaded " + cnt + "/" + stations.size() + " DTP stations...");
@@ -56,7 +56,7 @@ public final class StationManager implements Component {
         if (!loadedStations.containsKey(name.toLowerCase())) {
             throw new UnknownStationException("No station with the name " + name + " found!");
         }
-        return loadedStations.get(name.toLowerCase());
+        return loadedStations.get(name);
     }
 
     public List<Station> getUnlockedStations(Player player) {
@@ -68,7 +68,7 @@ public final class StationManager implements Component {
         for (TPlayerStation playerStation : stationsList) {
             try {
                 if (playerStation.getStation().getWorld().equalsIgnoreCase(player.getLocation().getWorld().getName())) {
-                    stations.add(getStation(playerStation.getStation().getDisplayName().toLowerCase()));
+                    stations.add(getStation(playerStation.getStation().getName()));
                 }
             } catch (UnknownStationException e) {
                 plugin.getLogger().warning(e.getMessage());
@@ -92,21 +92,21 @@ public final class StationManager implements Component {
         throw new UnknownStationException("No station found within the radius of " + radius + " near " + location.toString());
     }
 
-    public DragonStation createNewStation(String name, Location location, int costLevel, boolean mainStation, boolean emergencyTarget) throws UnknownStationException {
+    public DragonStation createNewStation(String name, String displayName, Location location, int costLevel, boolean mainStation, boolean emergencyTarget) throws UnknownStationException {
 
         if (loadedStations.containsKey(name)) {
             throw new UnknownStationException("Duplicate station with the name " + name + " detected!");
         }
-        DragonStation dragonStation = new DragonStation(name, location, costLevel, mainStation, emergencyTarget);
+        DragonStation dragonStation = new DragonStation(name, displayName, location, costLevel, mainStation, emergencyTarget);
         dragonStation.save();
-        loadedStations.put(dragonStation.getDisplayName(), dragonStation);
+        loadedStations.put(dragonStation.getName(), dragonStation);
         return dragonStation;
     }
 
     public void deleteStation(DragonStation station) {
 
-        loadedStations.remove(station.getDisplayName());
-        TStation entry = plugin.getDatabase().find(TStation.class).where().eq("name", station.getDisplayName()).findUnique();
+        loadedStations.remove(station.getName());
+        TStation entry = plugin.getDatabase().find(TStation.class).where().eq("name", station.getName()).findUnique();
         plugin.getDatabase().delete(entry);
     }
 

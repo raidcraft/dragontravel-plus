@@ -26,9 +26,10 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     private boolean emergencyTarget = false;
     private double costMultiplier;
 
-    public DragonStation(String name, Location location, double costMultiplier, boolean mainStation, boolean emergencyTarget) {
+    public DragonStation(String name, String displayName, Location location, double costMultiplier, boolean mainStation, boolean emergencyTarget) {
 
         super(name, location);
+        setDisplayName(displayName);
         this.mainStation = mainStation;
         this.emergencyTarget = emergencyTarget;
         this.costMultiplier = costMultiplier;
@@ -39,7 +40,7 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
      */
     public DragonStation(String name, Location location) {
 
-        this(name, location, 0, false, false);
+        super(name, location);
     }
 
     public boolean isMainStation() {
@@ -66,7 +67,7 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
         List<TPlayerStation> stations = RaidCraft.getDatabase(DragonTravelPlusPlugin.class)
                 .find(TPlayerStation.class).where().eq("player", player).isNotNull("discovered").findList();
         for (TPlayerStation station : stations) {
-            if (station.getStation().getDisplayName().toLowerCase().equals(getDisplayName().toLowerCase())) {
+            if (station.getStation().getName().equalsIgnoreCase(getName())) {
                 return true;
             }
         }

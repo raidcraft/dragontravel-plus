@@ -77,7 +77,7 @@ public class ChunkListener implements Listener {
             }
 
             for (Station station : stations) {
-                RaidCraft.LOGGER.info("Create DragonGuard NPC for station: '" + station.getDisplayName() + "'!");
+                RaidCraft.LOGGER.info("Create DragonGuard NPC for station: '" + station.getName() + "'!");
                 NPCManager.createDragonGuard(station);
             }
         }

@@ -4,7 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.rctravel.api.station.Station;
 import org.bukkit.Bukkit;
 import org.dynmap.DynmapAPI;
-import org.dynmap.markers.Marker;
+import org.dynmap.markers.GenericMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
@@ -40,7 +40,7 @@ public class DynmapManager {
 
         removeMarker(station);
 
-        dragonSet.createMarker(station.getDisplayName().toLowerCase().replace(" ", "_")
+        dragonSet.createMarker(station.getName()
                 , station.getDisplayName()
                 , station.getLocation().getWorld().getName()
                 , station.getLocation().getBlockX()
@@ -55,10 +55,9 @@ public class DynmapManager {
         if (dragonSet == null) {
             return;
         }
-        for (Marker marker : dragonSet.getMarkers()) {
-            if (marker.getLabel().equalsIgnoreCase(station.getDisplayName()) || marker.getLabel().equalsIgnoreCase(station.getDisplayName())) {
-                marker.deleteMarker();
-            }
-        }
+        dragonSet.getMarkers().stream()
+                .filter(marker -> marker.getLabel().equalsIgnoreCase(station.getName())
+                        || marker.getLabel().equalsIgnoreCase(station.getDisplayName()))
+                .forEach(GenericMarker::deleteMarker);
     }
 }
