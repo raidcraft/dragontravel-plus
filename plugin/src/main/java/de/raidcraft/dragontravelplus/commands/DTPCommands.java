@@ -98,7 +98,8 @@ public class DTPCommands {
 
             DragonStation station;
             try {
-                station = stationManager.createNewStation(context.getString(0)
+                station = stationManager.createNewStation(context.getString(0),
+                        context.getString(0).replace("_", "")
                         , ((Player) sender).getLocation()
                         , costLevel
                         , mainStation
