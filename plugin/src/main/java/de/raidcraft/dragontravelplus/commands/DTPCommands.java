@@ -74,8 +74,8 @@ public class DTPCommands {
                 aliases = {"create", "new", "add"},
                 flags = "mec:",
                 desc = "Create new station",
-                min = 1,
-                usage = "<name>"
+                min = 2,
+                usage = "<name> <displayname>"
         )
         @CommandPermissions("dragontravelplus.create")
         public void create(CommandContext context, CommandSender sender) throws CommandException {
@@ -98,8 +98,8 @@ public class DTPCommands {
 
             DragonStation station;
             try {
-                station = stationManager.createNewStation(context.getString(0),
-                        context.getString(0).replace("_", "")
+                station = stationManager.createNewStation(context.getString(0)
+                        , context.getJoinedStrings(1)
                         , ((Player) sender).getLocation()
                         , costLevel
                         , mainStation
