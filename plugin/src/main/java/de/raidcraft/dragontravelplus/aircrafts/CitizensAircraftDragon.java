@@ -7,6 +7,7 @@ import de.raidcraft.util.LocationUtil;
 import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.trait.MobType;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -24,6 +25,12 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
         this.npc = citizens.getNPCRegistry().createNPC(EntityType.ENDER_DRAGON, "Flying Dragon");
         npc.setFlyable(true);
         npc.setProtected(true);
+        npc.getTrait(MobType.class).setType(EntityType.ENDER_DRAGON);
+        npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, true);
+        npc.data().set(NPC.AMBIENT_SOUND_METADATA, false);
+        npc.data().set(NPC.DAMAGE_OTHERS_METADATA, false);
+        npc.data().set(NPC.NAMEPLATE_VISIBLE_METADATA, false);
+        npc.data().set(NPC.FLYABLE_METADATA, true);
     }
     
     @Override
@@ -78,7 +85,6 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     public NPC spawn(Location location) {
 
         getEntity().spawn(location);
-        getEntity().getNavigator().setPaused(false);
         return getEntity();
     }
 
