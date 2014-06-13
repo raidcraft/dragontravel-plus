@@ -166,6 +166,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         public boolean flightTeleportFallback = false;
         @Setting("flight.waypoint-distance")
         public int wayPointDistance = 10;
+        @Setting("flight.use-citizens-pathfinding")
+        public boolean useCitizensPathFinding = true;
         @Setting("flight-editor-item")
         public int flightEditorItem = 122;
         @Setting("forbidden-commands")
