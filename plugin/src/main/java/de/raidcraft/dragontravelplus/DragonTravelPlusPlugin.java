@@ -146,9 +146,9 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         public double pricePerBlock = 0.1;
         @Setting("flight-warmup-time")
         public int flightWarmup = 1;
-        @Setting("flight-height")
+        @Setting("flight.height")
         public int flightHeight = 15;
-        @Setting("flight-speed")
+        @Setting("flight.speed")
         public double flightSpeed = 0.3;
         @Setting("controlled-flight-speed")
         public double controlledFlightSpeed = 0.3;
@@ -164,8 +164,10 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         public int flightTaskInterval = 5;
         @Setting("flight.teleport-fallback")
         public boolean flightTeleportFallback = false;
-        @Setting("flight-waypoint-distance")
+        @Setting("flight.waypoint-distance")
         public int wayPointDistance = 10;
+        @Setting("flight.use-citizens-pathfinding")
+        public boolean useCitizensPathFinding = true;
         @Setting("flight-editor-item")
         public int flightEditorItem = 122;
         @Setting("forbidden-commands")

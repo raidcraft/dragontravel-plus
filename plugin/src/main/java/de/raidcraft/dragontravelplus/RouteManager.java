@@ -92,7 +92,10 @@ public final class RouteManager implements Component {
         }
         // generate a flight path
         Path path;
-        if (plugin.getConfig().useDynamicRouting) {
+        if (plugin.getConfig().useCitizensPathFinding
+                && AircraftManager.AircraftType.fromString(plugin.getConfig().aircraftType) == AircraftManager.AircraftType.CITIZENS) {
+            path = new StaticFlightPath(start.getLocation(), destination.getLocation());
+        } else if (plugin.getConfig().useDynamicRouting) {
             path = new DynamicFlightPath(start.getLocation(), destination.getLocation());
         } else {
             path = new StaticFlightPath(start.getLocation(), destination.getLocation());
