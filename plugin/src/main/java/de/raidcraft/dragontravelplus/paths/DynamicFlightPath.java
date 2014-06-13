@@ -29,16 +29,19 @@ public class DynamicFlightPath extends AbstractPath {
 
         // create unit vector to get the way point direction
         int xDif = getEndLocation().getBlockX() - getStartLocation().getBlockX();
+        int yDif = getEndLocation().getBlockY() - getStartLocation().getBlockY();
         int zDif = getEndLocation().getBlockZ() - getStartLocation().getBlockZ();
-        Vector unitVector = new Vector(xDif, 0, zDif).normalize();
+        Vector unitVector = new Vector(xDif, yDif, zDif).normalize();
 
         // here we simply calculate what points are between the start and the end location
         // we always add the defined flight height to the next waypoint
-        int wayPointCount = LocationUtil.getBlockDistance(getStartLocation(), getEndLocation()) / RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().wayPointDistance;
+        DragonTravelPlusPlugin.LocalDTPConfiguration config = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig();
+        int wayPointDistance = config.wayPointDistance;
+        int wayPointCount = LocationUtil.getBlockDistance(getStartLocation(), getEndLocation()) / wayPointDistance;
         for (int i = 1; i < wayPointCount; i++) {
             Location wpLocation = getStartLocation().clone();
             Vector unitVectorCopy = unitVector.clone();
-            wpLocation.add(unitVectorCopy.multiply(i * RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().wayPointDistance));
+            wpLocation.add(unitVectorCopy.multiply(i * wayPointDistance));
 
             // lets remember if we need to unload the chunk
             unloadChunk = !wpLocation.getChunk().isLoaded();
@@ -47,7 +50,7 @@ public class DynamicFlightPath extends AbstractPath {
             // lets unload the chunk if needed to avoid memory leaking
             if (unloadChunk) wpLocation.getChunk().unload();
 
-            wpLocation.setY(wpLocation.getY() + RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightHeight);
+            wpLocation.setY(wpLocation.getY() + config.flightHeight);
             // dont allow waypoints above max world height
             if (wpLocation.getY() > world.getMaxHeight()) wpLocation.setY(world.getMaxHeight());
 
