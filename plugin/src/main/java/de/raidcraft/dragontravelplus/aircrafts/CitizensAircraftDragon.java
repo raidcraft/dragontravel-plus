@@ -54,13 +54,17 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     @Override
     public boolean hasReachedWaypoint(Waypoint waypoint, int radius) {
 
-        return LocationUtil.isWithinRadius(waypoint.getLocation(), getEntity().getEntity().getLocation(), radius);
+        return isSpawned() && LocationUtil.isWithinRadius(waypoint.getLocation(), getEntity().getEntity().getLocation(), radius);
     }
 
     @Override
     public Location getCurrentLocation() {
 
-        return getEntity().getEntity().getLocation();
+        if (isSpawned()) {
+            return getEntity().getEntity().getLocation();
+        } else {
+            return getEntity().getStoredLocation();
+        }
     }
 
     @Override
@@ -72,13 +76,17 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     @Override
     public void move(Flight flight, Waypoint waypoint) {
 
-        getEntity().getNavigator().setTarget(waypoint.getLocation());
+        if (isSpawned()) {
+            getEntity().getNavigator().setTarget(waypoint.getLocation());
+        }
     }
 
     @Override
     public void stopMoving() {
 
-        getEntity().getNavigator().cancelNavigation();
+        if (isSpawned()) {
+            getEntity().getNavigator().cancelNavigation();
+        }
     }
 
     @Override
@@ -97,12 +105,16 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     @Override
     public void mountPassenger(Flight flight) {
 
-        getEntity().getEntity().setPassenger(flight.getPassenger().getEntity());
+        if (isSpawned()) {
+            getEntity().getEntity().setPassenger(flight.getPassenger().getEntity());
+        }
     }
 
     @Override
     public void unmountPassenger(Flight flight) {
 
-        getEntity().getEntity().setPassenger(null);
+        if (isSpawned()) {
+            getEntity().getEntity().setPassenger(null);
+        }
     }
 }
