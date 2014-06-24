@@ -26,11 +26,6 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
         npc.setFlyable(true);
         npc.setProtected(true);
         npc.getTrait(MobType.class).setType(EntityType.ENDER_DRAGON);
-        npc.data().set(NPC.DEFAULT_PROTECTED_METADATA, true);
-        npc.data().set(NPC.AMBIENT_SOUND_METADATA, false);
-        npc.data().set(NPC.DAMAGE_OTHERS_METADATA, false);
-        npc.data().set(NPC.NAMEPLATE_VISIBLE_METADATA, false);
-        npc.data().set(NPC.FLYABLE_METADATA, true);
     }
     
     @Override
