@@ -75,7 +75,13 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     }
 
     @Override
-    public void stopMoving() {
+    public void startNavigation(Flight flight) {
+
+
+    }
+
+    @Override
+    public void stopNavigation(Flight flight) {
 
         Location currentLocation = getCurrentLocation();
         move(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ());

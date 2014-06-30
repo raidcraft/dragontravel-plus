@@ -62,7 +62,13 @@ public class EntityAircraft extends AbstractAircraft<Entity> {
     }
 
     @Override
-    public void stopMoving() {
+    public void startNavigation(Flight flight) {
+
+
+    }
+
+    @Override
+    public void stopNavigation(Flight flight) {
 
 
     }

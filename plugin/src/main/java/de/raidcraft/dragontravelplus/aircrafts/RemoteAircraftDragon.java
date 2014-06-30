@@ -41,7 +41,13 @@ public class RemoteAircraftDragon extends AbstractAircraft<RemoteEnderDragon> {
     }
 
     @Override
-    public void stopMoving() {
+    public void startNavigation(Flight flight) {
+
+
+    }
+
+    @Override
+    public void stopNavigation(Flight flight) {
 
         if (!isSpawned()) return;
         getEntity().stopMoving();
