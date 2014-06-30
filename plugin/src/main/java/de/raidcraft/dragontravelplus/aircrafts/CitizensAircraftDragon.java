@@ -78,7 +78,7 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
 
         if (!isSpawned()) spawn(flight.getStartLocation());
         getEntity().getNavigator().setTarget(flight.getEndLocation());
-        getEntity().getNavigator().getLocalParameters().useNewPathfinder(true);
+        getEntity().getNavigator().getLocalParameters().range((float) LocationUtil.getDistance(flight.getStartLocation(), flight.getEndLocation()) + 50F);
     }
 
     @Override
