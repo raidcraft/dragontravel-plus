@@ -77,6 +77,9 @@ public final class StationManager implements Component {
         // also add all emergency stations
         stations.addAll(getAllStations().stream()
                 .filter(station -> station instanceof DragonStation)
+                .map(station -> (DragonStation) station)
+                .filter(station -> station.isEmergencyTarget() || station.isMainStation())
+                .filter(station -> station.hasDiscovered(player.getName()))
                 .collect(Collectors.toList())
         );
         return stations;
