@@ -79,6 +79,7 @@ public class ListStationsAction extends AbstractAction {
             stations = stations.stream()
                     .filter(station -> station.getLocation().getWorld() != null)
                     .filter(station -> station.getLocation().getWorld().equals(currentStation.getLocation().getWorld()))
+                    .distinct()
                     .collect(Collectors.toList());
             stations.remove(currentStation);
 
