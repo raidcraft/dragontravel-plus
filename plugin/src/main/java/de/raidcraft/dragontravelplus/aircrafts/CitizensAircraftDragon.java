@@ -73,6 +73,9 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     @Override
     public void move(Flight flight, Waypoint waypoint) {
 
+        if (isSpawned()) {
+            getEntity().getNavigator().setTarget(waypoint.getLocation());
+        }
     }
 
     @Override
