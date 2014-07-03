@@ -2,12 +2,11 @@ package de.raidcraft.dragontravelplus.paths;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.aircraft.Aircraft;
-import de.raidcraft.dragontravelplus.AircraftManager;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.Path;
 import de.raidcraft.api.flight.passenger.Passenger;
+import de.raidcraft.dragontravelplus.AircraftManager;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.aircrafts.EntityAircraft;
 import de.raidcraft.dragontravelplus.flights.DragonStationFlight;
 import de.raidcraft.dragontravelplus.flights.TeleportFlight;
 import de.raidcraft.rctravel.api.station.Station;
@@ -48,7 +47,7 @@ public class DragonStationRoute {
         Flight flight;
         Aircraft<?> aircraft = RaidCraft.getComponent(AircraftManager.class).getAircraft(passenger);
         if (RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightTeleportFallback) {
-            flight = new TeleportFlight(getStartStation(), getEndStation(), new EntityAircraft(passenger.getEntity()), getPath());
+            flight = new TeleportFlight(getStartStation(), getEndStation(), null, getPath());
         } else {
             flight = new DragonStationFlight(getStartStation(), getEndStation(), aircraft, getPath());
         }

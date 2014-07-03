@@ -22,10 +22,41 @@ public class TeleportFlight extends DragonStationFlight {
     }
 
     @Override
-    public void onStartFlight() throws FlightException {
+    public boolean isActive() {
 
-        super.onStartFlight();
-        getPassenger().getEntity().teleport(getEndStation().getLocation());
-        endFlight();
+        return true;
+    }
+
+    @Override
+    public void startFlight() {
+
+        try {
+            onStartFlight();
+            getPassenger().getEntity().teleport(getEndLocation());
+            endFlight();
+        } catch (FlightException e) {
+            getPassenger().sendMessage(e.getMessage());
+        }
+    }
+
+    @Override
+    public void abortFlight() {
+
+        try {
+            onAbortFlight();
+            getPassenger().getEntity().teleport(getStartLocation());
+        } catch (FlightException e) {
+            getPassenger().sendMessage(e.getMessage());
+        }
+    }
+
+    @Override
+    public void endFlight() {
+
+        try {
+            onEndFlight();
+        } catch (FlightException e) {
+            getPassenger().sendMessage(e.getMessage());
+        }
     }
 }
