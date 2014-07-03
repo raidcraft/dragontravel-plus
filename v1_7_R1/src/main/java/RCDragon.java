@@ -21,18 +21,20 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     @Getter
     @Setter
     private boolean flying;
+    private final double speed;
     @Getter
     @Setter
     private BukkitTask aircraftMoverTask;
 
-    public RCDragon(org.bukkit.World world) {
+    public RCDragon(org.bukkit.World world, double speed) {
 
-        this(((CraftWorld) world).getHandle());
+        this(((CraftWorld) world).getHandle(), speed);
     }
 
-    public RCDragon(World world) {
+    public RCDragon(World world, double speed) {
 
         super(world);
+        this.speed = speed;
     }
 
     @Override
@@ -71,7 +73,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     @Override
     public void move(Flight flight, Waypoint waypoint) {
 
-        move(waypoint.getX(), waypoint.getY(), waypoint.getZ());
+        getNavigation().a(waypoint.getX(), waypoint.getY(), waypoint.getZ(), speed);
     }
 
     @Override
@@ -84,7 +86,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     public void stopNavigation(Flight flight) {
 
         Location currentLocation = getCurrentLocation();
-        move(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ());
+        setLocation(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), 180F, 90F);
     }
 
     @Override
