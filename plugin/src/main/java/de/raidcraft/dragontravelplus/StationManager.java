@@ -69,7 +69,7 @@ public final class StationManager implements Component {
             try {
                 if (playerStation.getStation().getWorld().equalsIgnoreCase(player.getLocation().getWorld().getName())) {
                     Station station = getStation(playerStation.getStation().getName());
-                    if (station != null) stations.add(station);
+                    if (station != null && station.getLocation().getWorld().equals(player.getWorld())) stations.add(station);
                 }
             } catch (UnknownStationException e) {
                 plugin.getLogger().warning(e.getMessage());
@@ -79,6 +79,7 @@ public final class StationManager implements Component {
         stations.addAll(getAllStations().stream()
                         .filter(station -> station instanceof DragonStation)
                         .map(station -> (DragonStation) station)
+                        .filter(station -> station.getLocation().getWorld().equals(player.getWorld()))
                         .filter(station -> station.isEmergencyTarget() || station.isMainStation())
                         .filter(station -> station.hasDiscovered(player.getName()))
                         .collect(Collectors.toList())
