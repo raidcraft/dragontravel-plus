@@ -79,7 +79,7 @@ public final class StationManager implements Component {
         stations.addAll(getAllStations().stream()
                         .filter(station -> station instanceof DragonStation)
                         .map(station -> (DragonStation) station)
-                        .filter(station -> station.getLocation().getWorld().equals(player.getWorld()))
+                        .filter(station -> station.getLocation().getWorld() != null && station.getLocation().getWorld().equals(player.getWorld()))
                         .filter(station -> station.isEmergencyTarget() || station.isMainStation())
                         .filter(station -> station.hasDiscovered(player.getName()))
                         .collect(Collectors.toList())
