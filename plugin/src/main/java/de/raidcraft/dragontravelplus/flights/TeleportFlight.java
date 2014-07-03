@@ -32,7 +32,7 @@ public class TeleportFlight extends DragonStationFlight {
 
         try {
             onStartFlight();
-            getPassenger().getEntity().teleport(getEndLocation());
+            getPassenger().getEntity().teleport(getEndLocation().add(0, 3, 0));
             endFlight();
         } catch (FlightException e) {
             getPassenger().sendMessage(e.getMessage());

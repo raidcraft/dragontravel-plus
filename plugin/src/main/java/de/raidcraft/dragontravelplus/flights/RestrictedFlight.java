@@ -73,7 +73,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
             event.setCancelled(true);
         }
         // cancel damage done to the aircraft
-        if (event.getEntity().equals(getAircraft().getBukkitEntity())) {
+        if (getAircraft() != null && event.getEntity().equals(getAircraft().getBukkitEntity())) {
             event.setCancelled(true);
         }
     }
