@@ -180,17 +180,17 @@ public class DragonTravelPlusPlugin extends BasePlugin {
                 "tp"
         };
 
-        @Setting("npc-search-radius")
+        @Setting("de.raidcraft.npc-search-radius")
         public int npcStationSearchRadius = 3;
-        @Setting("npc-name")
+        @Setting("de.raidcraft.npc-name")
         public String npcDefaultName = "Drachenmeister";
-        @Setting("npc-conversation-auto-exit-distance")
+        @Setting("de.raidcraft.npc-conversation-auto-exit-distance")
         public int autoExitDistance = 10;
-        @Setting("npc-conversation-max-stations-per-page")
+        @Setting("de.raidcraft.npc-conversation-max-stations-per-page")
         public int maxStationPerPage = 5;
-        @Setting("npc-conversation-chat-delimiter")
+        @Setting("de.raidcraft.npc-conversation-chat-delimiter")
         public String chatDelimiter = " ";
-        @Setting("npc-conversation-exit-words")
+        @Setting("de.raidcraft.npc-conversation-exit-words")
         public String[] exitWords = new String[]{
                 "exit",
                 "ende",
