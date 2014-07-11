@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Philip Urban
  */
 public class ChunkListener implements Listener {
-
+    // TODO: npc rework
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onChunkLoad(ChunkLoadEvent event) {
 

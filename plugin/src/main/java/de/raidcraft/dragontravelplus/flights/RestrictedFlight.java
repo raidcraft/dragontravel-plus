@@ -42,6 +42,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         return RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightTaskInterval;
     }
 
+    // TODO: player check
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onChat(AsyncPlayerChatEvent event) {
 
@@ -54,6 +55,10 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
+    // TODO: doku
+    // TODO: performance - gilt das für alle player?
+    // TODO: player check
+    // ist das überhaupt nötig? einfach vom Speler immer deaktivieren
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onInteract(PlayerInteractEvent event) {
 
@@ -62,6 +67,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
+    // TODO: player check, immer Schaden deaktivieren?
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDamage(EntityDamageEvent event) {
 
@@ -76,8 +82,9 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         if (getAircraft() != null && event.getEntity().equals(getAircraft().getBukkitEntity())) {
             event.setCancelled(true);
         }
-    }
+    }                    #
 
+    // TODO: player check
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onCommand(PlayerCommandPreprocessEvent event) {
 
@@ -94,6 +101,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
+    // TODO: player check
     @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)
     public void onVehicleExit(VehicleExitEvent event) {
 
@@ -104,6 +112,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
+    // TODO: player check
     @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)
     public void onPlayerCrouch(PlayerToggleSneakEvent event) {
 
@@ -114,6 +123,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
+    // TODO: player check
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent event) {
 
@@ -122,6 +132,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
+    // TODO: player check und entity check
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDeath(EntityDeathEvent event) {
 
@@ -154,6 +165,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     private void unregisterListener() {
 
         // unregister a little bit later to catch fall damage and such
+        // TODO: sideeffects
         DragonTravelPlusPlugin plugin = RaidCraft.getComponent(DragonTravelPlusPlugin.class);
         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
