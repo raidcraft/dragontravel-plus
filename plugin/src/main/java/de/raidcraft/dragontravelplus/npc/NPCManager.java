@@ -18,23 +18,12 @@ public class NPCManager {
 
         Location improvedLocation = station.getLocation().clone();
         improvedLocation.setY(improvedLocation.getY()+1);
-        ConversationsTrait.create(improvedLocation, RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().conversationName, "Drachenmeister");
+        ConversationsTrait.createInitial(improvedLocation, RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().conversationName, "Drachenmeister");
     }
 
     public static void removeDragonGuard(DragonStation station) {
-
-        String conversationName = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().conversationName;
-        for(NPC npc : NPCRegistry.INST.getSpawnedNPCs(station.getLocation().getChunk())) {
-            ConversationsTrait trait = npc.getTrait(ConversationsTrait.class);
-            if(!trait.getConversationName().equalsIgnoreCase(conversationName)) {
-                continue;
-            }
-
-            if(npc.getBukkitEntity().getLocation().distance(station.getLocation()) <= 5) {
-                NPCRegistry.INST.unregisterNPC(npc);
-                npc.destroy();
-            }
-        }
+        // TODO: implement
+//        ConversationsTrait.removeFromServer(...);
     }
 
 }
