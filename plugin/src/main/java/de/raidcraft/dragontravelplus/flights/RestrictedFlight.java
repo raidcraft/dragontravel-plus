@@ -82,7 +82,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         if (getAircraft() != null && event.getEntity().equals(getAircraft().getBukkitEntity())) {
             event.setCancelled(true);
         }
-    }                    #
+    }
 
     // TODO: player check
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
