@@ -15,19 +15,22 @@ public class TeleportFlight extends DragonStationFlight {
         super(startStation, endStation, aircraft, path);
     }
 
-    @Override
+    // TODO: fix compile error
+    @Deprecated
     public long getMoveInterval() {
 
         return -1;
     }
 
-    @Override
+    // TODO: fix compile error
+    @Deprecated
     public boolean isActive() {
 
         return true;
     }
 
-    @Override
+    // TODO: fix compile error
+    @Deprecated
     public void startFlight() {
 
         try {
