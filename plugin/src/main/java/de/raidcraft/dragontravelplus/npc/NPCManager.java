@@ -4,10 +4,11 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.npc.ConversationsTrait;
-import de.raidcraft.rcconversations.npc.NPCRegistry;
 import de.raidcraft.rctravel.api.station.Station;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
+
+import static de.raidcraft.rcconversations.npc.ConversationsTrait.*;
 
 /**
  * @author Philip Urban
