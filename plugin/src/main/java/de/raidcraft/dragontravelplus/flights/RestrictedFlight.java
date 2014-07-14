@@ -58,7 +58,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     // TODO: doku
     // TODO: performance - gilt das für alle player?
     // TODO: player check
-    // ist das überhaupt nötig? einfach vom Speler immer deaktivieren
+    // necessary? einfach vom Spieler immer deaktivieren
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onInteract(PlayerInteractEvent event) {
 
