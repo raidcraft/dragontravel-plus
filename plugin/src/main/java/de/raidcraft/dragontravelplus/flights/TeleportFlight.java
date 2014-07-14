@@ -16,31 +16,31 @@ public class TeleportFlight extends DragonStationFlight {
     }
 
     // TODO: fix compile error
-    @Deprecated
-    public long getMoveInterval() {
-
-        return -1;
-    }
-
-    // TODO: fix compile error
-    @Deprecated
-    public boolean isActive() {
-
-        return true;
-    }
+    @Override
+//    public long getMoveInterval() {
+//
+//        return -1;
+//    }
 
     // TODO: fix compile error
-    @Deprecated
-    public void startFlight() {
+    @Override
+//    public boolean isActive() {
+//
+//        return true;
+//    }
 
-        try {
-            onStartFlight();
-            getPassenger().getEntity().teleport(getEndLocation().add(0, 3, 0));
-            endFlight();
-        } catch (FlightException e) {
-            getPassenger().sendMessage(e.getMessage());
-        }
-    }
+    // TODO: fix compile error
+    @Override
+//    public void startFlight() {
+//
+//        try {
+//            onStartFlight();
+//            getPassenger().getEntity().teleport(getEndLocation().add(0, 3, 0));
+//            endFlight();
+//        } catch (FlightException e) {
+//            getPassenger().sendMessage(e.getMessage());
+//        }
+//    }
 
     @Override
     public void abortFlight() {
