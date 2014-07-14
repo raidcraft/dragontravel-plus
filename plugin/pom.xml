@@ -45,7 +45,7 @@
         <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>rcconversations</artifactId>
-            <version>${rc.version}</version>
+            <version>1.1.6-20140714.203804-25</version>
         </dependency>
         <dependency>
             <groupId>de.raidcraft</groupId>
