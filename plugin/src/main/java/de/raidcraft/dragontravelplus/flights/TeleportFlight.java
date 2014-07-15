@@ -16,50 +16,50 @@ public class TeleportFlight extends DragonStationFlight {
     }
 
     // TODO: fix compile error
-//    @Override
-//    public long getMoveInterval() {
-//
-//        return -1;
-//    }
+    @Override
+    public long getMoveInterval() {
+
+        return -1;
+    }
 
     // TODO: fix compile error
-//    @Override
-//    public boolean isActive() {
-//
-//        return true;
-//    }
+    @Override
+    public boolean isActive() {
+
+        return true;
+    }
 
     // TODO: fix compile error
-//    @Override
-//    public void startFlight() {
-//
-//        try {
-//            onStartFlight();
-//            getPassenger().getEntity().teleport(getEndLocation().add(0, 3, 0));
-//            endFlight();
-//        } catch (FlightException e) {
-//            getPassenger().sendMessage(e.getMessage());
-//        }
-//    }
+    @Override
+    public void startFlight() {
+
+        try {
+            onStartFlight();
+            getPassenger().getEntity().teleport(getEndLocation().add(0, 3, 0));
+            endFlight();
+        } catch (FlightException e) {
+            getPassenger().sendMessage(e.getMessage());
+        }
+    }
     // TODO: fix compile error
-//    @Override
-//    public void abortFlight() {
-//
-//        try {
-//            onAbortFlight();
-//            getPassenger().getEntity().teleport(getStartLocation());
-//        } catch (FlightException e) {
-//            getPassenger().sendMessage(e.getMessage());
-//        }
-//    }
+    @Override
+    public void abortFlight() {
+
+        try {
+            onAbortFlight();
+            getPassenger().getEntity().teleport(getStartLocation());
+        } catch (FlightException e) {
+            getPassenger().sendMessage(e.getMessage());
+        }
+    }
     // TODO: fix compile error
-//    @Override
-//    public void endFlight() {
-//
-//        try {
-//            onEndFlight();
-//        } catch (FlightException e) {
-//            getPassenger().sendMessage(e.getMessage());
-//        }
-//    }
+    @Override
+    public void endFlight() {
+
+        try {
+            onEndFlight();
+        } catch (FlightException e) {
+            getPassenger().sendMessage(e.getMessage());
+        }
+    }
 }
