@@ -227,14 +227,14 @@ public class DTPCommands {
         )
         @CommandPermissions("dragontravelplus.debug")
         public void debug(CommandContext context, CommandSender sender) throws CommandException {
-// TODO: fix compiler errors
-//            Player player = (Player) sender;
-//            Chunk chunk = player.getLocation().getChunk();
-//
-//            int entityCount = 0;
-//            int npcMethodCount = 0;
-//            int npcMetaCount = 0;
-//
+            Player player = (Player) sender;
+            Chunk chunk = player.getLocation().getChunk();
+
+            int entityCount = 0;
+            int npcMethodCount = 0;
+            int npcMetaCount = 0;
+
+            // TODO: implement NPC method
 //            for (ChunkLocation cl : NPCRegistry.INST.getAffectedChunkLocations(chunk)) {
 //                for (Entity entity : chunk.getWorld().getChunkAt(cl.getX(), cl.getZ()).getEntities()) {
 //                    if (!(entity instanceof LivingEntity)) continue;

@@ -5,6 +5,7 @@ import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
 import de.raidcraft.api.flight.flight.Flight;
+import de.raidcraft.api.npc.NPC_Manager;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
 import de.raidcraft.dragontravelplus.conversations.CheckPlayerAction;
@@ -56,6 +57,9 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         registerCommands(DTPCommands.class);
         registerCommands(FlightCommands.class);
+
+        // load NPC's
+        NPC_Manager.getInstance().loadNPCs(getName());
 
         // lets trigger a delayed load to make sure all plugins are loaded
         Bukkit.getScheduler().runTaskLater(this, new Runnable() {

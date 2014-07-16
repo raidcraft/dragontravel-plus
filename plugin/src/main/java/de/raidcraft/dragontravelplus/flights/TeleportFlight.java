@@ -15,21 +15,18 @@ public class TeleportFlight extends DragonStationFlight {
         super(startStation, endStation, aircraft, path);
     }
 
-    // TODO: fix compile error
     @Override
     public long getMoveInterval() {
 
         return -1;
     }
 
-    // TODO: fix compile error
     @Override
     public boolean isActive() {
 
         return true;
     }
 
-    // TODO: fix compile error
     @Override
     public void startFlight() {
 
@@ -41,7 +38,6 @@ public class TeleportFlight extends DragonStationFlight {
             getPassenger().sendMessage(e.getMessage());
         }
     }
-    // TODO: fix compile error
     @Override
     public void abortFlight() {
 
@@ -52,7 +48,7 @@ public class TeleportFlight extends DragonStationFlight {
             getPassenger().sendMessage(e.getMessage());
         }
     }
-    // TODO: fix compile error
+
     @Override
     public void endFlight() {
 
