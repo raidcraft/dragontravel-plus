@@ -55,7 +55,7 @@
         <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>rcconversations</artifactId>
-            <version>${rc.version}</version>
+            <version>1.1.7-develop-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.kumpelblase2</groupId>
