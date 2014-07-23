@@ -7,13 +7,13 @@ import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.commands.QueuedCommand;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.FlightManager;
-import de.raidcraft.dragontravelplus.RouteManager;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Path;
 import de.raidcraft.api.flight.flight.UnknownPathException;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.FlightManager;
+import de.raidcraft.dragontravelplus.RouteManager;
 import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
 import de.raidcraft.dragontravelplus.tables.TPath;
 import org.bukkit.ChatColor;
@@ -38,6 +38,7 @@ public class FlightCommands {
     @CommandPermissions("dragontravelplus.flight")
     @NestedCommand(NestedFlightEditorCommands.class)
     public void flight(CommandContext context, CommandSender sender) throws CommandException {
+
     }
 
     public static class NestedFlightEditorCommands {

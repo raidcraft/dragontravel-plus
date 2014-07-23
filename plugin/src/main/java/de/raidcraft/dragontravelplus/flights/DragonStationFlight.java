@@ -2,11 +2,11 @@ package de.raidcraft.dragontravelplus.flights;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.economy.Economy;
-import de.raidcraft.api.language.Translator;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Path;
+import de.raidcraft.api.language.Translator;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rctravel.api.station.Chargeable;
 import de.raidcraft.rctravel.api.station.Station;
