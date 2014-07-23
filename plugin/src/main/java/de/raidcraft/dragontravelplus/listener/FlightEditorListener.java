@@ -1,9 +1,9 @@
 package de.raidcraft.dragontravelplus.listener;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.api.flight.flight.Path;
 import de.raidcraft.api.flight.flight.Waypoint;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.paths.StaticFlightPath;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

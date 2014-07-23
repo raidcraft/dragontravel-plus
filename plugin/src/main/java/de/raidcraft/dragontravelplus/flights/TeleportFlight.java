@@ -38,6 +38,7 @@ public class TeleportFlight extends DragonStationFlight {
             getPassenger().sendMessage(e.getMessage());
         }
     }
+
     @Override
     public void abortFlight() {
 

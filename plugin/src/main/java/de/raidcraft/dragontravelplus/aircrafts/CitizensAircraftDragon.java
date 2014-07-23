@@ -29,10 +29,10 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
         npc.setProtected(true);
         npc.getTrait(MobType.class).setType(EntityType.ENDER_DRAGON);
     }
-    
+
     @Override
     public Entity getBukkitEntity() {
-        
+
         return getEntity().getEntity();
     }
 
