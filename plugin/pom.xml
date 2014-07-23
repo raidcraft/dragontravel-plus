@@ -20,13 +20,13 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dragontravelplus</artifactId>
     <packaging>jar</packaging>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0-develop-SNAPSHOT</version>
     <name>DragonTravelPlus</name>
 
     <parent>
         <groupId>de.raidcraft</groupId>
         <artifactId>masterpom</artifactId>
-        <version>RELEASE</version>
+        <version>LATEST</version>
     </parent>
 
     <scm>
@@ -44,18 +44,23 @@
     <dependencies>
         <dependency>
             <groupId>de.raidcraft</groupId>
-            <artifactId>rcconversations</artifactId>
-            <version>${rc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.raidcraft</groupId>
-            <artifactId>rctravel</artifactId>
-            <version>${rc.version}</version>
+            <artifactId>raidcraft-api</artifactId>
+            <version>1.4.2-develop-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizens</artifactId>
             <version>${rc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.raidcraft</groupId>
+            <artifactId>rcconversations</artifactId>
+            <version>1.1.7-develop-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.raidcraft</groupId>
+            <artifactId>rctravel</artifactId>
+            <version>1.1.6-develop-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.kumpelblase2</groupId>

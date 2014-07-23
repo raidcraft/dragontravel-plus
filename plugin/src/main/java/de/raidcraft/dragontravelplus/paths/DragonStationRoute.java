@@ -42,6 +42,9 @@ public class DragonStationRoute {
         return path;
     }
 
+    // TODO: performance - for each player
+    // wenn man schon fuer jeden Spieler einen eigenen Listener erstellt, dann sollte man auch alle
+    // nicht Spieler relevanten Events abfangen ...
     public Flight createFlight(Passenger<?> passenger) {
 
         Flight flight;
