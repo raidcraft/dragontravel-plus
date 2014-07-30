@@ -6,24 +6,18 @@ import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.flight.flight.Flight;
+import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.npc.NPCManager;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
-import de.raidcraft.rcconversations.RCConversationsPlugin;
-import de.raidcraft.rcconversations.npc.NPCRegistry;
-import de.raidcraft.rcconversations.util.ChunkLocation;
 import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.rctravel.api.station.UnknownStationException;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 /**
@@ -209,7 +203,7 @@ public class DTPCommands {
             }
             tr.msg(sender, "cmd.dynmap", "Created %s dynmap markers.", i);
         }
-        
+
         @Command(
                 aliases = {"abortflights"},
                 desc = "Aborts all active flights"
@@ -237,20 +231,21 @@ public class DTPCommands {
             int npcMethodCount = 0;
             int npcMetaCount = 0;
 
-            for (ChunkLocation cl : NPCRegistry.INST.getAffectedChunkLocations(chunk)) {
-                for (Entity entity : chunk.getWorld().getChunkAt(cl.getX(), cl.getZ()).getEntities()) {
-                    if (!(entity instanceof LivingEntity)) continue;
-                    entityCount++;
-                    NPC npc = RaidCraft.getComponent(RCConversationsPlugin.class).getCitizens().getNPCRegistry().getNPC(entity);
-                    if (npc != null) npcMethodCount++;
-                    if (entity.hasMetadata("NPC")) npcMetaCount++;
-                }
-            }
-
-            player.sendMessage("Living-Entities in affected chunks: " + entityCount);
-            player.sendMessage("NPC-Entities according to getNPC(): " + npcMethodCount);
-            player.sendMessage("NPC-Entities according to MetaData: " + npcMetaCount);
-            player.sendMessage("NPC-Entities according to Registry: " + NPCRegistry.INST.getSpawnedNPCs(chunk).size());
+            // TODO: implement NPC method
+            //            for (ChunkLocation cl : NPCRegistry.INST.getAffectedChunkLocations(chunk)) {
+            //                for (Entity entity : chunk.getWorld().getChunkAt(cl.getX(), cl.getZ()).getEntities()) {
+            //                    if (!(entity instanceof LivingEntity)) continue;
+            //                    entityCount++;
+            //                    NPC npc = RaidCraft.getComponent(RCConversationsPlugin.class).getCitizens().getNPCRegistry().getNPC(entity);
+            //                    if (npc != null) npcMethodCount++;
+            //                    if (entity.hasMetadata("NPC")) npcMetaCount++;
+            //                }
+            //            }
+            //
+            //            player.sendMessage("Living-Entities in affected chunks: " + entityCount);
+            //            player.sendMessage("NPC-Entities according to getNPC(): " + npcMethodCount);
+            //            player.sendMessage("NPC-Entities according to MetaData: " + npcMetaCount);
+            //            player.sendMessage("NPC-Entities according to Registry: " + NPCRegistry.INST.getSpawnedNPCs(chunk).size());
         }
     }
 }

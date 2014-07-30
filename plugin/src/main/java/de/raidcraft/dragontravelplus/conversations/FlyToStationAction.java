@@ -1,11 +1,11 @@
 package de.raidcraft.dragontravelplus.conversations;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.passenger.Passenger;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.paths.DragonStationRoute;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.RCConversationsPlugin;
@@ -77,7 +77,8 @@ public class FlyToStationAction extends AbstractAction {
         public void run() {
 
             try {
-                RaidCraft.getComponent(RCConversationsPlugin.class).getConversationManager().endConversation(passenger.getName(), EndReason.SILENT);
+                RaidCraft.getComponent(RCConversationsPlugin.class).getConversationManager()
+                        .endConversation(passenger.getEntity().getUniqueId(), EndReason.SILENT);
                 Flight flight = route.createFlight(passenger);
                 flight.startFlight();
             } catch (FlightException e) {

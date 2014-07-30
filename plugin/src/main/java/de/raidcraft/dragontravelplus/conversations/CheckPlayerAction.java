@@ -14,6 +14,8 @@ import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.rctravel.api.station.UnknownStationException;
 import de.raidcraft.util.LocationUtil;
 
+import java.util.UUID;
+
 /**
  * @author Philip
  */
@@ -65,7 +67,7 @@ public class CheckPlayerAction extends AbstractAction {
         }
         conversation.set("dtp_target_price", price);
         conversation.set("dtp_target_price_formatted", economy.getFormattedAmount(price));
-        String player = conversation.getPlayer().getName();
+        UUID player = conversation.getPlayer().getUniqueId();
         if (checkPrice && !economy.hasEnough(player, price)) {
             setErrorMsg(conversation, "Du brauchst " + economy.getFormattedAmount(price) + " um dorthin zu fliegen!");
             changeStage(conversation, failure);

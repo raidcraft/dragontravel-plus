@@ -32,7 +32,8 @@ public class PlayerStationsTable extends Table {
                             "`station_name` VARCHAR( 32 ) NOT NULL, " +
                             "`discovered` VARCHAR ( 32 ) NOT NULL, " +
                             "PRIMARY KEY ( `id` )" +
-                            ")");
+                            ")"
+            );
         } catch (SQLException e) {
             e.printStackTrace();
         }

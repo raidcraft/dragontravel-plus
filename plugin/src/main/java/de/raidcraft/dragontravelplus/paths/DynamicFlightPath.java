@@ -1,9 +1,9 @@
 package de.raidcraft.dragontravelplus.paths;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.api.flight.flight.AbstractPath;
 import de.raidcraft.api.flight.flight.Waypoint;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Location;
 import org.bukkit.World;

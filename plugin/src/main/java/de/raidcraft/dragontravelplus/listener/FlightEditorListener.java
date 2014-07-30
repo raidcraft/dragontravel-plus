@@ -1,9 +1,9 @@
 package de.raidcraft.dragontravelplus.listener;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.api.flight.flight.Path;
 import de.raidcraft.api.flight.flight.Waypoint;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.paths.StaticFlightPath;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -20,6 +20,8 @@ import java.util.HashMap;
 /**
  * @author Silthus
  */
+// TODO: doku
+// TODO: sollte player basiert sein, wie abstract flight und sich unregistern
 public class FlightEditorListener implements Listener {
 
     public static final Material MARKER_MATERIAL = Material.GLOWSTONE;
@@ -62,6 +64,7 @@ public class FlightEditorListener implements Listener {
         }
     }
 
+    // TODO: playercheck
     @EventHandler
     public void onWP(PlayerInteractEvent event) {
 
@@ -90,6 +93,7 @@ public class FlightEditorListener implements Listener {
         }
     }
 
+    // TODO: playercheck
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 

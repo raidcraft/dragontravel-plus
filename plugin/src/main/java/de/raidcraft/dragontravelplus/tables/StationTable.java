@@ -36,7 +36,8 @@ public class StationTable extends Table {
                             "`main` TINYINT( 1 ) NOT NULL, " +
                             "`emergency` TINYINT( 1 ) NOT NULL, " +
                             "PRIMARY KEY ( `id` )" +
-                            ")");
+                            ")"
+            );
         } catch (SQLException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }

@@ -3,6 +3,6 @@ main: de.raidcraft.dragontravelplus.DragonTravelPlusPlugin
 version: ${project.version}#${build.number}
 author: Strasse36
 website: www.raid-craft.de
-depend: [RaidCraft-API, Citizens]
+depend: [RaidCraft-API, Citizens, RCTravel, RCEconomy]
 softdepend: [Dynmap, RCConversations]
 database: true
