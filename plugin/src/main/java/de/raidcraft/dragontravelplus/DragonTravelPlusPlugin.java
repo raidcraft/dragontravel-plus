@@ -15,8 +15,6 @@ import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
 import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
 import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
-import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
-import de.raidcraft.dragontravelplus.tables.StationTable;
 import de.raidcraft.dragontravelplus.tables.TPath;
 import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
@@ -44,9 +42,6 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     public void enable() {
 
         config = configure(new LocalDTPConfiguration(this));
-
-        registerTable(StationTable.class, new StationTable());
-        registerTable(PlayerStationsTable.class, new PlayerStationsTable());
 
         stationManager = new StationManager(this);
         aircraftManager = new de.raidcraft.dragontravelplus.AircraftManager(this);
