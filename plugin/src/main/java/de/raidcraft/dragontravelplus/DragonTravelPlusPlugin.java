@@ -20,7 +20,6 @@ import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
 import de.raidcraft.rcconversations.actions.ActionManager;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,23 +55,16 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         // load NPC's
         NPC_Manager.getInstance().loadNPCs(getName());
 
-        // lets trigger a delayed load to make sure all plugins are loaded
-        Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    ActionManager.registerAction(new FlyFlightAction());
-                    ActionManager.registerAction(new FlyControlledAction());
-                    ActionManager.registerAction(new FlyToStationAction());
-                    ActionManager.registerAction(new ListStationsAction());
-                    ActionManager.registerAction(new FindDragonstationAction());
-                    ActionManager.registerAction(new CheckPlayerAction());
-                } catch (Exception e) {
-                    RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
-                }
-            }
-        }, 1L);
+        try {
+            ActionManager.registerAction(new FlyFlightAction());
+            ActionManager.registerAction(new FlyControlledAction());
+            ActionManager.registerAction(new FlyToStationAction());
+            ActionManager.registerAction(new ListStationsAction());
+            ActionManager.registerAction(new FindDragonstationAction());
+            ActionManager.registerAction(new CheckPlayerAction());
+        } catch (Exception e) {
+            RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
+        }
     }
 
     @Override
