@@ -16,7 +16,6 @@ import de.raidcraft.dragontravelplus.util.DynmapManager;
 import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.rctravel.api.station.UnknownStationException;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -175,10 +174,6 @@ public class DTPCommands {
                     }
                 }
 
-                if (!station.getLocation().getWorld().equals(((Player) sender).getLocation().getWorld())) {
-                    continue;
-                }
-
                 ChatColor color = ChatColor.AQUA;
                 if (station instanceof DragonStation && ((DragonStation) station).getPrice() > 0) color = ChatColor.GOLD;
                 if (station instanceof DragonStation && ((DragonStation) station).isEmergencyTarget()) color = ChatColor.DARK_RED;
@@ -215,37 +210,6 @@ public class DTPCommands {
                 flight.abortFlight();
             }
             tr.msg(sender, "cmd.abort-flights", "Aborted all active flights.");
-        }
-
-        @Command(
-                aliases = {"debug"},
-                desc = "Debug"
-        )
-        @CommandPermissions("dragontravelplus.debug")
-        public void debug(CommandContext context, CommandSender sender) throws CommandException {
-
-            Player player = (Player) sender;
-            Chunk chunk = player.getLocation().getChunk();
-
-            int entityCount = 0;
-            int npcMethodCount = 0;
-            int npcMetaCount = 0;
-
-            // TODO: implement NPC method
-            //            for (ChunkLocation cl : NPCRegistry.INST.getAffectedChunkLocations(chunk)) {
-            //                for (Entity entity : chunk.getWorld().getChunkAt(cl.getX(), cl.getZ()).getEntities()) {
-            //                    if (!(entity instanceof LivingEntity)) continue;
-            //                    entityCount++;
-            //                    NPC npc = RaidCraft.getComponent(RCConversationsPlugin.class).getCitizens().getNPCRegistry().getNPC(entity);
-            //                    if (npc != null) npcMethodCount++;
-            //                    if (entity.hasMetadata("NPC")) npcMetaCount++;
-            //                }
-            //            }
-            //
-            //            player.sendMessage("Living-Entities in affected chunks: " + entityCount);
-            //            player.sendMessage("NPC-Entities according to getNPC(): " + npcMethodCount);
-            //            player.sendMessage("NPC-Entities according to MetaData: " + npcMetaCount);
-            //            player.sendMessage("NPC-Entities according to Registry: " + NPCRegistry.INST.getSpawnedNPCs(chunk).size());
         }
     }
 }
