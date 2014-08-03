@@ -204,9 +204,9 @@ public class DTPCommands {
                 list += Colors.Chat.INFO + station.getName() + ChatColor.WHITE + ", ";
             }
             if (list.equals("")) {
-                list = "No stations discovered";
+                list = "Du hast keine Drachenmeister gefunden.";
             } else {
-                sender.sendMessage(Colors.Chat.SUCCESS + "You discovered Dragonstations:");
+                sender.sendMessage(Colors.Chat.SUCCESS + "Folgende Drachenmeister hast du gefunden:");
             }
             sender.sendMessage(list);
         }
