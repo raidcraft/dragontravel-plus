@@ -9,6 +9,7 @@ import de.raidcraft.util.LocationUtil;
 import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.trait.MobType;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -21,10 +22,12 @@ import org.bukkit.entity.EntityType;
 public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
 
     private final NPC npc;
+    private NPCRegistry register;
 
     public CitizensAircraftDragon(Citizens citizens) {
-
-        this.npc = citizens.getNPCRegistry().createNPC(EntityType.ENDER_DRAGON, "Flying Dragon");
+        // TODO: use custom npc registry
+        register =  citizens.getNPCRegistry();
+        this.npc = register.createNPC(EntityType.ENDER_DRAGON, "Flying Dragon");
         npc.setFlyable(true);
         npc.setProtected(true);
         npc.getTrait(MobType.class).setType(EntityType.ENDER_DRAGON);
@@ -33,7 +36,7 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     @Override
     public Entity getBukkitEntity() {
 
-        return getEntity().getEntity();
+        return npc.getEntity();
     }
 
     @Override
@@ -45,29 +48,25 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     @Override
     public boolean hasReachedWaypoint(Waypoint waypoint) {
 
-        return hasReachedWaypoint(waypoint, 1);
+        return hasReachedWaypoint(waypoint, 3);
     }
 
     @Override
     public boolean hasReachedWaypoint(Waypoint waypoint, int radius) {
 
-        return isSpawned() && LocationUtil.isWithinRadius(waypoint.getLocation(), getEntity().getEntity().getLocation(), radius);
+        return isSpawned() && LocationUtil.isWithinRadius(waypoint.getLocation(), getCurrentLocation(), radius);
     }
 
     @Override
     public Location getCurrentLocation() {
 
-        if (isSpawned()) {
-            return getEntity().getEntity().getLocation();
-        } else {
-            return getEntity().getStoredLocation();
-        }
+        return npc.getStoredLocation();
     }
 
     @Override
     public boolean isSpawned() {
 
-        return getEntity().isSpawned();
+        return npc.isSpawned();
     }
 
     @Override
@@ -108,6 +107,7 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     public void despawn() {
 
         getEntity().despawn(DespawnReason.REMOVAL);
+        register.deregister(npc);
     }
 
     @Override
@@ -123,6 +123,7 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
 
         if (isSpawned()) {
             getEntity().getEntity().setPassenger(null);
+            despawn();
         }
     }
 }
