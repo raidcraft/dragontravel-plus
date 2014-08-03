@@ -1,6 +1,5 @@
 package de.raidcraft.dragontravelplus.tables;
 
-import de.raidcraft.util.UUIDUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,27 +27,7 @@ public class TPlayerStation {
     private TStation station;
     @Setter
     private UUID playerId;
-    private String player;
     @Setter
     @Getter
     private Timestamp discovered;
-
-    @Deprecated
-    public String getPlayer() {
-
-        return player;
-    }
-
-    @Deprecated
-    public void setPlayer(String player) {
-
-        this.player = player;
-    }
-
-    public UUID getPlayerId() {
-        if(playerId == null) {
-            playerId = UUIDUtil.convertPlayer(getPlayer());
-        }
-        return playerId;
-    }
 }
