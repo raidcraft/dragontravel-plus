@@ -12,12 +12,16 @@ import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.npc.NPCManager;
 import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
 import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.rctravel.api.station.UnknownStationException;
+import de.raidcraft.reference.Colors;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 /**
  * Author: Philip
@@ -180,6 +184,30 @@ public class DTPCommands {
                 list += color + station.getDisplayName() + ChatColor.WHITE + ", ";
             }
 
+            sender.sendMessage(list);
+        }
+
+        @Command(
+                aliases = {"discovered", "explored", "visited"},
+                desc = "Show all discovered Dragonsations"
+        )
+        public void discovered(CommandContext context, CommandSender sender) throws CommandException {
+
+            Player player = (Player) sender;
+            String list = "";
+            List<TStation> stations = plugin.getDatabase().find(TStation.class)
+                    .fetch("playerStations")
+                    .where().eq("player_id", player.getUniqueId().toString())
+                    .isNotNull("discovered")
+                    .findList();
+            for (TStation station : stations) {
+                list += Colors.Chat.INFO + station.getName() + ChatColor.WHITE + ", ";
+            }
+            if (list.equals("")) {
+                list = "No stations discovered";
+            } else {
+                sender.sendMessage(Colors.Chat.SUCCESS + "You discovered Dragonstations:");
+            }
             sender.sendMessage(list);
         }
 

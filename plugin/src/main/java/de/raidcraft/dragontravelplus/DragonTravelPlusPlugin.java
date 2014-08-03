@@ -49,8 +49,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         registerEvents(new FlightEditorListener());
 
-        registerCommands(DTPCommands.class);
-        registerCommands(FlightCommands.class);
+        registerCommands(DTPCommands.class, getName());
+        registerCommands(FlightCommands.class, getName());
 
         // load NPC's
         NPC_Manager.getInstance().loadNPCs(getName());
