@@ -65,7 +65,8 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
         if (emergencyTarget || mainStation) {
             return true;
         }
-        List<TPlayerStation> stations = RaidCraft.getDatabase(DragonTravelPlusPlugin.class)
+
+        List< TPlayerStation > stations = RaidCraft.getDatabase(DragonTravelPlusPlugin.class)
                 .find(TPlayerStation.class).where().eq("player_id", player).isNotNull("discovered").findList();
         for (TPlayerStation station : stations) {
             if (station.getStation().getName().equalsIgnoreCase(getName())) {
