@@ -13,21 +13,16 @@ import java.util.UUID;
 /**
  * @author Silthus
  */
+@Setter
+@Getter
 @Entity
 @Table(name = "flight_player_stations")
 public class TPlayerStation {
 
-    @Setter
-    @Getter
     @Id
     private int id;
-    @Setter
-    @Getter
     @ManyToOne
     private TStation station;
-    @Setter
     private UUID playerId;
-    @Setter
-    @Getter
     private Timestamp discovered;
 }
