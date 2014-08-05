@@ -48,7 +48,7 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     @Override
     public boolean hasReachedWaypoint(Waypoint waypoint) {
 
-        return hasReachedWaypoint(waypoint, 3);
+        return hasReachedWaypoint(waypoint, 5);
     }
 
     @Override
