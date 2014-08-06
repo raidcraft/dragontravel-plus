@@ -59,6 +59,13 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
     @Setting("flight.use-citizens-pathfinding")
     public boolean useCitizensPathFinding = true;
 
+    @Setting("flight.vanilla.speed-x")
+    public double speedX = 0.8;
+    @Setting("flight.vanilla.speed-y")
+    public double speedY = 0.6;
+    @Setting("flight.vanilla.speed-z")
+    public double speedZ = 0.8;
+
     @Setting("flight-editor-item")
     public int flightEditorItem = 122;
     @Setting("forbidden-commands")
