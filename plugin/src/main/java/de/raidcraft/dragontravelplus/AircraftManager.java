@@ -7,7 +7,6 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.passenger.Passenger;
 import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
-import de.raidcraft.dragontravelplus.aircrafts.RemoteAircraftDragon;
 import de.raidcraft.util.EntityUtil;
 import de.raidcraft.util.EnumUtils;
 import de.raidcraft.util.ReflectionUtil;
@@ -77,8 +76,6 @@ public final class AircraftManager implements Component {
 
         switch (type) {
 
-            case REMOTE_ENTITIES:
-                return new RemoteAircraftDragon(remoteEntityManager);
             case CITIZENS:
                 return new CitizensAircraftDragon(citizens);
             case VANILLA:
