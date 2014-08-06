@@ -46,7 +46,7 @@ public class DynamicFlightPath extends AbstractPath {
         Location lastUnsafeStart = getStartLocation().clone();
         for (int i = 1; i < wayPointCount; i++) {
             // calculate unsafe start point
-            Location wpLocation = lastUnsafeStart.clone();
+            Location wpLocation = getStartLocation().clone();
             Vector unitVectorCopy = unitVector.clone();
             wpLocation.add(unitVectorCopy.multiply(i * wayPointDistance));
 
