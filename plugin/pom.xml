@@ -16,7 +16,8 @@
   ~ along with this program. If not, see <http://www.gnu.org/licenses />.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dragontravelplus</artifactId>
     <packaging>jar</packaging>
@@ -45,7 +46,7 @@
         <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>raidcraft-api</artifactId>
-            <version>${rc.version}</version>
+            <version>1.4.9-develop-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.raidcraft</groupId>
@@ -80,7 +81,8 @@
     </dependencies>
 
     <build>
-        <directory>../target</directory> <!-- Build it one level up, because it is the one we care about -->
+        <directory>../target</directory>
+        <!-- Build it one level up, because it is the one we care about -->
         <!-- Define filtering for the inclusion of plugin.yml, so we can utilize the pom.xml version in it -->
         <plugins>
             <plugin>

@@ -20,10 +20,6 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
     public double pricePerBlock = 0.1;
     @Setting("flight-warmup-time")
     public int flightWarmup = 1;
-    @Setting("flight.height")
-    public int flightHeight = 15;
-    @Setting("flight.speed")
-    public double flightSpeed = 0.3;
     @Setting("controlled-flight-speed")
     public double controlledFlightSpeed = 0.3;
     @Setting("dynamic-flight-speed")
@@ -32,20 +28,25 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
     public int controlledTargetDistance = 30;
     @Setting("dynamic-flight-route")
     public boolean useDynamicRouting = true;
+
+    // waypoint settings
+    @Setting("flight.speed")
+    public double flightSpeed = 0.3; // flight speed, buggy
     @Setting("flight.waypoint-radius")
-    public int waypointRadius = 3;
+    public int waypointRadius = 3; // fly to new waypoint if in this radius
     @Setting("flight.min-ground-distance")
-    public int fligthMinGroundDistance = 3;
+    public int fligthMinGroundDistance = 3; // min distance between dragon and ground
     @Setting("flight.max-ground-distance")
-    public int fligthMaxGroundDistance = 32;
+    public int fligthMaxGroundDistance = 32; // max distance between dragon and ground
     @Setting("flight.flight-task-interval")
-    public int flightTaskInterval = 5;
+    public int flightTaskInterval = 5; // ticks to check if dragon in waypoint
     @Setting("flight.teleport-fallback")
     public boolean flightTeleportFallback = false;
     @Setting("flight.waypoint-distance")
-    public int wayPointDistance = 10;
+    public int wayPointDistance = 32; // distance between waypoints
     @Setting("flight.use-citizens-pathfinding")
     public boolean useCitizensPathFinding = true;
+
     @Setting("flight-editor-item")
     public int flightEditorItem = 122;
     @Setting("forbidden-commands")
