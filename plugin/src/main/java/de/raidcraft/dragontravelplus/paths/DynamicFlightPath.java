@@ -20,7 +20,7 @@ public class DynamicFlightPath extends AbstractPath {
     }
 
     @Override
-    public synchronized void calculate() {
+    public void calculate() {
 
         clearWaypoints();
 
