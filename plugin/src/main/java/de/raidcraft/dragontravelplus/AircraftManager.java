@@ -77,7 +77,7 @@ public final class AircraftManager implements Component {
         switch (type) {
 
             case CITIZENS:
-                return new CitizensAircraftDragon(citizens);
+                return new CitizensAircraftDragon(citizens, plugin.getConfig());
             case VANILLA:
                 try {
                     Class<?> clazz = ReflectionUtil.getNmsClass("de.raidcraft.dragontravelplus.aircrafts.nms", "RCDragon");

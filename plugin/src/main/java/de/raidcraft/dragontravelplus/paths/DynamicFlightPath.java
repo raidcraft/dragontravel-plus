@@ -3,6 +3,7 @@ package de.raidcraft.dragontravelplus.paths;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.flight.AbstractPath;
 import de.raidcraft.api.flight.flight.Waypoint;
+import de.raidcraft.dragontravelplus.DTPConfig;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Location;
@@ -35,7 +36,7 @@ public class DynamicFlightPath extends AbstractPath {
 
         // here we simply calculate what points are between the start and the end location
         // we always add the defined flight height to the next waypoint
-        DragonTravelPlusPlugin.LocalDTPConfiguration config = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig();
+        DTPConfig config = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig();
         int wayPointDistance = config.wayPointDistance;
         int wayPointCount = LocationUtil.getBlockDistance(getStartLocation(), getEndLocation()) / wayPointDistance;
         for (int i = 1; i < wayPointCount; i++) {
