@@ -83,7 +83,6 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     public void startNavigation(Flight flight) {
 
         //        RaidCraft.LOGGER.warning("startNavigation CitizensAircraftDragon");
-        npc.faceLocation(flight.getEndLocation());
         npc.getNavigator().setTarget(flight.getEndLocation());
         npc.getNavigator().getLocalParameters().useNewPathfinder(false);
         // try all ... maybe in the future it works
@@ -121,6 +120,7 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
 
         //        RaidCraft.LOGGER.warning("mount CitizensAircraftDragon");
         npc.getEntity().setPassenger(flight.getPassenger().getEntity());
+        npc.faceLocation(flight.getEndLocation());
     }
 
     @Override
