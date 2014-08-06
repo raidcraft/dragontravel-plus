@@ -87,8 +87,8 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
         npc.getNavigator().getLocalParameters().useNewPathfinder(false);
         // try all ... maybe in the future it works
         npc.getNavigator().getLocalParameters().baseSpeed((float) config.flightSpeed);
-        npc.getNavigator().getLocalParameters().speedModifier((float) config.flightSpeed);
-        npc.getNavigator().getLocalParameters().modifiedSpeed((float) config.flightSpeed);
+        //        npc.getNavigator().getLocalParameters().speedModifier((float) config.flightSpeed);
+        //        npc.getNavigator().getLocalParameters().modifiedSpeed((float) config.flightSpeed);
         npc.getNavigator().setTarget(flight.getEndLocation());
     }
 
