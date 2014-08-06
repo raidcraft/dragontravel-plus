@@ -1,5 +1,6 @@
 package de.raidcraft.dragontravelplus;
 
+import de.raidcraft.api.config.Comment;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
 
@@ -31,19 +32,25 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
 
     // waypoint settings
     @Setting("flight.speed")
-    public double flightSpeed = 0.3; // flight speed, buggy
+    @Comment("buggy - flight speed of the dragon")
+    public double flightSpeed = 0.3;
     @Setting("flight.waypoint-radius")
-    public int waypointRadius = 3; // fly to new waypoint if in this radius
+    @Comment("fly to new waypoint if in this radius")
+    public int waypointRadius = 3;
     @Setting("flight.min-ground-distance")
-    public int fligthMinGroundDistance = 3; // min distance between dragon and ground
+    @Comment("min distance between dragon and ground")
+    public int fligthMinGroundDistance = 3;
     @Setting("flight.max-ground-distance")
-    public int fligthMaxGroundDistance = 32; // max distance between dragon and ground
+    @Comment("max distance between dragon and ground")
+    public int fligthMaxGroundDistance = 32;
     @Setting("flight.flight-task-interval")
-    public int flightTaskInterval = 5; // ticks to check if dragon in waypoint
+    @Comment("ticks between is at next waypoint check")
+    public int flightTaskInterval = 5;
     @Setting("flight.teleport-fallback")
     public boolean flightTeleportFallback = false;
     @Setting("flight.waypoint-distance")
-    public int wayPointDistance = 32; // distance between waypoints
+    @Comment("distance between waypoints")
+    public int wayPointDistance = 32;
     @Setting("flight.use-citizens-pathfinding")
     public boolean useCitizensPathFinding = true;
 
