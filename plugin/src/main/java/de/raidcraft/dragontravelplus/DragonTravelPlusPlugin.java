@@ -80,9 +80,9 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     @Override
     public void reload() {
 
+        getConfig().reload();
         getStationManager().reload();
         getRouteManager().reload();
-        getConfig().reload();
     }
 
     public de.raidcraft.dragontravelplus.AircraftManager getAircraftManager() {
