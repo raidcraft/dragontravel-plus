@@ -43,21 +43,24 @@ public class DynamicFlightPath extends AbstractPath {
         double minGroundDiff = config.fligthMinGroundDistance;
         double maxGroundDiff = config.fligthMaxGroundDistance;
         double flighHeight = (maxGroundDiff - minGroundDiff) / 2;
+        Location lastUnsafeStart = getStartLocation().clone();
         for (int i = 1; i < wayPointCount; i++) {
-            Location wpLocation = getStartLocation().clone();
+            // calculate unsafe start point
+            Location wpLocation = lastUnsafeStart.clone();
             Vector unitVectorCopy = unitVector.clone();
             wpLocation.add(unitVectorCopy.multiply(i * wayPointDistance));
 
             // lets remember if we need to unload the chunk
             unloadChunk = !wpLocation.getChunk().isLoaded();
-            // we are getting a block, this will load the chunk
-            wpLocation = world.getHighestBlockAt(wpLocation).getLocation();
+            // load chunk and find heighest Block
+            double heighestBlockY = getHeighestBlock(lastUnsafeStart, unitVector.clone(), wayPointDistance);
+            // save current unsafe start
+            lastUnsafeStart = wpLocation.clone();
             // lets unload the chunk if needed to avoid memory leaking
             if (unloadChunk) wpLocation.getChunk().unload();
 
             // try to flight on the same height
             double y = lastY;
-            double heighestBlockY = wpLocation.getY();
             if (heighestBlockY + minGroundDiff > y) {   // if new location is to low
                 y = heighestBlockY + flighHeight;
             } else if (y > heighestBlockY + maxGroundDiff) { // if new location is to hight
@@ -70,5 +73,21 @@ public class DynamicFlightPath extends AbstractPath {
             if (wpLocation.getY() > world.getMaxHeight()) wpLocation.setY(world.getMaxHeight());
             addWaypoint(new Waypoint(wpLocation));
         }
+    }
+
+    public int getHeighestBlock(Location start, Vector unitVector, int distance) {
+
+        int heighest = -1;
+        World w = start.getWorld();
+        for (int i = 1; i <= distance; i++) {
+            Vector unitVectorCopy = unitVector.clone();
+            Location tmp = start.clone();
+            tmp.add(unitVectorCopy.multiply(i));
+            int blockHeight = w.getHighestBlockYAt(tmp);
+            if (blockHeight > heighest) {
+                heighest = blockHeight;
+            }
+        }
+        return heighest;
     }
 }
