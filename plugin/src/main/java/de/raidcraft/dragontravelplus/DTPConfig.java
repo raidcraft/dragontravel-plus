@@ -60,11 +60,15 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
     public boolean useCitizensPathFinding = true;
 
     @Setting("flight.vanilla.speed-x")
+    @Comment("move speed per tick")
     public double speedX = 0.8;
     @Setting("flight.vanilla.speed-y")
     public double speedY = 0.6;
     @Setting("flight.vanilla.speed-z")
     public double speedZ = 0.8;
+    @Setting("flight.vanilla.player-pitch")
+    @Comment("down: -90; up: 90; normal: 0")
+    public float playerPitch = 30;
 
     @Setting("flight-editor-item")
     public int flightEditorItem = 122;

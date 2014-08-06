@@ -72,9 +72,9 @@ public final class AircraftManager implements Component {
                     Class<?> clazz = ReflectionUtil.getNmsClass("de.raidcraft.dragontravelplus.aircrafts.nms", "RCDragon");
                     DTPConfig config = plugin.getConfig();
                     return (Aircraft<?>) clazz.getConstructor(World.class,
-                            double.class, double.class, double.class, int.class)
+                            double.class, double.class, double.class, int.class, float.class)
                             .newInstance(passenger.getEntity().getWorld(), config.speedX, config.speedY, config.speedZ,
-                                    config.waypointRadius);
+                                    config.waypointRadius, config.playerPitch);
                 } catch (Exception e) {
                     plugin.getLogger().warning(e.getMessage());
                     e.printStackTrace();
