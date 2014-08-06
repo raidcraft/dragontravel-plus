@@ -7,10 +7,12 @@ import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.flight.Flight;
+import de.raidcraft.api.flight.flight.Waypoint;
 import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.npc.NPCManager;
+import de.raidcraft.dragontravelplus.paths.DynamicFlightPath;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
@@ -18,6 +20,8 @@ import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.rctravel.api.station.UnknownStationException;
 import de.raidcraft.reference.Colors;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -238,6 +242,35 @@ public class DTPCommands {
                 flight.abortFlight();
             }
             tr.msg(sender, "cmd.abort-flights", "Aborted all active flights.");
+        }
+
+        @Command(
+                aliases = {"debug"},
+                desc = "Debug a flight",
+                min = 2,
+                usage = "<start_station> <end_station>"
+        )
+        @CommandPermissions("dragontravelplus.debug")
+        public void debug(CommandContext context, CommandSender sender) throws CommandException {
+
+            try {
+                Location start = plugin.getStationManager().getStation(context.getString(0)).getLocation();
+                Location end = plugin.getStationManager().getStation(context.getString(1)).getLocation();
+                DynamicFlightPath path = new DynamicFlightPath(start, end);
+                path.calculate();
+                List<Waypoint> points = path.getWaypoints();
+                for (Waypoint point : points) {
+                    sender.sendMessage(point.getX() + ":" + point.getY() + ":" + point.getZ());
+                }
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    for (Waypoint point : points) {
+                        player.sendBlockChange(point.getLocation(), Material.GLOWSTONE, (byte) 0);
+                    }
+                }
+            } catch (UnknownStationException e) {
+                sender.sendMessage(e.getMessage());
+            }
         }
     }
 }
