@@ -34,6 +34,10 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
     public boolean useDynamicRouting = true;
     @Setting("flight.waypoint-radius")
     public int waypointRadius = 3;
+    @Setting("flight.min-ground-distance")
+    public int fligthMinGroundDistance = 3;
+    @Setting("flight.max-ground-distance")
+    public int fligthMaxGroundDistance = 32;
     @Setting("flight.flight-task-interval")
     public int flightTaskInterval = 5;
     @Setting("flight.teleport-fallback")

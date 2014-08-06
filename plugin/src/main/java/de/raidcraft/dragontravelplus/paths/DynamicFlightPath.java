@@ -39,6 +39,10 @@ public class DynamicFlightPath extends AbstractPath {
         DTPConfig config = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig();
         int wayPointDistance = config.wayPointDistance;
         int wayPointCount = LocationUtil.getBlockDistance(getStartLocation(), getEndLocation()) / wayPointDistance;
+        double lastY = -1;
+        double minGroundDiff = config.fligthMinGroundDistance;
+        double maxGroundDiff = config.fligthMaxGroundDistance;
+        double flighHeight = (maxGroundDiff - minGroundDiff) / 2;
         for (int i = 1; i < wayPointCount; i++) {
             Location wpLocation = getStartLocation().clone();
             Vector unitVectorCopy = unitVector.clone();
@@ -51,10 +55,19 @@ public class DynamicFlightPath extends AbstractPath {
             // lets unload the chunk if needed to avoid memory leaking
             if (unloadChunk) wpLocation.getChunk().unload();
 
-            wpLocation.setY(wpLocation.getY() + config.flightHeight);
+            // try to flight on the same height
+            double y = lastY;
+            double heighestBlockY = wpLocation.getY();
+            if (heighestBlockY + minGroundDiff > y) {   // if new location is to low
+                y = heighestBlockY + flighHeight;
+            } else if (y > heighestBlockY + maxGroundDiff) { // if new location is to hight
+                y = heighestBlockY + flighHeight;
+            }
+            lastY = y;
+            wpLocation.setY(y);
+
             // dont allow waypoints above max world height
             if (wpLocation.getY() > world.getMaxHeight()) wpLocation.setY(world.getMaxHeight());
-
             addWaypoint(new Waypoint(wpLocation));
         }
     }
