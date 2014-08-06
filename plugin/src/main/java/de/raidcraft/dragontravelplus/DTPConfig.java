@@ -2,6 +2,7 @@ package de.raidcraft.dragontravelplus;
 
 import de.raidcraft.api.config.Comment;
 import de.raidcraft.api.config.ConfigurationBase;
+import de.raidcraft.api.config.MultiComment;
 import de.raidcraft.api.config.Setting;
 
 /**
@@ -43,6 +44,10 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
     @Setting("flight.max-ground-distance")
     @Comment("max distance between dragon and ground")
     public int fligthMaxGroundDistance = 32;
+    @Setting("flight.dragon-falling")
+    @MultiComment({"Dragon lose height on flights",
+            "to avoid circle simulate it"})
+    public int flightDragonFalling = 0;
     @Setting("flight.flight-task-interval")
     @Comment("ticks between is at next waypoint check")
     public int flightTaskInterval = 5;

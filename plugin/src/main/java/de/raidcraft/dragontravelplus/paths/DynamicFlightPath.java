@@ -60,7 +60,7 @@ public class DynamicFlightPath extends AbstractPath {
             if (unloadChunk) wpLocation.getChunk().unload();
 
             // try to flight on the same height
-            double y = lastY;
+            double y = lastY - config.flightDragonFalling;
             if (heighestBlockY + minGroundDiff > y) {   // if new location is to low
                 y = heighestBlockY + flighHeight;
             } else if (y > heighestBlockY + maxGroundDiff) { // if new location is to hight
