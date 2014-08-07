@@ -59,6 +59,8 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
     @Setting("flight.max-y-delta-before-lift-up")
     @Comment("if the y delta is heighter then this dragon lift up")
     public double flightLiftUpDelta = 16;
+    @Setting("flight.use-citizens-pathfinding")
+    public boolean useCitizensPathFinding = true;
 
     @Setting("flight.vanilla.speed-x")
     @Comment("move speed per tick")
