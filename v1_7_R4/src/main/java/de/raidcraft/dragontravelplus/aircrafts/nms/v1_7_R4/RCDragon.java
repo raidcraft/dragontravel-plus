@@ -1,6 +1,5 @@
 package de.raidcraft.dragontravelplus.aircrafts.nms.v1_7_R4;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.Waypoint;
@@ -94,7 +93,6 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     @Override
     public void move(Flight flight, Waypoint waypoint) {
 
-        RaidCraft.LOGGER.info("move RCDragon");
         this.moving = true;
         toX = waypoint.getX();
         toY = waypoint.getY();
@@ -106,16 +104,13 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     @Override
     public void startNavigation(Flight flight) {
 
-        Location start = flight.getStartLocation();
-        Location end = flight.getEndLocation();
-        RaidCraft.LOGGER.info("startNavigation RCDragon");
-
+        //        RaidCraft.LOGGER.info("startNavigation RCDragon");
     }
 
     @Override
     public void stopNavigation(Flight flight) {
 
-        RaidCraft.LOGGER.info("stopNavigation RCDragon");
+        //        RaidCraft.LOGGER.info("stopNavigation RCDragon");
         Location currentLocation = getCurrentLocation();
         setLocation(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), 180F, 90F);
     }
@@ -123,7 +118,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     @Override
     public RCDragon spawn(Location location) {
 
-        RaidCraft.LOGGER.info("spawn RCDragon");
+        //        RaidCraft.LOGGER.info("spawn RCDragon");
         setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         ((CraftWorld) location.getWorld()).getHandle().addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return this;
@@ -132,14 +127,14 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     @Override
     public void despawn() {
 
-        RaidCraft.LOGGER.info("despawn RCDragon");
+        //        RaidCraft.LOGGER.info("despawn RCDragon");
         getBukkitEntity().remove();
     }
 
     @Override
     public void mountPassenger(Flight flight) {
 
-        RaidCraft.LOGGER.info("mount RCDragon");
+        //        RaidCraft.LOGGER.info("mount RCDragon");
 
         Entity passaenger = flight.getPassenger().getEntity();
         passaenger.teleport(getPlayerYaw(flight.getStartLocation(),
@@ -150,7 +145,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     @Override
     public void unmountPassenger(Flight flight) {
 
-        RaidCraft.LOGGER.info("unmount RCDragon");
+        //        RaidCraft.LOGGER.info("unmount RCDragon");
         mount(null);
     }
 
