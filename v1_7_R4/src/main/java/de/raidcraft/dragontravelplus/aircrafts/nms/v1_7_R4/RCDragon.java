@@ -68,7 +68,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     @Override
     public boolean hasReachedWaypoint(Waypoint waypoint) {
 
-        return hasReachedWaypoint(waypoint, 1);
+        return hasReachedWaypoint(waypoint, waypointRadius);
     }
 
     @Override
