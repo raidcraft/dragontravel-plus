@@ -39,7 +39,6 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     double toZ;
     boolean moving = false;
 
-
     public RCDragon(org.bukkit.World world,
                     double speedX, double speedY, double speedZ,
                     int waypointRadius, float playerPitch) {
@@ -125,7 +124,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     public RCDragon spawn(Location location) {
 
         RaidCraft.LOGGER.info("spawn RCDragon");
-        setLocation(location.getX(), location.getY(), location.getZ(), 0F, 0F);
+        setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         ((CraftWorld) location.getWorld()).getHandle().addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return this;
     }
@@ -146,9 +145,6 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
         passaenger.teleport(getPlayerYaw(flight.getStartLocation(),
                 flight.getEndLocation()));
         getBukkitEntity().setPassenger(passaenger);
-        // set yaw
-        //        Location w = flight.getCurrentWaypoint().getLocation();
-        //        this.yaw = lookAtIgnoreY(locX, locZ, w.getX(), w.getZ());
     }
 
     @Override
