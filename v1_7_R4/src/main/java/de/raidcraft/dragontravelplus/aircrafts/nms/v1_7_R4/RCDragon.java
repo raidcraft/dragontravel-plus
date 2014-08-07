@@ -23,6 +23,10 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     @Getter
     @Setter
     private BukkitTask aircraftMoverTask;
+    @Getter
+    @Setter
+    boolean flying;
+
 
     double XperTick = 0.5;
     double ZperTick = 0.5;
@@ -33,9 +37,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     double toX;
     double toY;
     double toZ;
-    @Getter
-    @Setter
-    boolean flying = false;
+    boolean moving = false;
 
 
     public RCDragon(org.bukkit.World world,
@@ -94,7 +96,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     public void move(Flight flight, Waypoint waypoint) {
 
         RaidCraft.LOGGER.info("move RCDragon");
-        this.flying = true;
+        this.moving = true;
         toX = waypoint.getX();
         toY = waypoint.getY();
         toZ = waypoint.getZ();
@@ -155,7 +157,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     @Override
     public void e() {
 
-        if (!flying) {
+        if (!moving) {
             return;
         }
 

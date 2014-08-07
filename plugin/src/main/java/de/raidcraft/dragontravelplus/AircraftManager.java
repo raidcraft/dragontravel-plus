@@ -20,7 +20,6 @@ public final class AircraftManager implements Component {
     public enum AircraftType {
 
         VANILLA,
-        REMOTE_ENTITIES,
         CITIZENS;
 
         public static AircraftType fromString(String name) {
