@@ -10,6 +10,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
+import java.util.List;
+
 /**
  * @author Silthus
  */
@@ -74,6 +76,39 @@ public class DynamicFlightPath extends AbstractPath {
             // dont allow waypoints above max world height
             if (wpLocation.getY() > world.getMaxHeight()) wpLocation.setY(world.getMaxHeight());
             addWaypoint(new Waypoint(wpLocation));
+        }
+
+        // add "H_H" check #1313
+        List<Waypoint> waypoints = getWaypoints();
+        double y = -1;
+        double nextY = -1;
+        for (int i = 1; i < waypoints.size() - 1; i++) {
+            lastY = waypoints.get(i - 1).getY();
+            y = waypoints.get(i).getY();
+            nextY = waypoints.get(i + 1).getY();
+            // if we are flying into a gap
+            if (lastY <= y || nextY <= y) {
+                continue;
+            }
+            // use the y of next or last
+            waypoints.get(i).setY(Math.max(lastY, nextY));
+        }
+
+        // add "_H" check #1313
+        double dy = -1;
+        // TODO: maybe iter from behind to increase performance
+        for (int i = 1; i < waypoints.size(); i++) {
+            // if the y-delte is to much, lift up
+            dy = waypoints.get(i).getY() - waypoints.get(i - 1).getY();
+            if (dy < config.flightLiftUpDelta) {
+                continue;
+            }
+            // lift up
+            Waypoint liftUpWaypoint = new Waypoint(waypoints.get(i - 1).getLocation().clone());
+            liftUpWaypoint.setY(waypoints.get(i).getY());
+            waypoints.add(i, liftUpWaypoint);
+            // increase index of new added waypoint
+            i++;
         }
 
         // add end point
