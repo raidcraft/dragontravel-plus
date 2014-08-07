@@ -124,8 +124,8 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     public RCDragon spawn(Location location) {
 
         RaidCraft.LOGGER.info("spawn RCDragon");
-        ((CraftWorld) location.getWorld()).getHandle().addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
         setLocation(location.getX(), location.getY(), location.getZ(), 0F, 0F);
+        ((CraftWorld) location.getWorld()).getHandle().addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return this;
     }
 
@@ -193,8 +193,8 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     private float lookAtIgnoreY(double x, double z, double lookAtX, double lookAtZ) {
 
         // Values of change in distance (make it relative)
-        double dx = x - lookAtX;
-        double dz = z - lookAtZ;
+        double dx = lookAtX - x;
+        double dz = lookAtZ - z;
 
         double yaw = 0;
         // Set yaw
