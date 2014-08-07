@@ -15,7 +15,7 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
     @Setting("disabled")
     public boolean disabled = false;
     @Setting("aircraft.type")
-    public String aircraftType = "REMOTE_ENTITIES";
+    public String aircraftType = "VANILLA";
     @Setting("error-prevention-flight-timeout")
     public int flightTimeout = 30;
     @Setting("flight-cost-per-block")

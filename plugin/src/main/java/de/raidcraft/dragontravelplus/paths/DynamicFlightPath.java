@@ -29,16 +29,18 @@ public class DynamicFlightPath extends AbstractPath {
         boolean unloadChunk;
 
         // create unit vector to get the way point direction
-        int xDif = getEndLocation().getBlockX() - getStartLocation().getBlockX();
-        int yDif = getEndLocation().getBlockY() - getStartLocation().getBlockY();
-        int zDif = getEndLocation().getBlockZ() - getStartLocation().getBlockZ();
+        double xDif = getEndLocation().getX() - getStartLocation().getX();
+        double yDif = getEndLocation().getY() - getStartLocation().getY();
+        double zDif = getEndLocation().getZ() - getStartLocation().getZ();
         Vector unitVector = new Vector(xDif, yDif, zDif).normalize();
 
         // here we simply calculate what points are between the start and the end location
         // we always add the defined flight height to the next waypoint
         DTPConfig config = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig();
         int wayPointDistance = config.wayPointDistance;
-        int wayPointCount = LocationUtil.getBlockDistance(getStartLocation(), getEndLocation()) / wayPointDistance;
+        double distance = LocationUtil.getRealDistance(getStartLocation().getX(), getStartLocation().getZ(),
+                getEndLocation().getX(), getEndLocation().getZ());
+        double wayPointCount = distance / wayPointDistance;
         double lastY = -1;
         double minGroundDiff = config.fligthMinGroundDistance;
         double maxGroundDiff = config.fligthMaxGroundDistance;
@@ -73,7 +75,11 @@ public class DynamicFlightPath extends AbstractPath {
             if (wpLocation.getY() > world.getMaxHeight()) wpLocation.setY(world.getMaxHeight());
             addWaypoint(new Waypoint(wpLocation));
         }
+
+        // add end point
+        addWaypoint(new Waypoint(getEndLocation().clone()));
     }
+
 
     public int getHeighestBlock(Location start, Vector unitVector, int distance) {
 
