@@ -100,6 +100,8 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
         toX = waypoint.getX();
         toY = waypoint.getY();
         toZ = waypoint.getZ();
+        // set yaw
+        this.yaw = lookAtIgnoreY(locX, locZ, toX, toZ);
     }
 
     @Override
@@ -107,7 +109,6 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
 
         Location start = flight.getStartLocation();
         Location end = flight.getEndLocation();
-        this.yaw = lookAtIgnoreY(start.getX(), start.getZ(), end.getX(), end.getZ());
         RaidCraft.LOGGER.info("startNavigation RCDragon");
 
     }
@@ -145,6 +146,9 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
         passaenger.teleport(getPlayerYaw(flight.getStartLocation(),
                 flight.getEndLocation()));
         getBukkitEntity().setPassenger(passaenger);
+        // set yaw
+        //        Location w = flight.getCurrentWaypoint().getLocation();
+        //        this.yaw = lookAtIgnoreY(locX, locZ, w.getX(), w.getZ());
     }
 
     @Override
@@ -193,25 +197,25 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     private float lookAtIgnoreY(double x, double z, double lookAtX, double lookAtZ) {
 
         // Values of change in distance (make it relative)
-        double dx = lookAtX - x;
-        double dz = lookAtZ - z;
+        double dx = x - lookAtX;
+        double dz = z - lookAtZ;
 
-        double yaw = 0;
+        double myyaw = 0;
         // Set yaw
         if (dx != 0) {
             // Set yaw start value based on dx
             if (dx < 0) {
-                yaw = 1.5 * Math.PI;
+                myyaw = 1.5 * Math.PI;
             } else {
-                yaw = 0.5 * Math.PI;
+                myyaw = 0.5 * Math.PI;
             }
-            yaw = yaw - Math.atan(dz / dx);
+            myyaw = myyaw - Math.atan(dz / dx);
         } else if (dz < 0) {
-            yaw = Math.PI;
+            myyaw = Math.PI;
         }
 
         // Set values, convert to degrees (invert the yaw since Bukkit uses a different yaw dimension format)
-        return (float) (-yaw * 180f / Math.PI);
+        return (float) (-myyaw * 180f / Math.PI);
     }
 
     public Location getPlayerYaw(Location loc, Location lookat) {
