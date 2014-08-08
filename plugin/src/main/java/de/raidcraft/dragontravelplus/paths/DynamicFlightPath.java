@@ -82,10 +82,20 @@ public class DynamicFlightPath extends AbstractPath {
         List<Waypoint> waypoints = getWaypoints();
         double y = -1;
         double nextY = -1;
+        int forwardIteration = config.flightGapIteration;
         for (int i = 1; i < waypoints.size() - 1; i++) {
             lastY = waypoints.get(i - 1).getY();
             y = waypoints.get(i).getY();
             nextY = waypoints.get(i + 1).getY();
+            // iter over it, e.g. to find "H__H"
+            for (int iter = 0; iter < forwardIteration; iter++) {
+                int nextIndex = i + 1 + iter;
+                // if at the end
+                if (nextIndex >= waypoints.size()) {
+                    break;
+                }
+                nextY = Math.max(nextY, waypoints.get(nextIndex).getY());
+            }
             // if we are flying into a gap
             if (lastY <= y || nextY <= y) {
                 continue;
@@ -114,7 +124,6 @@ public class DynamicFlightPath extends AbstractPath {
         // add end point
         addWaypoint(new Waypoint(getEndLocation().clone()));
     }
-
 
     public int getHeighestBlock(Location start, Vector unitVector, int distance) {
 

@@ -59,6 +59,10 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
     @Setting("flight.max-y-delta-before-lift-up")
     @Comment("if the y delta is heighter then this dragon lift up")
     public double flightLiftUpDelta = 16;
+    @Setting("flight.gap-iteration")
+    @MultiComment({"How often the post process try to find 'H_H' pattern #1313",
+            "1: finds 'H__H', 2: finds 'H___H'"})
+    public int flightGapIteration = 1;
     @Setting("flight.use-citizens-pathfinding")
     public boolean useCitizensPathFinding = true;
 
