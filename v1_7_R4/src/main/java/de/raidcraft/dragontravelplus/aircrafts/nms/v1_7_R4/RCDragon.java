@@ -160,23 +160,28 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
         double myY = locY;
         double myZ = locZ;
 
-        if (myX < toX) {
-            myX += XperTick;
-        } else {
-            myX -= XperTick;
+        if ((int) myX != (int) toX) {
+            if (myX < toX) {
+                myX += XperTick;
+            } else {
+                myX -= XperTick;
+            }
         }
 
-        if (myZ < toZ) {
-            myZ += ZperTick;
-        } else {
-            myZ -= ZperTick;
+        if ((int) myY != (int) toY) {
+            if (myY < toY) {
+                myY += YperTick;
+            } else {
+                myY -= YperTick;
+            }
         }
 
-
-        if (myY < toY) {
-            myY += YperTick;
-        } else {
-            myY -= YperTick;
+        if ((int) myZ != (int) toZ) {
+            if (myZ < toZ) {
+                myZ += ZperTick;
+            } else {
+                myZ -= ZperTick;
+            }
         }
         setPosition(myX, myY, myZ);
     }
