@@ -28,8 +28,8 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
 
 
     double XperTick = 0.5;
-    double ZperTick = 0.5;
     double YperTick = 0.5;
+    double ZperTick = 0.5;
 
     float playerPitch;
     int waypointRadius;
@@ -52,7 +52,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
         super(world);
         XperTick = speedX;
         ZperTick = speedZ;
-        YperTick = speedZ;
+        YperTick = speedY;
         this.waypointRadius = waypointRadius;
         this.playerPitch = playerPitch;
     }
