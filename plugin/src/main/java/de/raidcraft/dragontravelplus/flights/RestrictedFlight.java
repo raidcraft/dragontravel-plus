@@ -94,7 +94,7 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         for (String cmd : RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().forbiddenCommands) {
             if (event.getMessage().toLowerCase().startsWith("/" + cmd.toLowerCase())) {
                 Translator.msg(DragonTravelPlusPlugin.class, event.getPlayer(),
-                        "flight.blocked-cmd", "You are now allowed to use this command while flying.");
+                        "flight.blocked-cmd", "You are not allowed to use this command during the flight.");
                 event.setCancelled(true);
                 return;
             }
