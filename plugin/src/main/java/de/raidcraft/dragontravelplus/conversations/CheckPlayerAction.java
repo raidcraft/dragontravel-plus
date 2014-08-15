@@ -25,18 +25,33 @@ public class CheckPlayerAction extends AbstractAction {
     @Override
     public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException, UnknownStationException {
 
+        String success = args.getString("onsuccess", null);
+        String failure = args.getString("onfailure", null);
+
         String startName = args.getString("start", null);
         startName = ParseString.INST.parse(conversation, startName);
         String targetName = args.getString("target", null);
         targetName = ParseString.INST.parse(conversation, targetName);
-        String success = args.getString("onsuccess", null);
-        String failure = args.getString("onfailure", null);
+        // hotfix for manual input
+        if (targetName.equals("%[dtp_target_name]")) {
+            setErrorMsg(conversation, "Keine gültige Station");
+            changeStage(conversation, failure);
+            return;
+        }
         boolean checkPrice = args.getBoolean("price", false);
         boolean checkFamiliarity = args.getBoolean("familiarity", false);
 
         StationManager stationManager = RaidCraft.getComponent(StationManager.class);
-        Station start = stationManager.getStation(startName);
-        Station target = stationManager.getStation(targetName);
+        Station start = null;
+        Station target = null;
+        try {
+            start = stationManager.getStation(startName);
+            target = stationManager.getStation(targetName);
+        } catch (UnknownStationException e) {
+            setErrorMsg(conversation, e.getMessage());
+            changeStage(conversation, failure);
+            return;
+        }
 
         if (start == null) {
             setErrorMsg(conversation, "Es ist ein Fehler aufgetreten! Bitte informiere das Raid-Craft Team!");
