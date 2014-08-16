@@ -36,8 +36,8 @@ public class FindDragonstationAction extends AbstractAction {
                 return;
             }
 
-            if (!station.hasDiscovered(conversation.getPlayer().getName())) {
-                station.setDiscovered(conversation.getPlayer().getName(), true);
+            if (!station.hasDiscovered(conversation.getPlayer().getUniqueId())) {
+                station.setDiscovered(conversation.getPlayer().getUniqueId(), true);
                 conversation.getPlayer().sendMessage(ChatColor.GREEN + "Du besuchst diese Drachenstation zum ersten mal!");
             }
 

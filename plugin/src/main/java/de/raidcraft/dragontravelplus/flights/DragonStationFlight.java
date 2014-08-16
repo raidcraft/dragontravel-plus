@@ -54,7 +54,7 @@ public class DragonStationFlight extends RestrictedFlight {
     public void onStartFlight() throws FlightException {
 
         Economy economy = RaidCraft.getEconomy();
-        if (!economy.hasEnough(getPassenger().getName(), getPrice())) {
+        if (!economy.hasEnough(getPassenger().getEntity().getUniqueId(), getPrice())) {
             throw new FlightException(Translator.tr(DragonTravelPlusPlugin.class, (Player) getPassenger().getEntity(),
                     "flight.no-money", "You dont have enough money to complete this flight!"));
         }
@@ -68,13 +68,13 @@ public class DragonStationFlight extends RestrictedFlight {
         Economy economy = RaidCraft.getEconomy();
         double price = getPrice();
         if (getPassenger().getEntity() instanceof Player) {
-            if (!economy.hasEnough(getPassenger().getName(), price)) {
+            if (!economy.hasEnough(getPassenger().getEntity().getUniqueId(), price)) {
                 // abort the flight
                 abortFlight();
                 throw new FlightException(Translator.tr(DragonTravelPlusPlugin.class, (Player) getPassenger().getEntity(),
                         "flight.no-money", "You dont have enough money to complete this flight!"));
             }
-            economy.substract(getPassenger().getName(), price);
+            economy.substract(getPassenger().getEntity().getUniqueId(), price);
         }
         super.onEndFlight();
     }

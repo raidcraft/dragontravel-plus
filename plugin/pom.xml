@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dragontravelplus</artifactId>
     <packaging>jar</packaging>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0-develop-SNAPSHOT</version>
     <name>DragonTravelPlus</name>
 
     <parent>
@@ -49,23 +49,13 @@
             <version>${rc.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizens</artifactId>
-            <version>${rc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.raidcraft</groupId>
-            <artifactId>rcconversations</artifactId>
-            <version>${rc.version}</version>
-        </dependency>
-        <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>rctravel</artifactId>
             <version>${rc.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.kumpelblase2</groupId>
-            <artifactId>remoteentities</artifactId>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizens</artifactId>
             <version>${rc.version}</version>
         </dependency>
         <!-- we need to include all nms versions -->
@@ -80,6 +70,13 @@
             <groupId>de.raidcraft.dragontravelplus</groupId>
             <artifactId>nms-v1_7_R3</artifactId>
             <version>v1_7_R3</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>de.raidcraft.dragontravelplus</groupId>
+            <artifactId>nms-v1_7_R4</artifactId>
+            <version>v1_7_R4</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>

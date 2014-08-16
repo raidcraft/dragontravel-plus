@@ -1,14 +1,15 @@
 package de.raidcraft.dragontravelplus.aircrafts;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.aircraft.AbstractAircraft;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.Waypoint;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.api.npc.NPC_Manager;
+import de.raidcraft.dragontravelplus.DTPConfig;
 import de.raidcraft.util.LocationUtil;
 import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.trait.MobType;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -21,10 +22,15 @@ import org.bukkit.entity.EntityType;
 public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
 
     private final NPC npc;
+    private NPCRegistry register;
+    private DTPConfig config;
 
-    public CitizensAircraftDragon(Citizens citizens) {
+    public CitizensAircraftDragon(Citizens citizens, DTPConfig config) {
 
-        this.npc = citizens.getNPCRegistry().createNPC(EntityType.ENDER_DRAGON, "Flying Dragon");
+        this.config = config;
+        //        RaidCraft.LOGGER.warning("create CitizensAircraftDragon");
+        register = NPC_Manager.getInstance().getNonPersistentRegistry();
+        this.npc = register.createNPC(EntityType.ENDER_DRAGON, "Flying Dragon");
         npc.setFlyable(true);
         npc.setProtected(true);
         npc.getTrait(MobType.class).setType(EntityType.ENDER_DRAGON);
@@ -33,7 +39,7 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     @Override
     public Entity getBukkitEntity() {
 
-        return getEntity().getEntity();
+        return npc.getEntity();
     }
 
     @Override
@@ -45,84 +51,83 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
     @Override
     public boolean hasReachedWaypoint(Waypoint waypoint) {
 
-        return hasReachedWaypoint(waypoint, 1);
+        return hasReachedWaypoint(waypoint, config.waypointRadius);
     }
 
     @Override
     public boolean hasReachedWaypoint(Waypoint waypoint, int radius) {
 
-        return isSpawned() && LocationUtil.isWithinRadius(waypoint.getLocation(), getEntity().getEntity().getLocation(), radius);
+        return LocationUtil.isWithinRadius(waypoint.getLocation(), getCurrentLocation(), radius);
     }
 
     @Override
     public Location getCurrentLocation() {
 
-        if (isSpawned()) {
-            return getEntity().getEntity().getLocation();
-        } else {
-            return getEntity().getStoredLocation();
-        }
+        return npc.getStoredLocation();
     }
 
     @Override
     public boolean isSpawned() {
 
-        return getEntity().isSpawned();
+        return npc.isSpawned();
     }
 
     @Override
     public void move(Flight flight, Waypoint waypoint) {
 
-        if (isSpawned()) {
-            getEntity().getNavigator().setTarget(waypoint.getLocation());
-        }
+        //        RaidCraft.LOGGER.warning("move CitizensAircraftDragon");
+        npc.getNavigator().setTarget(waypoint.getLocation());
     }
 
     @Override
     public void startNavigation(Flight flight) {
 
-        if (!isSpawned()) spawn(flight.getStartLocation());
-        getEntity().getNavigator().setTarget(flight.getEndLocation());
-        getEntity().getNavigator().getLocalParameters().useNewPathfinder(true);
-        getEntity().getNavigator().getLocalParameters().range((float) LocationUtil.getDistance(flight.getStartLocation(), flight.getEndLocation()) + 50F);
-        getEntity().getNavigator().getLocalParameters().baseSpeed((float) RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightSpeed);
-        getEntity().getNavigator().getLocalParameters().speedModifier(1.0F);
+        //        RaidCraft.LOGGER.warning("startNavigation CitizensAircraftDragon");
+        npc.getNavigator().setTarget(flight.getEndLocation());
+        npc.getNavigator().getLocalParameters().useNewPathfinder(false);
+        // try all ... maybe in the future it works
+        npc.getNavigator().getLocalParameters().baseSpeed((float) config.flightSpeed);
+        //        npc.getNavigator().getLocalParameters().speedModifier((float) config.flightSpeed);
+        //        npc.getNavigator().getLocalParameters().modifiedSpeed((float) config.flightSpeed);
+        npc.getNavigator().setTarget(flight.getEndLocation());
     }
 
     @Override
     public void stopNavigation(Flight flight) {
 
-        if (isSpawned()) {
-            getEntity().getNavigator().cancelNavigation();
-        }
+        //        RaidCraft.LOGGER.warning("stopNavigation CitizensAircraftDragon");
+        npc.getNavigator().cancelNavigation();
     }
 
     @Override
     public NPC spawn(Location location) {
 
-        getEntity().spawn(location);
+        //        RaidCraft.LOGGER.warning("spawn CitizensAircraftDragon");
+        npc.spawn(location);
         return getEntity();
     }
 
     @Override
     public void despawn() {
 
-        getEntity().despawn(DespawnReason.REMOVAL);
+        //        RaidCraft.LOGGER.warning("despawn CitizensAircraftDragon");
+        npc.despawn(DespawnReason.REMOVAL);
+        register.deregister(npc);
     }
 
     @Override
     public void mountPassenger(Flight flight) {
 
-        if (isSpawned()) {
-            getEntity().getEntity().setPassenger(flight.getPassenger().getEntity());
-        }
+        //        RaidCraft.LOGGER.warning("mount CitizensAircraftDragon");
+        npc.getEntity().setPassenger(flight.getPassenger().getEntity());
+        npc.faceLocation(flight.getEndLocation());
     }
 
     @Override
     public void unmountPassenger(Flight flight) {
 
-        if (isSpawned()) {
-            getEntity().getEntity().setPassenger(null);
-        }
+        //        RaidCraft.LOGGER.warning("unmount CitizensAircraftDragon");
+        getEntity().getEntity().setPassenger(null);
+        despawn();
     }
 }

@@ -148,7 +148,7 @@ public class ListStationsAction extends AbstractAction {
 
         StringBuilder builder = new StringBuilder();
         double price = start.getPrice(target);
-        if (price > 0 && !RaidCraft.getEconomy().hasEnough(player.getName(), price)) {
+        if (price > 0 && !RaidCraft.getEconomy().hasEnough(player.getUniqueId(), price)) {
             builder.append(ChatColor.DARK_GRAY);
         }
 

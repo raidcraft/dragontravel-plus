@@ -40,6 +40,7 @@ public final class RouteManager implements Component {
     public void reload() {
 
         loadedPaths.clear();
+        loadedRoutes.clear();
         load();
     }
 

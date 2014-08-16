@@ -2,8 +2,6 @@ package de.raidcraft.dragontravelplus;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
-import de.raidcraft.api.config.ConfigurationBase;
-import de.raidcraft.api.config.Setting;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.npc.NPC_Manager;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
@@ -15,14 +13,11 @@ import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
 import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
 import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
-import de.raidcraft.dragontravelplus.tables.PlayerStationsTable;
-import de.raidcraft.dragontravelplus.tables.StationTable;
 import de.raidcraft.dragontravelplus.tables.TPath;
 import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
 import de.raidcraft.rcconversations.actions.ActionManager;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +29,7 @@ import java.util.List;
  */
 public class DragonTravelPlusPlugin extends BasePlugin {
 
-    private LocalDTPConfiguration config;
+    private DTPConfig config;
     private de.raidcraft.dragontravelplus.AircraftManager aircraftManager;
     private de.raidcraft.dragontravelplus.FlightManager flightManager;
     private de.raidcraft.dragontravelplus.RouteManager routeManager;
@@ -43,10 +38,7 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     @Override
     public void enable() {
 
-        config = configure(new LocalDTPConfiguration(this));
-
-        registerTable(StationTable.class, new StationTable());
-        registerTable(PlayerStationsTable.class, new PlayerStationsTable());
+        config = configure(new DTPConfig(this));
 
         stationManager = new StationManager(this);
         aircraftManager = new de.raidcraft.dragontravelplus.AircraftManager(this);
@@ -55,29 +47,22 @@ public class DragonTravelPlusPlugin extends BasePlugin {
 
         registerEvents(new FlightEditorListener());
 
-        registerCommands(DTPCommands.class);
-        registerCommands(FlightCommands.class);
+        registerCommands(DTPCommands.class, getName());
+        registerCommands(FlightCommands.class, getName());
 
         // load NPC's
         NPC_Manager.getInstance().loadNPCs(getName());
 
-        // lets trigger a delayed load to make sure all plugins are loaded
-        Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    ActionManager.registerAction(new FlyFlightAction());
-                    ActionManager.registerAction(new FlyControlledAction());
-                    ActionManager.registerAction(new FlyToStationAction());
-                    ActionManager.registerAction(new ListStationsAction());
-                    ActionManager.registerAction(new FindDragonstationAction());
-                    ActionManager.registerAction(new CheckPlayerAction());
-                } catch (Exception e) {
-                    RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
-                }
-            }
-        }, 1L);
+        try {
+            ActionManager.registerAction(new FlyFlightAction());
+            ActionManager.registerAction(new FlyControlledAction());
+            ActionManager.registerAction(new FlyToStationAction());
+            ActionManager.registerAction(new ListStationsAction());
+            ActionManager.registerAction(new FindDragonstationAction());
+            ActionManager.registerAction(new CheckPlayerAction());
+        } catch (Exception e) {
+            RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
+        }
     }
 
     @Override
@@ -95,9 +80,9 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     @Override
     public void reload() {
 
+        getConfig().reload();
         getStationManager().reload();
         getRouteManager().reload();
-        getConfig().reload();
     }
 
     public de.raidcraft.dragontravelplus.AircraftManager getAircraftManager() {
@@ -131,83 +116,8 @@ public class DragonTravelPlusPlugin extends BasePlugin {
         return tables;
     }
 
-    public LocalDTPConfiguration getConfig() {
+    public DTPConfig getConfig() {
 
         return config;
-    }
-
-    public class LocalDTPConfiguration extends ConfigurationBase<DragonTravelPlusPlugin> {
-
-        @Setting("migrate")
-        public boolean migrate = true;
-        @Setting("disabled")
-        public boolean disabled = false;
-        @Setting("aircraft.type")
-        public String aircraftType = "REMOTE_ENTITIES";
-        @Setting("error-prevention-flight-timeout")
-        public int flightTimeout = 30;
-        @Setting("flight-cost-per-block")
-        public double pricePerBlock = 0.1;
-        @Setting("flight-warmup-time")
-        public int flightWarmup = 1;
-        @Setting("flight.height")
-        public int flightHeight = 15;
-        @Setting("flight.speed")
-        public double flightSpeed = 0.3;
-        @Setting("controlled-flight-speed")
-        public double controlledFlightSpeed = 0.3;
-        @Setting("dynamic-flight-speed")
-        public double dynamicFlightSpeed = 0.7;
-        @Setting("controlled-target-distance")
-        public int controlledTargetDistance = 30;
-        @Setting("dynamic-flight-route")
-        public boolean useDynamicRouting = true;
-        @Setting("flight.waypoint-radius")
-        public int waypointRadius = 15;
-        @Setting("flight.flight-task-interval")
-        public int flightTaskInterval = 5;
-        @Setting("flight.teleport-fallback")
-        public boolean flightTeleportFallback = false;
-        @Setting("flight.waypoint-distance")
-        public int wayPointDistance = 10;
-        @Setting("flight.use-citizens-pathfinding")
-        public boolean useCitizensPathFinding = true;
-        @Setting("flight-editor-item")
-        public int flightEditorItem = 122;
-        @Setting("forbidden-commands")
-        public String[] forbiddenCommands = new String[]{
-                "spawn",
-                "home",
-                "cast",
-                "town spawn",
-                "tutorial",
-                "tp"
-        };
-
-        @Setting("npc-search-radius")
-        public int npcStationSearchRadius = 3;
-        @Setting("npc-name")
-        public String npcDefaultName = "Drachenmeister";
-        @Setting("npc-conversation-auto-exit-distance")
-        public int autoExitDistance = 10;
-        @Setting("npc-conversation-max-stations-per-page")
-        public int maxStationPerPage = 5;
-        @Setting("npc-conversation-chat-delimiter")
-        public String chatDelimiter = " ";
-        @Setting("npc-conversation-exit-words")
-        public String[] exitWords = new String[]{
-                "exit",
-                "ende",
-                "beenden",
-                "stop"
-        };
-
-        @Setting("conversation-name")
-        public String conversationName = "drachenmeister";
-
-        public LocalDTPConfiguration(DragonTravelPlusPlugin plugin) {
-
-            super(plugin, "config.yml");
-        }
     }
 }
