@@ -31,7 +31,7 @@ public class TStation {
     private double costMultiplier = 1.0;
     private boolean mainStation = false;
     private boolean emergencyStation = false;
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "station")
     private List<TPlayerStation> playerStations = new ArrayList<>();
 
     public int getId() {

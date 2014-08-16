@@ -77,7 +77,8 @@ public class FlyToStationAction extends AbstractAction {
         public void run() {
 
             try {
-                RaidCraft.getComponent(RCConversationsPlugin.class).getConversationManager().endConversation(passenger.getName(), EndReason.SILENT);
+                RaidCraft.getComponent(RCConversationsPlugin.class).getConversationManager()
+                        .endConversation(passenger.getEntity().getUniqueId(), EndReason.SILENT);
                 Flight flight = route.createFlight(passenger);
                 flight.startFlight();
             } catch (FlightException e) {

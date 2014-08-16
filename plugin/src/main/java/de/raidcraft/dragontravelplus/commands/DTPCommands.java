@@ -7,18 +7,25 @@ import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.flight.Flight;
+import de.raidcraft.api.flight.flight.Waypoint;
 import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.npc.NPCManager;
+import de.raidcraft.dragontravelplus.paths.DynamicFlightPath;
 import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.util.DynmapManager;
 import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.rctravel.api.station.UnknownStationException;
+import de.raidcraft.reference.Colors;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 /**
  * Author: Philip
@@ -175,16 +182,36 @@ public class DTPCommands {
                     }
                 }
 
-                if (!station.getLocation().getWorld().equals(((Player) sender).getLocation().getWorld())) {
-                    continue;
-                }
-
                 ChatColor color = ChatColor.AQUA;
                 if (station instanceof DragonStation && ((DragonStation) station).getPrice() > 0) color = ChatColor.GOLD;
                 if (station instanceof DragonStation && ((DragonStation) station).isEmergencyTarget()) color = ChatColor.DARK_RED;
                 list += color + station.getDisplayName() + ChatColor.WHITE + ", ";
             }
 
+            sender.sendMessage(list);
+        }
+
+        @Command(
+                aliases = {"discovered", "explored", "visited"},
+                desc = "Show all discovered Dragonsations"
+        )
+        public void discovered(CommandContext context, CommandSender sender) throws CommandException {
+
+            Player player = (Player) sender;
+            String list = "";
+            List<TStation> stations = plugin.getDatabase().find(TStation.class)
+                    .fetch("playerStations")
+                    .where().eq("player_id", player.getUniqueId().toString())
+                    .isNotNull("discovered")
+                    .findList();
+            for (TStation station : stations) {
+                list += Colors.Chat.INFO + station.getName() + ChatColor.WHITE + ", ";
+            }
+            if (list.equals("")) {
+                list = "Du hast keine Drachenmeister gefunden.";
+            } else {
+                sender.sendMessage(Colors.Chat.SUCCESS + "Folgende Drachenmeister hast du gefunden:");
+            }
             sender.sendMessage(list);
         }
 
@@ -219,33 +246,31 @@ public class DTPCommands {
 
         @Command(
                 aliases = {"debug"},
-                desc = "Debug"
+                desc = "Debug a flight",
+                min = 2,
+                usage = "<start_station> <end_station>"
         )
         @CommandPermissions("dragontravelplus.debug")
         public void debug(CommandContext context, CommandSender sender) throws CommandException {
 
-            Player player = (Player) sender;
-            Chunk chunk = player.getLocation().getChunk();
-
-            int entityCount = 0;
-            int npcMethodCount = 0;
-            int npcMetaCount = 0;
-
-            // TODO: implement NPC method
-            //            for (ChunkLocation cl : NPCRegistry.INST.getAffectedChunkLocations(chunk)) {
-            //                for (Entity entity : chunk.getWorld().getChunkAt(cl.getX(), cl.getZ()).getEntities()) {
-            //                    if (!(entity instanceof LivingEntity)) continue;
-            //                    entityCount++;
-            //                    NPC npc = RaidCraft.getComponent(RCConversationsPlugin.class).getCitizens().getNPCRegistry().getNPC(entity);
-            //                    if (npc != null) npcMethodCount++;
-            //                    if (entity.hasMetadata("NPC")) npcMetaCount++;
-            //                }
-            //            }
-            //
-            //            player.sendMessage("Living-Entities in affected chunks: " + entityCount);
-            //            player.sendMessage("NPC-Entities according to getNPC(): " + npcMethodCount);
-            //            player.sendMessage("NPC-Entities according to MetaData: " + npcMetaCount);
-            //            player.sendMessage("NPC-Entities according to Registry: " + NPCRegistry.INST.getSpawnedNPCs(chunk).size());
+            try {
+                Location start = plugin.getStationManager().getStation(context.getString(0)).getLocation();
+                Location end = plugin.getStationManager().getStation(context.getString(1)).getLocation();
+                DynamicFlightPath path = new DynamicFlightPath(start, end);
+                path.calculate();
+                List<Waypoint> points = path.getWaypoints();
+                for (Waypoint point : points) {
+                    sender.sendMessage(point.getX() + ":" + point.getY() + ":" + point.getZ());
+                }
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    for (Waypoint point : points) {
+                        player.sendBlockChange(point.getLocation(), Material.GLOWSTONE, (byte) 0);
+                    }
+                }
+            } catch (UnknownStationException e) {
+                sender.sendMessage(e.getMessage());
+            }
         }
     }
 }

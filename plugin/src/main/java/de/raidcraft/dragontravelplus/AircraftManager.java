@@ -1,13 +1,10 @@
 package de.raidcraft.dragontravelplus;
 
-import de.kumpelblase2.remoteentities.EntityManager;
-import de.kumpelblase2.remoteentities.RemoteEntities;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.passenger.Passenger;
 import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
-import de.raidcraft.dragontravelplus.aircrafts.RemoteAircraftDragon;
 import de.raidcraft.util.EntityUtil;
 import de.raidcraft.util.EnumUtils;
 import de.raidcraft.util.ReflectionUtil;
@@ -23,7 +20,6 @@ public final class AircraftManager implements Component {
     public enum AircraftType {
 
         VANILLA,
-        REMOTE_ENTITIES,
         CITIZENS;
 
         public static AircraftType fromString(String name) {
@@ -35,7 +31,6 @@ public final class AircraftManager implements Component {
     private final DragonTravelPlusPlugin plugin;
     private final AircraftType type;
 
-    private EntityManager remoteEntityManager;
     private Citizens citizens;
 
     protected AircraftManager(DragonTravelPlusPlugin plugin) {
@@ -49,14 +44,6 @@ public final class AircraftManager implements Component {
             return;
         }
         switch (type) {
-            case REMOTE_ENTITIES:
-                if (Bukkit.getPluginManager().getPlugin("RemoteEntities") != null) {
-                    this.remoteEntityManager = RemoteEntities.createManager(plugin, true);
-                } else {
-                    plugin.getLogger().severe("RemoteEntites as aircraft type, but plugin was not found! Disabling...");
-                    plugin.disable();
-                }
-                break;
             case CITIZENS:
                 if (Bukkit.getPluginManager().getPlugin("Citizens") != null) {
                     this.citizens = Citizens.getPlugin(Citizens.class);
@@ -77,14 +64,16 @@ public final class AircraftManager implements Component {
 
         switch (type) {
 
-            case REMOTE_ENTITIES:
-                return new RemoteAircraftDragon(remoteEntityManager);
             case CITIZENS:
-                return new CitizensAircraftDragon(citizens);
+                return new CitizensAircraftDragon(citizens, plugin.getConfig());
             case VANILLA:
                 try {
                     Class<?> clazz = ReflectionUtil.getNmsClass("de.raidcraft.dragontravelplus.aircrafts.nms", "RCDragon");
-                    return (Aircraft<?>) clazz.getConstructor(World.class, double.class).newInstance(passenger.getEntity().getWorld(), plugin.getConfig().flightSpeed);
+                    DTPConfig config = plugin.getConfig();
+                    return (Aircraft<?>) clazz.getConstructor(World.class,
+                            double.class, double.class, double.class, int.class, float.class)
+                            .newInstance(passenger.getEntity().getWorld(), config.speedX, config.speedY, config.speedZ,
+                                    config.waypointRadius, config.playerPitch);
                 } catch (Exception e) {
                     plugin.getLogger().warning(e.getMessage());
                     e.printStackTrace();

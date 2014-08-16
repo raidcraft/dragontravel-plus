@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Author: Philip
@@ -59,13 +60,14 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     }
 
     @Override
-    public boolean hasDiscovered(String player) {
+    public boolean hasDiscovered(UUID player) {
 
         if (emergencyTarget || mainStation) {
             return true;
         }
-        List<TPlayerStation> stations = RaidCraft.getDatabase(DragonTravelPlusPlugin.class)
-                .find(TPlayerStation.class).where().eq("player", player).isNotNull("discovered").findList();
+
+        List< TPlayerStation > stations = RaidCraft.getDatabase(DragonTravelPlusPlugin.class)
+                .find(TPlayerStation.class).where().eq("player_id", player).isNotNull("discovered").findList();
         for (TPlayerStation station : stations) {
             if (station.getStation().getName().equalsIgnoreCase(getName())) {
                 return true;
@@ -75,17 +77,17 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     }
 
     @Override
-    public void setDiscovered(String player, boolean discovered) {
+    public void setDiscovered(UUID player, boolean discovered) {
 
         if (discovered) {
 
             EbeanServer database = RaidCraft.getDatabase(DragonTravelPlusPlugin.class);
             TStation station = save();
             TPlayerStation playerStation = database.find(TPlayerStation.class)
-                    .where().eq("station_id", station.getId()).eq("player", player).findUnique();
+                    .where().eq("station_id", station.getId()).eq("player_id", player).findUnique();
             if (playerStation == null) {
                 playerStation = new TPlayerStation();
-                playerStation.setPlayer(player);
+                playerStation.setPlayerId(player);
                 playerStation.setStation(station);
             }
             if (playerStation.getDiscovered() == null) {
