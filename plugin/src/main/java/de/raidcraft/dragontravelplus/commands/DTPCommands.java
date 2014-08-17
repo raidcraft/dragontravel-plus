@@ -159,7 +159,8 @@ public class DTPCommands {
                 throw new CommandException(e.getMessage());
             }
             Player player = CommandUtil.warp(context, sender, station.getLocation(), 1);
-            tr.msg(player, "cmd.station.warp", "You have been teleported to the dragon station: %s", station.getDisplayName());
+            tr.msg(player, "cmd.station.warp", "You have been teleported to the dragon station: %s",
+                    station.getDisplayName());
         }
 
         @Command(
