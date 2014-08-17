@@ -29,7 +29,7 @@ public class CitizensAircraftDragon extends AbstractAircraft<NPC> {
 
         this.config = config;
         //        RaidCraft.LOGGER.warning("create CitizensAircraftDragon");
-        register = NPC_Manager.getInstance().getNonPersistentRegistry();
+        register = NPC_Manager.getInstance().getNonPersistentNpcRegistry("DTP");
         this.npc = register.createNPC(EntityType.ENDER_DRAGON, "Flying Dragon");
         npc.setFlyable(true);
         npc.setProtected(true);
