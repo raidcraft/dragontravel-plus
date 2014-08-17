@@ -19,6 +19,7 @@ import de.raidcraft.dragontravelplus.util.DynmapManager;
 import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.rctravel.api.station.UnknownStationException;
 import de.raidcraft.reference.Colors;
+import de.raidcraft.util.CommandUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -146,20 +147,19 @@ public class DTPCommands {
                 aliases = {"warp", "tp"},
                 desc = "Teleports a player to a station",
                 min = 1,
-                usage = "<name>"
+                usage = "<player> <station>"
         )
         @CommandPermissions("dragontravelplus.warp")
         public void warp(CommandContext context, CommandSender sender) throws CommandException {
 
             DragonStation station;
             try {
-                station = (DragonStation) stationManager.getStation(context.getJoinedStrings(0));
+                station = (DragonStation) stationManager.getStation(context.getString(0));
             } catch (UnknownStationException e) {
                 throw new CommandException(e.getMessage());
             }
-
-            ((Player) sender).teleport(station.getLocation());
-            tr.msg(sender, "cmd.station.warp", "You have been teleported to the dragon station: %s", station.getDisplayName());
+            Player player = CommandUtil.warp(context, sender, station.getLocation(), 1);
+            tr.msg(player, "cmd.station.warp", "You have been teleported to the dragon station: %s", station.getDisplayName());
         }
 
         @Command(
