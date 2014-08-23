@@ -31,8 +31,11 @@ public class CheckPlayerAction extends AbstractAction {
         String startName = args.getString("start", null);
         startName = ParseString.INST.parse(conversation, startName);
         String targetName = conversation.getString("dtp_target_friendlyname", null);
-        targetName = ParseString.INST.parse(conversation, targetName);
         // hotfix for manual input
+        if (targetName == null) {
+            targetName = args.getString("target", null);
+        }
+        targetName = ParseString.INST.parse(conversation, targetName);
         if (targetName == null) {
             setErrorMsg(conversation, "Keine gültige Station");
             changeStage(conversation, failure);
