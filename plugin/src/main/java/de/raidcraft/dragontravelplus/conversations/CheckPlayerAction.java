@@ -31,7 +31,7 @@ public class CheckPlayerAction extends AbstractAction {
         String startName = args.getString("start", null);
         startName = ParseString.INST.parse(conversation, startName);
         String targetName = conversation.getString("dtp_target_friendlyname", null);
-        // hotfix for manual input
+        // hotfix if not manual input
         if (targetName == null) {
             targetName = args.getString("target", null);
         }
