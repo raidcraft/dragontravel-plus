@@ -49,7 +49,7 @@ public class CheckPlayerAction extends AbstractAction {
         Station target = null;
         try {
             start = stationManager.getStation(startName);
-            target = stationManager.getStation(targetName);
+            target = stationManager.getStationFromInput(targetName);
         } catch (UnknownStationException e) {
             setErrorMsg(conversation, e.getMessage());
             changeStage(conversation, failure);
