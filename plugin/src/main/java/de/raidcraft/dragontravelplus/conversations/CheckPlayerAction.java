@@ -30,10 +30,13 @@ public class CheckPlayerAction extends AbstractAction {
 
         String startName = args.getString("start", null);
         startName = ParseString.INST.parse(conversation, startName);
-        String targetName = args.getString("target", null);
+        String targetName = conversation.getString("dtp_target_friendlyname", null);
+        // hotfix if not manual input
+        if (targetName == null) {
+            targetName = args.getString("target", null);
+        }
         targetName = ParseString.INST.parse(conversation, targetName);
-        // hotfix for manual input
-        if (targetName.equals("%[dtp_target_name]")) {
+        if (targetName == null) {
             setErrorMsg(conversation, "Keine gültige Station");
             changeStage(conversation, failure);
             return;
@@ -46,7 +49,7 @@ public class CheckPlayerAction extends AbstractAction {
         Station target = null;
         try {
             start = stationManager.getStation(startName);
-            target = stationManager.getStation(targetName);
+            target = stationManager.getStationFromInput(targetName);
         } catch (UnknownStationException e) {
             setErrorMsg(conversation, e.getMessage());
             changeStage(conversation, failure);

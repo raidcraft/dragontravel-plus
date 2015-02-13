@@ -18,6 +18,12 @@ import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
 import de.raidcraft.rcconversations.actions.ActionManager;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.EntityType;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +33,7 @@ import java.util.List;
  * Date: 22.11.12 - 06:01
  * Description:
  */
-public class DragonTravelPlusPlugin extends BasePlugin {
+public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
 
     private DTPConfig config;
     private de.raidcraft.dragontravelplus.AircraftManager aircraftManager;
@@ -39,6 +45,9 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     public void enable() {
 
         config = configure(new DTPConfig(this));
+
+        // hotfix spawn
+        Bukkit.getPluginManager().registerEvents(this, this);
 
         stationManager = new StationManager(this);
         aircraftManager = new de.raidcraft.dragontravelplus.AircraftManager(this);
@@ -119,5 +128,14 @@ public class DragonTravelPlusPlugin extends BasePlugin {
     public DTPConfig getConfig() {
 
         return config;
+    }
+
+    // hotfix for WorldEdit, otherwise Dragons cannot spawn
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onSpawn(CreatureSpawnEvent event) {
+        if (event.getEntity().getType() != EntityType.ENDER_DRAGON) {
+            return;
+        }
+        event.setCancelled(false);
     }
 }

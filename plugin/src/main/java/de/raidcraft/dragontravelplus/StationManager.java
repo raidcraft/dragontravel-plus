@@ -59,6 +59,16 @@ public final class StationManager implements Component {
         return loadedStations.get(name);
     }
 
+    public Station getStationFromInput(String name) throws UnknownStationException {
+
+        if (!loadedStations.containsKey(name.toLowerCase())) {
+            name = name.replace(" ", "_");
+            return getStation(name);
+            throw new UnknownStationException("No station with the name " + name + " found!");
+        }
+        return loadedStations.get(name);
+    }
+
     public List<Station> getUnlockedStations(Player player) {
 
         List<TPlayerStation> stationsList = plugin.getDatabase().find(TPlayerStation.class).where()

@@ -14,7 +14,7 @@
     <repositories>
         <repository>
             <id>raidcraft</id>
-            <url>http://nexus.raid-craft.de/content/groups/public/</url>
+            <url>http://repo.raid-craft.eu/artifactory/repo/</url>
         </repository>
     </repositories>
 
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>raidcraft-api</artifactId>
-            <version>${rc.version}</version>
+            <version>1.4.9-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
     </dependencies>
