@@ -64,7 +64,9 @@ public final class StationManager implements Component {
         if (!loadedStations.containsKey(name.toLowerCase())) {
 	        name = name.replace(" ", "_");
 	        if(!loadedStations.containsKey(name.toLowerCase()))
-		        throw new UnknownStationException("No station with the name " + name + " found!");
+		        name = name.replace("_", "-");
+		        if(!loadedStations.containsKey(name.toLowerCase()))
+			        throw new UnknownStationException("No station with the name " + name + " found!");
 	        return getStation(name);
         }
         return loadedStations.get(name);
