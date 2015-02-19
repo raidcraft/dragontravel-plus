@@ -22,14 +22,14 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
+            <version>1.7.10-R0.1</version>
             <type>jar</type>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>raidcraft-api</artifactId>
-            <version>1.4.9-SNAPSHOT</version>
+            <version>1.6.2</version>
             <type>jar</type>
         </dependency>
     </dependencies>
