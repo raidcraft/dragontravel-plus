@@ -22,7 +22,7 @@
 
     <modules>
         <module>plugin</module>
-        <module>v1_7_R4</module>
+        <module>v1_7_R3</module>
     </modules>
 
     <build>
