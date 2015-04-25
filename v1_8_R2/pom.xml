@@ -25,6 +25,12 @@
             <version>1.8.3-R0.1-SNAPSHOT</version>
             <type>jar</type>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>minecraft-server</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.raidcraft</groupId>
