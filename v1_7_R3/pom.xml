@@ -30,6 +30,12 @@
             <groupId>de.raidcraft</groupId>
             <artifactId>raidcraft-api</artifactId>
             <version>1.6.3-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.md-5</groupId>
+                    <artifactId>bungeecord-chat</artifactId>
+                </exclusion>
+            </exclusions>
             <type>jar</type>
         </dependency>
     </dependencies>
