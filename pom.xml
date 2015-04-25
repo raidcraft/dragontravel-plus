@@ -10,7 +10,7 @@
     <parent>
         <groupId>de.raidcraft</groupId>
         <artifactId>masterpom</artifactId>
-        <version>RELEASE</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
 
     <repositories>
@@ -23,6 +23,7 @@
     <modules>
         <module>plugin</module>
         <module>v1_7_R3</module>
+        <module>v1_8_R2</module>
     </modules>
 
     <build>

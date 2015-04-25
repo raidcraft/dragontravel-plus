@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dragontravelplus</artifactId>
     <packaging>jar</packaging>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.3.0-SNAPSHOT</version>
     <name>DragonTravelPlus</name>
 
     <scm>
@@ -29,7 +29,7 @@
     <parent>
         <groupId>de.raidcraft</groupId>
         <artifactId>masterpom</artifactId>
-        <version>4.1.0</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
 
     <repositories>
@@ -43,7 +43,7 @@
         <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>raidcraft-api</artifactId>
-            <version>1.6.2</version>
+            <version>1.6.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.raidcraft</groupId>
@@ -74,6 +74,13 @@
             <groupId>de.raidcraft.dragontravelplus</groupId>
             <artifactId>nms-v1_7_R4</artifactId>
             <version>v1_7_R4</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>de.raidcraft.dragontravelplus</groupId>
+            <artifactId>nms-v1_8_R2</artifactId>
+            <version>v1_8_R2</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
