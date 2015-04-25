@@ -24,18 +24,18 @@
             <artifactId>spigot</artifactId>
             <version>1.7.9-R0.3-SNAPSHOT</version>
             <type>jar</type>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>de.raidcraft</groupId>
-            <artifactId>raidcraft-api</artifactId>
-            <version>1.6.3-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>net.md-5</groupId>
                     <artifactId>bungeecord-chat</artifactId>
                 </exclusion>
             </exclusions>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>de.raidcraft</groupId>
+            <artifactId>raidcraft-api</artifactId>
+            <version>1.6.3-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
     </dependencies>
