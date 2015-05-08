@@ -5,6 +5,7 @@ import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Path;
+import de.raidcraft.api.flight.flight.RCStartFlightEvent;
 import de.raidcraft.api.language.Translator;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.station.DragonStation;
@@ -53,10 +54,19 @@ public class DragonStationFlight extends RestrictedFlight {
     @Override
     public void onStartFlight() throws FlightException {
 
-        Economy economy = RaidCraft.getEconomy();
-        if (!economy.hasEnough(getPassenger().getEntity().getUniqueId(), getPrice())) {
-            throw new FlightException(Translator.tr(DragonTravelPlusPlugin.class, (Player) getPassenger().getEntity(),
-                    "flight.no-money", "You dont have enough money to complete this flight!"));
+        if (getPassenger().getEntity() instanceof Player) {
+            Economy economy = RaidCraft.getEconomy();
+            if (!economy.hasEnough(getPassenger().getEntity().getUniqueId(), getPrice())) {
+                throw new FlightException(Translator.tr(DragonTravelPlusPlugin.class, (Player) getPassenger().getEntity(),
+                        "flight.no-money", "You dont have enough money to complete this flight!"));
+            }
+            RCStartFlightEvent event = new RCStartFlightEvent((Player) getPassenger().getEntity(), this);
+            RaidCraft.callEvent(event);
+            if (event.isCancelled()) {
+                if (event.getMessage() != null)
+                    throw new FlightException(event.getMessage());
+                throw new FlightException("Flug konnte nicht gestartet werden.");
+            }
         }
         super.onStartFlight();
     }
