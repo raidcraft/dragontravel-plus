@@ -89,8 +89,9 @@ public class ListStationsAction extends AbstractAction {
                 conversation.addStage(new SimpleStage(entranceStage, "Du kennst keine passende Stationen!", answers));
             }
 
-            int pages = (int) (((double) stations.size() / (double) pageSize) + 0.5);
+            int pages = (int) Math.ceil((double) stations.size() / (double) pageSize);
             if (pages == 0) pages = 1;
+            int x = 0;
             for (int i = 0; i < pages; i++) {
 
                 Stage stage;
@@ -98,11 +99,15 @@ public class ListStationsAction extends AbstractAction {
                 String text;
 
                 text = "Du kennst folgende Drachenstationen (" + (i + 1) + "/" + pages + "):|&7(" + type.getInfoText() + ")";
-                int a;
 
+                int a;
                 for (a = 0; a < pageSize; a++) {
-                    if (stations.size() <= a + (i * pageSize)) break;
-                    answers.add(createStationAnswer(conversation.getPlayer(), a, currentStation, (DragonStation) stations.get(i * pageSize + a), confirmStage));
+                    if (x < stations.size()) {
+                        answers.add(createStationAnswer(conversation.getPlayer(), a, currentStation, (DragonStation) stations.get(x), confirmStage));
+                        x++;
+                    } else {
+                        break;
+                    }
                 }
                 a++;
 
