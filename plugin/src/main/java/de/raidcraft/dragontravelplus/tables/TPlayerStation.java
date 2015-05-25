@@ -23,6 +23,7 @@ public class TPlayerStation {
     private int id;
     @ManyToOne
     private TStation station;
+    private String player;
     private UUID playerId;
     private Timestamp discovered;
 }

@@ -9,6 +9,7 @@ import de.raidcraft.rctravel.api.station.AbstractStation;
 import de.raidcraft.rctravel.api.station.Chargeable;
 import de.raidcraft.rctravel.api.station.Discoverable;
 import de.raidcraft.rctravel.api.station.Station;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -88,6 +89,9 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
             if (playerStation == null) {
                 playerStation = new TPlayerStation();
                 playerStation.setPlayerId(player);
+                if(Bukkit.getPlayer(player) != null) {
+                    playerStation.setPlayer(Bukkit.getPlayer(player).getName());
+                }
                 playerStation.setStation(station);
             }
             if (playerStation.getDiscovered() == null) {
