@@ -23,8 +23,6 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>1.8.6-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>de.raidcraft</groupId>
