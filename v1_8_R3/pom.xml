@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>nms-v1_8_R3</artifactId>
+    <packaging>jar</packaging>
+    <version>v1_8_R3</version>
+
+    <parent>
+        <groupId>de.raidcraft.dragontravelplus</groupId>
+        <artifactId>parent</artifactId>
+        <version>parent</version>
+    </parent>
+
+    <repositories>
+        <repository>
+            <id>raidcraft</id>
+            <url>http://repo.raid-craft.eu/artifactory/repo/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.8.6-R0.1-SNAPSHOT</version>
+            <type>jar</type>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>de.raidcraft</groupId>
+            <artifactId>raidcraft-api</artifactId>
+            <version>1.6.3-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+</project>
