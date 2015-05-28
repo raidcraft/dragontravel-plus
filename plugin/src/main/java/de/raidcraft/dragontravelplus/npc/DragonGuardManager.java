@@ -11,6 +11,8 @@ import de.raidcraft.rctravel.npc.StationTrait;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
 
+import java.util.List;
+
 /**
  * @author Philip Urban
  */
@@ -28,8 +30,9 @@ public class DragonGuardManager {
 
     public static void spawnAllDragonGuardNPCs(StationManager stationManager) {
 
-        for(Station station : stationManager.getAllStations()) {
-            if(!(station instanceof DragonStation)) continue;
+        List<Station> stationList = stationManager.getAllStations();
+        RaidCraft.LOGGER.info("[DragonTravel] Spawn " + stationList.size() + " Dragon Guards...");
+        for(Station station : stationList) {
             spawnDragonGuardNPC(station);
         }
     }

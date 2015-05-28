@@ -91,6 +91,8 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
 
         getConfig().reload();
         getStationManager().reload();
+        DragonGuardManager.removeAllDragonGuards();
+        DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
         getRouteManager().reload();
     }
 
