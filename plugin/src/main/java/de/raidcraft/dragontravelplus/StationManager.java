@@ -49,7 +49,7 @@ public final class StationManager implements Component {
             loadedStations.put(dragonStation.getName(), dragonStation);
             cnt++;
         }
-        plugin.getLogger().info("Loaded " + cnt + "/" + stations.size() + " DTP stations...");
+        plugin.getLogger().info("Loaded " + cnt + " stations for this server (" + stations.size() + " total)");
     }
 
     public Station getStation(String name) throws UnknownStationException {
