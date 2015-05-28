@@ -43,6 +43,7 @@ public final class StationManager implements Component {
         int cnt = 0;
         List<TStation> stations = plugin.getDatabase().find(TStation.class).findList();
         for (TStation station : stations) {
+            if(station.getLocation().getWorld() == null) continue; // ignore stations of other server worlds
             DragonStation dragonStation = new DragonStation(station.getName(), station.getDisplayName(), station.getLocation(),
                     station.getCostMultiplier(), station.isMainStation(), station.isEmergencyStation());
             loadedStations.put(dragonStation.getName(), dragonStation);
@@ -79,6 +80,7 @@ public final class StationManager implements Component {
                 .isNotNull("discovered").findList();
         List<Station> stations = new ArrayList<>();
         for (TPlayerStation playerStation : stationsList) {
+            if(playerStation.getStation().getLocation().getWorld() == null) continue; // ignore stations of other server worlds
             try {
                 if (playerStation.getStation().getWorld().equalsIgnoreCase(player.getLocation().getWorld().getName())) {
                     Station station = getStation(playerStation.getStation().getName());
