@@ -11,7 +11,7 @@ import de.raidcraft.api.flight.flight.Waypoint;
 import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.StationManager;
-import de.raidcraft.dragontravelplus.npc.NPCManager;
+import de.raidcraft.dragontravelplus.npc.DragonGuardManager;
 import de.raidcraft.dragontravelplus.paths.DynamicFlightPath;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
@@ -110,7 +110,7 @@ public class DTPCommands {
                 throw new CommandException(e.getMessage());
             }
 
-            NPCManager.createDragonGuard(station);
+            DragonGuardManager.spawnDragonGuardNPC(station);
 
             // dynmap
             DynmapManager.INST.addStationMarker(station);
@@ -134,7 +134,7 @@ public class DTPCommands {
                 throw new CommandException(e.getMessage());
             }
 
-            NPCManager.removeDragonGuard(station);
+            DragonGuardManager.removeDragonGuard(station);
 
             stationManager.deleteStation(station);
             DynmapManager.INST.removeMarker(station);

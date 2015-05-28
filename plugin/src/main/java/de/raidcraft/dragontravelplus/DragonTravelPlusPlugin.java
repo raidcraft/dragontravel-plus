@@ -3,7 +3,6 @@ package de.raidcraft.dragontravelplus;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.flight.flight.Flight;
-import de.raidcraft.api.npc.NPC_Manager;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
 import de.raidcraft.dragontravelplus.conversations.CheckPlayerAction;
@@ -13,6 +12,7 @@ import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
 import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
 import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
+import de.raidcraft.dragontravelplus.npc.DragonGuardManager;
 import de.raidcraft.dragontravelplus.tables.TPath;
 import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
@@ -60,7 +60,7 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
         registerCommands(FlightCommands.class);
 
         // load NPC's
-        NPC_Manager.getInstance().loadNPCs(getName());
+        DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
 
         try {
             ActionManager.registerAction(new FlyFlightAction());
