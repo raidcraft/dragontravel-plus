@@ -158,8 +158,10 @@ public class DTPCommands {
             } catch (UnknownStationException e) {
                 throw new CommandException(e.getMessage());
             }
-            Player player = CommandUtil.warp(context, sender, station.getLocation(), 1);
-            tr.msg(player, "cmd.station.warp", "You have been teleported to the dragon station: %s",
+            Location improvedLocation = station.getLocation().clone();
+            improvedLocation.setY(improvedLocation.getY() + 2);
+            Player player = CommandUtil.warp(context, sender, improvedLocation, 1);
+            tr.msg(player, "cmd.station.warp", ChatColor.GREEN + "You have been teleported to the dragon station: %s",
                     station.getDisplayName());
         }
 
