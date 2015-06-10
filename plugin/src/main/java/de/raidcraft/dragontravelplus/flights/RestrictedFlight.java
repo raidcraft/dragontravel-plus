@@ -22,7 +22,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 import java.util.Arrays;
 
@@ -42,7 +42,6 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         return RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightTaskInterval;
     }
 
-    // TODO: player check
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onChat(AsyncPlayerChatEvent event) {
 
@@ -55,9 +54,6 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
-    // TODO: doku
-    // TODO: performance - gilt das für alle player?
-    // TODO: player check
     // necessary? einfach vom Spieler immer deaktivieren
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onInteract(PlayerInteractEvent event) {
@@ -67,7 +63,6 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
-    // TODO: player check, immer Schaden deaktivieren?
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDamage(EntityDamageEvent event) {
 
@@ -84,7 +79,6 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
-    // TODO: player check
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onCommand(PlayerCommandPreprocessEvent event) {
 
@@ -101,18 +95,16 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
-    // TODO: player check
     @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)
-    public void onVehicleExit(VehicleExitEvent event) {
+    public void onVehicleExit(EntityDismountEvent event) {
 
-        if (hasPassenger(event.getExited())) {
+        if (!(event.getDismounted() instanceof LivingEntity)) return;
+        if (hasPassenger((LivingEntity) event.getDismounted())) {
             // abort the flight
             abortFlight();
-            event.setCancelled(true);
         }
     }
 
-    // TODO: player check
     @EventHandler(ignoreCancelled = false, priority = EventPriority.LOW)
     public void onPlayerCrouch(PlayerToggleSneakEvent event) {
 
@@ -123,7 +115,6 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
-    // TODO: player check
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent event) {
 
@@ -132,7 +123,6 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
         }
     }
 
-    // TODO: player check und entity check
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onDeath(EntityDeathEvent event) {
 
@@ -165,7 +155,6 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
     private void unregisterListener() {
 
         // unregister a little bit later to catch fall damage and such
-        // TODO: sideeffects
         DragonTravelPlusPlugin plugin = RaidCraft.getComponent(DragonTravelPlusPlugin.class);
         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
