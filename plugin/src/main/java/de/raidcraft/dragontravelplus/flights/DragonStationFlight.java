@@ -117,6 +117,7 @@ public class DragonStationFlight extends RestrictedFlight {
 
         private int arrivalTime;
         private double lastDistance;
+        private int lastBlocksPerSecond;
 
         @Override
         public void run() {
@@ -138,7 +139,7 @@ public class DragonStationFlight extends RestrictedFlight {
             }
 
             // print welcome message if distance is short enough
-            if(newDistance < 40) {
+            if(newDistance < 70) {
                 GUIUtil.setTitleBarText((Player)getPassenger().getEntity(),
                         ChatColor.DARK_GRAY + "*** " +
                                 ChatColor.DARK_PURPLE + "Du hast dein Ziel erreicht: " +
@@ -155,10 +156,19 @@ public class DragonStationFlight extends RestrictedFlight {
             /**
              * Arrival Time Calculation
              */
-            int blockPerSeconds = (int)(lastDistance - newDistance);
-            // some interpolation to prevent incomprehensible values
-            if(blockPerSeconds > 1) {
-                arrivalTime = (int)newDistance / blockPerSeconds;
+            int blocksPerSeconds = (int)(lastDistance - newDistance);
+
+            // first speed calculation
+            if(lastBlocksPerSecond == 0) lastBlocksPerSecond = blocksPerSeconds;
+            // check if delta is too high and correct it
+            if((lastBlocksPerSecond - blocksPerSeconds) > 3) {
+                blocksPerSeconds = lastBlocksPerSecond - 3;
+            } else if((lastBlocksPerSecond - blocksPerSeconds) < -3){
+                blocksPerSeconds = lastBlocksPerSecond + 3;
+            }
+
+            if(blocksPerSeconds > 1) {
+                arrivalTime = (int)newDistance / blocksPerSeconds;
             }
             String arrivalTimeString;
             if(arrivalTime < 60) {
@@ -172,9 +182,9 @@ public class DragonStationFlight extends RestrictedFlight {
              */
             String distanceString;
             if(newDistance > 1000D) {
-                distanceString = ChatColor.GOLD.toString() + round((newDistance/1000D), 2) + "km";
+                distanceString = ChatColor.GOLD.toString() + Double.toString(round((newDistance/1000D), 2)) + "km";
             } else {
-                distanceString = ChatColor.GOLD.toString() + String.valueOf(((int)(newDistance))) + "m";
+                distanceString = ChatColor.GOLD.toString() + Double.toString(round((newDistance), 0)) + "m";
             }
 
 
