@@ -126,6 +126,12 @@ public class DragonStationFlight extends RestrictedFlight {
         @Override
         public void run() {
 
+            // cancel this task if flight was aborted
+            if(!isActive()) {
+                Bukkit.getScheduler().cancelTask(updateGUITaskID);
+                return;
+            }
+
             double newDistance = round(getPassenger().getEntity().getLocation().distance(getEndLocation()), 2);
             int totalDistance = (int)Math.round(getEndLocation().distance(getStartLocation()));
 
@@ -139,7 +145,7 @@ public class DragonStationFlight extends RestrictedFlight {
              */
             int blockPerSeconds = (int)(lastDistance - newDistance);
             // some interpolation to prevent incomprehensible values
-            if(blockPerSeconds < 5) {
+            if(blockPerSeconds > 1) {
                 arrivalTime = totalDistance / blockPerSeconds;
             }
             String arrivalTimeString;
@@ -156,7 +162,7 @@ public class DragonStationFlight extends RestrictedFlight {
             if(newDistance > 1000D) {
                 distanceString = ChatColor.GOLD.toString() + round((newDistance/1000D), 2) + "km";
             } else {
-                distanceString = ChatColor.GOLD.toString() + newDistance + "m";
+                distanceString = ChatColor.GOLD.toString() + round((newDistance), 0) + "m";
             }
 
 
