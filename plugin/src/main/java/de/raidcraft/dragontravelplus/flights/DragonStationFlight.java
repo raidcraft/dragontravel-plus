@@ -142,11 +142,6 @@ public class DragonStationFlight extends RestrictedFlight {
             if(lastDistance == 0) {
                 lastDistance = totalDistance;
             }
-//
-//            RaidCraft.LOGGER.info("[DragonTP-GUI] ----------------------------------");
-//            RaidCraft.LOGGER.info("[DragonTP-GUI] lastDistance: " + lastDistance);
-//            RaidCraft.LOGGER.info("[DragonTP-GUI] newDistance: " + newDistance);
-//            RaidCraft.LOGGER.info("[DragonTP-GUI] totalDistance: " + totalDistance);
 
             // dragon is flying backwards!? ;)
             if(newDistance > lastDistance) {
@@ -159,7 +154,7 @@ public class DragonStationFlight extends RestrictedFlight {
             int blockPerSeconds = (int)(lastDistance - newDistance);
             // some interpolation to prevent incomprehensible values
             if(blockPerSeconds > 1) {
-                arrivalTime = totalDistance / blockPerSeconds;
+                arrivalTime = (int)newDistance / blockPerSeconds;
             }
             String arrivalTimeString;
             if(arrivalTime < 60) {
@@ -175,7 +170,7 @@ public class DragonStationFlight extends RestrictedFlight {
             if(newDistance > 1000D) {
                 distanceString = ChatColor.GOLD.toString() + round((newDistance/1000D), 2) + "km";
             } else {
-                distanceString = ChatColor.GOLD.toString() + round((newDistance), 0) + "m";
+                distanceString = ChatColor.GOLD.toString() + ((int)(newDistance)) + "m";
             }
 
 
