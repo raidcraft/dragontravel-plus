@@ -109,26 +109,40 @@ public class DragonStationFlight extends RestrictedFlight {
         super.onEndFlight();
     }
 
+    private static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
+    }
+
     private class UpdateGuiTask implements Runnable {
 
         private int arrivalTime;
-        private int lastDistance;
+        private double lastDistance;
 
         @Override
         public void run() {
 
-            int newDistance = (int)Math.round(getPassenger().getEntity().getLocation().distance(getEndLocation()));
+            double newDistance = round(getPassenger().getEntity().getLocation().distance(getEndLocation()), 2);
             int totalDistance = (int)Math.round(getEndLocation().distance(getStartLocation()));
+
+            // dragon is flying backwards!? ;)
+            if(newDistance > lastDistance) {
+                newDistance = lastDistance;
+            }
 
             /**
              * Arrival Time Calculation
              */
-            int blockPerSeconds = lastDistance - newDistance;
-            if(blockPerSeconds != 0) {
+            int blockPerSeconds = (int)(lastDistance - newDistance);
+            // some interpolation to prevent incomprehensible values
+            if(blockPerSeconds < 5) {
                 arrivalTime = totalDistance / blockPerSeconds;
             }
             String arrivalTimeString;
-
             if(arrivalTime < 60) {
                 arrivalTimeString = ChatColor.GOLD.toString() + arrivalTime + "s";
             } else {
@@ -139,15 +153,14 @@ public class DragonStationFlight extends RestrictedFlight {
              * Distance Calculation
              */
             String distanceString;
-
-            if(newDistance > 1000) {
-                distanceString = ChatColor.GOLD.toString() + (double)Math.round(((double)newDistance/1000D)*100)/100D + "km";
+            if(newDistance > 1000D) {
+                distanceString = ChatColor.GOLD.toString() + round((newDistance/1000D), 2) + "km";
             } else {
                 distanceString = ChatColor.GOLD.toString() + newDistance + "m";
             }
 
 
-                    lastDistance = newDistance;
+            lastDistance = newDistance;
 
             GUIUtil.setTitleBarText((Player)getPassenger().getEntity(),
                     ChatColor.DARK_GRAY + "*** " +
@@ -155,7 +168,7 @@ public class DragonStationFlight extends RestrictedFlight {
                             ChatColor.GOLD + newDistance + distanceString +
                             ChatColor.DARK_GRAY + "| " +
                             ChatColor.DARK_PURPLE + "Ankunft in " + arrivalTimeString +
-                            ChatColor.DARK_GRAY + "***");
+                            ChatColor.DARK_GRAY + " ***");
         }
     }
 }
