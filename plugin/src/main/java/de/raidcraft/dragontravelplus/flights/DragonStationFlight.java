@@ -90,13 +90,6 @@ public class DragonStationFlight extends RestrictedFlight {
     @Override
     public void onEndFlight() throws FlightException {
 
-        // stop GUI update task
-        if(updateGUITaskID != 0) {
-            Bukkit.getScheduler().cancelTask(updateGUITaskID);
-            Hero hero = RaidCraft.getComponent(SkillsPlugin.class).getCharacterManager().getHero((Player)getPassenger().getEntity());
-            Option.ACTION_BAR.set(hero, true); // enable actionbar
-        }
-
         // lets substract the flight cost
         Economy economy = RaidCraft.getEconomy();
         double price = getPrice();
@@ -130,6 +123,7 @@ public class DragonStationFlight extends RestrictedFlight {
 
             // cancel this task if flight was aborted
             if(!isActive()) {
+
                 Hero hero = RaidCraft.getComponent(SkillsPlugin.class).getCharacterManager().getHero((Player)getPassenger().getEntity());
                 Option.ACTION_BAR.set(hero, true); // enable actionbar
                 Bukkit.getScheduler().cancelTask(updateGUITaskID);
@@ -141,6 +135,16 @@ public class DragonStationFlight extends RestrictedFlight {
 
             if(lastDistance == 0) {
                 lastDistance = totalDistance;
+            }
+
+            // print welcome message if distance is short enough
+            if(newDistance < 40) {
+                GUIUtil.setTitleBarText((Player)getPassenger().getEntity(),
+                        ChatColor.DARK_GRAY + "*** " +
+                                ChatColor.DARK_PURPLE + "Du hast dein Ziel erreicht: " +
+                                ChatColor.GOLD + getEndStation().getDisplayName() +
+                                ChatColor.DARK_GRAY + " ***");
+                return;
             }
 
             // dragon is flying backwards!? ;)
@@ -170,7 +174,7 @@ public class DragonStationFlight extends RestrictedFlight {
             if(newDistance > 1000D) {
                 distanceString = ChatColor.GOLD.toString() + round((newDistance/1000D), 2) + "km";
             } else {
-                distanceString = ChatColor.GOLD.toString() + ((int)(newDistance)) + "m";
+                distanceString = ChatColor.GOLD.toString() + String.valueOf(((int)(newDistance))) + "m";
             }
 
 
@@ -180,7 +184,7 @@ public class DragonStationFlight extends RestrictedFlight {
                     ChatColor.DARK_GRAY + "*** " +
                             ChatColor.DARK_PURPLE + "Entfernung zum Ziel: " +
                             ChatColor.GOLD + newDistance + distanceString +
-                            ChatColor.DARK_GRAY + "| " +
+                            ChatColor.DARK_GRAY + " | " +
                             ChatColor.DARK_PURPLE + "Ankunft in " + arrivalTimeString +
                             ChatColor.DARK_GRAY + " ***");
         }
