@@ -21,6 +21,9 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * @author Silthus
  */
@@ -109,13 +112,12 @@ public class DragonStationFlight extends RestrictedFlight {
         super.onEndFlight();
     }
 
-    private static double round(double value, int places) {
+    public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
-        long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
     private class UpdateGuiTask implements Runnable {
@@ -128,12 +130,23 @@ public class DragonStationFlight extends RestrictedFlight {
 
             // cancel this task if flight was aborted
             if(!isActive()) {
+                Hero hero = RaidCraft.getComponent(SkillsPlugin.class).getCharacterManager().getHero((Player)getPassenger().getEntity());
+                Option.ACTION_BAR.set(hero, true); // enable actionbar
                 Bukkit.getScheduler().cancelTask(updateGUITaskID);
                 return;
             }
 
             double newDistance = round(getPassenger().getEntity().getLocation().distance(getEndLocation()), 2);
-            int totalDistance = (int)Math.round(getEndLocation().distance(getStartLocation()));
+            int totalDistance = (int)round(getEndLocation().distance(getStartLocation()), 0);
+
+            if(lastDistance == 0) {
+                lastDistance = totalDistance;
+            }
+//
+//            RaidCraft.LOGGER.info("[DragonTP-GUI] ----------------------------------");
+//            RaidCraft.LOGGER.info("[DragonTP-GUI] lastDistance: " + lastDistance);
+//            RaidCraft.LOGGER.info("[DragonTP-GUI] newDistance: " + newDistance);
+//            RaidCraft.LOGGER.info("[DragonTP-GUI] totalDistance: " + totalDistance);
 
             // dragon is flying backwards!? ;)
             if(newDistance > lastDistance) {
