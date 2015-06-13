@@ -122,16 +122,19 @@ public class DragonStationFlight extends RestrictedFlight {
         @Override
         public void run() {
 
-            // cancel this task if flight was aborted
-            if(!isActive()) {
+            Player player = (Player)getPassenger().getEntity();
 
-                Hero hero = RaidCraft.getComponent(SkillsPlugin.class).getCharacterManager().getHero((Player)getPassenger().getEntity());
+            // cancel this task if flight was aborted
+            if(!isActive() || player.getVehicle() == null) {
+
+                if(isActive()) { abortFlight(); } // maybe player is not on dragon but flight is still active
+                Hero hero = RaidCraft.getComponent(SkillsPlugin.class).getCharacterManager().getHero(player);
                 Option.ACTION_BAR.set(hero, true); // enable actionbar
                 Bukkit.getScheduler().cancelTask(updateGUITaskID);
                 return;
             }
 
-            double newDistance = round(getPassenger().getEntity().getLocation().distance(getEndLocation()), 2);
+            double newDistance = round(player.getLocation().distance(getEndLocation()), 2);
             int totalDistance = (int)round(getEndLocation().distance(getStartLocation()), 0);
 
             if(lastDistance == 0) {
@@ -140,7 +143,7 @@ public class DragonStationFlight extends RestrictedFlight {
 
             // print welcome message if distance is short enough
             if(newDistance < 70) {
-                GUIUtil.setTitleBarText((Player)getPassenger().getEntity(),
+                GUIUtil.setTitleBarText(player,
                         ChatColor.DARK_GRAY + "*** " +
                                 ChatColor.DARK_PURPLE + "Du hast dein Ziel erreicht: " +
                                 ChatColor.GOLD + getEndStation().getDisplayName() +
@@ -161,10 +164,10 @@ public class DragonStationFlight extends RestrictedFlight {
             // first speed calculation
             if(lastBlocksPerSecond == 0) lastBlocksPerSecond = blocksPerSeconds;
             // check if delta is too high and correct it
-            if((lastBlocksPerSecond - blocksPerSeconds) > 5) {
-                blocksPerSeconds = lastBlocksPerSecond - 5;
-            } else if((lastBlocksPerSecond - blocksPerSeconds) < -5){
-                blocksPerSeconds = lastBlocksPerSecond + 5;
+            if((lastBlocksPerSecond - blocksPerSeconds) > 2) {
+                blocksPerSeconds = lastBlocksPerSecond - 2;
+            } else if((lastBlocksPerSecond - blocksPerSeconds) < -2){
+                blocksPerSeconds = lastBlocksPerSecond + 2;
             }
             // we are slower than the value we measured
             blocksPerSeconds -= 3;
@@ -174,27 +177,27 @@ public class DragonStationFlight extends RestrictedFlight {
             }
             String arrivalTimeString;
             if(arrivalTime < 60) {
-                arrivalTimeString = ChatColor.GOLD.toString() + "~" + arrivalTime + "s";
+                arrivalTimeString = ChatColor.GOLD.toString() + arrivalTime + "s";
             } else {
-                arrivalTimeString = ChatColor.GOLD.toString() + "~" + (arrivalTime/60) + "min";
+                arrivalTimeString = ChatColor.GOLD.toString() + (arrivalTime/60) + "min";
             }
 
             /**
              * Distance Calculation
              */
 
-            int intDistance = (int)newDistance;
-            String distanceString = ChatColor.GOLD.toString() + intDistance + "m";
+            Integer intDistance = new Integer((int)newDistance);
+            String distanceString = ChatColor.GOLD.toString() + intDistance.toString() + "m";
 
 
             lastDistance = newDistance;
 
-            GUIUtil.setTitleBarText((Player)getPassenger().getEntity(),
+            GUIUtil.setTitleBarText(player,
                     ChatColor.DARK_GRAY + "*** " +
                             ChatColor.DARK_PURPLE + "Entfernung zum Ziel: " +
                             ChatColor.GOLD + newDistance + distanceString +
                             ChatColor.DARK_GRAY + " | " +
-                            ChatColor.DARK_PURPLE + "Ankunft in " + arrivalTimeString +
+                            ChatColor.DARK_PURPLE + "Ankunft in ca. " + arrivalTimeString +
                             ChatColor.DARK_GRAY + " ***");
         }
     }
