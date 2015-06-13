@@ -161,11 +161,13 @@ public class DragonStationFlight extends RestrictedFlight {
             // first speed calculation
             if(lastBlocksPerSecond == 0) lastBlocksPerSecond = blocksPerSeconds;
             // check if delta is too high and correct it
-            if((lastBlocksPerSecond - blocksPerSeconds) > 3) {
-                blocksPerSeconds = lastBlocksPerSecond - 3;
-            } else if((lastBlocksPerSecond - blocksPerSeconds) < -3){
-                blocksPerSeconds = lastBlocksPerSecond + 3;
+            if((lastBlocksPerSecond - blocksPerSeconds) > 5) {
+                blocksPerSeconds = lastBlocksPerSecond - 5;
+            } else if((lastBlocksPerSecond - blocksPerSeconds) < -5){
+                blocksPerSeconds = lastBlocksPerSecond + 5;
             }
+            // we are slower than the value we measured
+            blocksPerSeconds -= 1;
 
             if(blocksPerSeconds > 1) {
                 arrivalTime = (int)newDistance / blocksPerSeconds;
@@ -180,12 +182,7 @@ public class DragonStationFlight extends RestrictedFlight {
             /**
              * Distance Calculation
              */
-            String distanceString;
-            if(newDistance > 1000D) {
-                distanceString = ChatColor.GOLD.toString() + Double.toString(round((newDistance/1000D), 2)) + "km";
-            } else {
-                distanceString = ChatColor.GOLD.toString() + Double.toString(round((newDistance), 0)) + "m";
-            }
+             String distanceString = ChatColor.GOLD.toString() + Integer.toString((int)newDistance) + "m";
 
 
             lastDistance = newDistance;
