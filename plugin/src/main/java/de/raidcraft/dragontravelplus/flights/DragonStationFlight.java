@@ -82,7 +82,7 @@ public class DragonStationFlight extends RestrictedFlight {
             // start thread to update GUI (distance view in title bar)
             Hero hero = RaidCraft.getComponent(SkillsPlugin.class).getCharacterManager().getHero((Player)getPassenger().getEntity());
             Option.ACTION_BAR.set(hero, false); // disable actionbar
-            updateGUITaskID = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new UpdateGuiTask(), 20, 20).getTaskId();
+            updateGUITaskID = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new UpdateGuiTask(), 10, 20).getTaskId();
         }
         super.onStartFlight();
     }
@@ -167,7 +167,7 @@ public class DragonStationFlight extends RestrictedFlight {
                 blocksPerSeconds = lastBlocksPerSecond + 5;
             }
             // we are slower than the value we measured
-            blocksPerSeconds -= 1;
+            blocksPerSeconds -= 3;
 
             if(blocksPerSeconds > 1) {
                 arrivalTime = (int)newDistance / blocksPerSeconds;
@@ -182,7 +182,9 @@ public class DragonStationFlight extends RestrictedFlight {
             /**
              * Distance Calculation
              */
-             String distanceString = ChatColor.GOLD.toString() + Integer.toString((int)newDistance) + "m";
+
+            int intDistance = (int)newDistance;
+            String distanceString = ChatColor.GOLD.toString() + intDistance + "m";
 
 
             lastDistance = newDistance;
@@ -192,7 +194,7 @@ public class DragonStationFlight extends RestrictedFlight {
                             ChatColor.DARK_PURPLE + "Entfernung zum Ziel: " +
                             ChatColor.GOLD + newDistance + distanceString +
                             ChatColor.DARK_GRAY + " | " +
-                            ChatColor.DARK_PURPLE + "Ankunft in " + arrivalTimeString +
+                            ChatColor.DARK_PURPLE + "Ankunft in ~" + arrivalTimeString +
                             ChatColor.DARK_GRAY + " ***");
         }
     }
