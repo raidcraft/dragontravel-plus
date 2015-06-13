@@ -174,9 +174,9 @@ public class DragonStationFlight extends RestrictedFlight {
             }
             String arrivalTimeString;
             if(arrivalTime < 60) {
-                arrivalTimeString = ChatColor.GOLD.toString() + arrivalTime + "s";
+                arrivalTimeString = ChatColor.GOLD.toString() + "~" + arrivalTime + "s";
             } else {
-                arrivalTimeString = ChatColor.GOLD.toString() + (arrivalTime/60) + "min";
+                arrivalTimeString = ChatColor.GOLD.toString() + "~" + (arrivalTime/60) + "min";
             }
 
             /**
@@ -194,7 +194,7 @@ public class DragonStationFlight extends RestrictedFlight {
                             ChatColor.DARK_PURPLE + "Entfernung zum Ziel: " +
                             ChatColor.GOLD + newDistance + distanceString +
                             ChatColor.DARK_GRAY + " | " +
-                            ChatColor.DARK_PURPLE + "Ankunft in ~" + arrivalTimeString +
+                            ChatColor.DARK_PURPLE + "Ankunft in " + arrivalTimeString +
                             ChatColor.DARK_GRAY + " ***");
         }
     }
