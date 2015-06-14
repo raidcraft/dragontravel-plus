@@ -40,11 +40,11 @@ public class DynamicInterpolatedFlightPath extends DynamicFlightPath {
         double preDiff = (int) (currentLocation.getY() - preLocation.getY());
         double nextDiff = (int) (currentLocation.getY() - nextLocation.getY());
         // limit route diff to 20 blocks high
-        if (Math.abs(preDiff) > 20) {
+        if (Math.abs(preDiff) > 5) {
             if (preDiff < 0) {
-                newY = preLocation.getY() - 20;
+                newY = preLocation.getY() - 5;
             } else {
-                newY = preLocation.getY() + 20;
+                newY = preLocation.getY() + 5;
             }
         }
         // set the updated waypoint
