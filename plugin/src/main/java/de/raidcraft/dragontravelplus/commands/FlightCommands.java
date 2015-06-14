@@ -110,6 +110,11 @@ public class FlightCommands {
         public void save(CommandContext context, CommandSender sender) throws CommandException {
 
             Player player = (Player) sender;
+
+            if(context.argsLength() < 1) {
+                throw new CommandException("Gebe den Name des Fluges an den du speichern möchtest!");
+            }
+
             String flightName = context.getString(0);
 
             if (!FlightEditorListener.hasEditorMode(player)) {

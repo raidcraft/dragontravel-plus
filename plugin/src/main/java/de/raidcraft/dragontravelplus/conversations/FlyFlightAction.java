@@ -13,6 +13,7 @@ import de.raidcraft.rcconversations.api.action.ActionArgumentList;
 import de.raidcraft.rcconversations.api.action.ActionInformation;
 import de.raidcraft.rcconversations.api.action.WrongArgumentValueException;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
+import de.raidcraft.rcconversations.conversations.EndReason;
 import de.raidcraft.rcconversations.util.ParseString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,6 +36,7 @@ public class FlyFlightAction extends AbstractAction {
             RouteManager routeManager = plugin.getRouteManager();
             Path path = routeManager.getPath(flightName);
 
+            double speed = args.getDouble("speed", 1);
             final Flight flight = plugin.getFlightManager().createFlight(plugin.getFlightManager().getPassenger(conversation.getPlayer()), path);
 
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
@@ -50,6 +52,7 @@ public class FlyFlightAction extends AbstractAction {
                 }
             }, delay);
         } catch (UnknownPathException e) {
+            conversation.endConversation(EndReason.FAILURE);
             throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Flight '" + flightName + "' does not exists!");
         }
     }
