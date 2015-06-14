@@ -127,7 +127,10 @@ public class DragonStationFlight extends RestrictedFlight {
             // cancel this task if flight was aborted
             if(!isActive() || player.getVehicle() == null) {
 
-                if(isActive()) { abortFlight(); } // maybe player is not on dragon but flight is still active
+                if(isActive()) {
+                    abortFlight();
+                    player.sendMessage(ChatColor.RED + "Du bist während des Fluges abgestiegen!");
+                } // maybe player is not on dragon but flight is still active
                 Hero hero = RaidCraft.getComponent(SkillsPlugin.class).getCharacterManager().getHero(player);
                 Option.ACTION_BAR.set(hero, true); // enable actionbar
                 Bukkit.getScheduler().cancelTask(updateGUITaskID);
@@ -195,7 +198,7 @@ public class DragonStationFlight extends RestrictedFlight {
             GUIUtil.setTitleBarText(player,
                     ChatColor.DARK_GRAY + "*** " +
                             ChatColor.DARK_PURPLE + "Entfernung zum Ziel: " +
-                            ChatColor.GOLD + newDistance + distanceString +
+                            ChatColor.GOLD + distanceString +
                             ChatColor.DARK_GRAY + " | " +
                             ChatColor.DARK_PURPLE + "Ankunft in ca. " + arrivalTimeString +
                             ChatColor.DARK_GRAY + " ***");
