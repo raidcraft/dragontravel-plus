@@ -129,7 +129,7 @@ public class DragonStationFlight extends RestrictedFlight {
 
                 if(isActive()) {
                     abortFlight();
-                    player.sendMessage(ChatColor.RED + "Du bist w‰hrend des Fluges abgestiegen!");
+                    player.sendMessage(ChatColor.RED + "Du bist w√§hrend des Fluges abgestiegen!");
                 } // maybe player is not on dragon but flight is still active
                 Hero hero = RaidCraft.getComponent(SkillsPlugin.class).getCharacterManager().getHero(player);
                 Option.ACTION_BAR.set(hero, true); // enable actionbar
