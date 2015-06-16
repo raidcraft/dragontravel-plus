@@ -69,7 +69,7 @@ public class ListStationsAction extends AbstractAction {
             }
 
             if (type == ListType.FREE) {
-                if(currentStation.isFree()) {
+                if(currentStation.isFree() ||currentStation.isMainStation()) {
                     stations = stations.stream()
                             .filter(station -> station instanceof DragonStation)
                             .map(station -> (DragonStation) station)
