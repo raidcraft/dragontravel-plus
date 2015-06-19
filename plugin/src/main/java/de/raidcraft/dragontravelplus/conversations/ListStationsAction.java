@@ -69,20 +69,10 @@ public class ListStationsAction extends AbstractAction {
             }
 
             if (type == ListType.FREE) {
-                if(currentStation.isFree() ||currentStation.isMainStation()) {
-                    stations = stations.stream()
-                            .filter(station -> station instanceof DragonStation)
-                            .map(station -> (DragonStation) station)
-                            .filter(DragonStation::isFree)
-                            .collect(Collectors.toList());
-                } else {
-                    stations = stations.stream()
-                            .filter(station -> station instanceof DragonStation)
-                            .map(station -> (DragonStation) station)
-                            .filter(DragonStation::isMainStation)
-                            .filter(DragonStation::isFree)
-                            .collect(Collectors.toList());
-                }
+                stations = stations.stream()
+                        .filter(station -> station instanceof DragonStation)
+                        .filter(station -> currentStation.getPrice((DragonStation)station) == 0)
+                        .collect(Collectors.toList());
             }
 
             stations = stations.stream()
