@@ -154,7 +154,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
         if ((int) from != (int) to) {
             if (from < to) {
                 if((to - from) < maxDiff) {
-                    from = (to - from);
+                    from += (to - from);
                 } else {
                     from += maxDiff;
                 }
