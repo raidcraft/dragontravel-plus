@@ -149,6 +149,25 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
         mount(null);
     }
 
+    private double getNewInterpolatedCoordinate(double from, double to, double maxDiff) {
+
+        if ((int) from != (int) to) {
+            if (from < to) {
+                if((to - from) < maxDiff) {
+                    from = (to - from);
+                } else {
+                    from += maxDiff;
+                }
+            } else {
+                if((from - to) < maxDiff) {
+                    from -= (from - to);
+                } else {
+                    from -= maxDiff;
+                }
+            }
+        }
+        return from;
+    }
 
     @Override
     public void m() {
@@ -161,29 +180,10 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
         double myY = locY;
         double myZ = locZ;
 
-        if ((int) myX != (int) toX) {
-            if (myX < toX) {
-                myX += XperTick;
-            } else {
-                myX -= XperTick;
-            }
-        }
+        myX = getNewInterpolatedCoordinate(myX, toX, XperTick);
+        myY = getNewInterpolatedCoordinate(myY, toY, YperTick);
+        myZ = getNewInterpolatedCoordinate(myZ, toZ, ZperTick);
 
-        if ((int) myY != (int) toY) {
-            if (myY < toY) {
-                myY += YperTick;
-            } else {
-                myY -= YperTick;
-            }
-        }
-
-        if ((int) myZ != (int) toZ) {
-            if (myZ < toZ) {
-                myZ += ZperTick;
-            } else {
-                myZ -= ZperTick;
-            }
-        }
         setPosition(myX, myY, myZ);
     }
 
@@ -231,7 +231,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
             } else {
                 loc.setYaw((float) (0.5 * Math.PI));
             }
-            loc.setYaw((float) loc.getYaw() - (float) Math.atan(dz / dx));
+            loc.setYaw(loc.getYaw() - (float) Math.atan(dz / dx));
         } else if (dz < 0) {
             loc.setYaw((float) Math.PI);
         }
