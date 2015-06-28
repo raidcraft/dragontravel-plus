@@ -63,13 +63,20 @@ public class DynamicFlightPath extends AbstractPath {
             // lets unload the chunk if needed to avoid memory leaking
             if (unloadChunk) wpLocation.getChunk().unload();
 
-            // try to flight on the same height
+            /*
+             * Calculate Y coordinate for a smooth flight
+             */
+            // use last y for start of calculation
             double y = lastY - config.flightDragonFalling;
-            if (heighestBlockY + minGroundDiff > y) {   // if new location is to low
-                y = heighestBlockY + flighHeight;
-            } else if (y > heighestBlockY + maxGroundDiff) { // if new location is to hight
-                y = heighestBlockY + flighHeight;
+            // check if minimum ground difference is reached
+            if((y - heighestBlockY) < minGroundDiff) {
+                y += (minGroundDiff - (y - heighestBlockY));
             }
+            // check if maximum ground difference is exceeded
+            if((y - heighestBlockY) > maxGroundDiff) {
+                y -= (maxGroundDiff - (y - heighestBlockY));
+            }
+
             lastY = y;
             wpLocation.setY(y);
 
