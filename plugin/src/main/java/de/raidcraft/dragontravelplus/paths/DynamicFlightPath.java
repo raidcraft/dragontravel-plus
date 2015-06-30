@@ -46,7 +46,6 @@ public class DynamicFlightPath extends AbstractPath {
         double lastY = -1;
         double minGroundDiff = config.fligthMinGroundDistance;
         double maxGroundDiff = config.fligthMaxGroundDistance;
-        double flighHeight = (maxGroundDiff - minGroundDiff) / 2;
         Location lastUnsafeStart = getStartLocation().clone();
         for (int i = 1; i < wayPointCount; i++) {
             // calculate unsafe start point
@@ -85,7 +84,6 @@ public class DynamicFlightPath extends AbstractPath {
             addWaypoint(new Waypoint(wpLocation));
         }
 
-        // add "H_H" check #1313
         List<Waypoint> waypoints = getWaypoints();
         double y = -1;
         double nextY = -1;
@@ -94,38 +92,26 @@ public class DynamicFlightPath extends AbstractPath {
             lastY = waypoints.get(i - 1).getY();
             y = waypoints.get(i).getY();
             nextY = waypoints.get(i + 1).getY();
-            // iter over it, e.g. to find "H__H"
-            for (int iter = 0; iter < forwardIteration; iter++) {
-                int nextIndex = i + 1 + iter;
-                // if at the end
-                if (nextIndex >= waypoints.size()) {
-                    break;
-                }
-                nextY = Math.max(nextY, waypoints.get(nextIndex).getY());
-            }
-            // if we are flying into a gap
-            if (lastY <= y || nextY <= y) {
-                continue;
-            }
-            // use the y of next or last
-            waypoints.get(i).setY(Math.max(lastY, nextY));
-        }
 
-        // add "_H" check #1313
-        double dy = -1;
-        // TODO: maybe iter from behind to increase performance
-        for (int i = 1; i < waypoints.size(); i++) {
-            // if the y-delte is to much, lift up
-            dy = waypoints.get(i).getY() - waypoints.get(i - 1).getY();
-            if (dy < config.flightLiftUpDelta) {
-                continue;
+            /*
+             * Lift down
+             */
+
+            // extreme delta
+            if(lastY - config.flightLiftDownDelta > y) {
+                y = (lastY-y / 2); // only lift down half delta
             }
-            // lift up
-            Waypoint liftUpWaypoint = new Waypoint(waypoints.get(i - 1).getLocation().clone());
-            liftUpWaypoint.setY(waypoints.get(i).getY());
-            waypoints.add(i, liftUpWaypoint);
-            // increase index of new added waypoint
-            i++;
+
+            /*
+             * Lift up
+             */
+
+            // extreme delta
+            if(nextY - config.flightLiftUpDelta > y) {
+                y = nextY; // lift up to avoid crashes
+            }
+
+            waypoints.get(i).setY(y);
         }
 
         // add end point
