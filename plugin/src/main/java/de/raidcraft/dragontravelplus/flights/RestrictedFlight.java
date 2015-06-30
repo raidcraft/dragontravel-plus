@@ -17,11 +17,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.*;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 import java.util.Arrays;
@@ -117,6 +113,14 @@ public abstract class RestrictedFlight extends AbstractFlight implements Listene
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent event) {
+
+        if (hasPassenger(event.getPlayer())) {
+            abortFlight();
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    public void onPlayerKick(PlayerKickEvent event) {
 
         if (hasPassenger(event.getPlayer())) {
             abortFlight();
