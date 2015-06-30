@@ -47,6 +47,9 @@ public class DynamicFlightPath extends AbstractPath {
         double minGroundDiff = config.fligthMinGroundDistance;
         double maxGroundDiff = config.fligthMaxGroundDistance;
         Location lastUnsafeStart = getStartLocation().clone();
+
+        RaidCraft.LOGGER.info("[DTP] Min: " + minGroundDiff + " | Max: " + maxGroundDiff);
+
         for (int i = 1; i < wayPointCount; i++) {
             // calculate unsafe start point
             Location wpLocation = getStartLocation().clone();
@@ -56,7 +59,7 @@ public class DynamicFlightPath extends AbstractPath {
             // lets remember if we need to unload the chunk
             unloadChunk = !wpLocation.getChunk().isLoaded();
             // load chunk and find heighest Block
-            double heighestBlockY = getHeighestBlock(lastUnsafeStart, unitVector.clone(), wayPointDistance);
+            double highestBlockY = getHeighestBlock(lastUnsafeStart, unitVector.clone(), wayPointDistance);
             // save current unsafe start
             lastUnsafeStart = wpLocation.clone();
             // lets unload the chunk if needed to avoid memory leaking
@@ -68,13 +71,17 @@ public class DynamicFlightPath extends AbstractPath {
             // use last y for start of calculation
             double y = lastY - config.flightDragonFalling;
             // check if minimum ground difference is reached
-            if((y - heighestBlockY) < minGroundDiff) {
-                y += (minGroundDiff - (y - heighestBlockY));
+            if((y - highestBlockY) < minGroundDiff) {
+                y += (minGroundDiff - (y - highestBlockY));
+                RaidCraft.LOGGER.info("[DTP] Path: minimum ground diff: last: " + lastY + " | new: " + y);
             }
             // check if maximum ground difference is exceeded
-            if((y - heighestBlockY) > maxGroundDiff) {
-                y -= (maxGroundDiff - (y - heighestBlockY));
+            if((y - highestBlockY) > maxGroundDiff) {
+                y -= (maxGroundDiff - (y - highestBlockY));
+                RaidCraft.LOGGER.info("[DTP] Path: maximum ground diff: last: " + lastY + " | new: " + y);
             }
+
+            RaidCraft.LOGGER.info("[DTP] Path: final Y: " + y + " (highest: " + highestBlockY + ")");
 
             lastY = y;
             wpLocation.setY(y);
