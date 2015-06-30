@@ -48,7 +48,7 @@ public class DynamicFlightPath extends AbstractPath {
         double maxGroundDiff = config.fligthMaxGroundDistance;
         Location lastUnsafeStart = getStartLocation().clone();
 
-        RaidCraft.LOGGER.info("[DTP] Min: " + minGroundDiff + " | Max: " + maxGroundDiff);
+//        RaidCraft.LOGGER.info("[DTP] Min: " + minGroundDiff + " | Max: " + maxGroundDiff);
 
         for (int i = 1; i < wayPointCount; i++) {
             // calculate unsafe start point
@@ -73,15 +73,15 @@ public class DynamicFlightPath extends AbstractPath {
             // check if minimum ground difference is reached
             if((y - highestBlockY) < minGroundDiff) {
                 y += (minGroundDiff - (y - highestBlockY));
-                RaidCraft.LOGGER.info("[DTP] Path: minimum ground diff: last: " + lastY + " | new: " + y);
+//                RaidCraft.LOGGER.info("[DTP] Path: minimum ground diff: last: " + lastY + " | new: " + y);
             }
             // check if maximum ground difference is exceeded
             if((y - highestBlockY) > maxGroundDiff) {
-                y -= (maxGroundDiff - (y - highestBlockY));
-                RaidCraft.LOGGER.info("[DTP] Path: maximum ground diff: last: " + lastY + " | new: " + y);
+                y = highestBlockY + maxGroundDiff;
+//                RaidCraft.LOGGER.info("[DTP] Path: maximum ground diff: last: " + lastY + " | new: " + y);
             }
 
-            RaidCraft.LOGGER.info("[DTP] Path: final Y: " + y + " (highest: " + highestBlockY + ")");
+//            RaidCraft.LOGGER.info("[DTP] Path: final Y: " + y + " (highest: " + highestBlockY + ")");
 
             lastY = y;
             wpLocation.setY(y);
