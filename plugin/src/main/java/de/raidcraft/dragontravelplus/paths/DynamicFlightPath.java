@@ -99,7 +99,7 @@ public class DynamicFlightPath extends AbstractPath {
 
             // extreme delta
             if(lastY - config.flightLiftDownDelta > y) {
-                y = (lastY-y / 2); // only lift down half delta
+                y = ((lastY-y) / 2); // only lift down half delta
             }
 
             /*
