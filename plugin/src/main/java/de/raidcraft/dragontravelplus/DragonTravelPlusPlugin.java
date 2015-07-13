@@ -1,23 +1,15 @@
 package de.raidcraft.dragontravelplus;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
-import de.raidcraft.dragontravelplus.conversations.CheckPlayerAction;
-import de.raidcraft.dragontravelplus.conversations.FindDragonstationAction;
-import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
-import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
-import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
-import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
 import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardManager;
 import de.raidcraft.dragontravelplus.tables.TPath;
 import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
-import de.raidcraft.rcconversations.actions.ActionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -62,16 +54,16 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
         // load NPC's
         DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
 
-        try {
-            ActionManager.registerAction(new FlyFlightAction());
-            ActionManager.registerAction(new FlyControlledAction());
-            ActionManager.registerAction(new FlyToStationAction());
-            ActionManager.registerAction(new ListStationsAction());
-            ActionManager.registerAction(new FindDragonstationAction());
-            ActionManager.registerAction(new CheckPlayerAction());
-        } catch (Exception e) {
-            RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
-        }
+//        try {
+//            ActionManager.registerAction(new FlyFlightAction());
+//            ActionManager.registerAction(new FlyControlledAction());
+//            ActionManager.registerAction(new FlyToStationAction());
+//            ActionManager.registerAction(new ListStationsAction());
+//            ActionManager.registerAction(new FindDragonstationAction());
+//            ActionManager.registerAction(new CheckPlayerAction());
+//        } catch (Exception e) {
+//            RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
+//        }
     }
 
     @Override
