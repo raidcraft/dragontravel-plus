@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus.paths;
+package de.raidcraft.dragontravelplus.routes;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.aircraft.Aircraft;
@@ -6,30 +6,29 @@ import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.Path;
 import de.raidcraft.api.flight.passenger.Passenger;
 import de.raidcraft.dragontravelplus.AircraftManager;
-import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.dragontravelplus.flights.DragonStationFlight;
-import de.raidcraft.dragontravelplus.flights.TeleportFlight;
+import de.raidcraft.dragontravelplus.flights.FreePathFlight;
 import de.raidcraft.rctravel.api.station.Station;
+import org.bukkit.Location;
 
 /**
  * @author Silthus
  */
-public class DragonStationRoute {
+public class LocationToDragonStationRoute implements Route {
 
-    private final Station startStation;
+    private final Location startLocation;
     private final Station endStation;
     private final Path path;
 
-    public DragonStationRoute(Station startStation, Station endStation, Path path) {
+    public LocationToDragonStationRoute(Location startLocation, Station endStation, Path path) {
 
-        this.startStation = startStation;
+        this.startLocation = startLocation;
         this.endStation = endStation;
         this.path = path;
     }
 
-    public Station getStartStation() {
+    public Location getStartLocation() {
 
-        return startStation;
+        return startLocation;
     }
 
     public Station getEndStation() {
@@ -49,11 +48,7 @@ public class DragonStationRoute {
 
         Flight flight;
         Aircraft<?> aircraft = RaidCraft.getComponent(AircraftManager.class).getAircraft(passenger);
-        if (RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightTeleportFallback) {
-            flight = new TeleportFlight(getStartStation(), getEndStation(), null, getPath());
-        } else {
-            flight = new DragonStationFlight(getStartStation(), getEndStation(), aircraft, getPath());
-        }
+        flight = new FreePathFlight(aircraft, getPath(), getStartLocation(), getEndStation().getLocation());
         flight.setPassenger(passenger);
         return flight;
     }
@@ -62,20 +57,20 @@ public class DragonStationRoute {
     public boolean equals(Object o) {
 
         if (this == o) return true;
-        if (!(o instanceof DragonStationRoute)) return false;
+        if (!(o instanceof LocationToDragonStationRoute)) return false;
 
-        DragonStationRoute that = (DragonStationRoute) o;
+        LocationToDragonStationRoute that = (LocationToDragonStationRoute) o;
 
         if (!endStation.equals(that.endStation)) return false;
         if (!path.equals(that.path)) return false;
-        return startStation.equals(that.startStation);
+        return startLocation.equals(that.startLocation);
 
     }
 
     @Override
     public int hashCode() {
 
-        int result = startStation.hashCode();
+        int result = startLocation.hashCode();
         result = 31 * result + endStation.hashCode();
         result = 31 * result + path.hashCode();
         return result;

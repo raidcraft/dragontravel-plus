@@ -1,9 +1,13 @@
 package de.raidcraft.dragontravelplus;
 
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
+import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
+import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
 import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardManager;
 import de.raidcraft.dragontravelplus.tables.TPath;
@@ -86,6 +90,13 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
         DragonGuardManager.removeAllDragonGuards();
         DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
         getRouteManager().reload();
+    }
+
+    private void registerActionAPI() {
+
+        ActionAPI.register(this)
+                .action(new FlyToStationAction())
+                .action(new ListStationsAction(), Conversation.class);
     }
 
     public de.raidcraft.dragontravelplus.AircraftManager getAircraftManager() {
