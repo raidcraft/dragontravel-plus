@@ -15,7 +15,6 @@ import de.raidcraft.rctravel.api.station.UnknownStationException;
 import de.raidcraft.util.ConfigUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +41,20 @@ public class ListStationsAction implements Action<Conversation> {
             }
 
             StationManager stationManager = RaidCraft.getComponent(StationManager.class);
-            DragonStation currentStation = (DragonStation) stationManager.getStation(conversation.getString("dtp_station_name"));
+            DragonStation currentStation;
+            // if we are in a dedicated dtp conversation get the station directly
+            if (conversation.getTemplate() instanceof DragonTravelConversationTemplate) {
+                currentStation = ((DragonTravelConversationTemplate) conversation.getTemplate()).getStation();
+            } else {
+                currentStation = (DragonStation) stationManager.getStation(conversation.getString("dtp_station_name", config.getString("station")));
+            }
+
+            if (currentStation == null) {
+                RaidCraft.LOGGER.warning("Could not find current dragon station at " + conversation.getOwner().getLocation() + " in " + ConfigUtil.getFileName(config));
+                conversation.sendMessage(ChatColor.RED + "Tut mir leid ich konnte in deiner Nähe keine Drachenstation finden.");
+                conversation.end(ConversationEndReason.ERROR);
+                return;
+            }
 
             String confirmStageName = config.getString("confirmstage");
 
@@ -94,7 +106,7 @@ public class ListStationsAction implements Action<Conversation> {
 
             stations.stream().filter(station -> station instanceof DragonStation)
                     .forEach(station -> listStationsStage
-                            .addAnswer(createStationAnswer(conversation.getOwner(), currentStation, (DragonStation) station, confirmStage.get())));
+                            .addAnswer(createStationAnswer(conversation, currentStation, (DragonStation) station, confirmStage.get())));
 
             conversation.set("dtp_station_name", currentStation.getName());
             conversation.changeToStage(listStationsStage);
@@ -105,11 +117,11 @@ public class ListStationsAction implements Action<Conversation> {
         }
     }
 
-    private Answer createStationAnswer(Player player, DragonStation start, DragonStation target, Stage confirmStage) {
+    private Answer createStationAnswer(Conversation conversation, DragonStation start, DragonStation target, Stage confirmStage) {
 
         StringBuilder builder = new StringBuilder();
         double price = start.getPrice(target);
-        if (price > 0 && !RaidCraft.getEconomy().hasEnough(player.getUniqueId(), price)) {
+        if (price > 0 && !RaidCraft.getEconomy().hasEnough(conversation.getOwner().getUniqueId(), price)) {
             builder.append(ChatColor.DARK_GRAY);
         }
 
@@ -123,11 +135,30 @@ public class ListStationsAction implements Action<Conversation> {
             builder.append(ChatColor.GRAY).append(" (").append(((double) distance) / 1000.).append("km)");
         }
 
-        return Answer.of(builder.toString(),
-                Action.changeStage(confirmStage),
+        Answer answer = Answer.of(builder.toString(),
+                Action.setConversationVariable("dtp_start_name", start.getName()),
                 Action.setConversationVariable("dtp_target_name", target.getName()),
                 Action.setConversationVariable("dtp_target_price", price)
         );
+        if (confirmStage == null) {
+            confirmStage = Stage.of(conversation, "Der Flug nach " + target.getDisplayName() + " kostet dich " + RaidCraft.getEconomy().getFormattedAmount(price)
+                            + "|Willst du den Flug starten?",
+                    Answer.of("Ja, los geht`s!",
+                            Action.text("Ein wenig Geduld, mein Drache ist gleich da!"),
+                            Action.of(FlyToStationAction.class)
+                                    .withArgs("start", start.getName())
+                                    .withArgs("target", target.getName())
+                                    .withArgs("price", price)
+                                    .withArgs("delay", "1s")
+                    ),
+                    Answer.of("Nein das ist mir zu teuer!",
+                            Action.text("Dann musst du wohl zu Fuß gehen."),
+                            Action.endConversation(ConversationEndReason.ENDED)
+                    )
+            );
+        }
+        answer.addAction(Action.changeStage(confirmStage));
+        return answer;
     }
 
     public enum ListType {

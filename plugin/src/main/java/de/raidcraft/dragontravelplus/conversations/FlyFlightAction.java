@@ -1,59 +1,62 @@
 package de.raidcraft.dragontravelplus.conversations;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.conversations.Conversations;
+import de.raidcraft.api.conversations.conversation.ConversationEndReason;
+import de.raidcraft.api.conversations.conversation.ConversationVariable;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Path;
 import de.raidcraft.api.flight.flight.UnknownPathException;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.RouteManager;
-import de.raidcraft.rcconversations.api.action.AbstractAction;
-import de.raidcraft.rcconversations.api.action.ActionArgumentException;
-import de.raidcraft.rcconversations.api.action.ActionArgumentList;
-import de.raidcraft.rcconversations.api.action.ActionInformation;
-import de.raidcraft.rcconversations.api.action.WrongArgumentValueException;
-import de.raidcraft.rcconversations.api.conversation.Conversation;
-import de.raidcraft.rcconversations.conversations.EndReason;
-import de.raidcraft.rcconversations.util.ParseString;
+import de.raidcraft.util.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 /**
  * @author Philip
  */
-@ActionInformation(name = "DTP_FLIGHT")
-public class FlyFlightAction extends AbstractAction {
+public class FlyFlightAction implements Action<Player> {
 
     @Override
-    public void run(final Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
+    @Information(
+            value = "flight.fly",
+            desc = "Starts the given flight for the player. Will teleport the player to the start position.",
+            conf = {
+                    "flight: name of the flight",
+                    "delay: how long to delay the takeoff"
+            },
+            aliases = "DTP_FLIGHT"
+    )
+    public void accept(Player player, ConfigurationSection config) {
 
-        String flightName = args.getString("flight");
-        flightName = ParseString.INST.parse(conversation, flightName);
-        int delay = args.getInt("delay", 0);
+        String flightName = ConversationVariable.getString(player, "dtp_flight_name").orElse(config.getString("flight"));
+        long delay = TimeUtil.parseTimeAsTicks(config.getString("delay", "1"));
 
         try {
             DragonTravelPlusPlugin plugin = RaidCraft.getComponent(DragonTravelPlusPlugin.class);
             RouteManager routeManager = plugin.getRouteManager();
             Path path = routeManager.getPath(flightName);
 
-            double speed = args.getDouble("speed", 1);
-            final Flight flight = plugin.getFlightManager().createFlight(plugin.getFlightManager().getPassenger(conversation.getPlayer()), path);
+            final Flight flight = plugin.getFlightManager().createFlight(plugin.getFlightManager().getPassenger(player), path);
 
-            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-                @Override
-                public void run() {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
 
-                    try {
-                        flight.startFlight();
-                    } catch (FlightException e) {
-                        conversation.getPlayer().sendMessage(ChatColor.RED + e.getMessage());
-                        e.printStackTrace();
-                    }
+                try {
+                    flight.startFlight();
+                } catch (FlightException e) {
+                    Conversations.message(player, ChatColor.RED + e.getMessage());
+                    e.printStackTrace();
+                    Conversations.endActiveConversation(player, ConversationEndReason.ERROR);
                 }
             }, delay);
         } catch (UnknownPathException e) {
-            conversation.endConversation(EndReason.FAILURE);
-            throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Flight '" + flightName + "' does not exists!");
+            e.printStackTrace();
+            Conversations.endActiveConversation(player, ConversationEndReason.ERROR);
         }
     }
 }

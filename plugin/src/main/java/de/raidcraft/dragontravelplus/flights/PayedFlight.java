@@ -3,7 +3,6 @@ package de.raidcraft.dragontravelplus.flights;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.flight.aircraft.Aircraft;
-import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Path;
 import de.raidcraft.api.flight.flight.RCStartFlightEvent;
@@ -17,8 +16,10 @@ import de.raidcraft.skills.SkillsPlugin;
 import de.raidcraft.skills.api.hero.Hero;
 import de.raidcraft.skills.api.hero.Option;
 import de.raidcraft.util.LocationUtil;
+import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
@@ -27,27 +28,21 @@ import java.math.RoundingMode;
 /**
  * @author Silthus
  */
-public class DragonStationFlight extends PayedFlight {
+public abstract class PayedFlight extends RestrictedFlight {
 
-    private final Station startStation;
-    private final Station endStation;
+    @Setter
+    private double price;
     private int updateGUITaskID;
 
-    public DragonStationFlight(Station startStation, Station endStation, Aircraft<?> aircraft, Path path) {
+    public PayedFlight(Location startLocation, Location endLocation, Aircraft<?> aircraft, Path path, double price) {
 
-        super(startStation.getLocation(), endStation.getLocation(), aircraft, path, 0.0);
-        this.startStation = startStation;
-        this.endStation = endStation;
+        super(aircraft, path, startLocation, endLocation);
+        this.price = price;
     }
 
-    public Station getStartStation() {
+    protected double getPrice() {
 
-        return startStation;
-    }
-
-    public Station getEndStation() {
-
-        return endStation;
+        return price;
     }
 
     @Override

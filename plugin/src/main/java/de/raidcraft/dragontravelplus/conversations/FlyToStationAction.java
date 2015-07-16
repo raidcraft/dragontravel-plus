@@ -10,6 +10,7 @@ import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.passenger.Passenger;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.StationManager;
+import de.raidcraft.dragontravelplus.flights.PayedFlight;
 import de.raidcraft.dragontravelplus.routes.Route;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rctravel.api.station.Station;
@@ -29,15 +30,17 @@ public class FlyToStationAction implements Action<Player> {
             desc = "Starts a flight to the given station from the current location of the player.",
             conf = {
                     "target: <target station>",
-                    "price: [0]"
+                    "price: [0]",
+                    "delay: until the dragon takes off",
+                    "start: optional start station - if none is defined the current player position will be used"
             },
             aliases = {"DTP_STATION"}
     )
     public void accept(Player player, ConfigurationSection config) {
 
-        String targetName = ConversationVariable.of(player, "dtp_target_name").orElse(config.getString("target"));
-        String priceString = ConversationVariable.of(player, "dtp_target_price").orElse(config.getString("price"));
-        String startName = ConversationVariable.of(player, "dtp_station_name").orElse(config.getString("start"));
+        String targetName = ConversationVariable.getString(player, "dtp_target_name").orElse(config.getString("target"));
+        String priceString = ConversationVariable.getString(player, "dtp_target_price").orElse(config.getString("price"));
+        String startName = ConversationVariable.getString(player, "dtp_station_name").orElse(config.getString("start"));
         long delay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
         double price = RaidCraft.getEconomy().parseCurrencyInput(priceString);
 
@@ -94,6 +97,9 @@ public class FlyToStationAction implements Action<Player> {
                     return;
                 }
                 Flight flight = route.createFlight(passenger);
+                if (flight instanceof PayedFlight) {
+                    ((PayedFlight) flight).setPrice(price);
+                }
                 flight.startFlight();
             } catch (FlightException e) {
                 RaidCraft.LOGGER.warning(e.getMessage());
