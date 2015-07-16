@@ -43,8 +43,8 @@ public class ListStationsAction implements Action<Conversation> {
             StationManager stationManager = RaidCraft.getComponent(StationManager.class);
             DragonStation currentStation;
             // if we are in a dedicated dtp conversation get the station directly
-            if (conversation.getTemplate() instanceof DragonTravelConversationTemplate) {
-                currentStation = ((DragonTravelConversationTemplate) conversation.getTemplate()).getStation();
+            if (conversation instanceof DragonTravelConversation) {
+                currentStation = ((DragonTravelConversation) conversation).getStation();
             } else {
                 currentStation = (DragonStation) stationManager.getStation(conversation.getString("dtp_station_name", config.getString("station")));
             }

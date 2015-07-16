@@ -8,7 +8,7 @@ import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
 import de.raidcraft.dragontravelplus.conversations.CheckStationTravelRequirement;
-import de.raidcraft.dragontravelplus.conversations.DragonTravelConversationTemplate;
+import de.raidcraft.dragontravelplus.conversations.DragonTravelConversation;
 import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
 import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
@@ -64,7 +64,7 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
         DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
 
         // lets register our custom conversation template for dragon stations
-        Conversations.registerConversationTemplate("dragontravel-station", DragonTravelConversationTemplate.class);
+        Conversations.registerConversationType("dragontravel-station", DragonTravelConversation.class);
 
         registerActionAPI();
     }
