@@ -35,7 +35,7 @@ public class DragonStationFlight extends PayedFlight {
 
     public DragonStationFlight(Station startStation, Station endStation, Aircraft<?> aircraft, Path path) {
 
-        super(startStation.getLocation(), endStation.getLocation(), aircraft, path, 0.0);
+        super(startStation.getLocation(), endStation.getLocation(), aircraft, path);
         this.startStation = startStation;
         this.endStation = endStation;
     }

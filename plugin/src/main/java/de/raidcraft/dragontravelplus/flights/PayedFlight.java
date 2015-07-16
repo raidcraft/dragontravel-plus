@@ -34,10 +34,9 @@ public abstract class PayedFlight extends RestrictedFlight {
     private double price;
     private int updateGUITaskID;
 
-    public PayedFlight(Location startLocation, Location endLocation, Aircraft<?> aircraft, Path path, double price) {
+    public PayedFlight(Location startLocation, Location endLocation, Aircraft<?> aircraft, Path path) {
 
         super(aircraft, path, startLocation, endLocation);
-        this.price = price;
     }
 
     protected double getPrice() {
@@ -131,9 +130,7 @@ public abstract class PayedFlight extends RestrictedFlight {
             if(newDistance < 70) {
                 GUIUtil.setTitleBarText(player,
                         ChatColor.DARK_GRAY + "*** " +
-                                ChatColor.DARK_PURPLE + "Du hast dein Ziel erreicht: " +
-                                ChatColor.GOLD + getEndStation().getDisplayName() +
-                                ChatColor.DARK_GRAY + " ***");
+                                ChatColor.DARK_PURPLE + "Du hast dein Ziel erreicht ***");
                 return;
             }
 
