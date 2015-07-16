@@ -43,8 +43,8 @@ public class DragonTravelConversation extends PlayerConversation {
             }
 
             this.station = station;
-            set("dtp_station_name", station.getName());
-            set("dtp_station_friendlyname", station.getDisplayName());
+            set(DTPConversationConstants.STATION_SOURCE_NAME, station.getName());
+            set(DTPConversationConstants.STATION_SOURCE_FRIENDLY_NAME, station.getDisplayName());
         } catch (UnknownStationException e) {
             e.printStackTrace();
             end(ConversationEndReason.ERROR);

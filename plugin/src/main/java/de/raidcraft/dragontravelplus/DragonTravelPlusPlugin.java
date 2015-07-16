@@ -9,6 +9,7 @@ import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
 import de.raidcraft.dragontravelplus.conversations.CheckStationTravelRequirement;
 import de.raidcraft.dragontravelplus.conversations.DragonTravelConversation;
+import de.raidcraft.dragontravelplus.conversations.FindStationInput;
 import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
 import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
@@ -65,6 +66,7 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
 
         // lets register our custom conversation template for dragon stations
         Conversations.registerConversationType("dragontravel-station", DragonTravelConversation.class);
+        Conversations.registerAnswer("find-station", FindStationInput.class);
 
         registerActionAPI();
     }

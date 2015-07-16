@@ -28,6 +28,11 @@ public class ListStationsAction implements Action<Conversation> {
             value = "stations.list",
             desc = "Constructs a conversation that lists all the possible DTP stations " +
                     "to the player makes it possible to pick one as a flight target.",
+            conf = {
+                    "type: ALPHABETIC/DISTANCE/FREE",
+                    "station: if not using a travel conversation",
+                    "confirmstage: can be left out to use the default confirm stage",
+            },
             aliases = {"DTP_LIST_STATIONS"}
     )
     public void accept(Conversation conversation, ConfigurationSection config) {
@@ -46,7 +51,7 @@ public class ListStationsAction implements Action<Conversation> {
             if (conversation instanceof DragonTravelConversation) {
                 currentStation = ((DragonTravelConversation) conversation).getStation();
             } else {
-                currentStation = (DragonStation) stationManager.getStation(conversation.getString("dtp_station_name", config.getString("station")));
+                currentStation = (DragonStation) stationManager.getStation(conversation.getString(DTPConversationConstants.STATION_SOURCE_NAME, config.getString("station")));
             }
 
             if (currentStation == null) {
@@ -56,20 +61,7 @@ public class ListStationsAction implements Action<Conversation> {
                 return;
             }
 
-            String confirmStageName = config.getString("confirmstage");
-
-            if (confirmStageName == null) {
-                RaidCraft.LOGGER.warning("Missing argument in '" + ConfigUtil.getFileName(config) + "': Confirmstage or Returnstage is missing!");
-                conversation.end(ConversationEndReason.ERROR);
-                return;
-            }
-
-            Optional<Stage> confirmStage = conversation.getStage(confirmStageName);
-            if (!confirmStage.isPresent()) {
-                RaidCraft.LOGGER.warning("Confirm stage " + confirmStageName + " not found!");
-                conversation.end(ConversationEndReason.ERROR);
-                return;
-            }
+            Optional<Stage> confirmStage = conversation.getStage(config.getString("confirmstage"));
 
             List<Station> stations = stationManager.getUnlockedStations(conversation.getOwner());
 
@@ -106,9 +98,9 @@ public class ListStationsAction implements Action<Conversation> {
 
             stations.stream().filter(station -> station instanceof DragonStation)
                     .forEach(station -> listStationsStage
-                            .addAnswer(createStationAnswer(conversation, currentStation, (DragonStation) station, confirmStage.get())));
+                            .addAnswer(createStationAnswer(conversation, currentStation, (DragonStation) station, confirmStage.orElse(null))));
 
-            conversation.set("dtp_station_name", currentStation.getName());
+            conversation.set(DTPConversationConstants.STATION_SOURCE_NAME, currentStation.getName());
             conversation.changeToStage(listStationsStage);
         } catch (UnknownStationException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
@@ -136,9 +128,10 @@ public class ListStationsAction implements Action<Conversation> {
         }
 
         Answer answer = Answer.of(builder.toString(),
-                Action.setConversationVariable("dtp_start_name", start.getName()),
-                Action.setConversationVariable("dtp_target_name", target.getName()),
-                Action.setConversationVariable("dtp_target_price", price)
+                Action.setConversationVariable(DTPConversationConstants.STATION_SOURCE_NAME, start.getName()),
+                Action.setConversationVariable(DTPConversationConstants.STATION_TARGET_NAME, target.getName()),
+                Action.setConversationVariable(DTPConversationConstants.PRICE, price),
+                Action.setConversationVariable(DTPConversationConstants.PRICE_FORMATTED, RaidCraft.getEconomy().getFormattedAmount(price))
         );
         if (confirmStage == null) {
             confirmStage = Stage.of(conversation, "Der Flug nach " + target.getDisplayName() + " kostet dich " + RaidCraft.getEconomy().getFormattedAmount(price)

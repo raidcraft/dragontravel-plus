@@ -34,7 +34,7 @@ public class FlyFlightAction implements Action<Player> {
     )
     public void accept(Player player, ConfigurationSection config) {
 
-        String flightName = ConversationVariable.getString(player, "dtp_flight_name").orElse(config.getString("flight"));
+        String flightName = ConversationVariable.getString(player, DTPConversationConstants.FLIGHT_NAME).orElse(config.getString("flight"));
         long delay = TimeUtil.parseTimeAsTicks(config.getString("delay", "1"));
 
         try {

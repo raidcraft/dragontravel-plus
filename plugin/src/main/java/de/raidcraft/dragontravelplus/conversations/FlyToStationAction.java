@@ -38,9 +38,9 @@ public class FlyToStationAction implements Action<Player> {
     )
     public void accept(Player player, ConfigurationSection config) {
 
-        String targetName = ConversationVariable.getString(player, "dtp_target_name").orElse(config.getString("target"));
-        String priceString = ConversationVariable.getString(player, "dtp_target_price").orElse(config.getString("price"));
-        String startName = ConversationVariable.getString(player, "dtp_station_name").orElse(config.getString("start"));
+        String targetName = ConversationVariable.getString(player, DTPConversationConstants.STATION_TARGET_NAME).orElse(config.getString("target"));
+        String priceString = ConversationVariable.getString(player, DTPConversationConstants.PRICE).orElse(config.getString("price"));
+        String startName = ConversationVariable.getString(player, DTPConversationConstants.STATION_SOURCE_NAME).orElse(config.getString("start"));
         long delay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
         double price = RaidCraft.getEconomy().parseCurrencyInput(priceString);
 

@@ -60,8 +60,8 @@ public class CheckStationTravelRequirement implements ReasonableRequirement<Play
 
     private void checkFlight(Player player, ConfigurationSection config) throws FlightException, UnknownStationException {
 
-        String startName = ConversationVariable.getString(player, "dtp_station_name").orElse(config.getString("start"));
-        String targetName = ConversationVariable.getString(player, "dtp_target_name").orElse(config.getString("target"));
+        String startName = ConversationVariable.getString(player, DTPConversationConstants.STATION_SOURCE_NAME).orElse(config.getString("start"));
+        String targetName = ConversationVariable.getString(player, DTPConversationConstants.STATION_TARGET_NAME).orElse(config.getString("target"));
         boolean checkPrice = config.getBoolean("check-price");
         boolean checkDiscovered = config.getBoolean("check-discovered");
 
@@ -84,9 +84,9 @@ public class CheckStationTravelRequirement implements ReasonableRequirement<Play
 
         Location startLocation = start != null ? start.getLocation() : player.getLocation();
 
-        ConversationVariable.set(player, "dtp_target_name", target.getName());
-        ConversationVariable.set(player, "dtp_target_friendlyname", target.getDisplayName());
-        ConversationVariable.set(player, "dtp_target_distance", LocationUtil.getDistance(target.getLocation(), startLocation));
+        ConversationVariable.set(player, DTPConversationConstants.STATION_TARGET_NAME, target.getName());
+        ConversationVariable.set(player, DTPConversationConstants.STATION_TARGET_FRIENDLY_NAME, target.getDisplayName());
+        ConversationVariable.set(player, DTPConversationConstants.DISTANCE, LocationUtil.getDistance(target.getLocation(), startLocation));
 
         Economy economy = RaidCraft.getEconomy();
         double price = 0.0;
@@ -94,8 +94,8 @@ public class CheckStationTravelRequirement implements ReasonableRequirement<Play
             price = ((DragonStation) start).getPrice((DragonStation) target);
         }
 
-        ConversationVariable.set(player, "dtp_target_price", price);
-        ConversationVariable.set(player, "dtp_target_price_formatted", economy.getFormattedAmount(price));
+        ConversationVariable.set(player, DTPConversationConstants.PRICE, price);
+        ConversationVariable.set(player, DTPConversationConstants.PRICE_FORMATTED, economy.getFormattedAmount(price));
 
         if (checkPrice && !economy.hasEnough(player.getUniqueId(), price)) {
             throw new FlightException("Du benötigst mindestens " + economy.getFormattedAmount(price) + " um dorthin zu fliegen!");
