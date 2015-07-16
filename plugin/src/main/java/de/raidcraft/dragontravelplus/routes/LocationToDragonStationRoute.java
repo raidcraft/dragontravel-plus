@@ -48,7 +48,7 @@ public class LocationToDragonStationRoute implements Route {
 
         Flight flight;
         Aircraft<?> aircraft = RaidCraft.getComponent(AircraftManager.class).getAircraft(passenger);
-        flight = new FreePathFlight(aircraft, getPath(), getStartLocation(), getEndStation().getLocation(), 0.0);
+        flight = new FreePathFlight(aircraft, getPath(), getStartLocation(), getEndStation().getLocation());
         flight.setPassenger(passenger);
         return flight;
     }
