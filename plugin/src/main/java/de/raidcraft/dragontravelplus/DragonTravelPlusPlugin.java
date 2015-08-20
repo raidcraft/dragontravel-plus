@@ -61,14 +61,15 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
         registerCommands(DTPCommands.class);
         registerCommands(FlightCommands.class);
 
-        // load NPC's
-        DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
 
         // lets register our custom conversation template for dragon stations
         Conversations.registerConversationType("dragontravel-station", DragonTravelConversation.class);
         Conversations.registerAnswer("find-station", FindStationInput.class);
 
         registerActionAPI();
+
+        // load NPC's
+        Bukkit.getScheduler().runTaskLater(this, () -> DragonGuardManager.spawnAllDragonGuardNPCs(stationManager), 20L * 10);
     }
 
     @Override
