@@ -1,13 +1,12 @@
 package de.raidcraft.dragontravelplus.npc;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.npc.NPC_Manager;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rctravel.api.station.Station;
-import de.raidcraft.rctravel.npc.StationTrait;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
 
 import java.util.List;
@@ -22,9 +21,7 @@ public class DragonGuardManager {
         Location improvedLocation = station.getLocation().clone();
         improvedLocation.setY(improvedLocation.getY() + 1.5);
         DragonTravelPlusPlugin plugin = RaidCraft.getComponent(DragonTravelPlusPlugin.class);
-        //NPC npc = NPC_Conservations_Manager.getInstance().spawnNonPersistNpcConservations(improvedLocation, "Drachenmeister", plugin.getName(), plugin.getConfig().conversationName);
-        //npc.addTrait(StationTrait.class);
-        //npc.getTrait(StationTrait.class).setStationName(station.getName());
+        Conversations.spawnConversationHost(plugin.getName(), "Drachenmeister", plugin.getConfig().conversationName, improvedLocation);
     }
 
     public static void spawnAllDragonGuardNPCs(StationManager stationManager) {
@@ -43,7 +40,7 @@ public class DragonGuardManager {
 
     public static void removeAllDragonGuards() {
         DragonTravelPlusPlugin plugin = RaidCraft.getComponent(DragonTravelPlusPlugin.class);
-        NPC_Manager.getInstance().removeAllNPCs(plugin.getName());
+        NPC_Manager.getInstance().clear(plugin.getName());
     }
 
 }
