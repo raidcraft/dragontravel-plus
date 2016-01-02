@@ -1,69 +1,65 @@
 package de.raidcraft.dragontravelplus.conversations;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.action.action.Action;
-import de.raidcraft.api.conversations.answer.Answer;
-import de.raidcraft.api.conversations.conversation.Conversation;
-import de.raidcraft.api.conversations.conversation.ConversationEndReason;
-import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.comparators.AlphabeticComparator;
 import de.raidcraft.dragontravelplus.comparators.DistanceComparator;
 import de.raidcraft.dragontravelplus.station.DragonStation;
+import de.raidcraft.rcconversations.actions.common.StageAction;
+import de.raidcraft.rcconversations.actions.variables.SetVariableAction;
+import de.raidcraft.rcconversations.api.action.AbstractAction;
+import de.raidcraft.rcconversations.api.action.ActionArgumentException;
+import de.raidcraft.rcconversations.api.action.ActionArgumentList;
+import de.raidcraft.rcconversations.api.action.ActionInformation;
+import de.raidcraft.rcconversations.api.action.MissingArgumentException;
+import de.raidcraft.rcconversations.api.action.WrongArgumentValueException;
+import de.raidcraft.rcconversations.api.answer.Answer;
+import de.raidcraft.rcconversations.api.answer.SimpleAnswer;
+import de.raidcraft.rcconversations.api.conversation.Conversation;
+import de.raidcraft.rcconversations.api.stage.SimpleStage;
+import de.raidcraft.rcconversations.api.stage.Stage;
 import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.rctravel.api.station.UnknownStationException;
-import de.raidcraft.util.ConfigUtil;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ListStationsAction implements Action<Conversation> {
+/**
+ * @author Philip
+ */
+@ActionInformation(name = "DTP_LIST_STATIONS")
+public class ListStationsAction extends AbstractAction {
 
     @Override
-    @Information(
-            value = "stations.list",
-            desc = "Constructs a conversation that lists all the possible DTP stations " +
-                    "to the player makes it possible to pick one as a flight target.",
-            conf = {
-                    "type: ALPHABETIC/DISTANCE/FREE",
-                    "station: if not using a travel conversation",
-                    "confirmstage: can be left out to use the default confirm stage",
-            },
-            aliases = {"DTP_LIST_STATIONS"}
-    )
-    public void accept(Conversation conversation, ConfigurationSection config) {
+    public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
 
         try {
-            ListType type = ListType.valueOf(config.getString("type", "ALPHABETIC"));
+            String typeName = args.getString("type");
+            ListType type = ListType.valueOf(typeName);
             if (type == null) {
-                RaidCraft.LOGGER.warning("invalid dtp list type inside " + ConfigUtil.getFileName(config));
-                conversation.end(ConversationEndReason.ERROR);
-                return;
+                throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Type '" + typeName + "' does not exists!");
             }
 
             StationManager stationManager = RaidCraft.getComponent(StationManager.class);
-            DragonStation currentStation;
-            // if we are in a dedicated dtp conversation get the station directly
-            if (conversation instanceof DragonTravelConversation) {
-                currentStation = ((DragonTravelConversation) conversation).getStation();
-            } else {
-                currentStation = (DragonStation) stationManager.getStation(conversation.getString(DTPConversationConstants.STATION_SOURCE_NAME, config.getString("station")));
+            DragonStation currentStation = (DragonStation) stationManager.getStation(conversation.getString("dtp_station_name"));
+
+            String confirmStage = args.getString("confirmstage");
+            String returnStage = args.getString("returnstage");
+            int pageSize = args.getInt("pagesize", 4);
+
+            if (confirmStage == null || returnStage == null) {
+                throw new MissingArgumentException("Missing argument in action '" + getName() + "': Confirmstage or Returnstage is missing!");
             }
 
-            if (currentStation == null) {
-                RaidCraft.LOGGER.warning("Could not find current dragon station at " + conversation.getOwner().getLocation() + " in " + ConfigUtil.getFileName(config));
-                conversation.sendMessage(ChatColor.RED + "Tut mir leid ich konnte in deiner Nähe keine Drachenstation finden.");
-                conversation.end(ConversationEndReason.ERROR);
-                return;
-            }
+            String entranceStage = "dtp_stationslist";
 
-            Optional<Stage> confirmStage = conversation.getStage(config.getString("confirmstage"));
-
-            List<Station> stations = stationManager.getUnlockedStations(conversation.getOwner());
+            List<Station> stations = stationManager.getUnlockedStations(conversation.getPlayer());
 
             if (type == ListType.ALPHABETIC) {
                 Collections.sort(stations, new AlphabeticComparator());
@@ -75,7 +71,7 @@ public class ListStationsAction implements Action<Conversation> {
             if (type == ListType.FREE) {
                 stations = stations.stream()
                         .filter(station -> station instanceof DragonStation)
-                        .filter(station -> currentStation.getPrice((DragonStation) station) == 0)
+                        .filter(station -> currentStation.getPrice((DragonStation)station) == 0)
                         .collect(Collectors.toList());
             }
 
@@ -87,33 +83,76 @@ public class ListStationsAction implements Action<Conversation> {
             stations.remove(currentStation);
 
             if (stations.isEmpty()) {
-                Stage.of(conversation, "Du kennst keine passende Stationen!",
-                        Answer.of("Ok zurück",
-                                Action.changeStage(conversation.getCurrentStage().get())))
-                        .changeTo();
-                return;
+                List<Answer> answers = new ArrayList<>();
+                answers.add(new SimpleAnswer("1", "Ok zurück", new ActionArgumentList("A", StageAction.class, "stage", returnStage)));
+                conversation.addStage(new SimpleStage(entranceStage, "Du kennst keine passende Stationen!", answers));
             }
 
-            Stage listStationsStage = Stage.of(conversation, "Du kennst folgende Drachenstationen:|" + ChatColor.GRAY + type.getInfoText());
+            int pages = (int) Math.ceil((double) stations.size() / (double) pageSize);
+            if (pages == 0) pages = 1;
+            int x = 0;
+            for (int i = 0; i < pages; i++) {
 
-            stations.stream().filter(station -> station instanceof DragonStation)
-                    .forEach(station -> listStationsStage
-                            .addAnswer(createStationAnswer(conversation, currentStation, (DragonStation) station, confirmStage.orElse(null))));
+                Stage stage;
+                List<Answer> answers = new ArrayList<>();
+                String text;
 
-            conversation.set(DTPConversationConstants.STATION_SOURCE_NAME, currentStation.getName());
-            conversation.changeToStage(listStationsStage);
+                text = "Du kennst folgende Drachenstationen (" + (i + 1) + "/" + pages + "):|&7(" + type.getInfoText() + ")";
+
+                int a;
+                for (a = 0; a < pageSize; a++) {
+                    if (x < stations.size()) {
+                        answers.add(createStationAnswer(conversation.getPlayer(), a, currentStation, (DragonStation) stations.get(x), confirmStage));
+                        x++;
+                    } else {
+                        break;
+                    }
+                }
+                a++;
+
+                String nextStage;
+                if (pages - 1 == i) {
+                    nextStage = entranceStage;
+                } else {
+                    nextStage = entranceStage + "_" + (i + 1);
+                }
+                String thisStage;
+                if (i == 0) {
+                    thisStage = entranceStage;
+                } else {
+                    thisStage = entranceStage + "_" + i;
+                }
+
+                if (pages > 1) {
+                    answers.add(new SimpleAnswer(String.valueOf(a), "&7Nächste Seite", new ActionArgumentList(String.valueOf(a), StageAction.class, "stage", nextStage)));
+                }
+                stage = new SimpleStage(thisStage, text, answers);
+
+                conversation.addStage(stage);
+            }
+
+            conversation.setCurrentStage(entranceStage);
+            conversation.triggerCurrentStage();
         } catch (UnknownStationException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
-            conversation.end(ConversationEndReason.ERROR);
         }
     }
 
-    private Answer createStationAnswer(Conversation conversation, DragonStation start, DragonStation target, Stage confirmStage) {
+    private Answer createStationAnswer(Player player, int number, DragonStation start, DragonStation target, String confirmStage) {
+
+        List<ActionArgumentList> actions = new ArrayList<>();
+        int i = 0;
+        Map<String, Object> data = new HashMap<>();
+        data.put("variable", "dtp_target_name");
+        data.put("local", true);
+        data.put("value", target.getName());
+        actions.add(new ActionArgumentList(String.valueOf(i++), SetVariableAction.class, data));
+        actions.add(new ActionArgumentList(String.valueOf(i++), StageAction.class, "stage", confirmStage));
 
         StringBuilder builder = new StringBuilder();
         double price = start.getPrice(target);
-        if (price > 0 && !RaidCraft.getEconomy().hasEnough(conversation.getOwner().getUniqueId(), price)) {
+        if (price > 0 && !RaidCraft.getEconomy().hasEnough(player.getUniqueId(), price)) {
             builder.append(ChatColor.DARK_GRAY);
         }
 
@@ -127,31 +166,7 @@ public class ListStationsAction implements Action<Conversation> {
             builder.append(ChatColor.GRAY).append(" (").append(((double) distance) / 1000.).append("km)");
         }
 
-        Answer answer = Answer.of(builder.toString(),
-                Action.setConversationVariable(DTPConversationConstants.STATION_SOURCE_NAME, start.getName()),
-                Action.setConversationVariable(DTPConversationConstants.STATION_TARGET_NAME, target.getName()),
-                Action.setConversationVariable(DTPConversationConstants.PRICE, price),
-                Action.setConversationVariable(DTPConversationConstants.PRICE_FORMATTED, RaidCraft.getEconomy().getFormattedAmount(price))
-        );
-        if (confirmStage == null) {
-            confirmStage = Stage.of(conversation, "Der Flug nach " + target.getDisplayName() + " kostet dich " + RaidCraft.getEconomy().getFormattedAmount(price)
-                            + "|Willst du den Flug starten?",
-                    Answer.of("Ja, los geht`s!",
-                            Action.text("Ein wenig Geduld, mein Drache ist gleich da!"),
-                            Action.of(FlyToStationAction.class)
-                                    .withArgs("start", start.getName())
-                                    .withArgs("target", target.getName())
-                                    .withArgs("price", price)
-                                    .withArgs("delay", "1s")
-                    ),
-                    Answer.of("Nein das ist mir zu teuer!",
-                            Action.text("Dann musst du wohl zu Fuß gehen."),
-                            Action.endConversation(ConversationEndReason.ENDED)
-                    )
-            );
-        }
-        answer.addAction(Action.changeStage(confirmStage));
-        return answer;
+        return new SimpleAnswer(String.valueOf(number + 1), builder.toString(), actions);
     }
 
     public enum ListType {

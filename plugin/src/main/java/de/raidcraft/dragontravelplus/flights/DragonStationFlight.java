@@ -27,7 +27,7 @@ import java.math.RoundingMode;
 /**
  * @author Silthus
  */
-public class DragonStationFlight extends PayedFlight {
+public class DragonStationFlight extends RestrictedFlight {
 
     private final Station startStation;
     private final Station endStation;
@@ -35,7 +35,7 @@ public class DragonStationFlight extends PayedFlight {
 
     public DragonStationFlight(Station startStation, Station endStation, Aircraft<?> aircraft, Path path) {
 
-        super(startStation.getLocation(), endStation.getLocation(), aircraft, path);
+        super(aircraft, path, startStation.getLocation(), endStation.getLocation());
         this.startStation = startStation;
         this.endStation = endStation;
     }
@@ -48,6 +48,18 @@ public class DragonStationFlight extends PayedFlight {
     public Station getEndStation() {
 
         return endStation;
+    }
+
+    private double getPrice() {
+
+        double price = 0.0;
+        if (getStartStation() instanceof DragonStation && getEndStation() instanceof DragonStation) {
+            price = ((DragonStation) startStation).getPrice((DragonStation) endStation);
+        } else if (getStartStation() instanceof Chargeable) {
+            price = ((Chargeable) getStartStation()).getPrice(
+                    LocationUtil.getBlockDistance(getStartStation().getLocation(), getEndStation().getLocation()));
+        }
+        return price;
     }
 
     @Override

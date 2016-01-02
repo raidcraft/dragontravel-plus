@@ -1,34 +1,38 @@
 package de.raidcraft.dragontravelplus.conversations;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.action.action.Action;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.util.TimeUtil;
+import de.raidcraft.rcconversations.api.action.AbstractAction;
+import de.raidcraft.rcconversations.api.action.ActionArgumentException;
+import de.raidcraft.rcconversations.api.action.ActionArgumentList;
+import de.raidcraft.rcconversations.api.action.ActionInformation;
+import de.raidcraft.rcconversations.api.action.WrongArgumentValueException;
+import de.raidcraft.rcconversations.api.conversation.Conversation;
+import de.raidcraft.rcconversations.util.ParseString;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 /**
  * @author Philip
  */
-public class FlyControlledAction implements Action<Player> {
+@ActionInformation(name = "DTP_CONTROLLED")
+public class FlyControlledAction extends AbstractAction {
 
     @Override
-    @Information(
-            value = "flight.controlled",
-            desc = "Starts a player controlled flight for the given amount of time.",
-            conf = {
-                    "duration: 10s - amount of time to allow the controlled flight",
-                    "delay: 1s - how long to delay the takeoff"
-            },
-            aliases = "DTP_CONTROLLED"
-    )
-    public void accept(Player player, ConfigurationSection config) {
+    public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
 
-        long delay = TimeUtil.parseTimeAsTicks(config.getString("delay", "1s"));
-        long duration = TimeUtil.parseTimeAsTicks(config.getString("duration"));
+        int delay = args.getInt("delay", 0);
+        String stringDuration = args.getString("duration");
+        stringDuration = ParseString.INST.parse(conversation, stringDuration);
 
-        StartControlledFlightTask task = new StartControlledFlightTask(player, (int) duration);
+        double duration;
+        try {
+            duration = Double.parseDouble(stringDuration);
+        } catch (NumberFormatException e) {
+            throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Duration must be a number!");
+        }
+
+        StartControlledFlightTask task = new StartControlledFlightTask(conversation.getPlayer(), (int) duration);
         Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(DragonTravelPlusPlugin.class), task, delay);
     }
 

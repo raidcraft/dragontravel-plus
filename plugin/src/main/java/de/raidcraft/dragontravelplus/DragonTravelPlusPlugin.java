@@ -1,15 +1,12 @@
 package de.raidcraft.dragontravelplus;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
-import de.raidcraft.api.action.ActionAPI;
-import de.raidcraft.api.conversations.Conversations;
-import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
-import de.raidcraft.dragontravelplus.conversations.CheckStationTravelRequirement;
-import de.raidcraft.dragontravelplus.conversations.DragonTravelConversation;
-import de.raidcraft.dragontravelplus.conversations.FindStationInput;
+import de.raidcraft.dragontravelplus.conversations.CheckPlayerAction;
+import de.raidcraft.dragontravelplus.conversations.FindDragonstationAction;
 import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
 import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
 import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
@@ -20,6 +17,7 @@ import de.raidcraft.dragontravelplus.tables.TPath;
 import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
+import de.raidcraft.rcconversations.actions.ActionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -61,15 +59,19 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
         registerCommands(DTPCommands.class);
         registerCommands(FlightCommands.class);
 
-
-        // lets register our custom conversation template for dragon stations
-        Conversations.registerConversationType("dragontravel-station", DragonTravelConversation.class);
-        Conversations.registerAnswer("find-station", FindStationInput.class);
-
-        registerActionAPI();
-
         // load NPC's
-        Bukkit.getScheduler().runTaskLater(this, () -> DragonGuardManager.spawnAllDragonGuardNPCs(stationManager), 20L * 10);
+        DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
+
+        try {
+            ActionManager.registerAction(new FlyFlightAction());
+            ActionManager.registerAction(new FlyControlledAction());
+            ActionManager.registerAction(new FlyToStationAction());
+            ActionManager.registerAction(new ListStationsAction());
+            ActionManager.registerAction(new FindDragonstationAction());
+            ActionManager.registerAction(new CheckPlayerAction());
+        } catch (Exception e) {
+            RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
+        }
     }
 
     @Override
@@ -92,16 +94,6 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
         DragonGuardManager.removeAllDragonGuards();
         DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
         getRouteManager().reload();
-    }
-
-    private void registerActionAPI() {
-
-        ActionAPI.register(this)
-                .action(new FlyToStationAction())
-                .action(new FlyControlledAction())
-                .action(new FlyFlightAction())
-                .action(new ListStationsAction(), Conversation.class)
-                .requirement(new CheckStationTravelRequirement());
     }
 
     public de.raidcraft.dragontravelplus.AircraftManager getAircraftManager() {

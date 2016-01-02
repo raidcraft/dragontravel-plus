@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus.routes;
+package de.raidcraft.dragontravelplus.paths;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.aircraft.Aircraft;
@@ -8,17 +8,13 @@ import de.raidcraft.api.flight.passenger.Passenger;
 import de.raidcraft.dragontravelplus.AircraftManager;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.flights.DragonStationFlight;
-import de.raidcraft.dragontravelplus.flights.PayedFlight;
 import de.raidcraft.dragontravelplus.flights.TeleportFlight;
-import de.raidcraft.dragontravelplus.station.DragonStation;
-import de.raidcraft.rctravel.api.station.Chargeable;
 import de.raidcraft.rctravel.api.station.Station;
-import de.raidcraft.util.LocationUtil;
 
 /**
  * @author Silthus
  */
-public class DragonStationRoute implements Route {
+public class DragonStationRoute {
 
     private final Station startStation;
     private final Station endStation;
@@ -58,16 +54,6 @@ public class DragonStationRoute implements Route {
         } else {
             flight = new DragonStationFlight(getStartStation(), getEndStation(), aircraft, getPath());
         }
-
-        double price = 0.0;
-        if (getStartStation() instanceof DragonStation && getEndStation() instanceof DragonStation) {
-            price = ((DragonStation) startStation).getPrice((DragonStation) endStation);
-        } else if (getStartStation() instanceof Chargeable) {
-            price = ((Chargeable) getStartStation()).getPrice(
-                    LocationUtil.getBlockDistance(getStartStation().getLocation(), getEndStation().getLocation()));
-        }
-        ((PayedFlight) flight).setPrice(price);
-
         flight.setPassenger(passenger);
         return flight;
     }

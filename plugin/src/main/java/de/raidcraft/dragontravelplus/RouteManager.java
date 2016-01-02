@@ -5,13 +5,11 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.flight.flight.Path;
 import de.raidcraft.api.flight.flight.UnknownPathException;
 import de.raidcraft.api.flight.flight.Waypoint;
-import de.raidcraft.dragontravelplus.routes.DragonStationRoute;
+import de.raidcraft.dragontravelplus.paths.DragonStationRoute;
 import de.raidcraft.dragontravelplus.paths.DynamicFlightPath;
 import de.raidcraft.dragontravelplus.paths.SavedFlightPath;
 import de.raidcraft.dragontravelplus.paths.SavedWaypoint;
 import de.raidcraft.dragontravelplus.paths.StaticFlightPath;
-import de.raidcraft.dragontravelplus.routes.LocationToDragonStationRoute;
-import de.raidcraft.dragontravelplus.routes.Route;
 import de.raidcraft.dragontravelplus.tables.TPath;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
 import de.raidcraft.rctravel.api.station.Station;
@@ -86,13 +84,6 @@ public final class RouteManager implements Component {
             loadedRoutes.put(route.getStartStation(), new HashMap<Station, DragonStationRoute>());
         }
         loadedRoutes.get(route.getStartStation()).put(route.getEndStation(), route);
-    }
-
-    public Route getRoute(Location start, Station destination) {
-
-        Path path = new DynamicFlightPath(start, destination.getLocation());
-        path.calculate();
-        return new LocationToDragonStationRoute(start, destination, path);
     }
 
     public DragonStationRoute getRoute(Station start, Station destination) {

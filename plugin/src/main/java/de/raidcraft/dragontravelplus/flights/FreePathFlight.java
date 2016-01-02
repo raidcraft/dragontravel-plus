@@ -7,10 +7,10 @@ import org.bukkit.Location;
 /**
  * @author Silthus
  */
-public class FreePathFlight extends PayedFlight {
+public class FreePathFlight extends RestrictedFlight {
 
     public FreePathFlight(Aircraft<?> aircraft, Path path, Location startLocation, Location endLocation) {
 
-        super(startLocation, endLocation, aircraft, path);
+        super(aircraft, path, startLocation, endLocation);
     }
 }
