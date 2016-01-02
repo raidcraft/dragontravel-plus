@@ -13,9 +13,6 @@ import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.dragontravelplus.util.GUIUtil;
 import de.raidcraft.rctravel.api.station.Chargeable;
 import de.raidcraft.rctravel.api.station.Station;
-import de.raidcraft.skills.SkillsPlugin;
-import de.raidcraft.skills.api.hero.Hero;
-import de.raidcraft.skills.api.hero.Option;
 import de.raidcraft.util.LocationUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -80,8 +77,6 @@ public class DragonStationFlight extends RestrictedFlight {
             }
 
             // start thread to update GUI (distance view in title bar)
-            Hero hero = RaidCraft.getComponent(SkillsPlugin.class).getCharacterManager().getHero((Player)getPassenger().getEntity());
-            Option.ACTION_BAR.set(hero, false); // disable actionbar
             updateGUITaskID = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new UpdateGuiTask(), 10, 20).getTaskId();
         }
         super.onStartFlight();
@@ -131,8 +126,6 @@ public class DragonStationFlight extends RestrictedFlight {
                     abortFlight();
                     player.sendMessage(ChatColor.RED + "Du bist während des Fluges abgestiegen!");
                 } // maybe player is not on dragon but flight is still active
-                Hero hero = RaidCraft.getComponent(SkillsPlugin.class).getCharacterManager().getHero(player);
-                Option.ACTION_BAR.set(hero, true); // enable actionbar
                 Bukkit.getScheduler().cancelTask(updateGUITaskID);
                 return;
             }
