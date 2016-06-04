@@ -74,6 +74,13 @@
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>de.raidcraft.dragontravelplus</groupId>
+            <artifactId>nms-v1_9_R1</artifactId>
+            <version>v1_9_R1</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
