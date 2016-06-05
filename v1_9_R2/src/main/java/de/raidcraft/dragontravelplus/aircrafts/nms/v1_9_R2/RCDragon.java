@@ -7,6 +7,7 @@ import de.raidcraft.util.LocationUtil;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.v1_9_R2.EntityEnderDragon;
+import net.minecraft.server.v1_9_R2.DragonControllerPhase;
 import net.minecraft.server.v1_9_R2.World;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_9_R2.CraftWorld;
@@ -120,6 +121,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
 
         //        RaidCraft.LOGGER.info("spawn RCDragon");
         setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+//        cT().a(DragonControllerPhase.a); //TODO: This will prevent dragons from only hovering
         ((CraftWorld) location.getWorld()).getHandle().addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return this;
     }
@@ -146,7 +148,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     public void unmountPassenger(Flight flight) {
 
         //        RaidCraft.LOGGER.info("unmount RCDragon");
-        mount(null);
+        //mount(null);
     }
 
     private double getNewInterpolatedCoordinate(double from, double to, double maxDiff) {
