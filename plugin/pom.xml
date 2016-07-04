@@ -62,8 +62,8 @@
         </dependency>
         <dependency>
             <groupId>de.raidcraft.dragontravelplus</groupId>
-            <artifactId>nms-v1_9_R2</artifactId>
-            <version>v1_9_R2</version>
+            <artifactId>nms-v1_10_R1</artifactId>
+            <version>v1_10_R1</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
