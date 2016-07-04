@@ -7,43 +7,55 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import java.lang.reflect.Constructor;
+
 /**
  * Created by Philip on 12.06.2015.
  */
 public class GUIUtil {
 
+    public static void sendPacket(Player player, Object packet) {
+        try {
+            Object handle = player.getClass().getMethod("getHandle").invoke(player);
+            Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
+            playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Class<?> getNMSClass(String name) {
+        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        try {
+            return Class.forName("net.minecraft.server." + version + "." + name);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static void setTitleBarText(Player player, String message){
 
         try {
-            Class<?> craftPlayer = ReflectionUtil.getNmsClass("org.bukkit.craftbukkit", "entity", "CraftPlayer");
-            Object p = craftPlayer.cast(player);
-            Object ppoc = null;
-            Class<?> playerOutChat = ReflectionUtil.getNmsClass("net.minecraft.server", "PacketPlayOutChat");
-            Class<?> packet = ReflectionUtil.getNmsClass("net.minecraft.server", "Packet");
+            Object e;
+            Object chatSubtitle;
+            Constructor subtitleConstructor;
+            Object subtitlePacket;
 
-            String nmsver = Bukkit.getServer().getClass().getPackage().getName();
-            nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
+                // Times packets
+                e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TIMES").get((Object) null);
+                chatSubtitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke((Object) null, new Object[]{"{\"text\":\"" + ""/* FIXME: EMPTY */ + "\"}"});
+                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE});
+                subtitlePacket = subtitleConstructor.newInstance(new Object[]{e, chatSubtitle, 2, 10, 2});
+                sendPacket(player, subtitlePacket);
 
-            if (nmsver.equalsIgnoreCase("v1_8_R1") || !nmsver.startsWith("v1_8_")) {
-                Class<?> chatSerializer = ReflectionUtil.getNmsClass("net.minecraft.server", "ChatSerializer");
-                Class<?> chatBaseComponent = ReflectionUtil.getNmsClass("net.minecraft.server", "IChatBaseComponent");
-                Method m3 = chatSerializer.getDeclaredMethod("a", new Class<?>[] {String.class});
-                Object cbc = chatBaseComponent.cast(m3.invoke(chatSerializer, "{\"text\": \"" + message + "\"}"));
-                ppoc = playerOutChat.getConstructor(new Class<?>[] {chatBaseComponent, byte.class}).newInstance(new Object[] {cbc, (byte) 2});
-            } else {
-                Class<?> chatComponentText = ReflectionUtil.getNmsClass("net.minecraft.server", "ChatComponentText");
-                Class<?> chatBaseComponent = ReflectionUtil.getNmsClass("net.minecraft.server", "IChatBaseComponent");
-                Object o = chatComponentText.getConstructor(new Class<?>[] {String.class}).newInstance(new Object[] {message});
-                ppoc = playerOutChat.getConstructor(new Class<?>[] {chatBaseComponent, byte.class}).newInstance(new Object[] {o, (byte) 2});
-            }
-            Method m1 = craftPlayer.getDeclaredMethod("getHandle", new Class<?>[] {});
-            Object handle = m1.invoke(p);
-            Field playerConnection = handle.getClass().getDeclaredField("playerConnection");
-            Object pc = playerConnection.get(handle);
-            Method m5 = pc.getClass().getDeclaredMethod("sendPacket",new Class<?>[] {packet});
-            m5.invoke(pc, ppoc);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+                e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("SUBTITLE").get((Object) null);
+                chatSubtitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke((Object) null, new Object[]{"{\"text\":\"" + message + "\"}"});
+                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE});
+                subtitlePacket = subtitleConstructor.newInstance(new Object[]{e, chatSubtitle, 2, 10, 2});
+                sendPacket(player, subtitlePacket);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
