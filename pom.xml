@@ -22,8 +22,6 @@
 
     <modules>
         <module>plugin</module>
-        <module>v1_8_R2</module>
-        <module>v1_8_R3</module>
         <module>v1_9_R2</module>
     </modules>
 
