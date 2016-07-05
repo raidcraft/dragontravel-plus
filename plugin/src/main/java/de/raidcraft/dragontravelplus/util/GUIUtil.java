@@ -46,13 +46,13 @@ public class GUIUtil {
                 e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TIMES").get((Object) null);
                 chatSubtitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke((Object) null, new Object[]{"{\"text\":\"" + "~"/* FIXME: EMPTY */ + "\"}"});
                 subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE});
-                subtitlePacket = subtitleConstructor.newInstance(new Object[]{e, chatSubtitle, 20, 100, 20});
+                subtitlePacket = subtitleConstructor.newInstance(new Object[]{e, chatSubtitle, 0, 100, 0});
                 sendPacket(player, subtitlePacket);
 
                 e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("SUBTITLE").get((Object) null);
                 chatSubtitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke((Object) null, new Object[]{"{\"text\":\"" + message + "\"}"});
                 subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE});
-                subtitlePacket = subtitleConstructor.newInstance(new Object[]{e, chatSubtitle, 20, 100, 20});
+                subtitlePacket = subtitleConstructor.newInstance(new Object[]{e, chatSubtitle, 0, 100, 0});
                 sendPacket(player, subtitlePacket);
         } catch (Exception e) {
             e.printStackTrace();
