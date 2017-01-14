@@ -171,7 +171,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     }
 
     @Override
-    public void m() {
+    public void n() {
 
         if (!moving) {
             return;
