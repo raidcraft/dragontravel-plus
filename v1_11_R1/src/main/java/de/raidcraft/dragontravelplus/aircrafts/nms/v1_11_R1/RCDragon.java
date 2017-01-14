@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus.aircrafts.nms.v1_10_R1;
+package de.raidcraft.dragontravelplus.aircrafts.nms.v1_11_R1;
 
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.flight.Flight;
@@ -6,10 +6,10 @@ import de.raidcraft.api.flight.flight.Waypoint;
 import de.raidcraft.util.LocationUtil;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.server.v1_10_R1.EntityEnderDragon;
-import net.minecraft.server.v1_10_R1.World;
+import net.minecraft.server.v1_11_R1.EntityEnderDragon;
+import net.minecraft.server.v1_11_R1.World;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scheduler.BukkitTask;
