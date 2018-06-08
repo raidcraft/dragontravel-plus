@@ -201,7 +201,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
         double myyaw = 0;
         // Set yaw
         if (dx != 0) {
-            // Set yaw start value based on dx
+            // Set yaw startStage value based on dx
             if (dx < 0) {
                 myyaw = 1.5 * Math.PI;
             } else {
@@ -226,7 +226,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
 
         // Set yaw
         if (dx != 0) {
-            // Set yaw start value based on dx
+            // Set yaw startStage value based on dx
             if (dx < 0) {
                 loc.setYaw((float) (1.5 * Math.PI));
             } else {

@@ -2,11 +2,7 @@ package de.raidcraft.dragontravelplus.conversations;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
-import de.raidcraft.rcconversations.api.action.AbstractAction;
-import de.raidcraft.rcconversations.api.action.ActionArgumentException;
-import de.raidcraft.rcconversations.api.action.ActionArgumentList;
-import de.raidcraft.rcconversations.api.action.ActionInformation;
-import de.raidcraft.rcconversations.api.action.WrongArgumentValueException;
+import de.raidcraft.rcconversations.api.action.*;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
 import de.raidcraft.rcconversations.util.ParseString;
 import org.bukkit.Bukkit;
@@ -29,7 +25,7 @@ public class FlyControlledAction extends AbstractAction {
         try {
             duration = Double.parseDouble(stringDuration);
         } catch (NumberFormatException e) {
-            throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Duration must be a number!");
+            throw new WrongArgumentValueException("Wrong argument value in withAction '" + getName() + "': Duration must be a number!");
         }
 
         StartControlledFlightTask task = new StartControlledFlightTask(conversation.getPlayer(), (int) duration);

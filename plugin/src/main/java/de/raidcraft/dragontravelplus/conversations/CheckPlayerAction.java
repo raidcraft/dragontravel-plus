@@ -23,12 +23,12 @@ import java.util.UUID;
 public class CheckPlayerAction extends AbstractAction {
 
     @Override
-    public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException, UnknownStationException {
+    public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException {
 
         String success = args.getString("onsuccess", null);
         String failure = args.getString("onfailure", null);
 
-        String startName = args.getString("start", null);
+        String startName = args.getString("startStage", null);
         startName = ParseString.INST.parse(conversation, startName);
         String targetName = conversation.getString("dtp_target_friendlyname", null);
         // hotfix if not manual input

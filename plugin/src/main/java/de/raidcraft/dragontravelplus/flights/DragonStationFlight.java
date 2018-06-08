@@ -3,7 +3,6 @@ package de.raidcraft.dragontravelplus.flights;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.flight.aircraft.Aircraft;
-import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Path;
 import de.raidcraft.api.flight.flight.RCStartFlightEvent;
@@ -76,7 +75,7 @@ public class DragonStationFlight extends RestrictedFlight {
                 throw new FlightException("Flug konnte nicht gestartet werden.");
             }
 
-            // start thread to update GUI (distance view in title bar)
+            // startStage thread to update GUI (distance view in title bar)
             updateGUITaskID = Bukkit.getScheduler().runTaskTimer(RaidCraft.getComponent(DragonTravelPlusPlugin.class), new UpdateGuiTask(), 10, 20).getTaskId();
         }
         super.onStartFlight();

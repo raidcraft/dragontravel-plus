@@ -5,12 +5,7 @@ import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
-import de.raidcraft.dragontravelplus.conversations.CheckPlayerAction;
-import de.raidcraft.dragontravelplus.conversations.FindDragonstationAction;
-import de.raidcraft.dragontravelplus.conversations.FlyControlledAction;
-import de.raidcraft.dragontravelplus.conversations.FlyFlightAction;
-import de.raidcraft.dragontravelplus.conversations.FlyToStationAction;
-import de.raidcraft.dragontravelplus.conversations.ListStationsAction;
+import de.raidcraft.dragontravelplus.conversations.*;
 import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardManager;
 import de.raidcraft.dragontravelplus.tables.TPath;
@@ -59,7 +54,7 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
         registerCommands(DTPCommands.class);
         registerCommands(FlightCommands.class);
 
-        // load NPC's
+        // loadConfig NPC's
         DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
 
         try {
@@ -70,7 +65,7 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
             ActionManager.registerAction(new FindDragonstationAction());
             ActionManager.registerAction(new CheckPlayerAction());
         } catch (Exception e) {
-            RaidCraft.LOGGER.warning("[DTP] Can't load Actions! RCConversations not found!");
+            RaidCraft.LOGGER.warning("[DTP] Can't loadConfig Actions! RCConversations not found!");
         }
     }
 

@@ -36,7 +36,7 @@ public class DynamicFlightPath extends AbstractPath {
         double zDif = getEndLocation().getZ() - getStartLocation().getZ();
         Vector unitVector = new Vector(xDif, yDif, zDif).normalize();
 
-        // here we simply calculate what points are between the start and the end location
+        // here we simply calculate what points are between the startStage and the end location
         // we always add the defined flight height to the next waypoint
         DTPConfig config = RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig();
         int wayPointDistance = config.wayPointDistance;
@@ -51,16 +51,16 @@ public class DynamicFlightPath extends AbstractPath {
 //        RaidCraft.LOGGER.info("[DTP] Min: " + minGroundDiff + " | Max: " + maxGroundDiff);
 
         for (int i = 1; i < wayPointCount; i++) {
-            // calculate unsafe start point
+            // calculate unsafe startStage point
             Location wpLocation = getStartLocation().clone();
             Vector unitVectorCopy = unitVector.clone();
             wpLocation.add(unitVectorCopy.multiply(i * wayPointDistance));
 
             // lets remember if we need to unload the chunk
             unloadChunk = !wpLocation.getChunk().isLoaded();
-            // load chunk and find heighest Block
+            // loadConfig chunk and find heighest Block
             double highestBlockY = getHeighestBlock(lastUnsafeStart, unitVector.clone(), wayPointDistance);
-            // save current unsafe start
+            // save current unsafe startStage
             lastUnsafeStart = wpLocation.clone();
             // lets unload the chunk if needed to avoid memory leaking
             if (unloadChunk) wpLocation.getChunk().unload();
@@ -68,7 +68,7 @@ public class DynamicFlightPath extends AbstractPath {
             /*
              * Calculate Y coordinate for a smooth flight
              */
-            // use last y for start of calculation
+            // use last y for startStage of calculation
             double y = lastY - config.flightDragonFalling;
             // check if minimum ground difference is reached
             if((y - highestBlockY) < minGroundDiff) {

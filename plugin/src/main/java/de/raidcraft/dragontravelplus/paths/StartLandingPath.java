@@ -34,10 +34,10 @@ public class StartLandingPath extends AbstractPath {
         int max = world.getMaxHeight();
         int diff = wayPointDistance;
 
-        // start path
+        // startStage path
         Location last = getStartLocation();
         while (last.getBlockY() + diff < max) {
-            // calculate unsafe start point
+            // calculate unsafe startStage point
             Location wpLocation = last.clone();
             wpLocation.add(diff, diff, 0);
             addWaypoint(new Waypoint(wpLocation));
@@ -48,7 +48,7 @@ public class StartLandingPath extends AbstractPath {
         List<Waypoint> landing = new ArrayList<>();
         last = getEndLocation();
         while (last.getBlockY() + diff < max) {
-            // calculate unsafe start point
+            // calculate unsafe startStage point
             Location wpLocation = last.clone();
             wpLocation.add(-diff, diff, 0);
             landing.add(new Waypoint(wpLocation));

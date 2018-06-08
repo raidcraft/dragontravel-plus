@@ -7,12 +7,7 @@ import de.raidcraft.dragontravelplus.comparators.DistanceComparator;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.actions.common.StageAction;
 import de.raidcraft.rcconversations.actions.variables.SetVariableAction;
-import de.raidcraft.rcconversations.api.action.AbstractAction;
-import de.raidcraft.rcconversations.api.action.ActionArgumentException;
-import de.raidcraft.rcconversations.api.action.ActionArgumentList;
-import de.raidcraft.rcconversations.api.action.ActionInformation;
-import de.raidcraft.rcconversations.api.action.MissingArgumentException;
-import de.raidcraft.rcconversations.api.action.WrongArgumentValueException;
+import de.raidcraft.rcconversations.api.action.*;
 import de.raidcraft.rcconversations.api.answer.Answer;
 import de.raidcraft.rcconversations.api.answer.SimpleAnswer;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
@@ -23,11 +18,7 @@ import de.raidcraft.rctravel.api.station.UnknownStationException;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +34,7 @@ public class ListStationsAction extends AbstractAction {
             String typeName = args.getString("type");
             ListType type = ListType.valueOf(typeName);
             if (type == null) {
-                throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Type '" + typeName + "' does not exists!");
+                throw new WrongArgumentValueException("Wrong argument value in withAction '" + getName() + "': Type '" + typeName + "' does not exists!");
             }
 
             StationManager stationManager = RaidCraft.getComponent(StationManager.class);
@@ -54,7 +45,7 @@ public class ListStationsAction extends AbstractAction {
             int pageSize = args.getInt("pagesize", 4);
 
             if (confirmStage == null || returnStage == null) {
-                throw new MissingArgumentException("Missing argument in action '" + getName() + "': Confirmstage or Returnstage is missing!");
+                throw new MissingArgumentException("Missing argument in withAction '" + getName() + "': Confirmstage or Returnstage is missing!");
             }
 
             String entranceStage = "dtp_stationslist";
@@ -177,7 +168,7 @@ public class ListStationsAction extends AbstractAction {
 
         private String infoText;
 
-        private ListType(String infoText) {
+        ListType(String infoText) {
 
             this.infoText = infoText;
         }

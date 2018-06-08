@@ -9,11 +9,7 @@ import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.paths.DragonStationRoute;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.RCConversationsPlugin;
-import de.raidcraft.rcconversations.api.action.AbstractAction;
-import de.raidcraft.rcconversations.api.action.ActionArgumentException;
-import de.raidcraft.rcconversations.api.action.ActionArgumentList;
-import de.raidcraft.rcconversations.api.action.ActionInformation;
-import de.raidcraft.rcconversations.api.action.WrongArgumentValueException;
+import de.raidcraft.rcconversations.api.action.*;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
 import de.raidcraft.rcconversations.conversations.EndReason;
 import de.raidcraft.rcconversations.util.MathHelper;
@@ -30,7 +26,7 @@ public class FlyToStationAction extends AbstractAction {
     @Override
     public void run(Conversation conversation, ActionArgumentList args) throws ActionArgumentException, UnknownStationException {
 
-        String startName = args.getString("start", null);
+        String startName = args.getString("startStage", null);
         String targetName = args.getString("target", null);
         targetName = ParseString.INST.parse(conversation, targetName);
         startName = ParseString.INST.parse(conversation, startName);
@@ -44,7 +40,7 @@ public class FlyToStationAction extends AbstractAction {
 
         DragonStation target = (DragonStation) stationManager.getStation(targetName);
         if (target == null) {
-            throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Station '" + targetName + "' does not exists!");
+            throw new WrongArgumentValueException("Wrong argument value in withAction '" + getName() + "': Station '" + targetName + "' does not exists!");
         }
 
         DragonStation start;
@@ -54,7 +50,7 @@ public class FlyToStationAction extends AbstractAction {
             start = (DragonStation) stationManager.getStation(startName);
         }
         if (start == null) {
-            throw new WrongArgumentValueException("Wrong argument value in action '" + getName() + "': Station '" + targetName + "' does not exists!");
+            throw new WrongArgumentValueException("Wrong argument value in withAction '" + getName() + "': Station '" + targetName + "' does not exists!");
         }
 
         DragonStationRoute route = plugin.getRouteManager().getRoute(start, target);
