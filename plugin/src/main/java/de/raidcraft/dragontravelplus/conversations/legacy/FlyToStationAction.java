@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus.conversations;
+package de.raidcraft.dragontravelplus.conversations.legacy;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.flight.Flight;
@@ -9,7 +9,6 @@ import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.paths.DragonStationRoute;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.RCConversationsPlugin;
-import de.raidcraft.rcconversations.api.action.*;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
 import de.raidcraft.rcconversations.conversations.EndReason;
 import de.raidcraft.rcconversations.util.MathHelper;

@@ -46,11 +46,6 @@
             <version>1.12-0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>de.faldoria</groupId>
-            <artifactId>conversations</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>de.raidcraft.dragontravelplus</groupId>
             <artifactId>nms-v1_11_R1</artifactId>
             <version>v1_11_R1</version>
@@ -90,6 +85,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus.conversations;
+package de.raidcraft.dragontravelplus.conversations.legacy;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;

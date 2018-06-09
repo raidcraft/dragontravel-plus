@@ -1,18 +1,17 @@
 package de.raidcraft.dragontravelplus;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
-import de.raidcraft.dragontravelplus.conversations.*;
+import de.raidcraft.dragontravelplus.conversations.StartFlightAction;
 import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardManager;
 import de.raidcraft.dragontravelplus.tables.TPath;
 import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
-import de.raidcraft.rcconversations.actions.ActionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -57,16 +56,7 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
         // loadConfig NPC's
         DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
 
-        try {
-            ActionManager.registerAction(new FlyFlightAction());
-            ActionManager.registerAction(new FlyControlledAction());
-            ActionManager.registerAction(new FlyToStationAction());
-            ActionManager.registerAction(new ListStationsAction());
-            ActionManager.registerAction(new FindDragonstationAction());
-            ActionManager.registerAction(new CheckPlayerAction());
-        } catch (Exception e) {
-            RaidCraft.LOGGER.warning("[DTP] Can't loadConfig Actions! RCConversations not found!");
-        }
+        registerActions();
     }
 
     @Override
@@ -89,6 +79,11 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
         DragonGuardManager.removeAllDragonGuards();
         DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
         getRouteManager().reload();
+    }
+
+    private void registerActions() {
+        ActionAPI.register(this)
+                .action(new StartFlightAction());
     }
 
     public de.raidcraft.dragontravelplus.AircraftManager getAircraftManager() {

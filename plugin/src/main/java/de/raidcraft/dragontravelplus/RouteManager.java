@@ -3,7 +3,6 @@ package de.raidcraft.dragontravelplus;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.flight.flight.Path;
-import de.raidcraft.api.flight.flight.UnknownPathException;
 import de.raidcraft.api.flight.flight.Waypoint;
 import de.raidcraft.dragontravelplus.paths.*;
 import de.raidcraft.dragontravelplus.tables.TPath;
@@ -16,6 +15,7 @@ import org.bukkit.Location;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Silthus
@@ -82,6 +82,8 @@ public final class RouteManager implements Component {
         loadedRoutes.get(route.getStartStation()).put(route.getEndStation(), route);
     }
 
+    // TODO: calculate and cache routes based on locations not stations
+
     public DragonStationRoute getRoute(Station start, Station destination) {
 
         if (loadedRoutes.containsKey(start) && loadedRoutes.get(start).containsKey(destination)) {
@@ -104,12 +106,9 @@ public final class RouteManager implements Component {
         return getRoute(start, destination);
     }
 
-    public Path getPath(String name) throws UnknownPathException {
+    public Optional<Path> getPath(String name) {
 
-        if (loadedPaths.containsKey(name)) {
-            return loadedPaths.get(name);
-        }
-        throw new UnknownPathException("There is not loaded path with the name " + name + "!");
+        return Optional.ofNullable(loadedPaths.get(name));
     }
 
     public void savePath(Path path, String name) {

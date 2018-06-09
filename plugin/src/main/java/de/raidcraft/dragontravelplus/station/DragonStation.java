@@ -3,6 +3,8 @@ package de.raidcraft.dragontravelplus.station;
 import com.avaje.ebean.EbeanServer;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import de.raidcraft.dragontravelplus.FlightManager;
+import de.raidcraft.dragontravelplus.RouteManager;
 import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.rctravel.api.station.AbstractStation;
@@ -102,9 +104,27 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     }
 
     @Override
-    public void travel(Player player, Station targetStation) {
+    public void travelFrom(Player player, Station sourceStation) {
+        RaidCraft.getComponent(RouteManager.class)
+                .getRoute(sourceStation, this)
+                .createFlight(RaidCraft.getComponent(FlightManager.class).getPassenger(player)).startFlight();
+    }
 
-        // dragontravelplus doesn't support this form off takeoff
+    @Override
+    public void travelTo(Player player, Station targetStation) {
+        RaidCraft.getComponent(RouteManager.class)
+                .getRoute(this, targetStation)
+                .createFlight(RaidCraft.getComponent(FlightManager.class).getPassenger(player)).startFlight();
+    }
+
+    @Override
+    public void travelTo(Player player) {
+        // TODO:
+    }
+
+    @Override
+    public void travel(Player player, Location from, Location to) {
+
     }
 
     @Override

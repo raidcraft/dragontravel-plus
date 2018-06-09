@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus.conversations;
+package de.raidcraft.dragontravelplus.conversations.legacy;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.StationManager;
@@ -7,7 +7,6 @@ import de.raidcraft.dragontravelplus.comparators.DistanceComparator;
 import de.raidcraft.dragontravelplus.station.DragonStation;
 import de.raidcraft.rcconversations.actions.common.StageAction;
 import de.raidcraft.rcconversations.actions.variables.SetVariableAction;
-import de.raidcraft.rcconversations.api.action.*;
 import de.raidcraft.rcconversations.api.answer.Answer;
 import de.raidcraft.rcconversations.api.answer.SimpleAnswer;
 import de.raidcraft.rcconversations.api.conversation.Conversation;
