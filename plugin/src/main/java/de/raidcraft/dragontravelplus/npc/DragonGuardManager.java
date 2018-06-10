@@ -1,17 +1,18 @@
 package de.raidcraft.dragontravelplus.npc;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.conversations.Conversations;
+import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.npc.NPC_Manager;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.StationManager;
 import de.raidcraft.dragontravelplus.station.DragonStation;
-import de.raidcraft.rcconversations.npc.NPC_Conservations_Manager;
 import de.raidcraft.rctravel.api.station.Station;
 import de.raidcraft.rctravel.npc.StationTrait;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Philip Urban
@@ -23,9 +24,9 @@ public class DragonGuardManager {
         Location improvedLocation = station.getLocation().clone();
         improvedLocation.setY(improvedLocation.getY() + 1.5);
         DragonTravelPlusPlugin plugin = RaidCraft.getComponent(DragonTravelPlusPlugin.class);
-        NPC npc = NPC_Conservations_Manager.getInstance().spawnNonPersistNpcConservations(improvedLocation, "Drachenmeister", plugin.getName(), plugin.getConfig().conversationName);
-        npc.addTrait(StationTrait.class);
-        npc.getTrait(StationTrait.class).setStationName(station.getName());
+        Optional<ConversationHost<?>> host = Conversations.spawnConversationHost(plugin.getName(), "Drachenmeister", plugin.getConfig().conversationName, improvedLocation);
+        host.ifPresent(npc -> npc.addTrait(StationTrait.class));
+        host.ifPresent(npc -> npc.getTrait(StationTrait.class).ifPresent(trait -> trait.setStationName(station.getName())));
     }
 
     public static void spawnAllDragonGuardNPCs(StationManager stationManager) {

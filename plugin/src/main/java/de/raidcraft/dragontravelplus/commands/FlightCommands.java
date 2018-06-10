@@ -1,16 +1,10 @@
 package de.raidcraft.dragontravelplus.commands;
 
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.minecraft.util.commands.NestedCommand;
+import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.flight.flight.Flight;
-import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Path;
-import de.raidcraft.api.flight.flight.UnknownPathException;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.FlightManager;
 import de.raidcraft.dragontravelplus.RouteManager;
@@ -21,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Philip
@@ -37,7 +32,7 @@ public class FlightCommands {
     )
     @CommandPermissions("dragontravelplus.flight")
     @NestedCommand(NestedFlightEditorCommands.class)
-    public void flight(CommandContext context, CommandSender sender) throws CommandException {
+    public void flight(CommandContext context, CommandSender sender) {
 
     }
 
@@ -66,10 +61,8 @@ public class FlightCommands {
                 throw new CommandException("Du bist bereits im Flugeditor Modus");
             }
 
-            try {
-                RaidCraft.getComponent(RouteManager.class).getPath(flightName);
+            if (RaidCraft.getComponent(RouteManager.class).getPath(flightName).isPresent()) {
                 throw new CommandException("Einen Flug mit diesem Namen existiert bereits!");
-            } catch (UnknownPathException ignored) {
             }
 
             FlightEditorListener.addPlayer(player);
@@ -121,10 +114,8 @@ public class FlightCommands {
                 throw new CommandException("Du bist nicht im Flugeditor Modus!");
             }
 
-            try {
-                RaidCraft.getComponent(RouteManager.class).getPath(flightName);
+            if (RaidCraft.getComponent(RouteManager.class).getPath(flightName).isPresent()) {
                 throw new CommandException("Einen Flug mit diesem Namen existiert bereits!");
-            } catch (UnknownPathException ignored) {
             }
 
             Path path = FlightEditorListener.editors.get(player);
@@ -141,7 +132,7 @@ public class FlightCommands {
                 usage = "<name>"
         )
         @CommandPermissions("dragontravelplus.editor.delete")
-        public void delete(CommandContext context, CommandSender sender) throws CommandException {
+        public void delete(CommandContext context, CommandSender sender) {
 
             String playerName = sender.getName();
             String flightName = context.getString(0);
@@ -158,7 +149,7 @@ public class FlightCommands {
                 desc = "List existing flights"
         )
         @CommandPermissions("dragontravelplus.flights.list")
-        public void list(CommandContext context, CommandSender sender) throws CommandException {
+        public void list(CommandContext context, CommandSender sender) {
 
             List<TPath> paths = RaidCraft.getDatabase(DragonTravelPlusPlugin.class)
                     .find(TPath.class).where().isNull("start_station_id").findList();
@@ -188,16 +179,16 @@ public class FlightCommands {
         @CommandPermissions("dragontravelplus.fly.flight")
         public void fly(CommandContext context, CommandSender sender) throws CommandException {
 
-            try {
-                String flightName = context.getString(0);
-                Path path = RaidCraft.getComponent(RouteManager.class).getPath(flightName);
+            String flightName = context.getString(0);
+            Optional<Path> path = RaidCraft.getComponent(RouteManager.class).getPath(flightName);
 
-                Flight flight = RaidCraft.getComponent(FlightManager.class).createFlight((Player) sender, path);
-
-                flight.startFlight();
-            } catch (UnknownPathException | FlightException e) {
-                throw new CommandException(e.getMessage());
+            if (!path.isPresent()) {
+                throw new CommandException("Der angegebene Flug exisitert nicht.");
             }
+
+            Flight flight = RaidCraft.getComponent(FlightManager.class).createFlight((Player) sender, path.get());
+
+            flight.startFlight();
         }
 
         public void leaveEditor(Player player) {
