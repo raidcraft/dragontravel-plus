@@ -46,16 +46,9 @@
             <version>1.12-0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>de.raidcraft.dragontravelplus</groupId>
-            <artifactId>nms-v1_11_R1</artifactId>
-            <version>v1_11_R1</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>de.raidcraft.dragontravelplus</groupId>
-            <artifactId>nms-v1_12_01</artifactId>
-            <version>v1_12_01</version>
+            <groupId>de.faldoria.dragontravelplus</groupId>
+            <artifactId>nms-v1_12_R1</artifactId>
+            <version>v1_12_R1</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -79,7 +72,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>de.raidcraft.dragontravelplus:nms-*</include>
+                                    <include>de.faldoria.dragontravelplus:nms-*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

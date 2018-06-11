@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus.aircrafts.nms.v1_11_R1;
+package de.raidcraft.dragontravelplus.aircrafts.nms.v1_12_R1;
 
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.flight.Flight;
