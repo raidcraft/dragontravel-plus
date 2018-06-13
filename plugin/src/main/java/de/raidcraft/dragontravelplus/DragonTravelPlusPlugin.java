@@ -2,16 +2,21 @@ package de.raidcraft.dragontravelplus;
 
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.conversations.Conversations;
+import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.flight.flight.Flight;
+import de.raidcraft.dragontravelplus.actions.ListStationsAction;
+import de.raidcraft.dragontravelplus.actions.StartFlightAction;
+import de.raidcraft.dragontravelplus.actions.TravelToStationAction;
 import de.raidcraft.dragontravelplus.commands.DTPCommands;
 import de.raidcraft.dragontravelplus.commands.FlightCommands;
-import de.raidcraft.dragontravelplus.conversations.StartFlightAction;
 import de.raidcraft.dragontravelplus.listener.FlightEditorListener;
 import de.raidcraft.dragontravelplus.npc.DragonGuardManager;
 import de.raidcraft.dragontravelplus.tables.TPath;
 import de.raidcraft.dragontravelplus.tables.TPlayerStation;
 import de.raidcraft.dragontravelplus.tables.TStation;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
+import de.raidcraft.rctravel.npc.StationTrait;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -21,6 +26,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Philip
@@ -53,10 +59,18 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
         registerCommands(DTPCommands.class);
         registerCommands(FlightCommands.class);
 
+        registerActions();
+    }
+
+    @Override
+    public void loadDependencyConfigs() {
         // loadConfig NPC's
         DragonGuardManager.spawnAllDragonGuardNPCs(stationManager);
 
-        registerActions();
+        Conversations.registerConversationVariable("%dtp_station", (matcher, conversation) -> {
+            Optional<StationTrait> trait = conversation.getHost().getTrait(StationTrait.class);
+            return trait.map(StationTrait::getName).orElse("INVALID STATION TRAIT");
+        });
     }
 
     @Override
@@ -83,7 +97,9 @@ public class DragonTravelPlusPlugin extends BasePlugin implements Listener {
 
     private void registerActions() {
         ActionAPI.register(this)
-                .action(new StartFlightAction());
+                .action(new StartFlightAction())
+                .action(new TravelToStationAction())
+                .action(new ListStationsAction(), Conversation.class);
     }
 
     public de.raidcraft.dragontravelplus.AircraftManager getAircraftManager() {

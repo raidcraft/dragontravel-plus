@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -52,25 +53,20 @@ public final class StationManager implements Component {
         plugin.getLogger().info("Loaded " + cnt + " stations for this server (" + stations.size() + " total)");
     }
 
-    public Station getStation(String name) throws UnknownStationException {
+    public Optional<Station> getStation(String name) {
 
-        if (!loadedStations.containsKey(name.toLowerCase())) {
-            throw new UnknownStationException("No station with the name " + name + " found!");
-        }
-        return loadedStations.get(name);
+        return Optional.ofNullable(loadedStations.get(name));
     }
 
-    public Station getStationFromInput(String name) throws UnknownStationException {
+    public Optional<Station> getStationFromInput(String name) {
 
         if (!loadedStations.containsKey(name.toLowerCase())) {
 	        name = name.replace(" ", "_");
 	        if(!loadedStations.containsKey(name.toLowerCase()))
 		        name = name.replace("_", "-");
-		        if(!loadedStations.containsKey(name.toLowerCase()))
-			        throw new UnknownStationException("No station with the name " + name + " found!");
 	        return getStation(name);
         }
-        return loadedStations.get(name);
+        return Optional.ofNullable(loadedStations.get(name));
     }
 
     public List<Station> getUnlockedStations(Player player) {
@@ -81,13 +77,9 @@ public final class StationManager implements Component {
         List<Station> stations = new ArrayList<>();
         for (TPlayerStation playerStation : stationsList) {
             if(playerStation.getStation().getLocation().getWorld() == null) continue; // ignore stations of other server worlds
-            try {
-                if (playerStation.getStation().getWorld().equalsIgnoreCase(player.getLocation().getWorld().getName())) {
-                    Station station = getStation(playerStation.getStation().getName());
-                    if (station != null && station.getLocation().getWorld().equals(player.getWorld())) stations.add(station);
-                }
-            } catch (UnknownStationException e) {
-                plugin.getLogger().warning(e.getMessage());
+            if (playerStation.getStation().getWorld().equalsIgnoreCase(player.getLocation().getWorld().getName())) {
+                Optional<Station> station = getStation(playerStation.getStation().getName());
+                station.filter(s -> s.getLocation().getWorld().equals(player.getWorld())).ifPresent(stations::add);
             }
         }
         // also add all emergency stations
@@ -102,14 +94,14 @@ public final class StationManager implements Component {
         return stations;
     }
 
-    public Station getNearbyStation(Location location, int radius) throws UnknownStationException {
+    public Optional<Station> getNearbyStation(Location location, int radius) {
 
         for (Station station : loadedStations.values()) {
             if (LocationUtil.isWithinRadius(station.getLocation(), location, radius)) {
-                return station;
+                return Optional.ofNullable(station);
             }
         }
-        throw new UnknownStationException("No station found within the radius of " + radius + " near " + location.toString());
+        return Optional.empty();
     }
 
     public DragonStation createNewStation(String name, String displayName, Location location, int costLevel, boolean mainStation, boolean emergencyTarget) throws UnknownStationException {

@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus.conversations;
+package de.raidcraft.dragontravelplus.actions;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;

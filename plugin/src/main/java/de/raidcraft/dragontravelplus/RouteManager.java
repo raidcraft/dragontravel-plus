@@ -8,7 +8,6 @@ import de.raidcraft.dragontravelplus.paths.*;
 import de.raidcraft.dragontravelplus.tables.TPath;
 import de.raidcraft.dragontravelplus.tables.TWaypoint;
 import de.raidcraft.rctravel.api.station.Station;
-import de.raidcraft.rctravel.api.station.UnknownStationException;
 import de.raidcraft.util.CaseInsensitiveMap;
 import org.bukkit.Location;
 
@@ -46,29 +45,25 @@ public final class RouteManager implements Component {
         int routeAmount = 0;
         List<TPath> paths = plugin.getDatabase().find(TPath.class).findList();
         for (TPath path : paths) {
-            try {
-                SavedFlightPath flightPath;
-                if (path.getStartStation() != null && path.getEndStation() != null) {
-                    Station startStation = RaidCraft.getComponent(StationManager.class).getStation(path.getStartStation().getName());
-                    Station endStation = RaidCraft.getComponent(StationManager.class).getStation(path.getEndStation().getName());
-                    flightPath = new SavedFlightPath(startStation.getLocation(), endStation.getLocation(), path);
-                    // this path has an end and startStage station so lets loadConfig the route while we are at it
-                    DragonStationRoute stationRoute = new DragonStationRoute(startStation, endStation, flightPath);
-                    addDragonStationRoute(stationRoute);
-                    routeAmount++;
-                } else if (path.getWaypoints().size() > 1) {
-                    Location startLoc = new SavedWaypoint(path.getWaypoints().get(0)).getLocation();
-                    Location endLoc = new SavedWaypoint(path.getWaypoints().get(path.getWaypoints().size() - 1)).getLocation();
-                    flightPath = new SavedFlightPath(startLoc, endLoc, path);
-                } else {
-                    plugin.getLogger().warning("Invalid path in the database found: " + path.getName() + "[" + path.getId() + "]!");
-                    continue;
-                }
-                loadedPaths.put(path.getName(), flightPath);
-                pathAmount++;
-            } catch (UnknownStationException e) {
-                plugin.getLogger().warning(e.getMessage());
+            SavedFlightPath flightPath;
+            if (path.getStartStation() != null && path.getEndStation() != null) {
+                Optional<Station> startStation = RaidCraft.getComponent(StationManager.class).getStation(path.getStartStation().getName());
+                Optional<Station> endStation = RaidCraft.getComponent(StationManager.class).getStation(path.getEndStation().getName());
+                flightPath = new SavedFlightPath(startStation.get().getLocation(), endStation.get().getLocation(), path);
+                // this path has an end and startStage station so lets loadConfig the route while we are at it
+                DragonStationRoute stationRoute = new DragonStationRoute(startStation.get(), endStation.get(), flightPath);
+                addDragonStationRoute(stationRoute);
+                routeAmount++;
+            } else if (path.getWaypoints().size() > 1) {
+                Location startLoc = new SavedWaypoint(path.getWaypoints().get(0)).getLocation();
+                Location endLoc = new SavedWaypoint(path.getWaypoints().get(path.getWaypoints().size() - 1)).getLocation();
+                flightPath = new SavedFlightPath(startLoc, endLoc, path);
+            } else {
+                plugin.getLogger().warning("Invalid path in the database found: " + path.getName() + "[" + path.getId() + "]!");
+                continue;
             }
+            loadedPaths.put(path.getName(), flightPath);
+            pathAmount++;
         }
         plugin.getLogger().info("Loaded " + pathAmount + "/" + paths.size() + " flight paths from the database...");
         plugin.getLogger().info("Loaded " + routeAmount + "/" + paths.size() + " precached routes from the database...");

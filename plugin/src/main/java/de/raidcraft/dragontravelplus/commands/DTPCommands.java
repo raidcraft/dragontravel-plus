@@ -1,10 +1,6 @@
 package de.raidcraft.dragontravelplus.commands;
 
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.minecraft.util.commands.NestedCommand;
+import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.Waypoint;
@@ -27,6 +23,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Philip
@@ -44,7 +41,7 @@ public class DTPCommands {
             desc = "Control Dragonguard settings"
     )
     @NestedCommand(NestedDragonGuardCommands.class)
-    public void dragontravelplus(CommandContext context, CommandSender sender) throws CommandException {
+    public void dragontravelplus(CommandContext context, CommandSender sender) {
 
     }
 
@@ -66,7 +63,7 @@ public class DTPCommands {
                 desc = "Reload config and database"
         )
         @CommandPermissions("dragontravelplus.reload")
-        public void reload(CommandContext context, CommandSender sender) throws CommandException {
+        public void reload(CommandContext context, CommandSender sender) {
 
             plugin.reload();
             tr.msg(sender, "cmd.reload", "Plugin was sucessfully reloaded!");
@@ -127,20 +124,23 @@ public class DTPCommands {
         @CommandPermissions("dragontravelplus.remove")
         public void remove(CommandContext context, CommandSender sender) throws CommandException {
 
-            DragonStation station;
-            try {
-                station = (DragonStation) stationManager.getStation(context.getString(0));
-            } catch (UnknownStationException e) {
-                throw new CommandException(e.getMessage());
+            Optional<DragonStation> station = stationManager.getStation(context.getString(0))
+                    .filter(DragonStation.class::isInstance)
+                    .map(DragonStation.class::cast);
+
+            if (!station.isPresent()) {
+                throw new CommandException("Es gibt keine DTP Station mit dem Namen: " + context.getString(0));
             }
 
-            DragonGuardManager.removeDragonGuard(station);
+            DragonStation dragonStation = station.get();
 
-            stationManager.deleteStation(station);
-            DynmapManager.INST.removeMarker(station);
+            DragonGuardManager.removeDragonGuard(dragonStation);
+
+            stationManager.deleteStation(dragonStation);
+            DynmapManager.INST.removeMarker(dragonStation);
             RaidCraft.getComponent(DragonTravelPlusPlugin.class).reload();
 
-            tr.msg(sender, "cmd.station.delete", "You deleted the dragon station: %s", station.getDisplayName());
+            tr.msg(sender, "cmd.station.delete", "You deleted the dragon station: %s", dragonStation.getDisplayName());
         }
 
         @Command(
@@ -152,17 +152,21 @@ public class DTPCommands {
         @CommandPermissions("dragontravelplus.warp")
         public void warp(CommandContext context, CommandSender sender) throws CommandException {
 
-            DragonStation station;
-            try {
-                station = (DragonStation) stationManager.getStation(context.getString(0));
-            } catch (UnknownStationException e) {
-                throw new CommandException(e.getMessage());
+            Optional<DragonStation> station = stationManager.getStation(context.getString(0))
+                    .filter(DragonStation.class::isInstance)
+                    .map(DragonStation.class::cast);
+
+            if (!station.isPresent()) {
+                throw new CommandException("Es gibt keine DTP Station mit dem Namen: " + context.getString(0));
             }
-            Location improvedLocation = station.getLocation().clone();
+
+            DragonStation dragonStation = station.get();
+
+            Location improvedLocation = dragonStation.getLocation().clone();
             improvedLocation.setY(improvedLocation.getY() + 2);
             Player player = CommandUtil.warp(context, sender, improvedLocation, 1);
             tr.msg(player, "cmd.station.warp", ChatColor.GREEN + "You have been teleported to the dragon station: %s",
-                    station.getDisplayName());
+                    dragonStation.getDisplayName());
         }
 
         @Command(
@@ -170,7 +174,7 @@ public class DTPCommands {
                 flags = "ec:",
                 desc = "Shows a list of all Stations"
         )
-        public void list(CommandContext context, CommandSender sender) throws CommandException {
+        public void list(CommandContext context, CommandSender sender) {
 
             String list = "";
 
@@ -198,7 +202,7 @@ public class DTPCommands {
                 aliases = {"discovered", "explored", "visited"},
                 desc = "Show all discovered Dragonsations"
         )
-        public void discovered(CommandContext context, CommandSender sender) throws CommandException {
+        public void discovered(CommandContext context, CommandSender sender) {
 
             Player player = (Player) sender;
             String list = "";
@@ -223,7 +227,7 @@ public class DTPCommands {
                 desc = "Recreate dynmap markers"
         )
         @CommandPermissions("dragontravelplus.markers")
-        public void markers(CommandContext context, CommandSender sender) throws CommandException {
+        public void markers(CommandContext context, CommandSender sender) {
 
             int i = 0;
             for (Station station : stationManager.getAllStations()) {
@@ -239,7 +243,7 @@ public class DTPCommands {
                 desc = "Aborts all active flights"
         )
         @CommandPermissions("dragontravelplus.abortflights")
-        public void abortFlights(CommandContext context, CommandSender sender) throws CommandException {
+        public void abortFlights(CommandContext context, CommandSender sender) {
 
             for (Flight flight : plugin.getFlightManager().getActiveFlights()) {
                 flight.abortFlight();
@@ -254,25 +258,21 @@ public class DTPCommands {
                 usage = "<start_station> <end_station>"
         )
         @CommandPermissions("dragontravelplus.debug")
-        public void debug(CommandContext context, CommandSender sender) throws CommandException {
+        public void debug(CommandContext context, CommandSender sender) {
 
-            try {
-                Location start = plugin.getStationManager().getStation(context.getString(0)).getLocation();
-                Location end = plugin.getStationManager().getStation(context.getString(1)).getLocation();
-                DynamicFlightPath path = new DynamicFlightPath(start, end);
-                path.calculate();
-                List<Waypoint> points = path.getWaypoints();
+            Location start = plugin.getStationManager().getStation(context.getString(0)).get().getLocation();
+            Location end = plugin.getStationManager().getStation(context.getString(1)).get().getLocation();
+            DynamicFlightPath path = new DynamicFlightPath(start, end);
+            path.calculate();
+            List<Waypoint> points = path.getWaypoints();
+            for (Waypoint point : points) {
+                sender.sendMessage(point.getX() + ":" + point.getY() + ":" + point.getZ());
+            }
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
                 for (Waypoint point : points) {
-                    sender.sendMessage(point.getX() + ":" + point.getY() + ":" + point.getZ());
+                    player.sendBlockChange(point.getLocation(), Material.GLOWSTONE, (byte) 0);
                 }
-                if (sender instanceof Player) {
-                    Player player = (Player) sender;
-                    for (Waypoint point : points) {
-                        player.sendBlockChange(point.getLocation(), Material.GLOWSTONE, (byte) 0);
-                    }
-                }
-            } catch (UnknownStationException e) {
-                sender.sendMessage(e.getMessage());
             }
         }
     }

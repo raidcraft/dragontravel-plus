@@ -5,7 +5,7 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.passenger.Passenger;
 import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
-import de.raidcraft.util.EntityUtil;
+import de.raidcraft.nms.NMSUtils;
 import de.raidcraft.util.EnumUtils;
 import de.raidcraft.util.ReflectionUtil;
 import net.citizensnpcs.Citizens;
@@ -54,7 +54,8 @@ public final class AircraftManager implements Component {
                 break;
             case VANILLA:
                 // we need to register the custom entity matching the correct version
-                EntityUtil.registerEntity("EnderDragon", 63, ReflectionUtil.getNmsClass("de.raidcraft.dragontravelplus.aircrafts.nms", "RCDragon"));
+                Class<?> rcDragon = ReflectionUtil.getNmsClass("de.raidcraft.dragontravelplus.aircrafts.nms", "RCDragon");
+                NMSUtils.registerEntity("RCDragon", NMSUtils.Type.ENDER_DRAGON, rcDragon, false);
                 break;
         }
         RaidCraft.registerComponent(AircraftManager.class, this);
