@@ -12,6 +12,7 @@ import de.raidcraft.util.ConfigUtil;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ListStationsAction implements Action<Conversation> {
 
@@ -47,7 +48,9 @@ public class ListStationsAction implements Action<Conversation> {
         }
 
         Station startStation = station.get();
-        conversation.changeToStage(StationConversationUtil.buildStationList(conversation, stationManager.getAllStations(), TravelToStationAction.class, (target, actionBuilder) -> {
+        conversation.changeToStage(StationConversationUtil.buildStationList(conversation,
+                stationManager.getAllStations().stream().filter(s -> !s.equals(startStation)).collect(Collectors.toList()),
+                TravelToStationAction.class, (target, actionBuilder) -> {
             actionBuilder.withConfig("target", target.getName());
             actionBuilder.withConfig("start", startStation.getName());
             actionBuilder.withConfig("confirm", true);
