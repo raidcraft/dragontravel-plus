@@ -70,7 +70,6 @@ public class TravelToStationAction implements Action<Player> {
                             .withAnswer("Ja auf gehts!", answer -> answer
                                     .withRequirement((type, config1) -> RaidCraft.getEconomy().hasEnough(player.getUniqueId(), price))
                                     .withAction((type, config1) -> startStation.get().travelTo(player, targetStation.get()))
-                                    .withAction((type, config1) -> RaidCraft.getEconomy().substract(player.getUniqueId(), price))
                                     .withAction(Action.endConversation(ConversationEndReason.ENDED))
                             )
                             .withAnswer("Nein danke, ich habe es mir anders überlegt.", answer -> answer.withAction(Action.changeToPreviousStage())).build()
