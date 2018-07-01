@@ -22,7 +22,7 @@ public class StartFlightAction implements Action<Player> {
             value = "flight.start",
             desc = "Starts a preconfigured named flight.",
             conf = {
-                    "flight: <name of the flight>",
+                    "flight: <displayName of the flight>",
                     "delay: 0"
             }
     )

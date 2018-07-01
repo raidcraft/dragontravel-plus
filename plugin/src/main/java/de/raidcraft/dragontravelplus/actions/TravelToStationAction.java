@@ -25,8 +25,8 @@ public class TravelToStationAction implements Action<Player> {
             desc = "Travels to the given station. Uses the current player position or given station as start.",
             aliases = {"travel"},
             conf = {
-                    "start: [station name]",
-                    "target: <station name>",
+                    "start: [station displayName]",
+                    "target: <station displayName>",
                     "delay: [in sec]",
                     "confirm: true/->false asks the player to confirm the travelTo",
                     "pay: true/->false if the player must pay for the trip"

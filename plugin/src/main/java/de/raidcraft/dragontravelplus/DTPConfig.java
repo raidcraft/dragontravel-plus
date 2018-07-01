@@ -95,7 +95,7 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
 
     @Setting("npc-search-radius")
     public int npcStationSearchRadius = 3;
-    @Setting("npc-name")
+    @Setting("npc-displayName")
     public String npcDefaultName = "Drachenmeister";
     @Setting("npc-conversation-auto-exit-distance")
     public int autoExitDistance = 10;
@@ -111,7 +111,7 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
             "stop"
     };
 
-    @Setting("conversation-name")
+    @Setting("conversation-displayName")
     public String conversationName = "drachenmeister";
 
     public DTPConfig(DragonTravelPlusPlugin plugin) {

@@ -107,7 +107,7 @@ public final class StationManager implements Component {
     public DragonStation createNewStation(String name, String displayName, Location location, int costLevel, boolean mainStation, boolean emergencyTarget) throws UnknownStationException {
 
         if (loadedStations.containsKey(name)) {
-            throw new UnknownStationException("Duplicate station with the name " + name + " detected!");
+            throw new UnknownStationException("Duplicate station with the displayName " + name + " detected!");
         }
         DragonStation dragonStation = new DragonStation(name, displayName, location, costLevel, mainStation, emergencyTarget);
         dragonStation.save();

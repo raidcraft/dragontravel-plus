@@ -74,7 +74,7 @@ public class DTPCommands {
                 flags = "mec:",
                 desc = "Create new station",
                 min = 2,
-                usage = "<name> <displayname>"
+                usage = "<displayName> <displayname>"
         )
         @CommandPermissions("dragontravelplus.create")
         public void create(CommandContext context, CommandSender sender) throws CommandException {
@@ -112,14 +112,14 @@ public class DTPCommands {
             // dynmap
             DynmapManager.INST.addStationMarker(station);
 
-            tr.msg(sender, "cmd.station.create", "You have created a dragon station with the name: %s", station.getDisplayName());
+            tr.msg(sender, "cmd.station.create", "You have created a dragon station with the displayName: %s", station.getDisplayName());
         }
 
         @Command(
                 aliases = {"delete", "remove"},
                 desc = "Remove dragon station",
                 min = 1,
-                usage = "<name>"
+                usage = "<displayName>"
         )
         @CommandPermissions("dragontravelplus.remove")
         public void remove(CommandContext context, CommandSender sender) throws CommandException {

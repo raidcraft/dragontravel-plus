@@ -49,7 +49,7 @@ public class FlightCommands {
                 aliases = {"new"},
                 desc = "Open editor mode",
                 min = 1,
-                usage = "<name>"
+                usage = "<displayName>"
         )
         @CommandPermissions("dragontravelplus.editor.new")
         public void editor(CommandContext context, CommandSender sender) throws CommandException {
@@ -129,7 +129,7 @@ public class FlightCommands {
                 aliases = {"delete", "remove"},
                 desc = "Delete flight",
                 min = 1,
-                usage = "<name>"
+                usage = "<displayName>"
         )
         @CommandPermissions("dragontravelplus.editor.delete")
         public void delete(CommandContext context, CommandSender sender) {
@@ -174,7 +174,7 @@ public class FlightCommands {
                 aliases = {"fly"},
                 desc = "Fly",
                 min = 1,
-                usage = "<name>"
+                usage = "<displayName>"
         )
         @CommandPermissions("dragontravelplus.fly.flight")
         public void fly(CommandContext context, CommandSender sender) throws CommandException {
