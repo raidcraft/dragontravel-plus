@@ -1,6 +1,5 @@
 package de.raidcraft.dragontravelplus.station;
 
-import com.avaje.ebean.EbeanServer;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import de.raidcraft.dragontravelplus.FlightManager;
@@ -11,6 +10,7 @@ import de.raidcraft.rctravel.api.station.AbstractStation;
 import de.raidcraft.rctravel.api.station.Chargeable;
 import de.raidcraft.rctravel.api.station.Discoverable;
 import de.raidcraft.rctravel.api.station.Station;
+import io.ebean.EbeanServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -87,7 +87,7 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
             EbeanServer database = RaidCraft.getDatabase(DragonTravelPlusPlugin.class);
             TStation station = save();
             TPlayerStation playerStation = database.find(TPlayerStation.class)
-                    .where().eq("station_id", station.getId()).eq("player_id", player).findUnique();
+                    .where().eq("station_id", station.getId()).eq("player_id", player).findOne();
             if (playerStation == null) {
                 playerStation = new TPlayerStation();
                 playerStation.setPlayerId(player);
@@ -159,7 +159,7 @@ public class DragonStation extends AbstractStation implements Chargeable, Discov
     public TStation save() {
 
         EbeanServer database = RaidCraft.getDatabase(DragonTravelPlusPlugin.class);
-        TStation station = database.find(TStation.class).where().eq("name", getName()).findUnique();
+        TStation station = database.find(TStation.class).where().eq("name", getName()).findOne();
         if (station == null) {
             station = new TStation();
         }

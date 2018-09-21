@@ -129,7 +129,7 @@ public final class RouteManager implements Component {
 
     public void deletePath(String name) {
 
-        TPath tPath = plugin.getDatabase().find(TPath.class).where().eq("name", name).findUnique();
+        TPath tPath = plugin.getDatabase().find(TPath.class).where().eq("name", name).findOne();
         if (tPath != null) {
             plugin.getDatabase().delete(tPath);
         }

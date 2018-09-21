@@ -118,7 +118,7 @@ public final class StationManager implements Component {
     public void deleteStation(DragonStation station) {
 
         loadedStations.remove(station.getName());
-        TStation entry = plugin.getDatabase().find(TStation.class).where().eq("name", station.getName()).findUnique();
+        TStation entry = plugin.getDatabase().find(TStation.class).where().eq("name", station.getName()).findOne();
         plugin.getDatabase().delete(entry);
     }
 
