@@ -1,25 +1,22 @@
 package de.raidcraft.dragontravelplus.tables;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import de.raidcraft.api.ebean.BaseModel;
+import lombok.Data;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Silthus
  */
+@Data
 @Entity
 @Table(name = "flight_paths")
-public class TPath {
+public class TPath extends BaseModel {
 
-    @Id
-    private int id;
+    public static final TPathFinder find = new TPathFinder();
+
     @Column(unique = true)
     private String name;
     @ManyToOne
@@ -31,54 +28,5 @@ public class TPath {
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "path_id")
     private List<TWaypoint> waypoints = new ArrayList<>();
-
-    public int getId() {
-
-        return id;
-    }
-
-    public void setId(int id) {
-
-        this.id = id;
-    }
-
-    public String getName() {
-
-        return name;
-    }
-
-    public void setName(String name) {
-
-        this.name = name;
-    }
-
-    public TStation getStartStation() {
-
-        return startStation;
-    }
-
-    public void setStartStation(TStation startStation) {
-
-        this.startStation = startStation;
-    }
-
-    public TStation getEndStation() {
-
-        return endStation;
-    }
-
-    public void setEndStation(TStation endStation) {
-
-        this.endStation = endStation;
-    }
-
-    public List<TWaypoint> getWaypoints() {
-
-        return waypoints;
-    }
-
-    public void setWaypoints(List<TWaypoint> waypoints) {
-
-        this.waypoints = waypoints;
-    }
 }
+

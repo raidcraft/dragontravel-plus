@@ -206,7 +206,7 @@ public class DTPCommands {
 
             Player player = (Player) sender;
             String list = "";
-            List<TStation> stations = plugin.getDatabase().find(TStation.class)
+            List<TStation> stations = plugin.getRcDatabase().find(TStation.class)
                     .fetch("playerStations")
                     .where().eq("player_id", player.getUniqueId().toString())
                     .isNotNull("discovered")

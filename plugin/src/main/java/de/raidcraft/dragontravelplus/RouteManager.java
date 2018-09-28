@@ -43,7 +43,7 @@ public final class RouteManager implements Component {
 
         int pathAmount = 0;
         int routeAmount = 0;
-        List<TPath> paths = plugin.getDatabase().find(TPath.class).findList();
+        List<TPath> paths = plugin.getRcDatabase().find(TPath.class).findList();
         for (TPath path : paths) {
             SavedFlightPath flightPath;
             if (path.getStartStation() != null && path.getEndStation() != null) {
@@ -113,7 +113,7 @@ public final class RouteManager implements Component {
         }
         TPath tPath = new TPath();
         tPath.setName(name);
-        plugin.getDatabase().save(tPath);
+        tPath.save();
         for (int i = 0; i < path.getWaypointAmount(); i++) {
             TWaypoint tWaypoint = new TWaypoint();
             tWaypoint.setPath(tPath);
@@ -123,15 +123,15 @@ public final class RouteManager implements Component {
             tWaypoint.setX(waypoint.getX());
             tWaypoint.setY(waypoint.getY());
             tWaypoint.setZ(waypoint.getZ());
-            plugin.getDatabase().save(tWaypoint);
+            tWaypoint.save();
         }
     }
 
     public void deletePath(String name) {
 
-        TPath tPath = plugin.getDatabase().find(TPath.class).where().eq("name", name).findOne();
+        TPath tPath = TPath.find.query().where().eq("name", name).findOne();
         if (tPath != null) {
-            plugin.getDatabase().delete(tPath);
+            tPath.delete();
         }
     }
 }

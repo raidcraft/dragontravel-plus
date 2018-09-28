@@ -42,7 +42,7 @@ public final class StationManager implements Component {
     private void load() {
 
         int cnt = 0;
-        List<TStation> stations = plugin.getDatabase().find(TStation.class).findList();
+        List<TStation> stations = plugin.getRcDatabase().find(TStation.class).findList();
         for (TStation station : stations) {
             if(station.getLocation().getWorld() == null) continue; // ignore stations of other server worlds
             DragonStation dragonStation = new DragonStation(station.getName(), station.getDisplayName(), station.getLocation(),
@@ -71,7 +71,7 @@ public final class StationManager implements Component {
 
     public List<Station> getUnlockedStations(Player player) {
 
-        List<TPlayerStation> stationsList = plugin.getDatabase().find(TPlayerStation.class).where()
+        List<TPlayerStation> stationsList = plugin.getRcDatabase().find(TPlayerStation.class).where()
                 .eq("player_id", player.getUniqueId())
                 .isNotNull("discovered").findList();
         List<Station> stations = new ArrayList<>();
@@ -118,8 +118,8 @@ public final class StationManager implements Component {
     public void deleteStation(DragonStation station) {
 
         loadedStations.remove(station.getName());
-        TStation entry = plugin.getDatabase().find(TStation.class).where().eq("name", station.getName()).findOne();
-        plugin.getDatabase().delete(entry);
+        TStation entry = plugin.getRcDatabase().find(TStation.class).where().eq("name", station.getName()).findOne();
+        plugin.getRcDatabase().delete(entry);
     }
 
     public List<Station> getAllStations() {
