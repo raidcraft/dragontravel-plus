@@ -17,6 +17,7 @@ public class GenerateDbMigration {
 
         DbMigration dbMigration = DbMigration.create();
         dbMigration.setPlatform(Platform.MYSQL);
+        dbMigration.setPathToResources("plugin/src/main/resources");
 
         dbMigration.generateMigration();
     }
