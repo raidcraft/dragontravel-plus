@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 @Getter
 @Entity
-@Table(name = "flight_player_stations")
+@Table(name = "rc_flight_player_stations")
 public class TPlayerStation extends BaseModel {
 
     public static final TPlayerStationFinder find = new TPlayerStationFinder();

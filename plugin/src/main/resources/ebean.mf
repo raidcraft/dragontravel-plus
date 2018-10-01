@@ -1,0 +1,3 @@
+entity-packages: de.raidcraft.dragontravelplus
+transactional-packages: de.raidcraft.dragontravelplus
+querybean-packages: de.raidcraft.dragontravelplus

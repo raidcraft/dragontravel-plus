@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 @Entity
-@Table(name = "flight_paths")
+@Table(name = "rc_flight_paths")
 public class TPath extends BaseModel {
 
     public static final TPathFinder find = new TPathFinder();

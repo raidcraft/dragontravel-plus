@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Data
 @Entity
-@Table(name = "flight_stations")
+@Table(name = "rc_flight_stations")
 public class TStation extends BaseModel {
 
     public static final TStationFinder find = new TStationFinder();

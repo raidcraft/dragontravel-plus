@@ -12,7 +12,7 @@ import javax.persistence.Table;
  */
 @Data
 @Entity
-@Table(name = "flight_waypoints")
+@Table(name = "rc_flight_waypoints")
 public class TWaypoint extends BaseModel implements Comparable<TWaypoint> {
 
     @ManyToOne
