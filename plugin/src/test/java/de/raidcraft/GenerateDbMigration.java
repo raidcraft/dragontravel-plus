@@ -20,6 +20,7 @@ public class GenerateDbMigration {
         DbMigration dbMigration = new DefaultDbMigration();
         dbMigration.setPlatform(Platform.MYSQL);
         dbMigration.setPathToResources("plugin/src/main/resources/");
+        dbMigration.setVersion("1.22");
         // generate the migration ddl and xml
         // ... with EbeanServer in "offline" mode
         dbMigration.generateMigration();
