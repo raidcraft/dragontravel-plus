@@ -5,17 +5,24 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.passenger.Passenger;
 import de.raidcraft.dragontravelplus.aircrafts.CitizensAircraftDragon;
-import de.raidcraft.nms.NMSUtils;
+import de.raidcraft.nms.api.EntityRegistry;
 import de.raidcraft.util.EnumUtils;
 import de.raidcraft.util.ReflectionUtil;
 import net.citizensnpcs.Citizens;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+
+import java.util.Optional;
 
 /**
  * @author Silthus
  */
 public final class AircraftManager implements Component {
+
+    public static final String RC_DRAGON_ENTITY_NAME = "rc_dtp_dragon";
+    private static final String NMS_PACKAGE = "de.raidcraft.dragontravelplus.aircrafts.nms";
 
     public enum AircraftType {
 
@@ -54,8 +61,8 @@ public final class AircraftManager implements Component {
                 break;
             case VANILLA:
                 // we need to register the custom entity matching the correct version
-                Class<?> rcDragon = ReflectionUtil.getNmsClass("de.raidcraft.dragontravelplus.aircrafts.nms", "RCDragon");
-                NMSUtils.registerEntity("RCDragon", NMSUtils.Type.ENDER_DRAGON, rcDragon, false);
+                Class<?> rcDragon = ReflectionUtil.getNmsClass(NMS_PACKAGE, "RCDragon");
+                if (rcDragon != null) RaidCraft.getComponent(EntityRegistry.class).registerCustomEntity(RC_DRAGON_ENTITY_NAME, EntityType.ENDER_DRAGON, rcDragon);
                 break;
         }
         RaidCraft.registerComponent(AircraftManager.class, this);
@@ -68,16 +75,10 @@ public final class AircraftManager implements Component {
             case CITIZENS:
                 return new CitizensAircraftDragon(citizens, plugin.getConfig());
             case VANILLA:
-                try {
-                    Class<?> clazz = ReflectionUtil.getNmsClass("de.raidcraft.dragontravelplus.aircrafts.nms", "RCDragon");
-                    DTPConfig config = plugin.getConfig();
-                    return (Aircraft<?>) clazz.getConstructor(World.class,
-                            double.class, double.class, double.class, int.class, float.class)
-                            .newInstance(passenger.getEntity().getWorld(), config.speedX, config.speedY, config.speedZ,
-                                    config.waypointRadius, config.playerPitch);
-                } catch (Exception e) {
-                    plugin.getLogger().warning(e.getMessage());
-                    e.printStackTrace();
+                Optional<Entity> entity = RaidCraft.getComponent(EntityRegistry.class).getEntity(RC_DRAGON_ENTITY_NAME, passenger.getEntity().getWorld());
+                if (entity.isPresent() && entity.get() instanceof Aircraft<?>) {
+                    ((Aircraft) entity.get()).load(plugin.getConfig().getAircraftConfig());
+                    return (Aircraft<?>) entity.get();
                 }
         }
         return null;

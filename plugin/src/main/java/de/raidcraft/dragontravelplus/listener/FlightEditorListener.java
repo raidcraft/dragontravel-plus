@@ -73,7 +73,7 @@ public class FlightEditorListener implements Listener {
 
         if (!editors.containsKey(player)) return;
 
-        if (player.getItemInHand().getTypeId() != RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightEditorItem) return;
+        if (player.getItemInHand().getType() != RaidCraft.getComponent(DragonTravelPlusPlugin.class).getConfig().flightEditorItem) return;
 
         Path path = editors.get(player);
 

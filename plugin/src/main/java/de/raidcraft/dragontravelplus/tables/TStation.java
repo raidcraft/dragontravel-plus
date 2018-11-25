@@ -1,6 +1,9 @@
 package de.raidcraft.dragontravelplus.tables;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.ebean.BaseModel;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import io.ebean.EbeanServer;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -35,5 +38,10 @@ public class TStation extends BaseModel {
     public Location getLocation() {
 
         return new Location(Bukkit.getWorld(getWorld()), getX(), getY(), getZ());
+    }
+
+    @Override
+    protected EbeanServer database() {
+        return RaidCraft.getDatabase(DragonTravelPlusPlugin.class);
     }
 }

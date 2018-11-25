@@ -1,6 +1,9 @@
 package de.raidcraft.dragontravelplus.tables;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.ebean.BaseModel;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import io.ebean.EbeanServer;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -29,5 +32,10 @@ public class TWaypoint extends BaseModel implements Comparable<TWaypoint> {
         if (getWaypointIndex() < o.getWaypointIndex()) return -1;
         if (getWaypointIndex() > o.getWaypointIndex()) return 1;
         return 0;
+    }
+
+    @Override
+    protected EbeanServer database() {
+        return RaidCraft.getDatabase(DragonTravelPlusPlugin.class);
     }
 }

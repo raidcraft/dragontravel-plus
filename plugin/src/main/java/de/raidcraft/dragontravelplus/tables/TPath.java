@@ -1,6 +1,9 @@
 package de.raidcraft.dragontravelplus.tables;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.ebean.BaseModel;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import io.ebean.EbeanServer;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -28,5 +31,10 @@ public class TPath extends BaseModel {
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "path_id")
     private List<TWaypoint> waypoints = new ArrayList<>();
+
+    @Override
+    protected EbeanServer database() {
+        return RaidCraft.getDatabase(DragonTravelPlusPlugin.class);
+    }
 }
 

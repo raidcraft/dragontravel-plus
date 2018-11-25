@@ -4,6 +4,8 @@ import de.raidcraft.api.config.Comment;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.MultiComment;
 import de.raidcraft.api.config.Setting;
+import de.raidcraft.api.flight.aircraft.AircraftConfig;
+import org.bukkit.Material;
 
 /**
  * @author Dragonfire
@@ -82,7 +84,7 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
     public float playerPitch = 30;
 
     @Setting("flight-editor-item")
-    public int flightEditorItem = 122;
+    public Material flightEditorItem = Material.DRAGON_EGG;
     @Setting("forbidden-commands")
     public String[] forbiddenCommands = new String[]{
             "spawn",
@@ -117,5 +119,15 @@ public class DTPConfig extends ConfigurationBase<DragonTravelPlusPlugin> {
     public DTPConfig(DragonTravelPlusPlugin plugin) {
 
         super(plugin, "config.yml");
+    }
+
+    public AircraftConfig getAircraftConfig() {
+        AircraftConfig config = new AircraftConfig();
+        config.setSpeedX(speedX);
+        config.setSpeedY(speedY);
+        config.setSpeedZ(speedZ);
+        config.setWaypointRadius(waypointRadius);
+        config.setPlayerPitch(playerPitch);
+        return config;
     }
 }
