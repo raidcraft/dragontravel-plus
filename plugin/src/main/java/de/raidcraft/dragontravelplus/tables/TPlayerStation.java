@@ -1,6 +1,9 @@
 package de.raidcraft.dragontravelplus.tables;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.ebean.BaseModel;
+import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
+import io.ebean.EbeanServer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,4 +29,9 @@ public class TPlayerStation extends BaseModel {
     private String player;
     private UUID playerId;
     private Timestamp discovered;
+
+    @Override
+    protected EbeanServer database() {
+        return RaidCraft.getDatabase(DragonTravelPlusPlugin.class);
+    }
 }

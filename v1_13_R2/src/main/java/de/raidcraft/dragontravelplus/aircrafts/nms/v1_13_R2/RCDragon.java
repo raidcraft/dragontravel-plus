@@ -1,4 +1,4 @@
-package de.raidcraft.dragontravelplus.aircrafts.nms.v1_12_R1;
+package de.raidcraft.dragontravelplus.aircrafts.nms.v1_13_R2;
 
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.aircraft.AircraftConfig;
@@ -7,10 +7,10 @@ import de.raidcraft.api.flight.flight.Waypoint;
 import de.raidcraft.util.LocationUtil;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.server.v1_12_R1.EntityEnderDragon;
-import net.minecraft.server.v1_12_R1.World;
+import net.minecraft.server.v1_13_R2.EntityEnderDragon;
+import net.minecraft.server.v1_13_R2.World;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scheduler.BukkitTask;
@@ -167,7 +167,7 @@ public class RCDragon extends EntityEnderDragon implements Aircraft<RCDragon> {
     }
 
     @Override
-    public void n() {
+    public void k() {
 
         if (!moving) {
             return;

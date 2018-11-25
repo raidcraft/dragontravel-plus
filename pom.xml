@@ -5,26 +5,12 @@
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>parent</version>
-    <dependencies>
-        <dependency>
-            <groupId>de.faldoria</groupId>
-            <artifactId>raidcraft-api</artifactId>
-            <version>1.12-0.6-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.faldoria</groupId>
-            <artifactId>rctravel</artifactId>
-            <version>1.12-0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
     <name>DragonTravelPlus Parent</name>
 
     <parent>
         <groupId>de.faldoria</groupId>
         <artifactId>FaldoriaMasterPom</artifactId>
-        <version>1.12-0.18</version>
+        <version>1.13.2-SNAPSHOT</version>
     </parent>
 
     <repositories>
@@ -37,6 +23,7 @@
     <modules>
         <module>plugin</module>
         <module>v1_12_R1</module>
+        <module>v1_13_R2</module>
     </modules>
 
     <build>
