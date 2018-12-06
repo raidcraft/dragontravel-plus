@@ -5,6 +5,7 @@ import de.raidcraft.api.ebean.BaseModel;
 import de.raidcraft.dragontravelplus.DragonTravelPlusPlugin;
 import io.ebean.EbeanServer;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "rc_flight_waypoints")
+@EqualsAndHashCode(callSuper = true)
 public class TWaypoint extends BaseModel implements Comparable<TWaypoint> {
 
     @ManyToOne
